@@ -54,9 +54,9 @@ export const superviseurNavData: NavSectionProps['data'] = [
         // subheader: 'Aperçu',
         items: [
             { title: 'Accueil', path: paths.superviseur.root, icon: ICONS.dashboard },
-            { title: 'Participants', path: paths.superviseur.PARTICIPANTS.root, icon: ICONS.job },
-            { title: 'Actinités', path: paths.superviseur.ACTIVITES.root, icon: ICONS.calendar },
-            { title: 'Photothèque', path: paths.superviseur.ENQUETES.root, icon: ICONS.phototheque },
+            { title: 'Participants', path: paths.superviseur.PARTICIPANTS.root, icon: ICONS.user},
+            { title: 'Activités', path: paths.superviseur.ACTIVITES.root, icon: ICONS.tour },
+            { title: 'Enquêtes', path: paths.superviseur.ENQUETES.root, icon: ICONS.file },
         ],
     },
 ];
