@@ -17,22 +17,30 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import Button from '@mui/material/Button';
-
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
+type StatusOption = {
+  value: string;
+  label: string;
+  color?: string;
+};
+
 type Props = {
   onResetPage: () => void;
   filters: UseSetStateReturn<IParticipantTableFilters>;
-  options?: {
-    statuses: string[];
-  };
+  statusOptions: StatusOption[];
+  activeTab: string;
 };
 
-export function ParticipantTableToolbar({ filters, options, onResetPage }: Props) {
+export function ParticipantTableToolbar({ 
+  filters, 
+  statusOptions, 
+  onResetPage, 
+  activeTab 
+}: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -40,21 +48,46 @@ export function ParticipantTableToolbar({ filters, options, onResetPage }: Props
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
-      updateFilters({ full_name: event.target.value });
+      updateFilters({ name: event.target.value });
     },
     [onResetPage, updateFilters]
   );
 
   const handleFilterStatus = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const newValue =
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
-
+    (event: SelectChangeEvent<string>) => {
       onResetPage();
-      updateFilters({ status: newValue });
+      updateFilters({ status: event.target.value });
     },
     [onResetPage, updateFilters]
   );
+
+  // Fonction pour obtenir le placeholder selon l'onglet
+  const getSearchPlaceholder = () => {
+    switch (activeTab) {
+      case 'demandes':
+        return 'Rechercher une demande (nom, email)...';
+      case 'invites':
+        return 'Rechercher un invité (nom, email)...';
+      case 'participants':
+        return 'Rechercher un participant (nom, email)...';
+      default:
+        return 'Rechercher...';
+    }
+  };
+
+  // Fonction pour obtenir le label du select selon l'onglet
+  const getStatusLabel = () => {
+    switch (activeTab) {
+      case 'demandes':
+        return 'Statut des demandes';
+      case 'invites':
+        return 'Statut des invités';
+      case 'participants':
+        return 'Statut des participants';
+      default:
+        return 'Statut';
+    }
+  };
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -89,31 +122,23 @@ export function ParticipantTableToolbar({ filters, options, onResetPage }: Props
           alignItems: { xs: 'flex-end', md: 'center' },
         }}
       >
-        {options && (
-          <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
-            <InputLabel htmlFor="filter-status-select">Statut</InputLabel>
-            <Select
-              multiple
-              value={currentFilters.status}
-              onChange={handleFilterStatus}
-              input={<OutlinedInput label="Statut" />}
-              renderValue={(selected) => selected.map((value) => value).join(', ')}
-              inputProps={{ id: 'filter-status-select' }}
-              MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
-            >
-              {options?.statuses.map((status) => (
-                <MenuItem key={status} value={status}>
-                  <Checkbox
-                    disableRipple
-                    size="small"
-                    checked={currentFilters.status.includes(status)}
-                  />
-                  {status}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
+        {/* Filtre par statut */}
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+          <InputLabel htmlFor="filter-status-select">{getStatusLabel()}</InputLabel>
+          <Select
+            value={currentFilters.status || 'all'}
+            onChange={handleFilterStatus}
+            input={<OutlinedInput label={getStatusLabel()} />}
+            inputProps={{ id: 'filter-status-select' }}
+            MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
+          >
+            {statusOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <Box
           sx={{
@@ -124,11 +149,12 @@ export function ParticipantTableToolbar({ filters, options, onResetPage }: Props
             alignItems: 'center',
           }}
         >
+          {/* Champ de recherche */}
           <TextField
             fullWidth
-            value={currentFilters.full_name}
+            value={currentFilters.name || ''}
             onChange={handleFilterName}
-            placeholder="Rechercher un participant..."
+            placeholder={getSearchPlaceholder()}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -138,6 +164,7 @@ export function ParticipantTableToolbar({ filters, options, onResetPage }: Props
             }}
           />
 
+          {/* Menu d'actions */}
           <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
