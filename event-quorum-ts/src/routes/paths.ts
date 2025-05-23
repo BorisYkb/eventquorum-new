@@ -120,7 +120,7 @@ export const paths = {
     root: ROOTS.SUPERVISEUR,
     accueil: `${ROOTS.SUPERVISEUR}/accueil`,
     PARTICIPANTS: {
-      root: `${ROOTS.ADMIN}/participants`,
+      root: `${ROOTS.SUPERVISEUR}/participants`,
       demandes: `${ROOTS.SUPERVISEUR}/participants/demandes`,
       invites: `${ROOTS.SUPERVISEUR}/participants/invites`,
       listes: `${ROOTS.SUPERVISEUR}/participants/listes`,
