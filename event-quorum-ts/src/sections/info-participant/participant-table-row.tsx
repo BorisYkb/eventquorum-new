@@ -13,7 +13,6 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -24,24 +23,22 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 type Props = {
     row: IParticipantItem;
-    selected: boolean;
-    onSelectRow: () => void;
     onDeleteRow: () => void;
     onAcceptRow?: () => void;
     onRejectRow?: () => void;
     onViewDetails?: () => void;
     activeTab: string;
+    readOnly?: boolean;
 };
 
 export function ParticipantTableRow({ 
-    row, 
-    selected, 
-    onSelectRow, 
+    row,
     onDeleteRow,
     onAcceptRow,
     onRejectRow,
     onViewDetails,
-    activeTab 
+    activeTab,
+    readOnly = false
 }: Props) {
     const menuActions = usePopover();
     const confirmDialog = useBoolean();
@@ -104,7 +101,7 @@ export function ParticipantTableRow({
         return value === 'oui' || value === 'Oui' ? 'success' : 'error';
     };
 
-    const canModifyStatus = activeTab === 'demandes' && row.statut === 'en attente';
+    const canModifyStatus = activeTab === 'demandes' && row.statut === 'en attente' && !readOnly;
 
     const renderMenuActions = () => (
         <CustomPopover
@@ -153,16 +150,18 @@ export function ParticipantTableRow({
                     </MenuItem>
                 )}
 
-                <MenuItem
-                    onClick={() => {
-                        confirmDialog.onTrue();
-                        menuActions.onClose();
-                    }}
-                    sx={{ color: 'error.main' }}
-                >
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                    Supprimer
-                </MenuItem>
+                {!readOnly && (
+                    <MenuItem
+                        onClick={() => {
+                            confirmDialog.onTrue();
+                            menuActions.onClose();
+                        }}
+                        sx={{ color: 'error.main' }}
+                    >
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                        Supprimer
+                    </MenuItem>
+                )}
             </MenuList>
         </CustomPopover>
     );
@@ -321,6 +320,20 @@ export function ParticipantTableRow({
                                 {getBooleanLabel(row.achat_effectue)}
                             </Label>
                         </TableCell>
+
+                        <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Tooltip title="Voir détails" placement="top" arrow>
+                                    <IconButton
+                                        color="info"
+                                        onClick={() => onViewDetails?.()}
+                                        size="small"
+                                    >
+                                        <Iconify icon="solar:eye-bold" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </TableCell>
                     </>
                 );
 
@@ -329,13 +342,13 @@ export function ParticipantTableRow({
                     <>
                         <TableCell>
                             <Typography variant="subtitle2" noWrap>
-                                {row.nom || row.nom_prenom?.split(' ')[0]}
+                                {row.nom || row.nom_prenom?.split(' ')[0] || '-'}
                             </Typography>
                         </TableCell>
 
                         <TableCell>
                             <Typography variant="subtitle2" noWrap>
-                                {row.prenom || row.nom_prenom?.split(' ')[1]}
+                                {row.prenom || row.nom_prenom?.split(' ').slice(1).join(' ') || '-'}
                             </Typography>
                         </TableCell>
 
@@ -370,13 +383,32 @@ export function ParticipantTableRow({
                         </TableCell>
 
                         <TableCell sx={{ textAlign: 'center' }}>
-                            <IconButton 
-                                size="small" 
-                                color="info"
-                                onClick={() => {/* Logique d'émargement */}}
-                            >
-                                <Iconify icon="solar:document-text-bold" />
-                            </IconButton>
+                            <Tooltip title="Émargement" placement="top" arrow>
+                                <IconButton 
+                                    size="small" 
+                                    color="info"
+                                    onClick={() => {
+                                        // Logique d'émargement
+                                        console.log('Émargement pour:', row.nom_prenom);
+                                    }}
+                                >
+                                    <Iconify icon="solar:document-text-bold" />
+                                </IconButton>
+                            </Tooltip>
+                        </TableCell>
+
+                        <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Tooltip title="Voir détails" placement="top" arrow>
+                                    <IconButton
+                                        color="info"
+                                        onClick={() => onViewDetails?.()}
+                                        size="small"
+                                    >
+                                        <Iconify icon="solar:eye-bold" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
                         </TableCell>
                     </>
                 );
@@ -386,22 +418,10 @@ export function ParticipantTableRow({
         }
     };
 
-    return (
-        <>
-            <TableRow hover selected={selected} aria-checked={selected} tabIndex={-1}>
-                <TableCell padding="checkbox">
-                    <Checkbox
-                        checked={selected}
-                        onClick={onSelectRow}
-                        inputProps={{
-                            id: `${row.id}-checkbox`,
-                            'aria-label': `${row.id} checkbox`,
-                        }}
-                    />
-                </TableCell>
-
-                {renderTableCells()}
-
+    const renderActionsCell = () => {
+        // Pour l'onglet demandes, on affiche les actions dans une cellule séparée
+        if (activeTab === 'demandes') {
+            return (
                 <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {/* Icône œil pour voir les détails */}
@@ -417,7 +437,7 @@ export function ParticipantTableRow({
                         </Tooltip>
 
                         {/* Actions rapides pour les demandes en attente */}
-                        {canModifyStatus && (
+                        {/* {canModifyStatus && (
                             <>
                                 <Tooltip title="Accepter" placement="top" arrow>
                                     <IconButton
@@ -441,16 +461,30 @@ export function ParticipantTableRow({
                                     </IconButton>
                                 </Tooltip>
                             </>
-                        )}
+                        )} */}
 
-                        <IconButton
-                            color={menuActions.open ? 'inherit' : 'default'}
-                            onClick={menuActions.onOpen}
-                        >
-                            <Iconify icon="eva:more-vertical-fill" />
-                        </IconButton>
+                        {!readOnly && (
+                            <IconButton
+                                color={menuActions.open ? 'inherit' : 'default'}
+                                onClick={menuActions.onOpen}
+                            >
+                                <Iconify icon="eva:more-vertical-fill" />
+                            </IconButton>
+                        )}
                     </Box>
                 </TableCell>
+            );
+        }
+        
+        // Pour les autres onglets, les actions sont déjà intégrées dans renderTableCells
+        return null;
+    };
+
+    return (
+        <>
+            <TableRow hover tabIndex={-1}>
+                {renderTableCells()}
+                {renderActionsCell()}
             </TableRow>
 
             {renderMenuActions()}

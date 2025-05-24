@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
@@ -33,13 +32,17 @@ type Props = {
   filters: UseSetStateReturn<IParticipantTableFilters>;
   statusOptions: StatusOption[];
   activeTab: string;
+  onExportExcel?: () => void;
+  onExportPDF?: () => void;
 };
 
 export function ParticipantTableToolbar({ 
   filters, 
   statusOptions, 
   onResetPage, 
-  activeTab 
+  activeTab,
+  onExportExcel,
+  onExportPDF
 }: Props) {
   const menuActions = usePopover();
 
@@ -61,7 +64,7 @@ export function ParticipantTableToolbar({
     [onResetPage, updateFilters]
   );
 
-  // Fonction pour obtenir le placeholder selon l'onglet
+  // Fonction pour obtenir le placeholder selon l'onglet actif
   const getSearchPlaceholder = () => {
     switch (activeTab) {
       case 'demandes':
@@ -75,7 +78,7 @@ export function ParticipantTableToolbar({
     }
   };
 
-  // Fonction pour obtenir le label du select selon l'onglet
+  // Fonction pour obtenir le label du select selon l'onglet actif
   const getStatusLabel = () => {
     switch (activeTab) {
       case 'demandes':
@@ -89,6 +92,21 @@ export function ParticipantTableToolbar({
     }
   };
 
+  // Gestion des actions d'export
+  const handleExportExcel = useCallback(() => {
+    menuActions.onClose();
+    if (onExportExcel) {
+      onExportExcel();
+    }
+  }, [menuActions, onExportExcel]);
+
+  const handleExportPDF = useCallback(() => {
+    menuActions.onClose();
+    if (onExportPDF) {
+      onExportPDF();
+    }
+  }, [menuActions, onExportPDF]);
+
   const renderMenuActions = () => (
     <CustomPopover
       open={menuActions.open}
@@ -97,12 +115,12 @@ export function ParticipantTableToolbar({
       slotProps={{ arrow: { placement: 'right-top' } }}
     >
       <MenuList>
-        <MenuItem onClick={() => menuActions.onClose()}>
+        <MenuItem onClick={handleExportPDF}>
           <Iconify icon="solar:printer-minimalistic-bold" />
           Imprimer (PDF)
         </MenuItem>
 
-        <MenuItem onClick={() => menuActions.onClose()}>
+        <MenuItem onClick={handleExportExcel}>
           <Iconify icon="solar:export-bold" />
           Exporter (EXCEL)
         </MenuItem>

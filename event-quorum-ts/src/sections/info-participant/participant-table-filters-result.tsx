@@ -13,14 +13,14 @@ import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-r
 type Props = FiltersResultProps & {
   onResetPage: () => void;
   filters: UseSetStateReturn<IParticipantTableFilters>;
-  activeTab?: string;
+  activeTab: string;
 };
 
 export function ParticipantTableFiltersResult({ 
   filters, 
   onResetPage, 
   totalResults, 
-  activeTab = 'demandes',
+  activeTab,
   sx 
 }: Props) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
@@ -55,32 +55,35 @@ export function ParticipantTableFiltersResult({
     resetFilters();
   }, [onResetPage, resetFilters]);
 
-  // Fonction pour obtenir le label du statut selon l'onglet
+  // Fonction pour obtenir le label du statut selon l'onglet actif
   const getStatusLabel = (status: string) => {
-    if (status === 'all') return '';
+    if (status === 'all' || !status) return '';
     
     switch (activeTab) {
       case 'demandes':
         switch (status) {
-          case 'acceptée': return 'Acceptée';
-          case 'rejetée': return 'Rejetée';
-          case 'en attente': return 'En attente';
+          case 'en_attente': return 'En attente';
+          case 'acceptee': return 'Acceptée';
+          case 'rejetee': return 'Rejetée';
+          case 'annulee': return 'Annulée';
           default: return status;
         }
       case 'invites':
         switch (status) {
-          case 'connecté': return 'Connecté';
-          case 'non connecté': return 'Non connecté';
-          case 'première connexion': return 'Première connexion';
-          case 'pas de première connexion': return 'Pas de première connexion';
-          case 'achat effectué': return 'Achat effectué';
-          case 'pas d\'achat effectué': return 'Pas d\'achat effectué';
+          case 'invite': return 'Invité';
+          case 'confirme': return 'Confirmé';
+          case 'desiste': return 'Désisté';
+          case 'connecte': return 'Connecté';
+          case 'non_connecte': return 'Non connecté';
           default: return status;
         }
       case 'participants':
         switch (status) {
-          case 'en présentiel': return 'En présentiel';
-          case 'en ligne': return 'En ligne';
+          case 'present': return 'Présent';
+          case 'absent': return 'Absent';
+          case 'en_presentiel': return 'En présentiel';
+          case 'en_ligne': return 'En ligne';
+          case 'partiel': return 'Participation partielle';
           default: return status;
         }
       default:
@@ -90,36 +93,70 @@ export function ParticipantTableFiltersResult({
 
   // Fonction pour obtenir le label d'activité
   const getActivityLabel = (activity: string) => {
-    if (activity === 'all') return '';
+    if (activity === 'all' || !activity) return '';
+    
+    // Vous pouvez adapter ces labels selon vos activités réelles
     switch (activity) {
-      case 'activité 1': return 'Activité 1';
-      case 'activité 2': return 'Activité 2';
+      case 'conference': return 'Conférence';
+      case 'atelier': return 'Atelier';
+      case 'networking': return 'Networking';
+      case 'presentation': return 'Présentation';
       default: return activity;
     }
   };
 
   // Fonction pour obtenir le label de statut de connexion
   const getConnectionLabel = (status: string) => {
-    if (status === 'all') return '';
+    if (status === 'all' || !status) return '';
+    
     switch (status) {
-      case 'connecté': return 'Connectés';
-      case 'non connecté': return 'Non connectés';
+      case 'connecte': return 'Connectés';
+      case 'non_connecte': return 'Non connectés';
+      case 'premiere_connexion': return 'Première connexion effectuée';
+      case 'jamais_connecte': return 'Jamais connecté';
       default: return status;
     }
   };
 
-  // Fonction pour obtenir le label de première connexion/achat
+  // Fonction pour obtenir le label de statut d'achat/première connexion
   const getPurchaseLabel = (status: string) => {
-    if (status === 'all') return '';
+    if (status === 'all' || !status) return '';
+    
     switch (status) {
-      case 'oui': return 'Première connexion';
-      case 'non': return 'Pas de première connexion';
+      case 'achat_effectue': return 'Achat effectué';
+      case 'pas_achat': return 'Pas d\'achat effectué';
+      case 'premiere_connexion_oui': return 'Première connexion effectuée';
+      case 'premiere_connexion_non': return 'Première connexion non effectuée';
       default: return status;
+    }
+  };
+
+  // Fonction pour obtenir le texte du résumé selon l'onglet
+  const getResultsLabel = () => {
+    const count = totalResults || 0;
+    switch (activeTab) {
+      case 'demandes':
+        return count === 0 ? 'Aucune demande trouvée' : 
+               count === 1 ? '1 demande trouvée' : `${count} demandes trouvées`;
+      case 'invites':
+        return count === 0 ? 'Aucun invité trouvé' : 
+               count === 1 ? '1 invité trouvé' : `${count} invités trouvés`;
+      case 'participants':
+        return count === 0 ? 'Aucun participant trouvé' : 
+               count === 1 ? '1 participant trouvé' : `${count} participants trouvés`;
+      default:
+        return count === 0 ? 'Aucun résultat trouvé' : 
+               count === 1 ? '1 résultat trouvé' : `${count} résultats trouvés`;
     }
   };
 
   return (
-    <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
+    <FiltersResult 
+      totalResults={totalResults} 
+      onReset={handleReset} 
+      sx={sx}
+      resultsLabel={getResultsLabel()}
+    >
       {/* Filtre par mot-clé (présent dans tous les onglets) */}
       <FiltersBlock label="Recherche:" isShow={!!currentFilters.name}>
         <Chip 
@@ -169,10 +206,10 @@ export function ParticipantTableFiltersResult({
         </FiltersBlock>
       )}
 
-      {/* Filtre par première connexion (présent uniquement dans l'onglet invités) */}
+      {/* Filtre par statut d'achat/première connexion (présent uniquement dans l'onglet invités) */}
       {activeTab === 'invites' && (
         <FiltersBlock 
-          label="Première connexion:" 
+          label="Achat/Première connexion:" 
           isShow={!!(currentFilters.purchaseStatus && currentFilters.purchaseStatus !== 'all')}
         >
           <Chip 

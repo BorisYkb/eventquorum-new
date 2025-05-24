@@ -12,9 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -23,49 +21,42 @@ import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 import { DashboardContent } from 'src/layouts/superviseur';
 import { _participantList } from 'src/_mock/_participants';
 
-import { Label } from 'src/components/label';
-import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
     useTable,
     emptyRows,
-    rowInPage,
     TableNoData,
     getComparator,
     TableEmptyRows,
     TableHeadCustom,
-    TableSelectedAction,
     TablePaginationCustom,
 } from 'src/components/table';
 
 // Import du composant AdminWidgetSummary
-import { AdminWidgetSummary } from 'src/sections/overview/admin/view/admin-widget-summary';
+import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary';
 
 import { ParticipantTableRow } from 'src/sections/info-participant/participant-table-row';
 import { ParticipantTableToolbar } from 'src/sections/info-participant/participant-table-toolbar';
 import { ParticipantTableFiltersResult } from 'src/sections/info-participant/participant-table-filters-result';
+import { DetailsInvite } from 'src/app/superviseur/participants/components/details-invite';
 
 // ----------------------------------------------------------------------
 
-// En-têtes pour l'onglet "Liste des demandes d'inscription"
+// En-têtes pour l'onglet "Liste des demandes d'inscription" (sans colonne actions)
 const DEMANDES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom_prenom', label: 'Nom_prenom', width: 200 },
     { id: 'email', label: 'Email', width: 200 },
     { id: 'telephone', label: 'Téléphone', width: 120 },
     { id: 'date', label: 'Date', width: 120 },
     { id: 'statut', label: 'Statut', width: 100 },
-    { id: '', width: 88 },
 ];
 
-// En-têtes pour l'onglet "Liste des invités"
+// En-têtes pour l'onglet "Liste des invités" (avec colonne détail)
 const INVITES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom_prenom', label: 'Nom_prenom', width: 150 },
     { id: 'email', label: 'Email', width: 180 },
@@ -74,10 +65,10 @@ const INVITES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'premiere_connexion', label: 'Première connexion', width: 140 },
     { id: 'activite_selectionnee', label: 'Activité sélectionnée', width: 150 },
     { id: 'achat_effectue', label: 'Achat effectué', width: 120 },
-    { id: '', width: 88 },
+    { id: 'detail', label: 'Détail', width: 88 },
 ];
 
-// En-têtes pour l'onglet "Liste des participants"
+// En-têtes pour l'onglet "Liste des participants" (avec colonne détail)
 const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom', label: 'Nom', width: 120 },
     { id: 'prenom', label: 'Prénom', width: 120 },
@@ -86,7 +77,7 @@ const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'connecte', label: 'Connecté', width: 100 },
     { id: 'statut', label: 'Statut', width: 100 },
     { id: 'emargement', label: 'Emargement', width: 120 },
-    { id: '', width: 88 },
+    { id: 'detail', label: 'Détail', width: 88 },
 ];
 
 // Options de statut pour les demandes
@@ -195,9 +186,10 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
 export function SuperviseurClientListView() {
     const theme = useTheme();
     const table = useTable();
-    const confirmDialog = useBoolean();
+    const detailsDialog = useBoolean();
     const [activeTab, setActiveTab] = useState('demandes');
-    const [participantData, setParticipantData] = useState<IParticipantItem[]>(_participantList);
+    const [participantData] = useState<IParticipantItem[]>(_participantList);
+    const [selectedInvite, setSelectedInvite] = useState<IParticipantItem | null>(null);
 
     // Filtres étendus selon l'onglet
     const filters = useSetState<IParticipantTableFilters>({
@@ -232,33 +224,19 @@ export function SuperviseurClientListView() {
         table.page * table.rowsPerPage + table.rowsPerPage
     );
 
-    const handleDeleteRow = useCallback(
-        (id: string) => {
-            setParticipantData(prev => prev.filter(row => row.id !== id));
-            toast.success('Suppression réussie!');
-            table.onUpdatePageDeleteRow(paginatedData.length);
-        },
-        [table, paginatedData.length]
-    );
-
-    const handleDeleteRows = useCallback(() => {
-        const totalRowsFiltered = dataFiltered.length;
-        const currentPageRows = paginatedData.length;
-
-        setParticipantData(prev => prev.filter(row => !table.selected.includes(row.id)));
-        toast.success('Suppression réussie!');
-
-        table.onUpdatePageDeleteRows(currentPageRows, totalRowsFiltered);
-    }, [table, dataFiltered.length, paginatedData]);
+    const handleViewDetails = useCallback((participant: IParticipantItem) => {
+        setSelectedInvite(participant);
+        detailsDialog.onTrue();
+    }, [detailsDialog]);
 
     const handleExportPDF = () => {
-        toast.info('Export PDF en cours...');
         // Logique d'export PDF ici
+        console.log('Export PDF en cours...');
     };
 
     const handleConsultConnectedList = () => {
-        toast.info('Consultation de la liste des connectés...');
         // Logique pour consulter la liste des connectés
+        console.log('Consultation de la liste des connectés...');
     };
 
     // Fonction pour obtenir les options de statut selon l'onglet
@@ -289,6 +267,31 @@ export function SuperviseurClientListView() {
         }
     };
 
+    // Fonction pour obtenir les statistiques selon l'onglet
+    const getStatistics = () => {
+        switch (activeTab) {
+            case 'demandes':
+                return [
+                    { title: "Nombre de demande reçues", total: 128 },
+                    { title: "Nombre de demande acceptée", total: 86 },
+                    { title: "Nombre de demandes rejetée", total: 64 },
+                    { title: "Nombre de demandes en attentes", total: 12 }
+                ];
+            case 'invites':
+                return [
+                    { title: "Invités", total: 500, color: '#1976d2' },
+                    { title: "Connectés", total: 100, color: '#1976d2' },
+                    { title: "Sélection d'activités", total: 75, color: '#1976d2' },
+                    { title: "Première connexion", total: 100, color: '#1976d2' },
+                    { title: "Achat effectué", total: 50, color: '#1976d2' }
+                ];
+            case 'participants':
+                return []; // Pas de statistiques pour les participants
+            default:
+                return [];
+        }
+    };
+
     const canReset = !!(
         filters.state.name || 
         filters.state.status !== 'all' || 
@@ -312,6 +315,8 @@ export function SuperviseurClientListView() {
         }
     };
 
+    const statistics = getStatistics();
+
     return (
         <>
             <DashboardContent maxWidth="xl">
@@ -320,81 +325,12 @@ export function SuperviseurClientListView() {
                     sx={{ mb: { xs: 3, md: 5 } }}
                 />
 
-                {/* Statistiques avec graphiques */}
-                <Grid container spacing={3} sx={{ mb: 3 }}>
-                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                        <AdminWidgetSummary
-                            title="Invité"
-                            total={500}
-                            percent={15.2}
-                            chart={{
-                                colors: [theme.palette.primary.light, theme.palette.primary.main],
-                                categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                                series: [420, 450, 480, 490, 495, 500],
-                            }}
-                        />
-                    </Grid>
-                    
-                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                        <AdminWidgetSummary
-                            title="Connecté"
-                            total={100}
-                            percent={8.5}
-                            chart={{
-                                colors: [theme.palette.info.light, theme.palette.info.main],
-                                categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                                series: [65, 75, 85, 90, 95, 100],
-                            }}
-                        />
-                    </Grid>
-                    
-                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                        <AdminWidgetSummary
-                            title="Sélection d'activité"
-                            total={75}
-                            percent={-2.1}
-                            chart={{
-                                colors: [theme.palette.warning.light, theme.palette.warning.main],
-                                categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                                series: [80, 78, 76, 75, 74, 75],
-                            }}
-                        />
-                    </Grid>
-                    
-                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                        <AdminWidgetSummary
-                            title="Première connexion"
-                            total={100}
-                            percent={12.8}
-                            chart={{
-                                colors: [theme.palette.success.light, theme.palette.success.main],
-                                categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                                series: [70, 80, 85, 90, 95, 100],
-                            }}
-                        />
-                    </Grid>
-                    
-                    <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                        <AdminWidgetSummary
-                            title="Achat effectué"
-                            total={50}
-                            percent={-5.3}
-                            totalColor={theme.palette.error.main}
-                            chart={{
-                                colors: [theme.palette.error.light, theme.palette.error.main],
-                                categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                                series: [60, 55, 52, 50, 48, 50],
-                            }}
-                        />
-                    </Grid>
-                </Grid>
-
-                <Card>
-                    {/* Onglets */}
+                {/* Onglets déplacés au-dessus des statistiques */}
+                <Card sx={{ mb: 3 }}>
                     <Tabs
                         value={activeTab}
                         onChange={handleTabChange}
-                        sx={{ px: 2.5, mb: 3 }}
+                        sx={{ px: 2.5, py: 2 }}
                     >
                         {PARTICIPANT_TABS.map((tab) => (
                             <Tab
@@ -404,9 +340,31 @@ export function SuperviseurClientListView() {
                             />
                         ))}
                     </Tabs>
+                </Card>
 
+                {/* Statistiques dynamiques selon l'onglet */}
+                {statistics.length > 0 && (
+                    <Grid container spacing={3} sx={{ mb: 3 }}>
+                        {statistics.map((stat, index) => (
+                            <Grid 
+                                key={index} 
+                                size={{ 
+                                    xs: 12, 
+                                    md: activeTab === 'invites' ? 2.4 : 3 
+                                }}
+                            >
+                                <SuperviseurWidgetSummary 
+                                    title={stat.title} 
+                                    total={stat.total}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+
+                <Card>
                     {/* Boutons d'actions selon l'onglet */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2, pt: 2 }}>
                         {activeTab === 'demandes' && (
                             <Button
                                 variant="contained"
@@ -514,26 +472,6 @@ export function SuperviseurClientListView() {
                     )}
 
                     <Box sx={{ position: 'relative' }}>
-                        {/* Actions sélection multiple */}
-                        <TableSelectedAction
-                            dense={table.dense}
-                            numSelected={table.selected.length}
-                            rowCount={dataFiltered.length}
-                            onSelectAllRows={(checked) =>
-                                table.onSelectAllRows(
-                                    checked,
-                                    dataFiltered.map((row) => row.id)
-                                )
-                            }
-                            action={
-                                <Tooltip title="Supprimer">
-                                    <IconButton color="primary" onClick={confirmDialog.onTrue}>
-                                        <Iconify icon="solar:trash-bin-trash-bold" />
-                                    </IconButton>
-                                </Tooltip>
-                            }
-                        />
-
                         {/* Tableau */}
                         <Scrollbar>
                             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
@@ -542,14 +480,8 @@ export function SuperviseurClientListView() {
                                     orderBy={table.orderBy}
                                     headCells={getTableHeaders()}
                                     rowCount={dataFiltered.length}
-                                    numSelected={table.selected.length}
+                                    numSelected={0}
                                     onSort={table.onSort}
-                                    onSelectAllRows={(checked) =>
-                                        table.onSelectAllRows(
-                                            checked,
-                                            dataFiltered.map((row) => row.id)
-                                        )
-                                    }
                                 />
 
                                 <TableBody>
@@ -557,10 +489,10 @@ export function SuperviseurClientListView() {
                                         <ParticipantTableRow
                                             key={row.id}
                                             row={row}
-                                            selected={table.selected.includes(row.id)}
-                                            onSelectRow={() => table.onSelectRow(row.id)}
-                                            onDeleteRow={() => handleDeleteRow(row.id)}
+                                            onDeleteRow={() => {}}
+                                            onViewDetails={() => handleViewDetails(row)}
                                             activeTab={activeTab}
+                                            readOnly={true}
                                         />
                                     ))}
 
@@ -588,28 +520,11 @@ export function SuperviseurClientListView() {
                 </Card>
             </DashboardContent>
 
-            {/* Dialog de confirmation */}
-            <ConfirmDialog
-                open={confirmDialog.value}
-                onClose={confirmDialog.onFalse}
-                title="Supprimer"
-                content={
-                    <>
-                        Êtes-vous sûr de vouloir supprimer <strong> {table.selected.length} </strong> éléments?
-                    </>
-                }
-                action={
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                            handleDeleteRows();
-                            confirmDialog.onFalse();
-                        }}
-                    >
-                        Supprimer
-                    </Button>
-                }
+            {/* Dialog de détails des invités */}
+            <DetailsInvite
+                open={detailsDialog.value}
+                onClose={detailsDialog.onFalse}
+                participant={selectedInvite}
             />
         </>
     );
