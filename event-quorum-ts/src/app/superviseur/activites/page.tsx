@@ -1,17 +1,35 @@
 'use client';
 import React, { useState } from 'react';
 import { Search, Download, FileText, Filter, Eye } from 'lucide-react';
+import ActivityDetailPage from './[id]/page'; // Assurez-vous que le chemin est correct
 
 const ActivityManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
 
-  const handleViewActivity = (activityId) => {
+  /*const handleViewActivity = (activityId) => {
     // Simuler la navigation - vous pourrez remplacer ceci par votre logique de navigation
     console.log(`Redirection vers les détails de l'activité ${activityId}`);
     // Dans une vraie app Next.js, vous utiliseriez : router.push(`/activites/${activityId}`);
     alert(`Consultation de l'activité ${activityId} - Implémentez votre navigation ici`);
+  };*/
+
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  const handleViewActivity = (activityId) => {
+    setSelectedActivity(activityId);
+    setShowDetails(true);
   };
+
+  const handleBackToList = () => {
+    setShowDetails(false);
+    setSelectedActivity(null);
+  };
+
+  if (showDetails) {
+    return <ActivityDetailPage onBack={handleBackToList} activityId={selectedActivity} />;
+  }
 
   const activities = [
     {
