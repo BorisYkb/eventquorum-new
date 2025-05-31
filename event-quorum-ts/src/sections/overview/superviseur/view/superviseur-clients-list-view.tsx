@@ -1,9 +1,10 @@
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { IParticipantItem, IParticipantTableFilters } from 'src/types/participant';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
@@ -44,16 +45,18 @@ import { ParticipantTableRow } from 'src/sections/info-participant/participant-t
 import { ParticipantTableToolbar } from 'src/sections/info-participant/participant-table-toolbar';
 import { ParticipantTableFiltersResult } from 'src/sections/info-participant/participant-table-filters-result';
 import { DetailsInvite } from 'src/app/superviseur/participants/components/details-invite';
+import DetailParticipantPage from 'src/app/superviseur/participants/components/detail-participants';
 
 // ----------------------------------------------------------------------
 
-// En-têtes pour l'onglet "Liste des demandes d'inscription" (sans colonne actions)
+// En-têtes pour l'onglet "Liste des demandes d'inscription" (SANS colonne actions/détail)
 const DEMANDES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom_prenom', label: 'Nom_prenom', width: 200 },
     { id: 'email', label: 'Email', width: 200 },
     { id: 'telephone', label: 'Téléphone', width: 120 },
     { id: 'date', label: 'Date', width: 120 },
     { id: 'statut', label: 'Statut', width: 100 },
+    // Pas de colonne "Actions" pour les demandes
 ];
 
 // En-têtes pour l'onglet "Liste des invités" (avec colonne détail)
@@ -79,7 +82,6 @@ const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'emargement', label: 'Emargement', width: 120 },
     { id: 'detail', label: 'Détail', width: 88 },
 ];
-
 // Options de statut pour les demandes
 export const DEMANDE_STATUS_OPTIONS = [
     { value: 'acceptée', label: 'Acceptée', color: 'success' },
@@ -109,6 +111,17 @@ export const ACTIVITY_OPTIONS = [
     { value: 'activité 2', label: 'Activité 2' },
 ];
 
+// **NOUVEAU: Options pour l'exportation des invités**
+export const EXPORT_INVITE_OPTIONS = [
+    { value: 'tous_les_invites', label: 'Tous les invités' },
+    { value: 'connectes', label: 'Connectés' },
+    { value: 'non_connectes', label: 'Non connectés' },
+    { value: 'premiere_connexion', label: 'Première connexion' },
+    { value: 'pas_de_premiere_connexion', label: 'Pas de première connexion' },
+    { value: 'achat_effectue', label: 'Achat effectué' },
+    { value: 'pas_dachat_effectue', label: 'Pas d\'achat effectué' },
+];
+
 // Onglets de navigation
 export const PARTICIPANT_TABS = [
     { label: 'Liste des demandes d\'inscription', value: 'demandes' },
@@ -131,7 +144,7 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
     // Filtrer par onglet actif
     switch (activeTab) {
         case 'demandes':
-            filteredData = filteredData.filter(item => 
+            filteredData = filteredData.filter(item =>
                 ['acceptée', 'rejetée', 'en attente'].includes(item.statut)
             );
             break;
@@ -139,7 +152,7 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
             filteredData = filteredData.filter(item => item.statut === 'acceptée');
             break;
         case 'participants':
-            filteredData = filteredData.filter(item => 
+            filteredData = filteredData.filter(item =>
                 ['en présentiel', 'en ligne'].includes(item.statut)
             );
             break;
@@ -158,7 +171,7 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
     if (name) {
         filteredData = filteredData.filter(
             (item) => item.nom_prenom.toLowerCase().includes(name.toLowerCase()) ||
-                     item.email.toLowerCase().includes(name.toLowerCase())
+                item.email.toLowerCase().includes(name.toLowerCase())
         );
     }
 
@@ -186,10 +199,22 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
 export function SuperviseurClientListView() {
     const theme = useTheme();
     const table = useTable();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const detailsDialog = useBoolean();
     const [activeTab, setActiveTab] = useState('demandes');
     const [participantData] = useState<IParticipantItem[]>(_participantList);
     const [selectedInvite, setSelectedInvite] = useState<IParticipantItem | null>(null);
+
+    useEffect(() => {
+        const tabFromUrl = searchParams?.get('tab');
+        if (tabFromUrl && ['demandes', 'invites', 'participants'].includes(tabFromUrl)) {
+            setActiveTab(tabFromUrl);
+        }
+    }, [searchParams]);
+
+    // **NOUVEAU: État pour gérer l'exportation des invités**
+    const [exportSelection, setExportSelection] = useState<string>('tous_les_invites');
 
     // Filtres étendus selon l'onglet
     const filters = useSetState<IParticipantTableFilters>({
@@ -203,13 +228,18 @@ export function SuperviseurClientListView() {
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
         setActiveTab(newValue);
         table.onResetPage();
-        filters.setState({ 
-            name: '', 
+
+        // Réinitialiser tous les filtres lors du changement d'onglet
+        filters.setState({
+            name: '',
             status: 'all',
             activity: 'all',
             connectionStatus: 'all',
             purchaseStatus: 'all'
         });
+
+        // Réinitialiser la sélection d'exportation
+        setExportSelection('tous_les_invites');
     };
 
     const dataFiltered = applyFilter({
@@ -225,13 +255,60 @@ export function SuperviseurClientListView() {
     );
 
     const handleViewDetails = useCallback((participant: IParticipantItem) => {
-        setSelectedInvite(participant);
-        detailsDialog.onTrue();
-    }, [detailsDialog]);
+        if (activeTab === 'participants') {
+            // Pour l'onglet participants, naviguer vers la page de détail
+            router.push(`/superviseur/participants/${participant.id}`);
+        } else {
+            // Pour les autres onglets (invités), garder le comportement actuel
+            setSelectedInvite(participant);
+            detailsDialog.onTrue();
+        }
+    }, [detailsDialog, router, activeTab]);
 
+
+
+    // **MODIFIÉ: Fonction d'export PDF pour les demandes**
     const handleExportPDF = () => {
-        // Logique d'export PDF ici
-        console.log('Export PDF en cours...');
+        // Logique d'export PDF pour les demandes ici
+        console.log('Export PDF des demandes en cours...');
+    };
+
+
+
+    // **NOUVEAU: Fonction d'export pour les invités**
+    const handleExportInvitesList = () => {
+        // Logique d'export selon la sélection pour les invités
+        console.log(`Export de la liste: ${exportSelection}`);
+
+        // Filtrer les données selon la sélection d'exportation
+        let dataToExport = dataFiltered;
+
+        switch (exportSelection) {
+            case 'connectes':
+                dataToExport = dataFiltered.filter(item => item.connecte === 'connecté');
+                break;
+            case 'non_connectes':
+                dataToExport = dataFiltered.filter(item => item.connecte === 'non connecté');
+                break;
+            case 'premiere_connexion':
+                dataToExport = dataFiltered.filter(item => item.premiere_connexion === 'oui');
+                break;
+            case 'pas_de_premiere_connexion':
+                dataToExport = dataFiltered.filter(item => item.premiere_connexion === 'non');
+                break;
+            case 'achat_effectue':
+                dataToExport = dataFiltered.filter(item => item.achat_effectue === 'oui');
+                break;
+            case 'pas_dachat_effectue':
+                dataToExport = dataFiltered.filter(item => item.achat_effectue === 'non');
+                break;
+            default:
+                // 'tous_les_invites' - garder toutes les données filtrées
+                break;
+        }
+
+        console.log(`Données à exporter:`, dataToExport);
+        // Ici vous pourrez ajouter la logique d'exportation réelle (PDF, Excel, etc.)
     };
 
     const handleConsultConnectedList = () => {
@@ -293,13 +370,13 @@ export function SuperviseurClientListView() {
     };
 
     const canReset = !!(
-        filters.state.name || 
-        filters.state.status !== 'all' || 
+        filters.state.name ||
+        filters.state.status !== 'all' ||
         filters.state.activity !== 'all' ||
         filters.state.connectionStatus !== 'all' ||
         filters.state.purchaseStatus !== 'all'
     );
-    
+
     const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
     const getTableTitle = () => {
@@ -346,15 +423,15 @@ export function SuperviseurClientListView() {
                 {statistics.length > 0 && (
                     <Grid container spacing={3} sx={{ mb: 3 }}>
                         {statistics.map((stat, index) => (
-                            <Grid 
-                                key={index} 
-                                size={{ 
-                                    xs: 12, 
-                                    md: activeTab === 'invites' ? 2.4 : 3 
+                            <Grid
+                                key={index}
+                                size={{
+                                    xs: 12,
+                                    md: activeTab === 'invites' ? 2.4 : 3
                                 }}
                             >
-                                <SuperviseurWidgetSummary 
-                                    title={stat.title} 
+                                <SuperviseurWidgetSummary
+                                    title={stat.title}
                                     total={stat.total}
                                 />
                             </Grid>
@@ -365,13 +442,14 @@ export function SuperviseurClientListView() {
                 <Card>
                     {/* Boutons d'actions selon l'onglet */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2, pt: 2 }}>
+                        {/* Bouton d'export pour l'onglet "demandes" */}
                         {activeTab === 'demandes' && (
                             <Button
                                 variant="contained"
                                 color="info"
                                 onClick={handleExportPDF}
                                 startIcon={<Iconify icon="eva:download-fill" />}
-                                sx={{ 
+                                sx={{
                                     bgcolor: 'cyan',
                                     color: 'black',
                                     '&:hover': { bgcolor: 'darkturquoise' }
@@ -380,13 +458,15 @@ export function SuperviseurClientListView() {
                                 Exporter la liste des demandes de participations (PDF&EXCEL)
                             </Button>
                         )}
+
+                        {/* Bouton de consultation pour l'onglet "participants" */}
                         {activeTab === 'participants' && (
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={handleConsultConnectedList}
                                 startIcon={<Iconify icon="eva:eye-fill" />}
-                                sx={{ 
+                                sx={{
                                     bgcolor: '#1976d2',
                                     '&:hover': { bgcolor: '#115293' }
                                 }}
@@ -396,54 +476,37 @@ export function SuperviseurClientListView() {
                         )}
                     </Box>
 
-                    {/* Filtres avancés pour les onglets invités et participants */}
-                    {(activeTab === 'invites' || activeTab === 'participants') && (
-                        <Box sx={{ display: 'flex', gap: 2, p: 2.5, pt: 0 }}>
-                            <FormControl size="small" sx={{ minWidth: 200 }}>
-                                <InputLabel>Toutes les activités</InputLabel>
+                    {/* **NOUVEAU: Système d'exportation pour l'onglet "invités"** */}
+                    {activeTab === 'invites' && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2.5, pt: 0 }}>
+                            {/* Bouton d'exportation */}
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleExportInvitesList}
+                                startIcon={<Iconify icon="eva:download-fill" />}
+                                sx={{
+                                    bgcolor: '#1976d2',
+                                    '&:hover': { bgcolor: '#115293' }
+                                }}
+                            >
+                                Exporter la liste
+                            </Button>
+
+                            <FormControl size="small" sx={{ minWidth: 250 }}>
+                                <InputLabel>Exporter la liste</InputLabel>
                                 <Select
-                                    value={filters.state.activity || 'all'}
-                                    onChange={(e) => filters.setState({ activity: e.target.value })}
-                                    label="Toutes les activités"
+                                    value={exportSelection}
+                                    onChange={(e) => setExportSelection(e.target.value)}
+                                    label="Exporter la liste"
                                 >
-                                    <MenuItem value="all">Toutes les activités</MenuItem>
-                                    {ACTIVITY_OPTIONS.map((option) => (
+                                    {EXPORT_INVITE_OPTIONS.map((option) => (
                                         <MenuItem key={option.value} value={option.value}>
                                             {option.label}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-
-                            {activeTab === 'invites' && (
-                                <>
-                                    <FormControl size="small" sx={{ minWidth: 150 }}>
-                                        <InputLabel>Connectés</InputLabel>
-                                        <Select
-                                            value={filters.state.connectionStatus || 'all'}
-                                            onChange={(e) => filters.setState({ connectionStatus: e.target.value })}
-                                            label="Connectés"
-                                        >
-                                            <MenuItem value="all">Tous les invités</MenuItem>
-                                            <MenuItem value="connecté">Connectés</MenuItem>
-                                            <MenuItem value="non connecté">Non connectés</MenuItem>
-                                        </Select>
-                                    </FormControl>
-
-                                    <FormControl size="small" sx={{ minWidth: 180 }}>
-                                        <InputLabel>Première connexion</InputLabel>
-                                        <Select
-                                            value={filters.state.purchaseStatus || 'all'}
-                                            onChange={(e) => filters.setState({ purchaseStatus: e.target.value })}
-                                            label="Première connexion"
-                                        >
-                                            <MenuItem value="all">Tous</MenuItem>
-                                            <MenuItem value="oui">Première connexion</MenuItem>
-                                            <MenuItem value="non">Pas de première connexion</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </>
-                            )}
                         </Box>
                     )}
 
@@ -452,7 +515,31 @@ export function SuperviseurClientListView() {
                         <span className=' pl-1'>({dataFiltered.length} participants)</span>
                     </Typography>
 
-                    {/* Toolbar de filtrage */}
+                    {/* **MODIFIÉ: Filtres avancés - Position modifiée pour les invités** */}
+                    {(activeTab === 'invites') && (
+                        <Box sx={{ display: 'flex', gap: 2, p: 2.5, pt: activeTab === 'invites' ? 1 : 0 }}>
+                            {/* **NOUVEAU: Filtre des activités déplacé en première position pour l'onglet invités** */}
+                            {activeTab === 'invites' && (
+                                <FormControl size="small" sx={{ minWidth: 200 }}>
+                                    <InputLabel>Toutes les activités</InputLabel>
+                                    <Select
+                                        value={filters.state.activity || 'all'}
+                                        onChange={(e) => filters.setState({ activity: e.target.value })}
+                                        label="Toutes les activités"
+                                    >
+                                        <MenuItem value="all">Toutes les activités</MenuItem>
+                                        {ACTIVITY_OPTIONS.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* Toolbar de filtrage (barre de recherche et filtre de statut) */}
                     <ParticipantTableToolbar
                         filters={filters}
                         onResetPage={table.onResetPage}
@@ -489,10 +576,8 @@ export function SuperviseurClientListView() {
                                         <ParticipantTableRow
                                             key={row.id}
                                             row={row}
-                                            onDeleteRow={() => {}}
                                             onViewDetails={() => handleViewDetails(row)}
                                             activeTab={activeTab}
-                                            readOnly={true}
                                         />
                                     ))}
 

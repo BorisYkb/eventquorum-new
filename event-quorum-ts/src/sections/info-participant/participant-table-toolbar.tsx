@@ -41,10 +41,7 @@ export function ParticipantTableToolbar({
   statusOptions, 
   onResetPage, 
   activeTab,
-  onExportExcel,
-  onExportPDF
 }: Props) {
-  const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
 
@@ -91,42 +88,6 @@ export function ParticipantTableToolbar({
         return 'Statut';
     }
   };
-
-  // Gestion des actions d'export
-  const handleExportExcel = useCallback(() => {
-    menuActions.onClose();
-    if (onExportExcel) {
-      onExportExcel();
-    }
-  }, [menuActions, onExportExcel]);
-
-  const handleExportPDF = useCallback(() => {
-    menuActions.onClose();
-    if (onExportPDF) {
-      onExportPDF();
-    }
-  }, [menuActions, onExportPDF]);
-
-  const renderMenuActions = () => (
-    <CustomPopover
-      open={menuActions.open}
-      anchorEl={menuActions.anchorEl}
-      onClose={menuActions.onClose}
-      slotProps={{ arrow: { placement: 'right-top' } }}
-    >
-      <MenuList>
-        <MenuItem onClick={handleExportPDF}>
-          <Iconify icon="solar:printer-minimalistic-bold" />
-          Imprimer (PDF)
-        </MenuItem>
-
-        <MenuItem onClick={handleExportExcel}>
-          <Iconify icon="solar:export-bold" />
-          Exporter (EXCEL)
-        </MenuItem>
-      </MenuList>
-    </CustomPopover>
-  );
 
   return (
     <>
@@ -181,15 +142,8 @@ export function ParticipantTableToolbar({
               ),
             }}
           />
-
-          {/* Menu d'actions */}
-          <IconButton onClick={menuActions.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
         </Box>
       </Box>
-
-      {renderMenuActions()}
     </>
   );
 }
