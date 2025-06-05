@@ -1,5 +1,3 @@
-//src/app/superviseur/participants/components/details-participant.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -12,13 +10,20 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
+import Rating from '@mui/material/Rating';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
 import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
+import { Label } from 'src/components/label';
+import { Scrollbar } from 'src/components/scrollbar';
 import { IParticipantItem } from 'src/types/participant';
 import { SurveyResultsTab } from 'src/sections/survey/survey-results-tab';
 
@@ -30,12 +35,12 @@ interface DetailParticipantProps {
 
 // Onglets pour les détails du participant
 const DETAIL_TABS = [
-  { label: 'Profil', value: 'profil' },
-  { label: 'Résultat enquête', value: 'enquete' },
+  { label: 'Informations personnelles', value: 'profil' },
+  { label: 'Résultats enquête', value: 'enquete' },
   { label: 'Avis', value: 'avis' },
 ];
 
-// Liste des activités disponibles (selon la maquette)
+// Liste des activités disponibles
 const ACTIVITES_DISPONIBLES = [
   'Activité 1',
   'Activité 2',
@@ -43,17 +48,37 @@ const ACTIVITES_DISPONIBLES = [
   'Activité 4'
 ];
 
+// Données mock pour les avis
+const AVIS_PARTICIPANT = [
+  {
+    id: 1,
+    evenementActivite: 'Activité 1',
+    appreciation: 3,
+    commentaire: 'Certaines parties de l\'activité manquaient d\'interaction, ce qui aurait pu rendre l\'expérience plus engageante.',
+    date: '12/05/2024 10H00'
+  },
+  {
+    id: 2,
+    evenementActivite: 'Évènement',
+    appreciation: 5,
+    commentaire: 'Je tiens à exprimer ma profonde satisfaction',
+    date: '12/05/2024 10H00'
+  }
+];
+
 export function DetailParticipant({ participant }: DetailParticipantProps) {
   const theme = useTheme();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('profil');
+
+  // Couleur alternée pour les cartes
+  const alternateColor = '#BCDFFB';
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
 
   const handleRetour = () => {
-    // Retourner à l'onglet participants spécifiquement
     router.push('/superviseur/participants?tab=participants');
   };
 
@@ -68,35 +93,36 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
     }
   };
 
-  const getConnectedStatus = (connecte: string) => {
-    return connecte === 'connecté' ? 'success' : 'error';
-  };
-
   return (
     <DashboardContent maxWidth="xl">
       {/* En-tête avec breadcrumbs et bouton retour */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <CustomBreadcrumbs
-          heading="Détail du participant"
-          
-        />
+        <Box>
+          <CustomBreadcrumbs
+            heading="Détail du participant"
+          />
+          {/* Nom du participant sous le titre */}
+          <Typography variant="h5" sx={{ mt: 1, fontWeight: 600, color: 'text.primary' }}>
+            {participant.nom_prenom || `${participant.nom} ${participant.prenom}`}
+          </Typography>
+        </Box>
 
         <Button
           variant="contained"
           onClick={handleRetour}
           startIcon={<Iconify icon="eva:arrow-back-fill" />}
           sx={{
-            bgcolor: '#ff9800',
+            bgcolor: '#000',
             color: 'white',
-            '&:hover': { bgcolor: '#f57c00' }
+            '&:hover': { bgcolor: '#333' }
           }}
         >
           Retour
         </Button>
       </Box>
 
-      {/* Onglets */}
-      <Card sx={{ mb: 3 }}>
+      {/* Onglets SANS shadow comme la page d'accueil */}
+      <Card sx={{ mb: 3, boxShadow: 'none', border: `1px solid ${theme.palette.divider}` }}>
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -112,24 +138,24 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
         </Tabs>
       </Card>
 
-      {/* Contenu selon l'onglet actif */}
+      {/* Onglet Informations personnelles */}
       {activeTab === 'profil' && (
-        <Card sx={{ p: 3 }}>
-          <Grid container spacing={3}>
-            {/* Section gauche - Informations personnelles */}
-            <Grid size={{ xs: 12, md: 7 }}>
+        <Grid container spacing={3}>
+          {/* Carte principale des informations */}
+          <Grid size={{ xs: 12, md: 8 }}>
+            <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
                 Profil
               </Typography>
 
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                       Nom
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.nom}
+                      {participant.nom || participant.nom_prenom?.split(' ')[0] || '-'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -140,7 +166,7 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                       Prénom
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.prenom}
+                      {participant.prenom || participant.nom_prenom?.split(' ').slice(1).join(' ') || '-'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -172,19 +198,15 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                       Connecté
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          bgcolor: participant.connecte === 'connecté' ? 'success.main' : 'error.main'
-                        }}
-                      />
-                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                        {participant.connecte}
-                      </Typography>
-                    </Box>
+                    {/* Juste un point coloré sans texte */}
+                    <Box
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: '50%',
+                        bgcolor: participant.connecte === 'connecté' ? 'success.main' : 'error.main'
+                      }}
+                    />
                   </Box>
                 </Grid>
 
@@ -194,7 +216,7 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                       Date de connexion
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.premiere_connexion || '10/06/2024'}
+                      {participant.date || '10/06/2024'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -204,12 +226,12 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                       Statut
                     </Typography>
-                    <Chip
-                      label={participant.statut}
+                    <Label
+                      variant="soft"
                       color={getStatusColor(participant.statut)}
-                      size="small"
-                      sx={{ fontWeight: 500 }}
-                    />
+                    >
+                      {participant.statut}
+                    </Label>
                   </Box>
                 </Grid>
 
@@ -219,13 +241,13 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                       Émargement
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.emargement || 'En ligne'}
+                      {participant.emargement === 'signé' ? 'Signé' : 'Non signé'}
                     </Typography>
                   </Box>
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
-                  <Box sx={{ mt: 2 }}>
+                  <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                       Date d'émargement
                     </Typography>
@@ -235,48 +257,94 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
                   </Box>
                 </Grid>
               </Grid>
-            </Grid>
-
-            {/* Section droite - Activités suivies */}
-            <Grid size={{ xs: 12, md: 5 }}>
-              <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
-                  Activités suivies
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  {ACTIVITES_DISPONIBLES.map((activite, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        p: 1,
-                        bgcolor: 'grey.100',
-                        borderRadius: 0.5,
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      {activite}
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            </Grid>
+            </Card>
           </Grid>
-        </Card>
+
+          {/* Carte des activités suivies */}
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Card sx={{ p: 3, backgroundColor: alternateColor }}>
+              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                Activités suivies
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {ACTIVITES_DISPONIBLES.map((activite, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      p: 2,
+                      bgcolor: 'grey.100',
+                      borderRadius: 2,
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      border: 1,
+                      borderColor: 'grey.300'
+                    }}
+                  >
+                    {activite}
+                  </Box>
+                ))}
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
       )}
 
-      {/* Onglets futurs - Placeholders */}
+      {/* Onglet Résultats enquête - Utilise SurveyResultsTab */}
       {activeTab === 'enquete' && (
         <SurveyResultsTab />
       )}
 
+      {/* Onglet Avis */}
       {activeTab === 'avis' && (
-        <Card sx={{ p: 3, textAlign: 'center', minHeight: 200 }}>
-          <Typography variant="h6" color="text.secondary">
-            Avis du participant
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, textAlign: 'center' }}>
+            Liste des avis
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Cette section sera développée prochainement
-          </Typography>
+
+          {/* Tableau des avis */}
+          <TableContainer>
+            <Scrollbar>
+              <Table sx={{ minWidth: 800 }}>
+                <TableHead>
+                  <TableRow sx={{ bgcolor: 'grey.100' }}>
+                    <TableCell sx={{ fontWeight: 600, width: 200 }}>Événement/Activité</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 150, textAlign: 'center' }}>Appréciation</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 400 }}>Commentaire</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 150, textAlign: 'center' }}>Date</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {AVIS_PARTICIPANT.map((avis) => (
+                    <TableRow key={avis.id} hover>
+                      <TableCell>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {avis.evenementActivite}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Rating
+                          value={avis.appreciation}
+                          readOnly
+                          size="small"
+                          sx={{ color: '#ffc107' }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {avis.commentaire}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2" color="text.secondary">
+                          {avis.date}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
         </Card>
       )}
     </DashboardContent>

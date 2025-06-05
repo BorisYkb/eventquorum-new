@@ -81,6 +81,17 @@ export function ParticipantTableRow({
         return value === 'oui' || value === 'Oui' ? 'success' : 'error';
     };
 
+    // Fonction pour gérer l'émargement (signé/non signé)
+    const getEmargementLabel = (emargement: string | undefined) => {
+        if (!emargement) return 'Non';
+        return emargement === 'signé' ? 'Oui' : 'Non';
+    };
+
+    const getEmargementColor = (emargement: string | undefined) => {
+        if (!emargement) return 'error';
+        return emargement === 'signé' ? 'success' : 'error';
+    };
+
     // Rendu conditionnel selon l'onglet actif
     const renderTableCells = () => {
         switch (activeTab) {
@@ -165,11 +176,7 @@ export function ParticipantTableRow({
                             </Label>
                         </TableCell>
 
-                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                            <Typography variant="body2">
-                                {row.activite_selectionnee || '-'}
-                            </Typography>
-                        </TableCell>
+                        {/* SUPPRIMÉ: La colonne "Activité sélectionnée" */}
 
                         <TableCell sx={{ textAlign: 'center' }}>
                             <Label
@@ -241,19 +248,14 @@ export function ParticipantTableRow({
                             </Label>
                         </TableCell>
 
+                        {/* MODIFIÉ: Colonne Emargement avec "Oui"/"Non" au lieu d'icônes */}
                         <TableCell sx={{ textAlign: 'center' }}>
-                            <Tooltip title="Émargement" placement="top" arrow>
-                                <IconButton 
-                                    size="small" 
-                                    color="info"
-                                    onClick={() => {
-                                        // Logique d'émargement
-                                        console.log('Émargement pour:', row.nom_prenom);
-                                    }}
-                                >
-                                    <Iconify icon="solar:document-text-bold" />
-                                </IconButton>
-                            </Tooltip>
+                            <Label
+                                variant="soft"
+                                color={getEmargementColor(row.emargement)}
+                            >
+                                {getEmargementLabel(row.emargement)}
+                            </Label>
                         </TableCell>
 
                         <TableCell>

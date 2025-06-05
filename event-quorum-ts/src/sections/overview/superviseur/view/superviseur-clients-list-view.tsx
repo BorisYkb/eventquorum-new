@@ -20,6 +20,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid2';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
@@ -38,40 +42,36 @@ import {
     TablePaginationCustom,
 } from 'src/components/table';
 
-// Import du composant AdminWidgetSummary
+// Import du composant SuperviseurWidgetSummary
 import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary';
 
 import { ParticipantTableRow } from 'src/sections/info-participant/participant-table-row';
-import { ParticipantTableToolbar } from 'src/sections/info-participant/participant-table-toolbar';
 import { ParticipantTableFiltersResult } from 'src/sections/info-participant/participant-table-filters-result';
 import { DetailsInvite } from 'src/app/superviseur/participants/components/details-invite';
-import DetailParticipantPage from 'src/app/superviseur/participants/components/detail-participants';
 
 // ----------------------------------------------------------------------
 
-// En-têtes pour l'onglet "Liste des demandes d'inscription" (SANS colonne actions/détail)
+// En-têtes pour l'onglet "Liste des demandes d'inscription"
 const DEMANDES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom_prenom', label: 'Nom_prenom', width: 200 },
     { id: 'email', label: 'Email', width: 200 },
     { id: 'telephone', label: 'Téléphone', width: 120 },
     { id: 'date', label: 'Date', width: 120 },
     { id: 'statut', label: 'Statut', width: 100 },
-    // Pas de colonne "Actions" pour les demandes
 ];
 
-// En-têtes pour l'onglet "Liste des invités" (avec colonne détail)
+// En-têtes pour l'onglet "Liste des invités" (SANS la colonne activité sélectionnée)
 const INVITES_TABLE_HEAD: TableHeadCellProps[] = [
-    { id: 'nom_prenom', label: 'Nom_prenom', width: 150 },
-    { id: 'email', label: 'Email', width: 180 },
+    { id: 'nom_prenom', label: 'Nom_prenom', width: 180 },
+    { id: 'email', label: 'Email', width: 200 },
     { id: 'telephone', label: 'Téléphone', width: 120 },
     { id: 'connecte', label: 'Connecté', width: 100 },
     { id: 'premiere_connexion', label: 'Première connexion', width: 140 },
-    { id: 'activite_selectionnee', label: 'Activité sélectionnée', width: 150 },
     { id: 'achat_effectue', label: 'Achat effectué', width: 120 },
     { id: 'detail', label: 'Détail', width: 88 },
 ];
 
-// En-têtes pour l'onglet "Liste des participants" (avec colonne détail)
+// En-têtes pour l'onglet "Liste des participants"
 const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'nom', label: 'Nom', width: 120 },
     { id: 'prenom', label: 'Prénom', width: 120 },
@@ -82,6 +82,7 @@ const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'emargement', label: 'Emargement', width: 120 },
     { id: 'detail', label: 'Détail', width: 88 },
 ];
+
 // Options de statut pour les demandes
 export const DEMANDE_STATUS_OPTIONS = [
     { value: 'acceptée', label: 'Acceptée', color: 'success' },
@@ -105,13 +106,13 @@ export const PARTICIPANT_STATUS_OPTIONS = [
     { value: 'en ligne', label: 'En ligne', color: 'warning' },
 ];
 
-// Options d'activité (selon l'image)
+// Options d'activité
 export const ACTIVITY_OPTIONS = [
     { value: 'activité 1', label: 'Activité 1' },
     { value: 'activité 2', label: 'Activité 2' },
 ];
 
-// **NOUVEAU: Options pour l'exportation des invités**
+// Options pour l'exportation des invités
 export const EXPORT_INVITE_OPTIONS = [
     { value: 'tous_les_invites', label: 'Tous les invités' },
     { value: 'connectes', label: 'Connectés' },
@@ -205,6 +206,10 @@ export function SuperviseurClientListView() {
     const [activeTab, setActiveTab] = useState('demandes');
     const [participantData] = useState<IParticipantItem[]>(_participantList);
     const [selectedInvite, setSelectedInvite] = useState<IParticipantItem | null>(null);
+    const [exportSelection, setExportSelection] = useState<string>('tous_les_invites');
+
+    // Couleur de fond alternée pour les widgets
+    const alternateColor = '#BCDFFB';
 
     useEffect(() => {
         const tabFromUrl = searchParams?.get('tab');
@@ -213,10 +218,6 @@ export function SuperviseurClientListView() {
         }
     }, [searchParams]);
 
-    // **NOUVEAU: État pour gérer l'exportation des invités**
-    const [exportSelection, setExportSelection] = useState<string>('tous_les_invites');
-
-    // Filtres étendus selon l'onglet
     const filters = useSetState<IParticipantTableFilters>({
         name: '',
         status: 'all',
@@ -229,7 +230,6 @@ export function SuperviseurClientListView() {
         setActiveTab(newValue);
         table.onResetPage();
 
-        // Réinitialiser tous les filtres lors du changement d'onglet
         filters.setState({
             name: '',
             status: 'all',
@@ -238,7 +238,6 @@ export function SuperviseurClientListView() {
             purchaseStatus: 'all'
         });
 
-        // Réinitialiser la sélection d'exportation
         setExportSelection('tous_les_invites');
     };
 
@@ -256,31 +255,19 @@ export function SuperviseurClientListView() {
 
     const handleViewDetails = useCallback((participant: IParticipantItem) => {
         if (activeTab === 'participants') {
-            // Pour l'onglet participants, naviguer vers la page de détail
             router.push(`/superviseur/participants/${participant.id}`);
         } else {
-            // Pour les autres onglets (invités), garder le comportement actuel
             setSelectedInvite(participant);
             detailsDialog.onTrue();
         }
     }, [detailsDialog, router, activeTab]);
 
-
-
-    // **MODIFIÉ: Fonction d'export PDF pour les demandes**
     const handleExportPDF = () => {
-        // Logique d'export PDF pour les demandes ici
         console.log('Export PDF des demandes en cours...');
     };
 
-
-
-    // **NOUVEAU: Fonction d'export pour les invités**
     const handleExportInvitesList = () => {
-        // Logique d'export selon la sélection pour les invités
         console.log(`Export de la liste: ${exportSelection}`);
-
-        // Filtrer les données selon la sélection d'exportation
         let dataToExport = dataFiltered;
 
         switch (exportSelection) {
@@ -303,20 +290,16 @@ export function SuperviseurClientListView() {
                 dataToExport = dataFiltered.filter(item => item.achat_effectue === 'non');
                 break;
             default:
-                // 'tous_les_invites' - garder toutes les données filtrées
                 break;
         }
 
         console.log(`Données à exporter:`, dataToExport);
-        // Ici vous pourrez ajouter la logique d'exportation réelle (PDF, Excel, etc.)
     };
 
     const handleConsultConnectedList = () => {
-        // Logique pour consulter la liste des connectés
         console.log('Consultation de la liste des connectés...');
     };
 
-    // Fonction pour obtenir les options de statut selon l'onglet
     const getStatusOptions = () => {
         switch (activeTab) {
             case 'demandes':
@@ -330,7 +313,6 @@ export function SuperviseurClientListView() {
         }
     };
 
-    // Fonction pour obtenir les en-têtes selon l'onglet
     const getTableHeaders = () => {
         switch (activeTab) {
             case 'demandes':
@@ -344,7 +326,6 @@ export function SuperviseurClientListView() {
         }
     };
 
-    // Fonction pour obtenir les statistiques selon l'onglet
     const getStatistics = () => {
         switch (activeTab) {
             case 'demandes':
@@ -363,9 +344,22 @@ export function SuperviseurClientListView() {
                     { title: "Achat effectué", total: 50, color: '#1976d2' }
                 ];
             case 'participants':
-                return []; // Pas de statistiques pour les participants
+                return [];
             default:
                 return [];
+        }
+    };
+
+    const getSearchPlaceholder = () => {
+        switch (activeTab) {
+            case 'demandes':
+                return 'Rechercher une demande (nom, email)...';
+            case 'invites':
+                return 'Rechercher un invité (nom, email)...';
+            case 'participants':
+                return 'Rechercher un participant (nom, email)...';
+            default:
+                return 'Rechercher...';
         }
     };
 
@@ -402,8 +396,8 @@ export function SuperviseurClientListView() {
                     sx={{ mb: { xs: 3, md: 5 } }}
                 />
 
-                {/* Onglets déplacés au-dessus des statistiques */}
-                <Card sx={{ mb: 3 }}>
+                {/* Onglets SANS shadow */}
+                <Card sx={{ mb: 3, boxShadow: 'none', border: `1px solid ${theme.palette.divider}` }}>
                     <Tabs
                         value={activeTab}
                         onChange={handleTabChange}
@@ -419,7 +413,7 @@ export function SuperviseurClientListView() {
                     </Tabs>
                 </Card>
 
-                {/* Statistiques dynamiques selon l'onglet */}
+                {/* Statistiques dynamiques avec couleurs alternées */}
                 {statistics.length > 0 && (
                     <Grid container spacing={3} sx={{ mb: 3 }}>
                         {statistics.map((stat, index) => (
@@ -433,6 +427,7 @@ export function SuperviseurClientListView() {
                                 <SuperviseurWidgetSummary
                                     title={stat.title}
                                     total={stat.total}
+                                    sx={index % 2 === 0 ? { backgroundColor: alternateColor } : {}}
                                 />
                             </Grid>
                         ))}
@@ -440,86 +435,46 @@ export function SuperviseurClientListView() {
                 )}
 
                 <Card>
-                    {/* Boutons d'actions selon l'onglet */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2, pt: 2 }}>
-                        {/* Bouton d'export pour l'onglet "demandes" */}
-                        {activeTab === 'demandes' && (
-                            <Button
-                                variant="contained"
-                                color="info"
-                                onClick={handleExportPDF}
-                                startIcon={<Iconify icon="eva:download-fill" />}
-                                sx={{
-                                    bgcolor: 'cyan',
-                                    color: 'black',
-                                    '&:hover': { bgcolor: 'darkturquoise' }
-                                }}
-                            >
-                                Exporter la liste des demandes de participations (PDF&EXCEL)
-                            </Button>
-                        )}
+                    {/* Section des filtres et boutons - Layout amélioré */}
+                    <Box sx={{ p: 2.5 }}>
+                        
+                        {/* NOUVEAU: Système d'exportation pour l'onglet "invités" EN HAUT */}
+                        {activeTab === 'invites' && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, justifyContent: 'flex-end' }}>
+                                <FormControl size="small" sx={{ minWidth: 250 }}>
+                                    <InputLabel>Exporter la liste</InputLabel>
+                                    <Select
+                                        value={exportSelection}
+                                        onChange={(e) => setExportSelection(e.target.value)}
+                                        label="Exporter la liste"
+                                    >
+                                        {EXPORT_INVITE_OPTIONS.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                        {/* Bouton de consultation pour l'onglet "participants" */}
-                        {activeTab === 'participants' && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleConsultConnectedList}
-                                startIcon={<Iconify icon="eva:eye-fill" />}
-                                sx={{
-                                    bgcolor: '#1976d2',
-                                    '&:hover': { bgcolor: '#115293' }
-                                }}
-                            >
-                                Consulter la liste des connectés
-                            </Button>
-                        )}
-                    </Box>
-
-                    {/* **NOUVEAU: Système d'exportation pour l'onglet "invités"** */}
-                    {activeTab === 'invites' && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2.5, pt: 0 }}>
-                            {/* Bouton d'exportation */}
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleExportInvitesList}
-                                startIcon={<Iconify icon="eva:download-fill" />}
-                                sx={{
-                                    bgcolor: '#1976d2',
-                                    '&:hover': { bgcolor: '#115293' }
-                                }}
-                            >
-                                Exporter la liste
-                            </Button>
-
-                            <FormControl size="small" sx={{ minWidth: 250 }}>
-                                <InputLabel>Exporter la liste</InputLabel>
-                                <Select
-                                    value={exportSelection}
-                                    onChange={(e) => setExportSelection(e.target.value)}
-                                    label="Exporter la liste"
+                                <Button
+                                    variant="contained"
+                                    onClick={handleExportInvitesList}
+                                    startIcon={<Iconify icon="eva:download-fill" />}
+                                    sx={{
+                                        bgcolor: '#000',
+                                        color: 'white',
+                                        '&:hover': { bgcolor: '#333' }
+                                    }}
                                 >
-                                    {EXPORT_INVITE_OPTIONS.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    )}
+                                    Exporter
+                                </Button>
+                            </Box>
+                        )}
 
-                    <Typography variant='h4' sx={{ mt: 3, mb: 2, pl: 5, fontSize: 20 }}>
-                        {getTableTitle()}
-                        <span className=' pl-1'>({dataFiltered.length} participants)</span>
-                    </Typography>
-
-                    {/* **MODIFIÉ: Filtres avancés - Position modifiée pour les invités** */}
-                    {(activeTab === 'invites') && (
-                        <Box sx={{ display: 'flex', gap: 2, p: 2.5, pt: activeTab === 'invites' ? 1 : 0 }}>
-                            {/* **NOUVEAU: Filtre des activités déplacé en première position pour l'onglet invités** */}
-                            {activeTab === 'invites' && (
+                        {/* Filtres pour l'onglet invités - EN BAS (après le système d'exportation) */}
+                        {activeTab === 'invites' && (
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                {/* Filtre des activités - EN PREMIER */}
                                 <FormControl size="small" sx={{ minWidth: 200 }}>
                                     <InputLabel>Toutes les activités</InputLabel>
                                     <Select
@@ -535,17 +490,128 @@ export function SuperviseurClientListView() {
                                         ))}
                                     </Select>
                                 </FormControl>
-                            )}
-                        </Box>
-                    )}
 
-                    {/* Toolbar de filtrage (barre de recherche et filtre de statut) */}
-                    <ParticipantTableToolbar
-                        filters={filters}
-                        onResetPage={table.onResetPage}
-                        statusOptions={getStatusOptions()}
-                        activeTab={activeTab}
-                    />
+                                {/* Filtre de statut - Renommé en "Statut" */}
+                                <FormControl size="small" sx={{ minWidth: 200 }}>
+                                    <InputLabel>Statut</InputLabel>
+                                    <Select
+                                        value={filters.state.status || 'all'}
+                                        onChange={(e) => filters.setState({ status: e.target.value })}
+                                        label="Statut"
+                                    >
+                                        {getStatusOptions().map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* Barre de recherche réduite */}
+                                <TextField
+                                    size="medium"
+                                    value={filters.state.name || ''}
+                                    onChange={(e) => {
+                                        table.onResetPage();
+                                        filters.setState({ name: e.target.value });
+                                    }}
+                                    placeholder={getSearchPlaceholder()}
+                                    sx={{ maxWidth: 400 }}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Box>
+                        )}
+
+                        {/* Filtres pour les autres onglets */}
+                        {activeTab !== 'invites' && (
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                {/* Filtre de statut */}
+                                <FormControl size="small" sx={{ minWidth: 200 }}>
+                                    <InputLabel>
+                                        {activeTab === 'demandes' ? 'Statut des demandes' : 'Statut des participants'}
+                                    </InputLabel>
+                                    <Select
+                                        value={filters.state.status || 'all'}
+                                        onChange={(e) => filters.setState({ status: e.target.value })}
+                                        label={activeTab === 'demandes' ? 'Statut des demandes' : 'Statut des participants'}
+                                    >
+                                        {getStatusOptions().map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* Barre de recherche réduite */}
+                                <TextField
+                                    size="small"
+                                    value={filters.state.name || ''}
+                                    onChange={(e) => {
+                                        table.onResetPage();
+                                        filters.setState({ name: e.target.value });
+                                    }}
+                                    placeholder={getSearchPlaceholder()}
+                                    sx={{ maxWidth: 300 }}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+
+                                {/* Boutons d'action - Alignés à droite */}
+                                <Box sx={{ marginLeft: 'auto' }}>
+                                    {activeTab === 'demandes' && (
+                                        <Tooltip title="la liste des demandes de participations (PDF&EXCEL)" arrow>
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleExportPDF}
+                                                startIcon={<Iconify icon="eva:download-fill" />}
+                                                sx={{
+                                                    bgcolor: '#000',
+                                                    color: 'white',
+                                                    '&:hover': { bgcolor: '#333' }
+                                                }}
+                                            >
+                                                Exporter
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+
+                                    {activeTab === 'participants' && (
+                                        <Tooltip title="La liste des connectés" arrow>
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleConsultConnectedList}
+                                                startIcon={<Iconify icon="eva:eye-fill" />}
+                                                sx={{
+                                                    bgcolor: '#000',
+                                                    color: 'white',
+                                                    '&:hover': { bgcolor: '#333' }
+                                                }}
+                                            >
+                                                Consulter
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                </Box>
+                            </Box>
+                        )}
+                    </Box>
+
+                    <Typography variant='h4' sx={{ mt: 1, mb: 2, pl: 2.5, fontSize: 20 }}>
+                        {getTableTitle()}
+                        <span className=' pl-1'>({dataFiltered.length} participants)</span>
+                    </Typography>
 
                     {/* Résultats des filtres */}
                     {canReset && (

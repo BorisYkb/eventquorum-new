@@ -5,49 +5,65 @@ import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 import { MotivationIllustration } from 'src/assets/illustrations';
-import { EventsYearlyAnalytics } from 'src/sections/overview/admin/admin-event-yearly-analytics';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useMockedSuperviseur } from 'src/auth/hooks';
 
 import { EcommerceWelcome } from '../ecommerce-welcome';
-import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary';
+import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary-2';
 import { SuperviseurRevenueChart } from '../../superviseur/superviseur-revenue-chart';
-import { SuperviseurActivitiesChart } from '../../superviseur/SuperviseurActivitiesChart';
-import { SuperviseurEnqueteChart } from '../../superviseur/superviseur-enquete-chart';
+import { SuperviseurDonutChart } from '../../superviseur/SuperviseurDonutChart';
 import { ActivitiesList } from '../../superviseur/superviseur-activities-list';
 
 // ----------------------------------------------------------------------
 
 export function OverviewSuperviseurView() {
-  const { user } = useMockedUser();
+  const { superviseur } = useMockedSuperviseur();
   const theme = useTheme();
+
+  // Couleur de fond alternée pour les widgets
+  const alternateColor = '#BCDFFB';
 
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 12, lg: 12 }}>
           <EcommerceWelcome
-            title={`Bienvenue 👋\n${user?.displayName}`}
+            title={`Bienvenue 👋\n${superviseur?.displayName}`}
             description="Vous êtes connecté(e) sur l'espace Superviseur de votre évènement."
             img={<MotivationIllustration hideBackground />}
           />
         </Grid>
 
-        {/* Widgets Résumés - 3 par ligne sur 2 lignes */}
+        {/* Widgets Résumés - 3 par ligne sur 2 lignes avec couleurs alternées */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary title="Demandes d'inscription" total={128} />
+          <SuperviseurWidgetSummary 
+            title="Demandes d'inscription" 
+            total={128}
+            sx={{ backgroundColor: alternateColor }}
+          />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary title="Invités" total={86} />
+          <SuperviseurWidgetSummary 
+            title="Invités" 
+            total={86} 
+          />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary title="Participants" total={64} />
+          <SuperviseurWidgetSummary 
+            title="Participants" 
+            total={64}
+            sx={{ backgroundColor: alternateColor }}
+          />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary title="Activités" subtitle="6 payantes / 12 total" total={12} />
+          <SuperviseurWidgetSummary 
+            title="Activités" 
+            subtitle="6 payantes / 12 total" 
+            total={12} 
+          />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
@@ -60,7 +76,11 @@ export function OverviewSuperviseurView() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary title="Enquêtes" subtitle="5 réalisées / 10 prévues" total={10} />
+          <SuperviseurWidgetSummary 
+            title="Enquêtes" 
+            subtitle="5 réalisées / 10 prévues" 
+            total={10} 
+          />
         </Grid>
 
         {/* Graphiques - 3 sur la même ligne */}
@@ -75,24 +95,24 @@ export function OverviewSuperviseurView() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurActivitiesChart
+          <SuperviseurDonutChart
             title="Répartition des activités"
             chart={{
               series: [
-                { label: 'Payantes', value: 9 },
-                { label: 'Gratuites', value: 3 },
+                { label: 'Payantes', value: 9, color: '#4ade80' },
+                { label: 'Gratuites', value: 3, color: '#fbbf24' },
               ],
             }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurEnqueteChart
+          <SuperviseurDonutChart
             title="Suivi des enquêtes"
             chart={{
               series: [
-                { label: 'Réalisées', value: 5 },
-                { label: 'Planifiées', value: 8 },
+                { label: 'Réalisées', value: 5, color: '#4ade80' },
+                { label: 'Planifiées', value: 8, color: '#fb7185' },
               ],
             }}
           />
@@ -124,10 +144,6 @@ export function OverviewSuperviseurView() {
                 hasVideo: false,
                 hasDocument: true 
               },
-            ]}
-            headCells={[
-              { id: 'name', label: 'Activités' },
-              { id: 'status', label: 'Statut' },
             ]}
           />
         </Grid>

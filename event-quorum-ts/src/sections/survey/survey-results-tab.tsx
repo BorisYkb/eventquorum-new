@@ -1,7 +1,7 @@
 // src/sections/survey/survey-results-tab.tsx
 
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -70,7 +70,11 @@ function applyFilter({ surveyData, filters, comparator }: FilterData) {
 export function SurveyResultsTab() {
   const table = useTable();
   const router = useRouter();
+  const params = useParams();
   const [surveyData] = useState<ISurveyItem[]>(_surveyList);
+  
+  // Couleur alternée pour les widgets
+  const alternateColor = '#BCDFFB';
   
   // Filtres
   const filters = useSetState<ISurveyTableFilters>({
@@ -99,10 +103,12 @@ export function SurveyResultsTab() {
   );
 
   const handleViewDetails = useCallback((survey: ISurveyItem) => {
-    // TODO: Naviguer vers la page de détail de l'enquête
-    console.log('Voir détails enquête:', survey.id);
-    // router.push(`/superviseur/surveys/${survey.id}`);
-  }, []);
+    // Naviguer vers la page de détail de l'enquête du participant
+    const participantId = params?.id as string;
+    if (participantId) {
+      router.push(`/superviseur/participants/${participantId}/surveys/${survey.id}`);
+    }
+  }, [router, params]);
 
   const canReset = !!filters.state.name;
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
@@ -110,34 +116,32 @@ export function SurveyResultsTab() {
 
   return (
     <Box>
-      {/* Statistiques */}
+      {/* Statistiques avec couleurs alternées */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Nombre enquêtes"
             total={stats.nombre_enquetes}
-            sx={{ bgcolor: '#FFF4E5', color: 'white' }}
+            sx={{ backgroundColor: alternateColor }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Nombre d'enquête expirée"
             total={stats.nombre_enquetes_expirees}
-            sx={{ bgcolor: '#FBC6C2', color: 'white' }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Nombre enquêtes en cours"
             total={stats.nombre_enquetes_en_cours}
-            sx={{ bgcolor: '#EDF7ED', color: 'white' }}
+            sx={{ backgroundColor: alternateColor }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Nombre enquêtes non démarrée"
             total={stats.nombre_enquetes_non_demarrees}
-            sx={{ bgcolor: '#90CAF9', color: 'white' }}
           />
         </Grid>
       </Grid>

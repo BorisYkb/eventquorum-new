@@ -1,13 +1,15 @@
 // src/sections/survey/survey-table-row.tsx
 
-import { ISurveyItem } from 'src/types/survey';
-
+import Box from '@mui/material/Box';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 
+import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { ISurveyItem } from 'src/types/survey';
 
 // ----------------------------------------------------------------------
 
@@ -17,14 +19,16 @@ type Props = {
 };
 
 export function SurveyTableRow({ row, onViewDetails }: Props) {
+  
+  // Couleurs corrigées selon vos spécifications
   const getStatusColor = (statut: string) => {
     switch (statut) {
       case 'En cours':
-        return 'success';
-      case 'Non démarré':
-        return 'warning';
+        return 'warning'; // Jaune
       case 'Terminé':
-        return 'error';
+        return 'success'; // Vert
+      case 'Non démarré':
+        return 'error'; // Rouge
       default:
         return 'default';
     }
@@ -33,9 +37,9 @@ export function SurveyTableRow({ row, onViewDetails }: Props) {
   const getParticipationColor = (statut: string) => {
     switch (statut) {
       case 'Participer':
-        return 'info';
+        return 'success'; // Vert
       case 'Non participer':
-        return 'warning';
+        return 'error'; // Rouge
       default:
         return 'default';
     }
@@ -43,30 +47,58 @@ export function SurveyTableRow({ row, onViewDetails }: Props) {
 
   return (
     <TableRow hover>
-      <TableCell>{row.titre_enquete}</TableCell>
-      <TableCell>{row.date}</TableCell>
-      <TableCell>{row.date_expiration}</TableCell>
       <TableCell>
-        <Chip
-          label={row.statut}
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          {row.titre_enquete}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Typography variant="body2" color="text.secondary">
+          {row.date}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Typography variant="body2" color="text.secondary">
+          {row.date_expiration}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Label
+          variant="soft"
           color={getStatusColor(row.statut)}
-          size="small"
-          sx={{ fontWeight: 500 }}
-        />
+        >
+          {row.statut}
+        </Label>
       </TableCell>
+
       <TableCell>
-        <Chip
-          label={row.statut_participation}
+        <Label
+          variant="soft"
           color={getParticipationColor(row.statut_participation)}
-          size="small"
-          sx={{ fontWeight: 500 }}
-        />
+        >
+          {row.statut_participation}
+        </Label>
       </TableCell>
-      <TableCell>{row.note}</TableCell>
+
       <TableCell align="center">
-        <IconButton onClick={onViewDetails} color="primary">
-          <Iconify icon="solar:eye-bold" />
-        </IconButton>
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          {row.note}
+        </Typography>
+      </TableCell>
+
+      <TableCell align="center">
+        <Tooltip title="Voir détails" placement="top" arrow>
+          <IconButton
+            onClick={onViewDetails}
+            color="info"
+            size="small"
+          >
+            <Iconify icon="solar:eye-bold" />
+          </IconButton>
+        </Tooltip>
       </TableCell>
     </TableRow>
   );
