@@ -450,7 +450,7 @@ export function SuperviseurClientListView() {
                 <Card>
                     <Box sx={{ p: 2.5 }}>
                         {/* NOUVEAU: Ligne titre + bouton d'action pour tous les onglets */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
                             <Typography variant='h4' sx={{ fontSize: 20 }}>
                                 {getTableTitle()}
                                 <span style={{ paddingLeft: 4 }}>({dataFiltered.length})</span>

@@ -17,6 +17,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
@@ -71,9 +72,6 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('profil');
 
-  // Couleur alternée pour les cartes
-  const alternateColor = '#BCDFFB';
-
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
@@ -92,6 +90,146 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
         return 'default';
     }
   };
+
+  // Fonction pour afficher les points colorés au lieu de Oui/Non
+  const renderConnectionDot = (value: boolean | string) => {
+    const isConnected = typeof value === 'boolean' ? value : (value === 'oui' || value === 'Oui' || value === 'connecté');
+    
+    return (
+      <Box
+        sx={{
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+          backgroundColor: isConnected ? '#22c55e' : '#ef4444', // vert ou rouge
+        }}
+      />
+    );
+  };
+
+  const renderInfoBox = (label: string, value: string | undefined, showIcon?: boolean, iconValue?: string | boolean) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
+      <Typography 
+        sx={{ 
+          minWidth: 180, 
+          fontWeight: 'medium', 
+          color: 'text.secondary',
+          fontSize: '0.9rem',
+          mr: 3
+        }}
+      >
+        {label}
+      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+        {showIcon && iconValue !== undefined && (
+          <Box sx={{ mr: 1.5 }}>
+            {renderConnectionDot(iconValue)}
+          </Box>
+        )}
+        <Typography sx={{ fontWeight: 'medium', fontSize: '0.9rem' }}>
+          {value || '-'}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+  const renderPersonalInfo = () => (
+    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+      <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+        INFORMATIONS PERSONNELLES
+      </Typography>
+      <Stack spacing={1.5}>
+        {renderInfoBox("Nom", participant.nom || participant.nom_prenom?.split(' ')[0])}
+        {renderInfoBox("Prénom", participant.prenom || participant.nom_prenom?.split(' ').slice(1).join(' '))}
+        {renderInfoBox("Email", participant.email)}
+        {renderInfoBox("Téléphone", participant.telephone)}
+        {renderInfoBox("Date d'inscription", participant.date)}
+      </Stack>
+    </Card>
+  );
+
+  const renderConnectionInfo = () => (
+    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+      <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+        STATUT & CONNEXION
+      </Typography>
+      <Stack spacing={1.5}>
+        {renderInfoBox(
+          "Connecté", 
+          participant.connecte === 'connecté' ? 'Oui' : 'Non',
+          true,
+          participant.connecte === 'connecté'
+        )}
+        {renderInfoBox("Date de connexion", participant.date || '10/06/2024')}
+        {renderInfoBox("Statut de participation", participant.statut)}
+        {renderInfoBox("Mode de participation", participant.statut === 'en ligne' ? 'En ligne' : 'En présentiel')}
+        {renderInfoBox("Dernière activité", "Aujourd'hui 15:30")}
+        {renderInfoBox("Temps de connexion", "2h 45min")}
+      </Stack>
+    </Card>
+  );
+
+  const renderParticipationInfo = () => (
+    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+      <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+        ÉMARGEMENT & PARTICIPATION
+      </Typography>
+      <Stack spacing={1.5}>
+        {renderInfoBox(
+          "Émargement", 
+          participant.emargement === 'signé' ? 'Signé' : 'Non signé',
+          true,
+          participant.emargement === 'signé'
+        )}
+        {renderInfoBox("Date d'émargement", participant.emargement === 'signé' ? '10/06/2024' : '-')}
+        {renderInfoBox("Heure d'émargement", participant.emargement === 'signé' ? '08:30' : '-')}
+        {renderInfoBox("Activité sélectionnée", participant.activite_selectionnee || '-')}
+        {renderInfoBox("Présence confirmée", participant.emargement === 'signé' ? 'Oui' : 'Non')}
+        {renderInfoBox("Taux de participation", "85%")}
+      </Stack>
+    </Card>
+  );
+
+  const renderActivitiesCard = () => (
+    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+      <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+        ACTIVITÉS SUIVIES
+      </Typography>
+      <Stack spacing={2}>
+        {ACTIVITES_DISPONIBLES.map((activite, index) => (
+          <Box
+            key={index}
+            sx={{
+              p: 2.5,
+              bgcolor: 'grey.50',
+              borderRadius: 2,
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              border: 1,
+              borderColor: 'grey.200',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              '&:hover': {
+                bgcolor: 'grey.100',
+                borderColor: 'primary.light'
+              }
+            }}
+          >
+            <Typography sx={{ fontWeight: 500 }}>{activite}</Typography>
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                bgcolor: index < 2 ? 'success.main' : 'grey.400', // 2 premières activités "suivies"
+              }}
+            />
+          </Box>
+        ))}
+      </Stack>
+    </Card>
+  );
 
   return (
     <DashboardContent maxWidth="xl">
@@ -138,155 +276,27 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
         </Tabs>
       </Card>
 
-      {/* Onglet Informations personnelles */}
+      {/* Onglet Informations personnelles redesigné */}
       {activeTab === 'profil' && (
-        <Grid container spacing={3}>
-          {/* Carte principale des informations */}
-          <Grid size={{ xs: 12, md: 8 }}>
-            <Card sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Profil
-              </Typography>
-
-              <Grid container spacing={3}>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Nom
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.nom || participant.nom_prenom?.split(' ')[0] || '-'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Prénom
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.prenom || participant.nom_prenom?.split(' ').slice(1).join(' ') || '-'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Email
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.email}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Téléphone
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.telephone}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Connecté
-                    </Typography>
-                    {/* Juste un point coloré sans texte */}
-                    <Box
-                      sx={{
-                        width: 12,
-                        height: 12,
-                        borderRadius: '50%',
-                        bgcolor: participant.connecte === 'connecté' ? 'success.main' : 'error.main'
-                      }}
-                    />
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Date de connexion
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.date || '10/06/2024'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Statut
-                    </Typography>
-                    <Label
-                      variant="soft"
-                      color={getStatusColor(participant.statut)}
-                    >
-                      {participant.statut}
-                    </Label>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                      Émargement
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.emargement === 'signé' ? 'Signé' : 'Non signé'}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid size={{ xs: 12 }}>
-                  <Box sx={{ mt: 1 }}>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                      Date d'émargement
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      10/06/2024
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Card>
+        <Box sx={{ bgcolor: 'grey.50', p: 3, borderRadius: 2 }}>
+          <Grid container spacing={3}>
+            {/* Première ligne */}
+            <Grid xs={12} md={6}>
+              {renderPersonalInfo()}
+            </Grid>
+            <Grid xs={12} md={6}>
+              {renderConnectionInfo()}
+            </Grid>
+            
+            {/* Deuxième ligne */}
+            <Grid xs={12} md={6}>
+              {renderParticipationInfo()}
+            </Grid>
+            <Grid xs={12} md={6}>
+              {renderActivitiesCard()}
+            </Grid>
           </Grid>
-
-          {/* Carte des activités suivies */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ p: 3, backgroundColor: alternateColor }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Activités suivies
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                {ACTIVITES_DISPONIBLES.map((activite, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      p: 2,
-                      bgcolor: 'grey.100',
-                      borderRadius: 2,
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      border: 1,
-                      borderColor: 'grey.300'
-                    }}
-                  >
-                    {activite}
-                  </Box>
-                ))}
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
+        </Box>
       )}
 
       {/* Onglet Résultats enquête - Utilise SurveyResultsTab */}

@@ -99,8 +99,8 @@ export function OverviewSuperviseurView() {
           <SuperviseurRevenueChart
             title="Évolution des revenus"
             chart={{
-              categories: ['Jour 1', 'Jour 2', 'Jour 3', 'Jour 4'],
-              series: [{ data: [300000, 450000, 600000, 500000] }],
+              categories: ['Jour 1', 'Jour 2', 'Jour 3', 'Jour 4', 'Jour 5'],
+              series: [{ data: [300000, 450000, 650000, 800000, 950000] }],
             }}
           />
         </Grid>

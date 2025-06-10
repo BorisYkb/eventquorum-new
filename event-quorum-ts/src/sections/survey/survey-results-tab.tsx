@@ -16,7 +16,7 @@ import { useSetState } from 'minimal-shared/hooks';
 import { useTable, emptyRows, TableNoData, getComparator, TableEmptyRows, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Iconify } from 'src/components/iconify';
-import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary';
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 
 import { ISurveyItem, ISurveyTableFilters } from 'src/types/survey';
 import { _surveyList, getSurveyStats } from 'src/_mock/_surveys';
@@ -73,9 +73,6 @@ export function SurveyResultsTab() {
   const params = useParams();
   const [surveyData] = useState<ISurveyItem[]>(_surveyList);
   
-  // Couleur alternée pour les widgets
-  const alternateColor = '#BCDFFB';
-  
   // Filtres
   const filters = useSetState<ISurveyTableFilters>({
     name: '',
@@ -114,47 +111,68 @@ export function SurveyResultsTab() {
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
   const stats = getSurveyStats();
 
+  // Couleurs alternées pour les widgets
+  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
+    const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
+    return colors[index % colors.length];
+  };
+
   return (
     <Box>
-      {/* Statistiques avec couleurs alternées */}
+      {/* Statistiques avec le nouveau SuperviseurWidgetSummary */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Nombre enquêtes"
             total={stats.nombre_enquetes}
-            sx={{ backgroundColor: alternateColor }}
+            color={getWidgetColor(0)}
+            sx={{ height: 180 }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
-            title="Nombre d'enquête expirée"
+            title="Enquêtes expirées"
             total={stats.nombre_enquetes_expirees}
+            color={getWidgetColor(1)}
+            sx={{ height: 180 }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
-            title="Nombre enquêtes en cours"
+            title="Enquêtes en cours"
             total={stats.nombre_enquetes_en_cours}
-            sx={{ backgroundColor: alternateColor }}
+            color={getWidgetColor(2)}
+            sx={{ height: 180 }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
-            title="Nombre enquêtes non démarrée"
+            title="Enquêtes non démarrées"
             total={stats.nombre_enquetes_non_demarrees}
+            color={getWidgetColor(3)}
+            sx={{ height: 180 }}
           />
         </Grid>
       </Grid>
 
-      {/* Tableau */}
+      {/* Tableau des enquêtes */}
       <Card>
-        {/* Barre de recherche */}
-        <Box sx={{ p: 2.5, pb: 0 }}>
+        {/* En-tête du tableau */}
+        <Box sx={{ p: 2.5, pb: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Liste des enquêtes
+            <Typography component="span" sx={{ color: 'text.secondary', ml: 1 }}>
+              ({dataFiltered.length})
+            </Typography>
+          </Typography>
+
+          {/* Barre de recherche */}
           <TextField
             fullWidth
             value={filters.state.name}
             onChange={handleFilterName}
-            placeholder="Recherche..."
+            placeholder="Rechercher une enquête (titre, statut)..."
+            sx={{ maxWidth: 400 }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
