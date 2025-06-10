@@ -1,3 +1,4 @@
+//src/sections/gestionclient/ficheclient/tabs/ficheclient-home.tsx
 import { Avatar, Box, Card, CardHeader, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { IClientItem } from 'src/types/client';

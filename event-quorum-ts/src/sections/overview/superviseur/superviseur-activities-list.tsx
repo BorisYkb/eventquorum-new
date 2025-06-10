@@ -40,14 +40,26 @@ export type ActivitiesListProps = CardProps & {
 export function ActivitiesList({ title, subheader, tableData, ...other }: ActivitiesListProps) {
   const theme = useTheme();
 
+  // Modifier les données pour avoir des éléments grisés
+  const modifiedTableData = tableData.map((item, index) => {
+    if (index === 1) { // Deuxième élément
+      return {
+        ...item,
+        link: '', // Pas de lien
+        hasVideo: false // Pas de vidéo
+      };
+    }
+    return item;
+  });
+
   const getStatusColor = (status: ActivityData['status']) => {
     switch (status) {
       case 'Terminé':
-        return 'success';
+        return 'success'; // Vert
       case 'En cours':
-        return 'info';
+        return 'warning'; // Jaune
       case 'Non démarrer':
-        return 'warning';
+        return 'error'; // Rouge
       default:
         return 'default';
     }
@@ -74,7 +86,7 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
         sx={{ pb: 3 }}
         action={
           <Chip 
-            label={`${tableData.length} activités`}
+            label={`${modifiedTableData.length} activités`}
             size="small"
             variant="soft"
             color="primary"
@@ -87,10 +99,10 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
           <Table sx={{ minWidth: { xs: 650, md: 800 } }}>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ width: { xs: '60%', md: '50%' } }}>
+                <TableCell sx={{ width: { xs: '60%', md: '45%' } }}>
                   <Typography variant="subtitle2">Activité</Typography>
                 </TableCell>
-                <TableCell sx={{ width: { xs: '25%', md: '30%' }, display: { xs: 'none', sm: 'table-cell' } }}>
+                <TableCell sx={{ width: { xs: '25%', md: '35%' }, display: { xs: 'none', sm: 'table-cell' } }} align="center">
                   <Typography variant="subtitle2">Ressources</Typography>
                 </TableCell>
                 <TableCell sx={{ width: { xs: '40%', md: '20%' } }} align="center">
@@ -100,7 +112,7 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
             </TableHead>
 
             <TableBody>
-              {tableData.map((row, index) => (
+              {modifiedTableData.map((row, index) => (
                 <TableRow 
                   key={index}
                   hover
@@ -132,30 +144,39 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                         >
                           {row.name}
                         </Typography>
-                        
-                        {row.link && (
-                          <Link 
-                            href={row.link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            variant="body2"
-                            sx={{ 
-                              color: 'text.secondary',
-                              textDecoration: 'none',
-                              '&:hover': { textDecoration: 'underline' }
-                            }}
-                          >
-                            <Iconify icon="eva:external-link-fill" width={14} sx={{ mr: 0.5 }} />
-                            Lien externe
-                          </Link>
-                        )}
                       </Box>
                     </Box>
                   </TableCell>
 
                   {/* Colonne Ressources - Cachée sur mobile */}
-                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }} align="center">
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center' }}>
+                      {/* Icône de lien externe */}
+                      <Tooltip title={row.link ? "Lien externe" : "Pas de lien"}>
+                        <IconButton 
+                          component={row.link ? "a" : "div"}
+                          href={row.link || undefined}
+                          target={row.link ? "_blank" : undefined}
+                          rel={row.link ? "noopener noreferrer" : undefined}
+                          size="small"
+                          sx={{
+                            color: row.link ? 'primary.main' : 'text.disabled',
+                            backgroundColor: row.link 
+                              ? alpha(theme.palette.primary.main, 0.12)
+                              : alpha(theme.palette.grey[500], 0.08),
+                            '&:hover': {
+                              backgroundColor: row.link 
+                                ? alpha(theme.palette.primary.main, 0.2)
+                                : alpha(theme.palette.grey[500], 0.16),
+                            },
+                            cursor: row.link ? 'pointer' : 'default',
+                          }}
+                        >
+                          <Iconify icon="eva:external-link-fill" width={16} />
+                        </IconButton>
+                      </Tooltip>
+
+                      {/* Icône vidéo */}
                       <Tooltip title={row.hasVideo ? "Vidéo disponible" : "Pas de vidéo"}>
                         <IconButton 
                           size="small"
@@ -175,6 +196,7 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                         </IconButton>
                       </Tooltip>
                       
+                      {/* Icône document */}
                       <Tooltip title={row.hasDocument ? "Document disponible" : "Pas de document"}>
                         <IconButton 
                           size="small"
@@ -202,7 +224,6 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                       <Label 
                         variant="soft" 
                         color={getStatusColor(row.status)}
-                        startIcon={<Iconify icon={getStatusIcon(row.status)} />}
                         sx={{ 
                           minWidth: { xs: 80, sm: 100 },
                           fontSize: { xs: '0.75rem', sm: '0.875rem' }
@@ -217,6 +238,32 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                         gap: 0.5,
                         mt: 0.5
                       }}>
+                        {row.link ? (
+                          <Tooltip title="Lien externe">
+                            <IconButton 
+                              component="a"
+                              href={row.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              size="small"
+                              sx={{ p: 0 }}
+                            >
+                              <Iconify 
+                                icon="eva:external-link-fill" 
+                                width={16} 
+                                sx={{ color: 'primary.main' }}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Pas de lien">
+                            <Iconify 
+                              icon="eva:external-link-fill" 
+                              width={16} 
+                              sx={{ color: 'text.disabled' }}
+                            />
+                          </Tooltip>
+                        )}
                         {row.hasVideo && (
                           <Tooltip title="Vidéo disponible">
                             <Iconify 
@@ -260,9 +307,6 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
           flexWrap: 'wrap',
           gap: 1
         }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Total: {tableData.length} activités
-          </Typography>
           
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -273,19 +317,7 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                 backgroundColor: theme.palette.success.main 
               }} />
               <Typography variant="caption">
-                {tableData.filter(item => item.status === 'Terminé').length} Terminées
-              </Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Box sx={{ 
-                width: 8, 
-                height: 8, 
-                borderRadius: '50%', 
-                backgroundColor: theme.palette.info.main 
-              }} />
-              <Typography variant="caption">
-                {tableData.filter(item => item.status === 'En cours').length} En cours
+                {modifiedTableData.filter(item => item.status === 'Terminé').length} Terminées
               </Typography>
             </Box>
             
@@ -297,7 +329,19 @@ export function ActivitiesList({ title, subheader, tableData, ...other }: Activi
                 backgroundColor: theme.palette.warning.main 
               }} />
               <Typography variant="caption">
-                {tableData.filter(item => item.status === 'Non démarrer').length} Non démarrées
+                {modifiedTableData.filter(item => item.status === 'En cours').length} En cours
+              </Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box sx={{ 
+                width: 8, 
+                height: 8, 
+                borderRadius: '50%', 
+                backgroundColor: theme.palette.error.main 
+              }} />
+              <Typography variant="caption">
+                {modifiedTableData.filter(item => item.status === 'Non démarrer').length} Non démarrées
               </Typography>
             </Box>
           </Box>

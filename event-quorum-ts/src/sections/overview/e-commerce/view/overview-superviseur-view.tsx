@@ -13,6 +13,7 @@ import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-wid
 import { SuperviseurRevenueChart } from '../../superviseur/superviseur-revenue-chart';
 import { SuperviseurDonutChart } from '../../superviseur/SuperviseurDonutChart';
 import { ActivitiesList } from '../../superviseur/superviseur-activities-list';
+import { FicheClientHomeWidget } from 'src/sections/gestionclient/ficheclient/ficheclient-home-widget';
 
 // ----------------------------------------------------------------------
 
@@ -36,33 +37,39 @@ export function OverviewSuperviseurView() {
 
         {/* Widgets Résumés - 3 par ligne sur 2 lignes avec couleurs alternées */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary 
-            title="Demandes d'inscription" 
+          <SuperviseurWidgetSummary
+            title="Demandes d'inscription"
             total={128}
-            sx={{ backgroundColor: alternateColor }}
+            color="secondary"
+            sx={{ height: 180 }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary 
-            title="Invités" 
-            total={86} 
+          <SuperviseurWidgetSummary
+            title="Invités"
+            total={86}
+            color="primary"
+            sx={{ height: 180 }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary 
-            title="Participants" 
+          <SuperviseurWidgetSummary
+            title="Participants"
             total={64}
-            sx={{ backgroundColor: alternateColor }}
+            color="success"
+            sx={{ height: 180 }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary 
-            title="Activités" 
-            subtitle="6 payantes / 12 total" 
-            total={12} 
+          <SuperviseurWidgetSummary
+            title="Activités"
+            subtitle="6 payantes / 12 total"
+            total={12}
+            color="warning"
+            sx={{ height: 180 }}
           />
         </Grid>
 
@@ -71,15 +78,19 @@ export function OverviewSuperviseurView() {
             title="Montant reçu"
             total={1850000}
             unit="FCFA"
-            color={theme.palette.primary.main}
+            subtitle="1 000 tickets achetés"
+            color="error"
+            sx={{ height: 180 }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary 
-            title="Enquêtes" 
-            subtitle="5 réalisées / 10 prévues" 
-            total={10} 
+          <SuperviseurWidgetSummary
+            title="Enquêtes"
+            subtitle="5 réalisées / 10 prévues"
+            total={10}
+            color="info"
+            sx={{ height: 180 }}
           />
         </Grid>
 
@@ -123,26 +134,26 @@ export function OverviewSuperviseurView() {
           <ActivitiesList
             title="Liste des activités"
             tableData={[
-              { 
-                name: 'Workshop cyber', 
-                link: 'https://www.youtube.com', 
+              {
+                name: 'Workshop cyber',
+                link: 'https://www.youtube.com',
                 status: 'Terminé',
                 hasVideo: true,
-                hasDocument: true 
+                hasDocument: true
               },
-              { 
-                name: 'Workshop Dev', 
-                link: 'https://www.youtube.com', 
+              {
+                name: 'Workshop Dev',
+                link: 'https://www.youtube.com',
                 status: 'En cours',
                 hasVideo: true,
-                hasDocument: true 
+                hasDocument: true
               },
-              { 
-                name: 'Workshop cyber', 
-                link: 'https://www.youtube.com', 
+              {
+                name: 'Workshop cyber',
+                link: 'https://www.youtube.com',
                 status: 'Non démarrer',
                 hasVideo: false,
-                hasDocument: true 
+                hasDocument: true
               },
             ]}
           />

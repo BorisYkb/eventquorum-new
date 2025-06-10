@@ -48,6 +48,7 @@
     "@fullcalendar/timeline": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
     "@iconify/react": "^5.0.2",
+    "@mui/icons-material": "^6.4.12",
     "@mui/lab": "^6.0.0-beta.18",
     "@mui/material": "^6.1.10",
     "@mui/material-nextjs": "^6.1.9",

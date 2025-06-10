@@ -81,6 +81,24 @@ export function ParticipantTableRow({
         return value === 'oui' || value === 'Oui' ? 'success' : 'error';
     };
 
+    // NOUVEAU: Fonction pour afficher les points colorés au lieu de Oui/Non
+    const renderConnectionDot = (value: boolean | string) => {
+        const isConnected = typeof value === 'boolean' ? value : (value === 'oui' || value === 'Oui' || value === 'connecté');
+        
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: '50%',
+                        backgroundColor: isConnected ? '#22c55e' : '#ef4444', // vert ou rouge
+                    }}
+                />
+            </Box>
+        );
+    };
+
     // Fonction pour gérer l'émargement (signé/non signé)
     const getEmargementLabel = (emargement: string | undefined) => {
         if (!emargement) return 'Non';
@@ -158,13 +176,9 @@ export function ParticipantTableRow({
                             </Typography>
                         </TableCell>
 
+                        {/* MODIFIÉ: Point coloré au lieu de Oui/Non */}
                         <TableCell sx={{ textAlign: 'center' }}>
-                            <Label
-                                variant="soft"
-                                color={getBooleanColor(row.connecte)}
-                            >
-                                {getBooleanLabel(row.connecte)}
-                            </Label>
+                            {renderConnectionDot(row.connecte)}
                         </TableCell>
 
                         <TableCell sx={{ textAlign: 'center' }}>
@@ -175,8 +189,6 @@ export function ParticipantTableRow({
                                 {getBooleanLabel(row.premiere_connexion)}
                             </Label>
                         </TableCell>
-
-                        {/* SUPPRIMÉ: La colonne "Activité sélectionnée" */}
 
                         <TableCell sx={{ textAlign: 'center' }}>
                             <Label
@@ -206,15 +218,10 @@ export function ParticipantTableRow({
             case 'participants':
                 return (
                     <>
+                        {/* MODIFIÉ: Une seule colonne pour nom_prenom */}
                         <TableCell>
                             <Typography variant="subtitle2" noWrap>
-                                {row.nom || row.nom_prenom?.split(' ')[0] || '-'}
-                            </Typography>
-                        </TableCell>
-
-                        <TableCell>
-                            <Typography variant="subtitle2" noWrap>
-                                {row.prenom || row.nom_prenom?.split(' ').slice(1).join(' ') || '-'}
+                                {row.nom_prenom}
                             </Typography>
                         </TableCell>
 
@@ -230,13 +237,9 @@ export function ParticipantTableRow({
                             </Typography>
                         </TableCell>
 
+                        {/* MODIFIÉ: Point coloré au lieu de Oui/Non */}
                         <TableCell sx={{ textAlign: 'center' }}>
-                            <Label
-                                variant="soft"
-                                color={getBooleanColor(row.connecte)}
-                            >
-                                {getBooleanLabel(row.connecte)}
-                            </Label>
+                            {renderConnectionDot(row.connecte)}
                         </TableCell>
 
                         <TableCell>
@@ -248,7 +251,7 @@ export function ParticipantTableRow({
                             </Label>
                         </TableCell>
 
-                        {/* MODIFIÉ: Colonne Emargement avec "Oui"/"Non" au lieu d'icônes */}
+                        {/* Colonne Emargement avec "Oui"/"Non" */}
                         <TableCell sx={{ textAlign: 'center' }}>
                             <Label
                                 variant="soft"
