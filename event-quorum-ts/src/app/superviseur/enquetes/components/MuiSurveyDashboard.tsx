@@ -134,7 +134,7 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+    <Box sx={{ p: 3, backgroundColor: '#ffff', minHeight: '100vh' }}>
       <Typography variant="h4" component="h1" sx={{ mb: 3, fontWeight: 'bold' }}>
         Gestion des Enquêtes
       </Typography>
@@ -207,7 +207,7 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
       </Grid>
 
       {/* Barre de recherche et filtres */}
-      <Card sx={{ p: 2, mb: 3 }}>
+      <Card sx={{ p: 2, mb: 3, border: 'none'}}>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           <TextField
             placeholder="Rechercher par titre, activité ou code..."

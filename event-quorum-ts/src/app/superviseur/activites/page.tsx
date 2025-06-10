@@ -25,11 +25,13 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 
 // Types
 interface Activity {
@@ -93,16 +95,16 @@ export default function ActivitiesPage() {
     router.push('/superviseur/activites/participants');
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (status) {
       case 'En cours':
-        return { bg: '#E8F5E8', color: '#2E7D32', label: 'En cours' };
+        return 'success';
       case 'Non démarrée':
-        return { bg: '#FFF3E0', color: '#F57C00', label: 'Non démarrée' };
+        return 'warning';
       case 'Terminée':
-        return { bg: '#FFE8E8', color: '#D32F2F', label: 'Terminée' };
+        return 'error';
       default:
-        return { bg: '#F5F5F5', color: '#757575', label: status };
+        return 'default';
     }
   };
 
@@ -145,33 +147,11 @@ export default function ActivitiesPage() {
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  // Données pour les cartes de statistiques
-  const statsData = [
-    {
-      title: 'Toutes les activités',
-      value: activities.length,
-      bgcolor: '#E3F2FD',
-      borderColor: '#BBDEFB'
-    },
-    {
-      title: 'En cours',
-      value: activities.filter(a => a.statut === 'En cours').length,
-      bgcolor: '#F5F5F5',
-      borderColor: '#E0E0E0'
-    },
-    {
-      title: 'Non démarrées',
-      value: activities.filter(a => a.statut === 'Non démarrée').length,
-      bgcolor: '#E3F2FD',
-      borderColor: '#BBDEFB'
-    },
-    {
-      title: 'Terminées',
-      value: activities.filter(a => a.statut === 'Terminée').length,
-      bgcolor: '#F5F5F5',
-      borderColor: '#E0E0E0'
-    }
-  ];
+  // Couleurs alternées pour les widgets
+  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
+    const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
+    return colors[index % colors.length];
+  };
 
   return (
     <DashboardContent>
@@ -184,103 +164,105 @@ export default function ActivitiesPage() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      {/* Cartes de statistiques - Style identique aux images */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        {statsData.map((stat, index) => (
-          <Grid xs={12} sm={6} md={3} key={index}>
-            <Card sx={{
-              p: 3,
-              textAlign: 'center',
-              bgcolor: stat.bgcolor,
-              border: `1px solid ${stat.borderColor}`,
-              borderRadius: 3,
-              height: '100%',
-              minHeight: 120
-            }}>
-              <Typography variant="caption" color="text.secondary" gutterBottom sx={{ fontSize: 12 }}>
-                {stat.title}
-              </Typography>
-              <Typography variant="h2" sx={{
-                color: '#1a1a1a',
-                fontWeight: 'bold',
-                fontSize: '3rem',
-                lineHeight: 1
-              }}>
-                {stat.value}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+      {/* Statistiques avec SuperviseurWidgetSummary */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Toutes les activités"
+            total={activities.length}
+            color={getWidgetColor(0)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="En cours"
+            total={activities.filter(a => a.statut === 'En cours').length}
+            color={getWidgetColor(1)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Non démarrées"
+            total={activities.filter(a => a.statut === 'Non démarrée').length}
+            color={getWidgetColor(2)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Terminées"
+            total={activities.filter(a => a.statut === 'Terminée').length}
+            color={getWidgetColor(3)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
       </Grid>
 
-      {/* Barre de recherche et filtres */}
-      <Box sx={{ mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid xs={12} md={6}>
+      {/* Tableau */}
+      <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        {/* Titre et filtres */}
+        <Box sx={{ p: 2.5 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6" sx={{ fontSize: 20 }}>
+              Liste des activités
+              <span style={{ paddingLeft: 4 }}>({filteredActivities.length})</span>
+            </Typography>
+          </Box>
+
+          {/* Ligne des filtres et recherche */}
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
+            {/* Filtres à gauche */}
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <FormControl size="small" sx={{ minWidth: 200 }}>
+                <InputLabel sx={{ fontSize: '0.8rem', px: 0.5 }}>Sélectionner un statut</InputLabel>
+                <Select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  label="Sélectionner un statut"
+                  sx={{ fontSize: '0.8rem' }}
+                >
+                  <MenuItem value="" sx={{ fontSize: '0.8rem' }}>Tous les statuts</MenuItem>
+                  <MenuItem value="En cours" sx={{ fontSize: '0.8rem' }}>En cours</MenuItem>
+                  <MenuItem value="Non démarrée" sx={{ fontSize: '0.8rem' }}>Non démarrée</MenuItem>
+                  <MenuItem value="Terminée" sx={{ fontSize: '0.8rem' }}>Terminée</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ minWidth: 200 }}>
+                <InputLabel sx={{ fontSize: '0.8rem', px: 0.5 }}>Sélectionner une activité</InputLabel>
+                <Select
+                  value={selectedActivity}
+                  onChange={(e) => setSelectedActivity(e.target.value)}
+                  label="Sélectionner une activité"
+                  sx={{ fontSize: '0.8rem' }}
+                >
+                  <MenuItem value="" sx={{ fontSize: '0.8rem' }}>Toutes les activités</MenuItem>
+                  <MenuItem value="Activité 1" sx={{ fontSize: '0.8rem' }}>Activité 1</MenuItem>
+                  <MenuItem value="Activité 2" sx={{ fontSize: '0.8rem' }}>Activité 2</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Barre de recherche à droite */}
             <TextField
-              fullWidth
+              size="small"
               placeholder="Rechercher par titre, activité ou code..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ width: 350 }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: '#9E9E9E' }} />
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                   </InputAdornment>
                 ),
               }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  bgcolor: 'white'
-                }
-              }}
             />
-          </Grid>
-          <Grid xs={12} md={3}>
-            <TextField
-              select
-              fullWidth
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              displayEmpty
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  bgcolor: 'white'
-                }
-              }}
-            >
-              <MenuItem value="">Statut</MenuItem>
-              <MenuItem value="En cours">En cours</MenuItem>
-              <MenuItem value="Non démarrée">Non démarrée</MenuItem>
-              <MenuItem value="Terminée">Terminée</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid xs={12} md={3}>
-            <TextField
-              select
-              fullWidth
-              value={selectedActivity}
-              onChange={(e) => setSelectedActivity(e.target.value)}
-              displayEmpty
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  bgcolor: 'white'
-                }
-              }}
-            >
-              <MenuItem value="">Activité</MenuItem>
-              <MenuItem value="Activité 1">Activité 1</MenuItem>
-              <MenuItem value="Activité 2">Activité 2</MenuItem>
-            </TextField>
-          </Grid>
-        </Grid>
-      </Box>
+          </Box>
+        </Box>
 
-      {/* Tableau - Style identique à l'image */}
-      <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
         <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
           <Table stickyHeader size={dense ? 'small' : 'medium'}>
             <TableHead>
@@ -316,7 +298,6 @@ export default function ActivitiesPage() {
             <TableBody>
               {filteredActivities.map((activity, index) => {
                 const isItemSelected = isSelected(activity.id);
-                const statusConfig = getStatusColor(activity.statut);
 
                 return (
                   <TableRow
@@ -363,21 +344,12 @@ export default function ActivitiesPage() {
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ py: 2 }}>
-                      <Box
-                        sx={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: 6,
-                          bgcolor: statusConfig.bg,
-                          color: statusConfig.color,
-                          fontSize: '12px',
-                          fontWeight: 500
-                        }}
+                      <Label
+                        variant="soft"
+                        color={getStatusColor(activity.statut)}
                       >
-                        {statusConfig.label}
-                      </Box>
+                        {activity.statut}
+                      </Label>
                     </TableCell>
                     <TableCell sx={{ py: 2 }}>
                       <Button
@@ -441,7 +413,7 @@ export default function ActivitiesPage() {
               </Select>
             </FormControl>
             <Typography variant="body2" sx={{ fontSize: '14px' }}>
-              1-4 of 4
+              1-{filteredActivities.length} of {filteredActivities.length}
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton size="small" disabled>

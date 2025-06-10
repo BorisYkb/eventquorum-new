@@ -22,10 +22,14 @@ import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import Checkbox from '@mui/material/Checkbox';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
+import { Label } from 'src/components/label';
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,6 +57,7 @@ export default function ActivityDetailPage() {
   const router = useRouter();
   const params = useParams();
   const activityId = params.id;
+  const theme = useTheme();
 
   const [activeTab, setActiveTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -108,18 +113,18 @@ export default function ActivityDetailPage() {
     setSelected([]);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (status) {
       case 'Confirmé':
       case 'Connecté':
-        return { bg: '#E8F5E8', color: '#2E7D32' };
+        return 'success';
       case 'En attente':
-        return { bg: '#FFF3E0', color: '#F57C00' };
+        return 'warning';
       case 'Refusé':
       case 'Déconnecté':
-        return { bg: '#FFE8E8', color: '#D32F2F' };
+        return 'error';
       default:
-        return { bg: '#F5F5F5', color: '#757575' };
+        return 'default';
     }
   };
 
@@ -163,14 +168,31 @@ export default function ActivityDetailPage() {
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  const statsData = [
-    { title: 'Invités', value: activity.invited, bgcolor: '#E3F2FD', borderColor: '#BBDEFB' },
-    { title: 'Participants', value: activity.participants, bgcolor: '#F5F5F5', borderColor: '#E0E0E0' },
-    { title: 'Statut', value: activity.status, bgcolor: '#E3F2FD', borderColor: '#BBDEFB' },
-    { title: 'Présentiel', value: activity.presentielParticipants, bgcolor: '#F5F5F5', borderColor: '#E0E0E0' },
-    { title: 'En ligne', value: activity.onlineParticipants, bgcolor: '#E3F2FD', borderColor: '#BBDEFB' },
-    { title: 'Connectés', value: activity.connected, bgcolor: '#F5F5F5', borderColor: '#E0E0E0' }
-  ];
+  // Couleurs alternées pour les widgets
+  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' => {
+    const colors: Array<'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'> = ['primary', 'secondary', 'success', 'warning', 'error', 'info'];
+    return colors[index % colors.length];
+  };
+
+  // Fonction pour afficher les informations dans l'onglet Information
+  const renderInfoBox = (label: string, value: string | undefined) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
+      <Typography 
+        sx={{ 
+          minWidth: 150, 
+          fontWeight: 'medium', 
+          color: 'text.secondary',
+          fontSize: '0.9rem',
+          mr: 3
+        }}
+      >
+        {label}
+      </Typography>
+      <Typography sx={{ fontWeight: 'medium', fontSize: '0.9rem' }}>
+        {value || '-'}
+      </Typography>
+    </Box>
+  );
 
   return (
     <DashboardContent>
@@ -186,7 +208,12 @@ export default function ActivityDetailPage() {
             variant="contained"
             startIcon={<Iconify icon="eva:arrow-back-fill" />}
             onClick={() => router.back()}
-            sx={{ borderRadius: 2 }}
+            sx={{ 
+              borderRadius: 2,
+              bgcolor: '#000',
+              color: 'white',
+              '&:hover': { bgcolor: '#333' }
+            }}
           >
             Retour à la liste
           </Button>
@@ -194,49 +221,71 @@ export default function ActivityDetailPage() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        {/* En-tête avec nom et type */}
-        <Box sx={{ borderLeft: 4, borderColor: 'primary.main', p: 4, mb: 2 }}>
-          <Typography variant="h3" gutterBottom>
+      {/* En-tête avec nom et type */}
+      <Card sx={{ borderRadius: 2, overflow: 'hidden', mb: 3 }}>
+        <Box sx={{ borderLeft: 4, borderColor: 'primary.main', p: 4 }}>
+          <Typography variant="h3" gutterBottom sx={{ fontWeight: 600 }}>
             {activity.name}
           </Typography>
-          <Chip
-            label={activity.type}
-            color="primary"
-            sx={{ borderRadius: 2 }}
+          <Label variant="soft" color="primary" sx={{ borderRadius: 2, px: 2, py: 1 }}>
+            {activity.type}
+          </Label>
+        </Box>
+      </Card>
+
+      {/* Statistiques avec SuperviseurWidgetSummary */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="Invités"
+            total={activity.invited}
+            color={getWidgetColor(0)}
+            sx={{ height: 180 }}
           />
-        </Box>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="Participants"
+            total={activity.participants}
+            color={getWidgetColor(1)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="Présentiel"
+            total={activity.presentielParticipants}
+            color={getWidgetColor(2)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="En ligne"
+            total={activity.onlineParticipants}
+            color={getWidgetColor(3)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="Connectés"
+            total={activity.connected}
+            color={getWidgetColor(4)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <SuperviseurWidgetSummary
+            title="Statut"
+            total={0}
+            color={getWidgetColor(5)}
+            sx={{ height: 180 }}
+          />
+        </Grid>
+      </Grid>
 
-        {/* Statistiques - Style identique aux images */}
-        <Box sx={{ px: 4, mb: 2 }}>
-          <Grid container spacing={2}>
-            {statsData.map((stat, index) => (
-              <Grid xs={6} sm={4} md={2} key={index}>
-                <Card sx={{
-                  p: 2,
-                  textAlign: 'center',
-                  bgcolor: stat.bgcolor,
-                  border: `1px solid ${stat.borderColor}`,
-                  borderRadius: 2,
-                  minHeight: 80
-                }}>
-                  <Typography variant="h4" sx={{
-                    color: '#1a1a1a',
-                    fontWeight: 'bold',
-                    fontSize: '2rem',
-                    lineHeight: 1
-                  }}>
-                    {stat.value}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }}>
-                    {stat.title}
-                  </Typography>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
+      <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
         {/* Onglets */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 4 }}>
           <Tabs
@@ -259,68 +308,88 @@ export default function ActivityDetailPage() {
 
         {/* Contenu des onglets */}
         <TabPanel value={activeTab} index={0}>
-          <Grid container spacing={3}>
-            <Grid xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Description
-              </Typography>
-              <Typography variant="body1" paragraph>
-                {activity.description}
-              </Typography>
-            </Grid>
+          <Box sx={{ bgcolor: 'grey.50', p: 3, borderRadius: 2 }}>
+            <Grid container spacing={3}>
+              {/* Informations principales */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Card sx={{ p: 4, height: 'fit-content' }}>
+                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+                    INFORMATIONS GÉNÉRALES
+                  </Typography>
+                  <Stack spacing={2}>
+                    {renderInfoBox("Type d'activité", activity.type)}
+                    {renderInfoBox("Nom d'intervenant", activity.consultant)}
+                    {renderInfoBox("Statut", activity.status)}
+                    {renderInfoBox("Durée", activity.duration)}
+                  </Stack>
+                </Card>
+              </Grid>
 
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                Date et Heure
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {activity.date} | {activity.time}
-              </Typography>
-            </Grid>
+              {/* Date et lieu */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Card sx={{ p: 4, height: 'fit-content' }}>
+                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+                    DATE & LIEU
+                  </Typography>
+                  <Stack spacing={2}>
+                    {renderInfoBox("Date", activity.date)}
+                    {renderInfoBox("Heure", activity.time)}
+                    {renderInfoBox("Lieu", activity.location)}
+                    {renderInfoBox("Capacité max", `${activity.maxParticipants} participants`)}
+                  </Stack>
+                </Card>
+              </Grid>
 
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                Type d'activité
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {activity.type}
-              </Typography>
-            </Grid>
+              {/* Description */}
+              <Grid size={{ xs: 12 }}>
+                <Card sx={{ p: 4 }}>
+                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+                    DESCRIPTION
+                  </Typography>
+                  <Typography variant="body1" sx={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
+                    {activity.description}
+                  </Typography>
+                </Card>
+              </Grid>
 
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                Nom d'intervenant
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {activity.consultant}
-              </Typography>
+              {/* Ressources */}
+              <Grid size={{ xs: 12 }}>
+                <Card sx={{ p: 4 }}>
+                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
+                    RESSOURCES DISPONIBLES
+                  </Typography>
+                  <Stack spacing={2}>
+                    {activity.resources.map((resource, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          p: 3,
+                          bgcolor: 'grey.50',
+                          borderRadius: 2,
+                          border: 1,
+                          borderColor: 'grey.200',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 2,
+                          '&:hover': {
+                            bgcolor: 'grey.100',
+                            borderColor: 'primary.light'
+                          }
+                        }}
+                      >
+                        <Label variant="soft" color="primary" sx={{ borderRadius: 1 }}>
+                          {resource.type}
+                        </Label>
+                        <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
+                          {resource.name}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </Card>
+              </Grid>
             </Grid>
-
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                Lieu
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {activity.location}
-              </Typography>
-            </Grid>
-
-            <Grid xs={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                Ressources
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {activity.resources.map((resource, index) => (
-                  <Card key={index} sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Chip label={resource.type} size="small" color="primary" sx={{ borderRadius: 2 }} />
-                      <Typography variant="body2">{resource.name}</Typography>
-                    </Box>
-                  </Card>
-                ))}
-              </Box>
-            </Grid>
-          </Grid>
+          </Box>
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
@@ -366,7 +435,6 @@ export default function ActivityDetailPage() {
               <TableBody>
                 {filteredInvited.map((person) => {
                   const isItemSelected = isSelected(person.id);
-                  const statusConfig = getStatusColor(person.status);
 
                   return (
                     <TableRow
@@ -399,21 +467,12 @@ export default function ActivityDetailPage() {
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ py: 2 }}>
-                        <Box
-                          sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            px: 2,
-                            py: 0.5,
-                            borderRadius: 6,
-                            bgcolor: statusConfig.bg,
-                            color: statusConfig.color,
-                            fontSize: '12px',
-                            fontWeight: 500
-                          }}
+                        <Label
+                          variant="soft"
+                          color={getStatusColor(person.status)}
                         >
                           {person.status}
-                        </Box>
+                        </Label>
                       </TableCell>
                     </TableRow>
                   );
@@ -458,7 +517,6 @@ export default function ActivityDetailPage() {
               </TableHead>
               <TableBody>
                 {filteredParticipants.map((person) => {
-                  const statusConfig = getStatusColor(person.status);
                   return (
                     <TableRow key={person.id} hover sx={{ '&:hover': { bgcolor: '#F8F9FA' } }}>
                       <TableCell sx={{ py: 2 }}>
@@ -477,21 +535,12 @@ export default function ActivityDetailPage() {
                         </Typography>
                       </TableCell>
                       <TableCell sx={{ py: 2 }}>
-                        <Box
-                          sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            px: 2,
-                            py: 0.5,
-                            borderRadius: 6,
-                            bgcolor: statusConfig.bg,
-                            color: statusConfig.color,
-                            fontSize: '12px',
-                            fontWeight: 500
-                          }}
+                        <Label
+                          variant="soft"
+                          color={getStatusColor(person.status)}
                         >
                           {person.status}
-                        </Box>
+                        </Label>
                       </TableCell>
                     </TableRow>
                   );
@@ -507,26 +556,20 @@ export default function ActivityDetailPage() {
               Liste des questions
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <Chip
-                label={`Questions répondues: ${questionsList.filter(q => q.answered).length.toString().padStart(2, '0')}`}
-                sx={{
-                  bgcolor: '#E8F5E8',
-                  color: '#2E7D32',
-                  borderRadius: 2,
-                  fontSize: '12px'
-                }}
-                size="small"
-              />
-              <Chip
-                label={`Questions en attente: ${questionsList.filter(q => !q.answered).length.toString().padStart(2, '0')}`}
-                sx={{
-                  bgcolor: '#FFF3E0',
-                  color: '#F57C00',
-                  borderRadius: 2,
-                  fontSize: '12px'
-                }}
-                size="small"
-              />
+              <Label
+                variant="soft"
+                color="success"
+                sx={{ borderRadius: 2, fontSize: '12px' }}
+              >
+                Questions répondues: {questionsList.filter(q => q.answered).length.toString().padStart(2, '0')}
+              </Label>
+              <Label
+                variant="soft"
+                color="warning"
+                sx={{ borderRadius: 2, fontSize: '12px' }}
+              >
+                Questions en attente: {questionsList.filter(q => !q.answered).length.toString().padStart(2, '0')}
+              </Label>
             </Box>
           </Box>
 
@@ -539,16 +582,13 @@ export default function ActivityDetailPage() {
                       <Typography variant="body2" fontWeight="bold">****</Typography>
                       <Typography variant="caption">Participant</Typography>
                     </Box>
-                    <Chip
-                      label={question.answered ? 'Répondu' : 'En attente'}
-                      sx={{
-                        bgcolor: question.answered ? '#E8F5E8' : '#FFF3E0',
-                        color: question.answered ? '#2E7D32' : '#F57C00',
-                        borderRadius: 2,
-                        fontSize: '11px'
-                      }}
-                      size="small"
-                    />
+                    <Label
+                      variant="soft"
+                      color={question.answered ? 'success' : 'warning'}
+                      sx={{ borderRadius: 2, fontSize: '11px' }}
+                    >
+                      {question.answered ? 'Répondu' : 'En attente'}
+                    </Label>
                   </Box>
                 </Box>
 
