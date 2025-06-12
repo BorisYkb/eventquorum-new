@@ -1,5 +1,3 @@
-
-// components/MuiSurveyDetail.tsx
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -19,11 +17,14 @@ import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import Chip from '@mui/material/Chip';
-import { ArrowBack, Visibility } from '@mui/icons-material';
+import Tooltip from '@mui/material/Tooltip';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import { ArrowBack } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 import { Survey, Question } from '../types/survey';
+import { Iconify } from 'src/components/iconify'; // Ajustez le chemin selon votre structure
 
 interface MuiSurveyDetailProps {
   survey: Survey;
@@ -89,10 +90,15 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
     setPage(0);
   };
 
+  const handleViewQuestion = (questionId: number) => {
+    // Logique pour voir les détails de la question
+    console.log('Viewing question:', questionId);
+  };
+
   const isSelected = (index: number) => selected.indexOf(index) !== -1;
 
   return (
-    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', p: 3 }}>
+    <Box sx={{ minHeight: '100vh', p: 3 }}>
       <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
 
         {/* Bouton retour */}
@@ -121,100 +127,87 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
               Titre de l'enquête
             </Typography>
-            <Card sx={{ p: 2, backgroundColor: '#f8f9fa' }}>
-              <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
+            <Card sx={{ 
+              p: 2, 
+              backgroundColor: '#f8f9fa',
+              display: 'inline-block',
+              minWidth: 'fit-content'
+            }}>
+              <Typography variant="h6" sx={{ 
+                color: theme.palette.text.primary,
+                textAlign: 'center'
+              }}>
                 {survey.title}
               </Typography>
             </Card>
           </Box>
 
-          {/* Cartes d'informations - Style des images avec vraies données */}
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid size={2.4}>
-              <Card sx={{
-                p: 3,
-                textAlign: 'center',
-                backgroundColor: '#e3f2fd',
-                border: '2px solid #bbdefb',
-                borderRadius: 3
-              }}>
-                <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-                  Code d'enquête
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333' }}>
-                  {survey.code}
-                </Typography>
-              </Card>
-            </Grid>
+          {/* Statistiques avec Paper horizontal */}
+          <Paper
+            sx={{
+              p: 3,
+              mb: 4,
+              backgroundColor: 'background.neutral',
+              borderLeft: (theme) => `6px solid ${theme.palette.primary.main}`
+            }}
+          >
+            <Grid container spacing={3}>
+              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+                <Stack alignItems="center" spacing={1}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
+                    Code d'enquête
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {survey.code}
+                  </Typography>
+                </Stack>
+              </Grid>
 
-            <Grid size={2.4}>
-              <Card sx={{
-                p: 3,
-                textAlign: 'center',
-                backgroundColor: '#f5f5f5',
-                border: '2px solid #e0e0e0',
-                borderRadius: 3
-              }}>
-                <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-                  Option
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333' }}>
-                  {survey.option}
-                </Typography>
-              </Card>
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+                <Stack alignItems="center" spacing={1}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
+                    Option
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {survey.option}
+                  </Typography>
+                </Stack>
+              </Grid>
 
-            <Grid size={2.4}>
-              <Card sx={{
-                p: 3,
-                textAlign: 'center',
-                backgroundColor: '#e3f2fd',
-                border: '2px solid #bbdefb',
-                borderRadius: 3
-              }}>
-                <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-                  Activité
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333' }}>
-                  {survey.activity}
-                </Typography>
-              </Card>
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+                <Stack alignItems="center" spacing={1}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
+                    Activité
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {survey.activity}
+                  </Typography>
+                </Stack>
+              </Grid>
 
-            <Grid size={2.4}>
-              <Card sx={{
-                p: 3,
-                textAlign: 'center',
-                backgroundColor: '#f5f5f5',
-                border: '2px solid #e0e0e0',
-                borderRadius: 3
-              }}>
-                <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-                  Participants
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333' }}>
-                  {survey.participants}
-                </Typography>
-              </Card>
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+                <Stack alignItems="center" spacing={1}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
+                    Participants
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {survey.participants}
+                  </Typography>
+                </Stack>
+              </Grid>
 
-            <Grid size={2.4}>
-              <Card sx={{
-                p: 3,
-                textAlign: 'center',
-                backgroundColor: '#e3f2fd',
-                border: '2px solid #bbdefb',
-                borderRadius: 3
-              }}>
-                <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-                  Date de création
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333' }}>
-                  {survey.dateCreation}
-                </Typography>
-              </Card>
+              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+                <Stack alignItems="center" spacing={1}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
+                    Date de création
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {survey.dateCreation}
+                  </Typography>
+                </Stack>
+              </Grid>
             </Grid>
-          </Grid>
+          </Paper>
 
           {/* Section des questions */}
           <Box>
@@ -222,19 +215,23 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 Liste des questions
               </Typography>
-              <Button
-                variant="contained"
-                onClick={handleViewResults}
-                sx={{
-                  backgroundColor: '#ff9800',
-                  '&:hover': { backgroundColor: '#f57c00' }
-                }}
-              >
-                Consulter les résultats
-              </Button>
+              <Tooltip title="Consulter les résultats de l'enquête" placement="top" arrow>
+                <Button
+                  variant="contained"
+                  onClick={handleViewResults}
+                  sx={{
+                    backgroundColor: '#000',
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#333' },
+                    minWidth: 120
+                  }}
+                >
+                  Consulter
+                </Button>
+              </Tooltip>
             </Box>
 
-            {/* Tableau des questions - Style image avec vraies questions */}
+            {/* Tableau des questions */}
             <Card sx={{ backgroundColor: 'white', border: '1px solid #e0e0e0', borderRadius: 2 }}>
               <TableContainer>
                 <Table size={dense ? 'small' : 'medium'}>
@@ -250,7 +247,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                       </TableCell>
                       <TableCell sx={{ fontWeight: 'medium', color: '#666' }}>N°</TableCell>
                       <TableCell sx={{ fontWeight: 'medium', color: '#666' }}>Question</TableCell>
-                      <TableCell align="center" sx={{ fontWeight: 'medium', color: '#666' }}>Actions</TableCell>
+                      <TableCell align="center" sx={{ fontWeight: 'medium', color: '#666', width: 80 }}>Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -287,17 +284,18 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                               </Typography>
                             </TableCell>
                             <TableCell align="center">
-                              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <Tooltip title="Voir détails" placement="top" arrow>
                                 <IconButton
+                                  color="info"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleViewQuestion(question.id);
+                                  }}
                                   size="small"
-                                  sx={{ color: '#666' }}
                                 >
-                                  <Visibility fontSize="small" />
+                                  <Iconify icon="solar:eye-bold" />
                                 </IconButton>
-                                <Typography variant="caption">
-                                  Voir
-                                </Typography>
-                              </Box>
+                              </Tooltip>
                             </TableCell>
                           </TableRow>
                         );

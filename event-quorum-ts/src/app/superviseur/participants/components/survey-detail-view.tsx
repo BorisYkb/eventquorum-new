@@ -19,6 +19,9 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
@@ -116,9 +119,6 @@ export function SurveyDetailView({ survey, participant }: SurveyDetailViewProps)
   const router = useRouter();
   const [selectedSurvey, setSelectedSurvey] = useState(survey.id);
 
-  // Couleur alternée pour les cadres
-  const alternateColor = '#BCDFFB';
-
   const handleRetour = () => {
     router.push(`/superviseur/participants/${participant.id}?tab=enquete`);
   };
@@ -137,6 +137,21 @@ export function SurveyDetailView({ survey, participant }: SurveyDetailViewProps)
   const getReponseLabel = (reponse: string, isCorrect: boolean | null) => {
     if (reponse === '----') return '----';
     return reponse;
+  };
+
+  const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
+    switch (status?.toLowerCase()) {
+      case 'terminé':
+      case 'terminée':
+        return 'success';
+      case 'en cours':
+        return 'warning';
+      case 'non participé':
+      case 'non démarré':
+        return 'error';
+      default:
+        return 'info';
+    }
   };
 
   // Obtenir l'enquête actuellement sélectionnée
@@ -173,7 +188,7 @@ export function SurveyDetailView({ survey, participant }: SurveyDetailViewProps)
       </Box>
 
       <Card sx={{ p: 3 }}>
-        {/* Section sélection d'enquête SANS couleur alternée */}
+        {/* Section sélection d'enquête */}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
           <Box sx={{ 
             display: 'flex', 
@@ -203,94 +218,112 @@ export function SurveyDetailView({ survey, participant }: SurveyDetailViewProps)
           </Box>
         </Box>
 
-        {/* Section titre et statuts avec couleur alternée */}
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          mb: 3,
-          p: 2,
-          backgroundColor: alternateColor,
-          borderRadius: 2
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Titre de enquête
-            </Typography>
-            <Label variant="soft" color="error" sx={{ px: 2, py: 0.5 }}>
-              {currentSurvey.titre_enquete}
-            </Label>
-          </Box>
+        {/* Section titre et statuts redesignée */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+            Détails de l'enquête
+          </Typography>
           
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 1,
-              px: 2,
-              py: 1,
-              border: 1,
-              borderColor: 'divider',
-              borderRadius: 2,
-              bgcolor: 'background.paper'
-            }}>
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                Note obtenue: {currentSurvey.note}
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                Statut de participation: {currentSurvey.statut_participation}
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                Participant
-              </Typography>
-            </Box>
-          </Box>
+          <Paper
+            sx={{
+              p: 3,
+              backgroundColor: 'background.neutral',
+              borderLeft: (theme) => `6px solid ${
+                currentSurvey.statut === 'Terminé' ? theme.palette.success.main :
+                currentSurvey.statut === 'En cours' ? theme.palette.warning.main :
+                theme.palette.error.main
+              }`
+            }}
+          >
+            <Grid container spacing={3} alignItems="center">
+              {/* Section titre de l'enquête */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Stack spacing={2}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                    Titre de l'enquête
+                  </Typography>
+                  <Label variant="soft" color="primary" sx={{ alignSelf: 'flex-start', px: 2, py: 1, fontSize: '0.875rem' }}>
+                    {currentSurvey.titre_enquete}
+                  </Label>
+                </Stack>
+              </Grid>
+
+              {/* Section note et statut de participation */}
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Stack spacing={2}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', minWidth: 120 }}>
+                      Note obtenue :
+                    </Typography>
+                    <Label variant="soft" color="info" sx={{ px: 2, py: 0.5, fontSize: '0.875rem' }}>
+                      {currentSurvey.note}
+                    </Label>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary', minWidth: 120 }}>
+                      Statut de participation :
+                    </Typography>
+                    <Label variant="soft" color={getStatusColor(currentSurvey.statut_participation)} sx={{ px: 2, py: 0.5, fontSize: '0.875rem' }}>
+                      {currentSurvey.statut_participation}
+                    </Label>
+                  </Box>
+                </Stack>
+              </Grid>
+            </Grid>
+          </Paper>
         </Box>
 
         {/* Tableau des résultats */}
-        <TableContainer>
-          <Scrollbar>
-            <Table sx={{ minWidth: 800 }}>
-              <TableHead>
-                <TableRow sx={{ bgcolor: 'grey.100' }}>
-                  <TableCell sx={{ fontWeight: 600, width: 120 }}>Question</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: 300 }}>Description</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: 200, textAlign: 'center' }}>La bonne réponse</TableCell>
-                  <TableCell sx={{ fontWeight: 600, width: 120, textAlign: 'center' }}>Réponses</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {surveyQuestions.map((row) => (
-                  <TableRow key={row.id} hover>
-                    <TableCell>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {row.question}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">
-                        {row.description}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography variant="body2" color="text.secondary">
-                        {row.bonneReponse}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Label
-                        variant="soft"
-                        color={getReponseColor(row.isCorrect)}
-                      >
-                        {getReponseLabel(row.reponse, row.isCorrect)}
-                      </Label>
-                    </TableCell>
+        <Box>
+          <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+            Détail des réponses
+          </Typography>
+          
+          <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+            <Scrollbar>
+              <Table sx={{ minWidth: 800 }}>
+                <TableHead>
+                  <TableRow sx={{ bgcolor: 'grey.100' }}>
+                    <TableCell sx={{ fontWeight: 600, width: 120 }}>Question</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 300 }}>Description</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 200, textAlign: 'center' }}>La bonne réponse</TableCell>
+                    <TableCell sx={{ fontWeight: 600, width: 120, textAlign: 'center' }}>Réponses</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {surveyQuestions.map((row) => (
+                    <TableRow key={row.id} hover>
+                      <TableCell>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {row.question}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2">
+                          {row.description}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2" color="text.secondary">
+                          {row.bonneReponse}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Label
+                          variant="soft"
+                          color={getReponseColor(row.isCorrect)}
+                        >
+                          {getReponseLabel(row.reponse, row.isCorrect)}
+                        </Label>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+        </Box>
       </Card>
     </DashboardContent>
   );

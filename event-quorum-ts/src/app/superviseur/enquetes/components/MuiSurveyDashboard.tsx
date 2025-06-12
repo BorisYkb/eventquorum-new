@@ -23,9 +23,13 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
-import { Search, Visibility } from '@mui/icons-material';
 
+import { Iconify } from 'src/components/iconify';
+import { Label } from 'src/components/label';
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 import { Survey } from '../types/survey';
 
 interface MuiSurveyDashboardProps {
@@ -107,30 +111,23 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
   const uniqueStatuses = [...new Set(surveys.map(s => s.status))];
   const uniqueActivities = [...new Set(surveys.map(s => s.activity))];
 
-  const getStatusColor = (statusColor: string) => {
-    switch (statusColor) {
-      case 'green':
-        return theme.palette.success.main;
-      case 'orange':
-        return theme.palette.warning.main;
-      case 'red':
-        return theme.palette.error.main;
+  const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
+    switch (status) {
+      case 'En cours':
+        return 'success';
+      case 'Non démarrée':
+        return 'warning';
+      case 'Terminée':
+        return 'error';
       default:
-        return theme.palette.grey[500];
+        return 'default';
     }
   };
 
-  const getStatusBgColor = (statusColor: string) => {
-    switch (statusColor) {
-      case 'green':
-        return theme.palette.success.light;
-      case 'orange':
-        return theme.palette.warning.light;
-      case 'red':
-        return theme.palette.error.light;
-      default:
-        return theme.palette.grey[100];
-    }
+  // Couleurs alternées pour les widgets
+  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
+    const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
+    return colors[index % colors.length];
   };
 
   return (
@@ -139,131 +136,105 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
         Gestion des Enquêtes
       </Typography>
 
-      {/* Cartes statistiques */}
+      {/* Statistiques avec SuperviseurWidgetSummary */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={3}>
-          <Card sx={{
-            p: 3,
-            textAlign: 'center',
-            backgroundColor: '#e3f2fd',
-            border: '2px solid #bbdefb'
-          }}>
-            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-              Toutes les enquêtes
-            </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {totalSurveys}
-            </Typography>
-          </Card>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Toutes les enquêtes"
+            total={totalSurveys}
+            color={getWidgetColor(0)}
+            sx={{ height: 180 }}
+          />
         </Grid>
-
-        <Grid size={3}>
-          <Card sx={{
-            p: 3,
-            textAlign: 'center',
-            backgroundColor: '#f5f5f5',
-            border: '2px solid #e0e0e0'
-          }}>
-            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-              En cours
-            </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {inProgress}
-            </Typography>
-          </Card>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="En cours"
+            total={inProgress}
+            color={getWidgetColor(1)}
+            sx={{ height: 180 }}
+          />
         </Grid>
-
-        <Grid size={3}>
-          <Card sx={{
-            p: 3,
-            textAlign: 'center',
-            backgroundColor: '#e3f2fd',
-            border: '2px solid #bbdefb'
-          }}>
-            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-              Non démarrées
-            </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {notStarted}
-            </Typography>
-          </Card>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Non démarrées"
+            total={notStarted}
+            color={getWidgetColor(2)}
+            sx={{ height: 180 }}
+          />
         </Grid>
-
-        <Grid size={3}>
-          <Card sx={{
-            p: 3,
-            textAlign: 'center',
-            backgroundColor: '#f5f5f5',
-            border: '2px solid #e0e0e0'
-          }}>
-            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium', color: '#666' }}>
-              Terminées
-            </Typography>
-            <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {completed}
-            </Typography>
-          </Card>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <SuperviseurWidgetSummary
+            title="Terminées"
+            total={completed}
+            color={getWidgetColor(3)}
+            sx={{ height: 180 }}
+          />
         </Grid>
       </Grid>
-
-      {/* Barre de recherche et filtres */}
-      <Card sx={{ p: 2, mb: 3, border: 'none'}}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <TextField
-            placeholder="Rechercher par titre, activité ou code..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ flexGrow: 1, maxWidth: 400 }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel>Statut</InputLabel>
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              label="Statut"
-            >
-              <MenuItem value="">Tous les statuts</MenuItem>
-              {uniqueStatuses.map(status => (
-                <MenuItem key={status} value={status}>{status}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel>Activité</InputLabel>
-            <Select
-              value={activityFilter}
-              onChange={(e) => setActivityFilter(e.target.value)}
-              label="Activité"
-            >
-              <MenuItem value="">Toutes les activités</MenuItem>
-              {uniqueActivities.map(activity => (
-                <MenuItem key={activity} value={activity}>{activity}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      </Card>
 
       {/* Tableau */}
       <Card>
         <Box sx={{ p: 3 }}>
           <Typography variant="h6" component="h2" sx={{ mb: 3, fontWeight: 'bold' }}>
-            Liste des enquêtes
+            Liste des enquêtes ({filteredSurveys.length})
           </Typography>
+
+          {/* Ligne des filtres et recherche sous le titre */}
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+            {/* Filtres à gauche */}
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <FormControl size="small" sx={{ minWidth: 200 }}>
+                <InputLabel sx={{ fontSize: '0.75rem', px: 1 }}>Sélectionner un statut</InputLabel>
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  label="Sélectionner un statut"
+                  sx={{ fontSize: '0.75rem' }}
+                >
+                  <MenuItem value="" sx={{ fontSize: '0.75rem' }}>Tous les statuts</MenuItem>
+                  {uniqueStatuses.map(status => (
+                    <MenuItem key={status} value={status} sx={{ fontSize: '0.75rem' }}>{status}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ minWidth: 200 }}>
+                <InputLabel sx={{ fontSize: '0.75rem', px: 1 }}>Sélectionner une activité</InputLabel>
+                <Select
+                  value={activityFilter}
+                  onChange={(e) => setActivityFilter(e.target.value)}
+                  label="Sélectionner une activité"
+                  sx={{ fontSize: '0.75rem' }}
+                >
+                  <MenuItem value="" sx={{ fontSize: '0.75rem' }}>Toutes les activités</MenuItem>
+                  {uniqueActivities.map(activity => (
+                    <MenuItem key={activity} value={activity} sx={{ fontSize: '0.75rem' }}>{activity}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Barre de recherche à droite */}
+            <TextField
+              size="small"
+              placeholder="Rechercher par titre, activité ou code..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ width: 350 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
 
           <TableContainer>
             <Table size={dense ? 'small' : 'medium'}>
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#F8F9FA', py: 2 } }}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
@@ -272,12 +243,24 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell>Titre enquête</TableCell>
-                  <TableCell>Activité</TableCell>
-                  <TableCell>Code</TableCell>
-                  <TableCell align="center">Participants</TableCell>
-                  <TableCell>Statut</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Titre enquête
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Activité
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Code
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Participants
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Statut
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -294,7 +277,7 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
+                        sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#F8F9FA' } }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -302,13 +285,21 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                             checked={isItemSelected}
                           />
                         </TableCell>
-                        <TableCell>
-                          <Typography variant="body2" fontWeight="medium">
+                        <TableCell sx={{ py: 2 }}>
+                          <Typography variant="body2" sx={{
+                            color: '#1976D2',
+                            fontWeight: 500,
+                            fontSize: '14px'
+                          }}>
                             {survey.title}
                           </Typography>
                         </TableCell>
-                        <TableCell>{survey.activity}</TableCell>
-                        <TableCell>
+                        <TableCell sx={{ py: 2 }}>
+                          <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
+                            {survey.activity}
+                          </Typography>
+                        </TableCell>
+                        <TableCell sx={{ py: 2 }}>
                           <Typography
                             variant="body2"
                             sx={{
@@ -317,44 +308,40 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                               px: 1,
                               py: 0.5,
                               borderRadius: 1,
-                              display: 'inline-block'
+                              display: 'inline-block',
+                              fontSize: '14px',
+                              color: '#374151'
                             }}
                           >
                             {survey.code}
                           </Typography>
                         </TableCell>
-                        <TableCell align="center">
-                          <Typography variant="body2" fontWeight="bold">
+                        <TableCell align="center" sx={{ py: 2 }}>
+                          <Typography variant="body2" sx={{ fontSize: '14px', fontWeight: 600 }}>
                             {survey.participants}
                           </Typography>
                         </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              backgroundColor: getStatusBgColor(survey.statusColor),
-                              color: getStatusColor(survey.statusColor),
-                              px: 2,
-                              py: 0.5,
-                              borderRadius: '20px',
-                              fontSize: '0.75rem',
-                              fontWeight: 'medium',
-                              display: 'inline-block'
-                            }}
+                        <TableCell sx={{ py: 2 }}>
+                          <Label
+                            variant="soft"
+                            color={getStatusColor(survey.status)}
                           >
                             {survey.status}
-                          </Box>
+                          </Label>
                         </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            size="small"
-                            startIcon={<Visibility />}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewSurvey(survey.id);
-                            }}
-                          >
-                            Voir
-                          </Button>
+                        <TableCell align="center" sx={{ py: 2 }}>
+                          <Tooltip title="Voir détails" placement="top" arrow>
+                            <IconButton
+                              color="info"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleViewSurvey(survey.id);
+                              }}
+                              size="small"
+                            >
+                              <Iconify icon="solar:eye-bold" />
+                            </IconButton>
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     );
@@ -393,8 +380,3 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
 };
 
 export default MuiSurveyDashboard;
-
-interface MuiSurveyDashboardProps {
-  surveys: Survey[];
-}
-

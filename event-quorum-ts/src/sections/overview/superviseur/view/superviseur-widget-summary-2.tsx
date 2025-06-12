@@ -1,3 +1,4 @@
+//src/sections/overview/superviseur/view/superviseur-widget-summary-2.tsx
 import type { BoxProps } from '@mui/material/Box';
 import type { PaletteColorKey } from 'src/theme/core';
 
