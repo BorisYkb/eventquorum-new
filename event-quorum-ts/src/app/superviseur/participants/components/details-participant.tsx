@@ -134,11 +134,11 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
   );
 
   const renderPersonalInfo = () => (
-    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+    <Card sx={{ p: 3, height: 450, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
         INFORMATIONS PERSONNELLES
       </Typography>
-      <Stack spacing={1.5}>
+      <Stack spacing={1.5} sx={{ flex: 1 }}>
         {renderInfoBox("Nom", participant.nom || participant.nom_prenom?.split(' ')[0])}
         {renderInfoBox("Prénom", participant.prenom || participant.nom_prenom?.split(' ').slice(1).join(' '))}
         {renderInfoBox("Email", participant.email)}
@@ -149,11 +149,11 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
   );
 
   const renderConnectionInfo = () => (
-    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+    <Card sx={{ p: 3, height: 450, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
         STATUT & CONNEXION
       </Typography>
-      <Stack spacing={1.5}>
+      <Stack spacing={1.5} sx={{ flex: 1 }}>
         {renderInfoBox(
           "Connecté", 
           participant.connecte === 'connecté' ? 'Oui' : 'Non',
@@ -170,11 +170,11 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
   );
 
   const renderParticipationInfo = () => (
-    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+    <Card sx={{ p: 3, height: 450, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
         ÉMARGEMENT & PARTICIPATION
       </Typography>
-      <Stack spacing={1.5}>
+      <Stack spacing={1.5} sx={{ flex: 1 }}>
         {renderInfoBox(
           "Émargement", 
           participant.emargement === 'signé' ? 'Signé' : 'Non signé',
@@ -191,11 +191,11 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
   );
 
   const renderActivitiesCard = () => (
-    <Card sx={{ p: 3, height: 'fit-content', minHeight: 320 }}>
+    <Card sx={{ p: 3, height: 450, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
         ACTIVITÉS SUIVIES
       </Typography>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ flex: 1, overflow: 'auto' }}>
         {ACTIVITES_DISPONIBLES.map((activite, index) => (
           <Box
             key={index}
@@ -278,21 +278,21 @@ export function DetailParticipant({ participant }: DetailParticipantProps) {
 
       {/* Onglet Informations personnelles redesigné */}
       {activeTab === 'profil' && (
-        <Box sx={{ bgcolor: 'grey.50', p: 3, borderRadius: 2 }}>
+        <Box sx={{ bgcolor: 'grey.50', p: 4, borderRadius: 2 }}>
           <Grid container spacing={3}>
             {/* Première ligne */}
-            <Grid xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {renderPersonalInfo()}
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {renderConnectionInfo()}
             </Grid>
             
             {/* Deuxième ligne */}
-            <Grid xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {renderParticipationInfo()}
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               {renderActivitiesCard()}
             </Grid>
           </Grid>
