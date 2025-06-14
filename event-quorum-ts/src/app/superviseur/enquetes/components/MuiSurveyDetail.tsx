@@ -92,6 +92,8 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
 
   const handleViewQuestion = (questionId: number) => {
     // Logique pour voir les détails de la question
+    // Naviguer vers la page de détail de la question
+    router.push(`/superviseur/enquetes/${survey.id}/questions/${questionId}`);
     console.log('Viewing question:', questionId);
   };
 
@@ -127,13 +129,13 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
               Titre de l'enquête
             </Typography>
-            <Card sx={{ 
-              p: 2, 
+            <Card sx={{
+              p: 2,
               backgroundColor: '#f8f9fa',
               display: 'inline-block',
               minWidth: 'fit-content'
             }}>
-              <Typography variant="h6" sx={{ 
+              <Typography variant="h6" sx={{
                 color: theme.palette.text.primary,
                 textAlign: 'center'
               }}>

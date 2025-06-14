@@ -36,7 +36,7 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
   const participationRate = 65; // À calculer depuis les données réelles
 
   const handleBack = () => {
-    router.push(`/superviseur/enquetes`);
+    router.push(`/superviseur/enquetes/${surveyId}`);
   };
 
   const handleExport = () => {
@@ -87,7 +87,15 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         {/* En-tête avec titre et bouton retour */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button
+
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+              ENQUÊTE {surveyId} - ACTIVITÉ 1
+            </Typography>
+
+
+          </Box>
+
+          <Button
               variant="contained"
               startIcon={<ArrowBack />}
               onClick={handleBack}
@@ -98,28 +106,13 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
               }}
             >
               Retour
-            </Button>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-              ENQUÊTE {surveyId} - ACTIVITÉ 1
-            </Typography>
-          </Box>
-          
-          <Button
-            variant="contained"
-            startIcon={<FileDownload />}
-            onClick={handleExport}
-            sx={{
-              backgroundColor: theme.palette.primary.main,
-              '&:hover': { backgroundColor: theme.palette.primary.dark }
-            }}
-          >
-            Exporter les résultats (PDF)
           </Button>
+
         </Box>
 
         {/* Widgets de statistiques */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-          <Grid container spacing={3} sx={{ maxWidth: '800px' }}>
+
+          <Grid container spacing={3}  sx={{ mb: 4 }}>
             <Grid size={4}>
               <SuperviseurWidgetSummary
                 title="Nombre de participants"
@@ -146,14 +139,33 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
               />
             </Grid>
           </Grid>
+
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+
+          </Box>
+          {/* Bouton d'exportation */}
+          <Button
+            variant="contained"
+            startIcon={<FileDownload />}
+            onClick={handleExport}
+            sx={{
+                bgcolor: '#000',
+                color: 'white',
+                '&:hover': { bgcolor: '#333' }
+              }}
+          >
+            Exporter les résultats (PDF)
+          </Button>
         </Box>
 
         {/* Questions et résultats */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {questions.map((question, questionIndex) => (
             <Scrollbar key={question.id} sx={{ height: 'auto' }}>
-              <Card sx={{ 
-                maxWidth: '100%', 
+              <Card sx={{
+                maxWidth: '100%',
                 width: '100%',
                 borderRadius: 3,
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
@@ -180,9 +192,9 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                           const color = getResponseColor(option);
 
                           return (
-                            <Box key={option} sx={{ 
-                              display: 'flex', 
-                              flexDirection: 'column', 
+                            <Box key={option} sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
                               gap: 1,
                               p: 2,
                               backgroundColor: 'rgba(0,0,0,0.02)',
