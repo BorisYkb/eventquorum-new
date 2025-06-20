@@ -67,9 +67,9 @@ export function SuperviseurDonutChart({ title, subheader, chart, ...other }: Pro
               fontSize: '24px',
               fontWeight: 700,
               color: theme.palette.text.primary,
-              formatter: (val: string, opts: any) => {
+              formatter: (val: string) => {
                 // Affiche la valeur de la section survolée
-                return chartSeries[opts.seriesIndex];
+                return val;
               },
             },
           },
@@ -83,14 +83,12 @@ export function SuperviseurDonutChart({ title, subheader, chart, ...other }: Pro
       hover: {
         filter: {
           type: 'lighten',
-          value: 0.1,
         },
       },
       active: {
         allowMultipleDataPointsSelection: false,
         filter: {
           type: 'darken',
-          value: 0.1,
         },
       },
     },
@@ -142,8 +140,6 @@ export function SuperviseurDonutChart({ title, subheader, chart, ...other }: Pro
           type="donut"
           series={chartSeries}
           options={chartOptions}
-          width="100%"
-          height={280}
         />
         {renderLegend}
       </Box>

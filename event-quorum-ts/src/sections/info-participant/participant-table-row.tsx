@@ -67,14 +67,14 @@ export function ParticipantTableRow({
         }
     };
 
-    const getBooleanLabel = (value: boolean | string) => {
+    const getBooleanLabel = (value: boolean | string | undefined) => {
         if (typeof value === 'boolean') {
             return value ? 'Oui' : 'Non';
         }
         return value === 'oui' || value === 'Oui' ? 'Oui' : 'Non';
     };
 
-    const getBooleanColor = (value: boolean | string) => {
+    const getBooleanColor = (value: boolean | string | undefined) => {
         if (typeof value === 'boolean') {
             return value ? 'success' : 'error';
         }
@@ -82,7 +82,7 @@ export function ParticipantTableRow({
     };
 
     // NOUVEAU: Fonction pour afficher les points colorés au lieu de Oui/Non
-    const renderConnectionDot = (value: boolean | string) => {
+    const renderConnectionDot = (value: boolean | string | undefined) => {
         const isConnected = typeof value === 'boolean' ? value : (value === 'oui' || value === 'Oui' || value === 'connecté');
         
         return (

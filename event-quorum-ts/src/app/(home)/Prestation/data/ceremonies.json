@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "breadcrumb": "Événement / Cérémonies et remises de prix",
+    "title": "Transformez vos cérémonies et remises de prix en moments mémorables",
+    "bgColor": "bg-blue-100",
+    "image": "/images/ceremonies/hero.jpg"
+  },
+  "introduction": {
+    "text": "Vous souhaitez organiser une cérémonie prestigieuse pour récompenser l'excellence, célébrer des accomplissements ou honorer des contributions remarquables ?",
+    "bgColor": "bg-white"
+  },
+  "features": {
+    "title": "Sublimez votre cérémonie grâce à nos solutions digitales",
+    "items": [
+      "Créez une ambiance de prestige avec nos solutions audiovisuelles",
+      "Gérez efficacement les nominations et les votes",
+      "Offrez une expérience interactive aux participants",
+      "Assurez une diffusion en direct pour les personnes à distance"
+    ],
+    "bgColor": "bg-blue-100"
+  },
+  "reasonsToChoose": {
+    "title": "Deux raisons de choisir EventQuorum",
+    "blocks": [
+      {
+        "title": "Gérez vos nominations et votes en toute simplicité",
+        "content": "Notre plateforme facilite la gestion des candidatures, des nominations et des votes. Créez des formulaires personnalisés, collectez les votes du public ou d'un jury et affichez les résultats en temps réel.",
+        "image": "/images/ceremonies/voting.jpg",
+        "bgColor": "bg-indigo-50"
+      },
+      {
+        "title": "Offrez une expérience hybride exceptionnelle",
+        "content": "Combinez la présence physique et virtuelle pour toucher un public plus large. Notre solution permet aux participants distants de vivre l'émotion de la cérémonie comme s'ils y étaient.",
+        "image": "/images/ceremonies/hybrid.jpg",
+        "bgColor": "bg-purple-50"
+      }
+    ]
+  },
+  "whyChoose": {
+    "title": "Pourquoi choisir notre solution de cérémonie ?",
+    "items": [
+      {
+        "icon": ["trophy", "text-yellow-400"],
+        "title": "Gestion des lauréats",
+        "description": "Organisation fluide des remises de prix"
+      },
+      {
+        "icon": ["camera", "text-purple-400"],
+        "title": "Production audiovisuelle",
+        "description": "Captation professionnelle de moments clés"
+      },
+      {
+        "icon": ["chart-bar", "text-green-400"],
+        "title": "Analyse des réactions",
+        "description": "Mesure de l'impact émotionnel"
+      },
+      {
+        "icon": ["share", "text-blue-400"],
+        "title": "Partage social",
+        "description": "Amplification de votre événement"
+      }
+    ],
+    "bgColor": "bg-indigo-50"
+  },
+  "functionalities": {
+    "title": "Nos fonctionnalités",
+    "items": [
+      {
+        "icon": ["award", "text-orange-400"],
+        "title": "Remise de prix",
+        "link": "fonctionnalite-1"
+      },
+      {
+        "icon": ["vote", "text-pink-400"],
+        "title": "Système de vote",
+        "link": "fonctionnalite-2"
+      },
+      {
+        "icon": ["stream", "text-yellow-400"],
+        "title": "Diffusion en direct",
+        "link": "fonctionnalite-3"
+      }
+    ]
+  },
+  "moreContent": {
+    "title": "Pour aller plus loin",
+    "buttonLabel": "Voir plus de cérémonies",
+    "items": [
+      {
+        "title": "Soirée des Trophées 2024 : les moments forts",
+        "image": "/images/shared/testimonials.jpg"
+      },
+      {
+        "title": "Remise des prix de l'innovation 2023",
+        "image": "/images/shared/customization.jpg"
+      },
+      {
+        "title": "Célébration des 10 ans de partenariat",
+        "image": "/images/shared/guide.jpg"
+      }
+    ]
+  }
+}

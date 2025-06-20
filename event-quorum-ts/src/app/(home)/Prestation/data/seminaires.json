@@ -1,0 +1,115 @@
+{
+  "hero": {
+    "breadcrumb": "Événement / Séminaires et Team Building",
+    "title": "Créez des séminaires et activités de team building inoubliables",
+    "image": "/images/seminaire1.png",
+    "description": {
+      "main": "Vous organisez un séminaire d’entreprise ou une journée de cohésion ?",
+      "secondary": "EventQuorum vous aide à concevoir des événements dynamiques, bien organisés et engageants pour renforcer l’esprit d’équipe, la motivation et la culture d’entreprise."
+    },
+    "benefits": [
+      "Créez des parcours immersifs et interactifs pour vos collaborateurs",
+      "Gérez la logistique et les inscriptions en toute simplicité",
+      "Offrez une expérience fluide sur site ou à distance"
+    ],
+    "buttonText": "Découvrir nos solutions"
+  },
+  "valueProposition": {
+    "title": "Pourquoi choisir EventQuorum pour vos séminaires ?"
+  },
+  "features": {
+    "items": [
+      {
+        "id": 1,
+        "title": "Expérience immersive",
+        "description": "Mettez en place des ateliers, challenges et animations adaptés à vos objectifs RH ou managériaux.",
+        "secondaryText": "Favorisez la collaboration et la créativité grâce à une expérience sur-mesure et participative.",
+        "imageSrc": "/images/seminaire2.jpg"
+      },
+      {
+        "id": 2,
+        "title": "Organisation centralisée",
+        "description": "Planifiez, communiquez et pilotez l’ensemble de l’événement depuis une interface unique.",
+        "secondaryText": "De l’invitation à l’évaluation finale, tout est géré depuis votre espace organisateur.",
+        "tertiaryText": "Une logistique simplifiée pour un événement plus fluide et moins stressant.",
+        "imageSrc": "/images/feature-gestion.jpg"
+      },
+      {
+        "id": 3,
+        "title": "Engagement des participants",
+        "description": "Impliquer activement vos collaborateurs grâce à des outils interactifs et ludiques.",
+        "secondaryText": "Quiz, jeux d’équipes, sondages en direct, tableaux de bord… autant de moyens de dynamiser votre séminaire.",
+        "imageSrc": "/images/feature-engagement.jpg"
+      }
+    ]
+  },
+  "support": {
+    "title": "Un appui opérationnel complet",
+    "paragraphs": [
+      "Nous vous accompagnons dans la conception et la mise en œuvre de vos événements internes, en tenant compte de vos contraintes de temps, de lieu, de budget et d’objectif.",
+      "Notre équipe vous aide à concevoir une expérience motivante pour renforcer la cohésion, fédérer les équipes et encourager la communication."
+    ]
+  },
+  "functionalities": {
+    "items": [
+      {
+        "id": 1,
+        "title": "Inscriptions simples et personnalisées",
+        "description": "Adaptez les formulaires à vos besoins : ateliers choisis, préférences repas, équipes souhaitées…",
+        "icon": {
+          "className": "w-8 h-8 text-violet-400",
+          "path": "M12 11c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm-2 7c-3.866 0-7-3.134-7-7S6.134 4 10 4s7 3.134 7 7-3.134 7-7 7z"
+        },
+        "link": "/functionalitie-inscription"
+      },
+      {
+        "id": 2,
+        "title": "Planning interactif",
+        "description": "Affichez les horaires des ateliers, des animations et des temps libres avec rappels et synchronisation.",
+        "icon": {
+          "className": "w-8 h-8 text-orange-400",
+          "path": "M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2v-6H3v6a2 2 0 002 2z"
+        },
+        "link": "/functionalitie-planning"
+      },
+      {
+        "id": 3,
+        "title": "Activités gamifiées",
+        "description": "Ajoutez du fun avec des quiz, défis d’équipes, classements, et récompenses numériques.",
+        "icon": {
+          "className": "w-8 h-8 text-pink-400",
+          "path": "M9.049 2.927C9.469 1.947 10.531 1.947 10.951 2.927l1.518 3.505 3.808.315c1.091.09 1.543 1.405.707 2.106l-2.935 2.506.873 3.71c.253 1.077-.888 1.926-1.787 1.378L10 14.347l-3.184 2.1c-.9.548-2.04-.3-1.787-1.378l.873-3.71-2.935-2.506c-.836-.701-.384-2.016.707-2.106l3.808-.315 1.518-3.505z"
+        },
+        "link": "/functionalitie-gamification"
+      },
+      {
+        "id": 4,
+        "title": "Retour d’expérience",
+        "description": "Recueillez facilement les impressions des participants via des enquêtes post-événement.",
+        "icon": {
+          "className": "w-8 h-8 text-teal-400",
+          "path": "M3 10h18M3 6h18M9 14h6m-3 4h.01M5 20h14a2 2 0 002-2v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2z"
+        },
+        "link": "/functionalitie-feedback"
+      }
+    ]
+  },
+  "moreContent": {
+    "title": "Pour aller plus loin",
+    "buttonLabel": "Voir plus de séminaires",
+    "items": [
+      {
+        "title": "Séminaire 2024 : cohésion et stratégie",
+        "image": "/images/shared/guide.jpg"
+      },
+      {
+        "title": "Team Building dans les Alpes",
+        "image": "/images/shared/customization.jpg"
+      },
+      {
+        "title": "Ateliers de leadership et communication",
+        "image": "/images/shared/guide.jpg"
+      }
+    ]
+  }
+}

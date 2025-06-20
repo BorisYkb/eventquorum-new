@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -142,7 +142,7 @@ export default function ResultatsPage() {
       {/* Cartes de statistiques */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {statsData.map((stat, index) => (
-          <Grid xs={12} sm={6} md={3} key={index}>
+          <Grid item xs={12} sm={6} md={3} key={index}>
             <Card sx={{ p: 3, textAlign: 'center', height: '100%' }}>
               <Box sx={{ mb: 2 }}>
                 <Iconify
@@ -258,7 +258,7 @@ export default function ResultatsPage() {
         {/* Résumé en bas du tableau */}
         <Box sx={{ p: 3, bgcolor: '#F8F9FA', borderTop: 1, borderColor: 'divider' }}>
           <Grid container spacing={3}>
-            <Grid xs={12} md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="subtitle2" gutterBottom>
                 Résumé des performances
               </Typography>
@@ -283,7 +283,7 @@ export default function ResultatsPage() {
                 </Box>
               </Box>
             </Grid>
-            <Grid xs={12} md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="subtitle2" gutterBottom>
                 Recommandations
               </Typography>

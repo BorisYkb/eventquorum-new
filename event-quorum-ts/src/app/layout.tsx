@@ -1,3 +1,5 @@
+//src/app/layout.tsx
+
 import 'src/global.css';
 
 import type { Metadata, Viewport } from 'next';

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Tab from '@mui/material/Tab';
@@ -328,12 +328,14 @@ export default function ParticipantsPage() {
                   fullWidth
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  displayEmpty
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
                       bgcolor: 'white'
                     }
+                  }}
+                  SelectProps={{
+                    displayEmpty: true
                   }}
                 >
                   <MenuItem value="">Statut</MenuItem>

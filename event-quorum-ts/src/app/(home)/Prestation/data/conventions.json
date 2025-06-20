@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "breadcrumb": "Événement / Conventions",
+    "title": "Faites de vos conventions des moments de partage inspirants pour vos participants",
+    "bgColor": "bg-amber-100",
+    "image": "/images/conventions/hero.jpg"
+  },
+  "introduction": {
+    "text": "Vous souhaitez organiser une convention pour éduquer vos participants sur un sujet spécifique, pour promouvoir une cause, ou pour faciliter le réseautage entre professionnels ?",
+    "bgColor": "bg-white"
+  },
+  "features": {
+    "title": "Optimisez votre convention grâce à nos solutions digitales",
+    "items": [
+      "Créez des espaces de discussion et d'échange",
+      "Offrez des supports numériques interactifs",
+      "Facilitez les inscriptions et la gestion des participants",
+      "Développez une communauté autour de votre événement"
+    ],
+    "bgColor": "bg-pink-50"
+  },
+  "reasonsToChoose": {
+    "title": "Deux raisons de choisir EventQuorum",
+    "blocks": [
+      {
+        "title": "Récoltez des informations précises sur vos participants",
+        "content": "Notre plateforme vous permet de collecter efficacement des données pertinentes sur les participants avant, pendant et après votre convention. Ces informations vous aideront à personnaliser l'expérience et à améliorer vos futurs événements.",
+        "image": "/images/conventions/data-collection.jpg",
+        "bgColor": "bg-blue-50"
+      },
+      {
+        "title": "Obtenez un score pour chaque participant",
+        "content": "Évaluez l'engagement et la participation de chacun grâce à notre système de scoring. Identifiez les participants les plus actifs et offrez-leur des avantages exclusifs pour récompenser leur implication.",
+        "image": "/images/conventions/scoring.jpg",
+        "bgColor": "bg-green-50"
+      }
+    ]
+  },
+  "whyChoose": {
+    "title": "Pourquoi choisir la fonctionnalité de matchmaking ?",
+    "items": [
+      {
+        "icon": ["users", "text-yellow-400"],
+        "title": "Liste intelligente",
+        "description": "Des participants triés selon leurs centres d'intérêts"
+      },
+      {
+        "icon": ["calendar", "text-green-400"],
+        "title": "Salle disponible",
+        "description": "Organisation facilitée des réunions et ateliers"
+      },
+      {
+        "icon": ["chart", "text-red-400"],
+        "title": "Un tracking automatique",
+        "description": "Des connections réussies mesurées"
+      },
+      {
+        "icon": ["rocket", "text-blue-400"],
+        "title": "Suivi global du projet",
+        "description": "Mesure de l'impact stratégique"
+      }
+    ],
+    "bgColor": "bg-pink-50"
+  },
+  "functionalities": {
+    "title": "Nos fonctionnalités",
+    "items": [
+      {
+        "icon": ["presentation", "text-red-400"],
+        "title": "Rendez-vous",
+        "link": "fonctionnalite-1"
+      },
+      {
+        "icon": ["message", "text-blue-400"],
+        "title": "Espaces interactifs",
+        "link": "fonctionnalite-2"
+      },
+      {
+        "icon": ["network", "text-yellow-400"],
+        "title": "Networking",
+        "link": "fonctionnalite-3"
+      }
+    ]
+  },
+  "moreContent": {
+    "title": "Pour aller plus loin",
+    "buttonLabel": "Voir plus de conférences",
+    "items": [
+      {
+        "title": "Conférence IA 2024 : enjeux et perspectives",
+        "image": "/content/arkea.jpg"
+      },
+      {
+        "title": "Retour sur la Convention Annuelle 2023",
+        "image": "/content/guide.jpg"
+      },
+      {
+        "title": "Talks Inspirants : Innover dans l'incertitude",
+        "image": "/content/webinar.jpg"
+      }
+    ]
+  }
+}

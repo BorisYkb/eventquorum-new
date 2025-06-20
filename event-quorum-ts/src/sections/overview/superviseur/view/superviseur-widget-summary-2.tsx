@@ -77,11 +77,18 @@ export function SuperviseurWidgetSummary({
           position: 'relative',
           color: `${color}.darker`,
           backgroundColor: 'common.white',
-          backgroundImage: `linear-gradient(135deg, ${varAlpha(theme.vars.palette[color].lighterChannel, 0.48)}, ${varAlpha(theme.vars.palette[color].lightChannel, 0.48)})`,
+          backgroundImage: (() => {
+            const paletteColor = theme.vars.palette[color as keyof typeof theme.vars.palette] as any;
+            const lighterChannel = paletteColor?.lighterChannel ?? '';
+            const lightChannel = paletteColor?.lightChannel ?? '';
+            if (lighterChannel && lightChannel) {
+              return `linear-gradient(135deg, ${varAlpha(lighterChannel, 0.48)}, ${varAlpha(lightChannel, 0.48)})`;
+            }
+            return 'none';
+          })(),
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      {...other}
     >
       {renderTrending}
 

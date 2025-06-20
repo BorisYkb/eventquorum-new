@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
 import Card from '@mui/material/Card';
@@ -310,7 +310,7 @@ export function DetailsInvite({ open, onClose, participant }: DetailsInviteProps
             <DialogContent sx={{ p: 3, bgcolor: 'grey.50' }}>
                 <Grid container spacing={3} sx={{ justifyContent: 'center', alignItems: 'stretch' }}>
                     {/* Colonne gauche */}
-                    <Grid xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Box sx={{ width: '100%', maxWidth: 450 }}>
                             <Stack spacing={3}>
                                 {renderPersonalInfo()}
@@ -320,7 +320,7 @@ export function DetailsInvite({ open, onClose, participant }: DetailsInviteProps
                     </Grid>
 
                     {/* Colonne droite */}
-                    <Grid xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Box sx={{ width: '100%', maxWidth: 450 }}>
                             <Stack spacing={3}>
                                 {renderConnectionInfo()}

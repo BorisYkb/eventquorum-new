@@ -1,0 +1,36 @@
+{
+    "logo": {
+      "icon": "E",
+      "name": "EventQuorum",
+      "description": "Transformez vos idées en événements inoubliables. Notre équipe expérimentée vous accompagne dans la création d'expériences sur mesure qui marqueront les esprits."
+    },
+    "services": [
+      { "label": "Plateforme événementielle personnalisable", "url": "/services/plateforme-evenementielle" },
+      { "label": "Billetterie en ligne et gestion des paiements", "url": "/services/billetterie" },
+      { "label": "Retransmission en direct ou différée", "url": "/services/retransmission" },
+      { "label": "Gestion des inscriptions et des accès", "url": "/services/inscriptions-acces" },
+      { "label": "Votes électroniques & interactions live", "url": "/services/votes-interactions" },
+      { "label": "Suivi des performances & statistiques", "url": "/services/statistiques" }
+    ],
+    "useful_links": [
+      { "label": "À propos de nous", "url": "/a-propos" },
+      { "label": "Témoignages clients", "url": "/temoignages" },
+      { "label": "FAQ", "url": "/faq" },
+      { "label": "Carrières", "url": "/carriere" },
+      { "label": "Mentions légales", "url": "/mentions-legales" },
+      { "label": "Politique de confidentialité", "url": "/confidentialite" },
+      { "label": "Conditions d'utilisation", "url": "/conditions-utilisation" }
+    ],
+    "contact": {
+      "address": "Rivera 2 / Pharmacie SPRING, Cocody Abidjan, Côte d'Ivoire",
+      "phone": "+225 01 41 95 03 52",
+      "email": "infos@quorumenligne.com"
+    },
+    "social_media": {
+      "facebook": "https://facebook.com/eventquorum",
+      "twitter": "https://twitter.com/eventquorum",
+      "instagram": "https://instagram.com/eventquorum",
+      "linkedin": "https://linkedin.com/company/eventquorum"
+    }
+  }
+  

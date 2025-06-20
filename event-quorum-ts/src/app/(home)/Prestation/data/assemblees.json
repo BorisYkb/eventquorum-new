@@ -1,0 +1,120 @@
+{
+  "hero": {
+    "breadcrumb": "Événement / Assemblées Générales",
+    "title": "Rendez vos assemblées générales plus engageantes et participatives",
+    "bgColor": "bg-green-100",
+    "image": "/images/assemblees/hero.jpg"
+  },
+  "introduction": {
+    "text": "Vous souhaitez organiser une assemblée générale efficace, transparente et inclusive qui favorise la participation active de tous les membres ?",
+    "bgColor": "bg-white"
+  },
+  "features": {
+    "title": "Optimisez votre assemblée générale grâce à nos solutions digitales",
+    "items": [
+      "Digitalisez les votes avec des boîtiers électroniques et une application en ligne",
+      "Permettez une participation à distance fluide et sécurisée",
+      "Accélérez l’enregistrement grâce à la liste pré-remplie et la signature sur tablette",
+      "Offrez la possibilité de voter par anticipation pour les actionnaires en ligne",
+      "Favorisez l’interactivité avec des questions en temps réel du public en ligne",
+      "Collectez et restituez les résultats automatiquement après l’AG"
+    ],
+    "bgColor": "bg-green-100"
+  },
+  "reasonsToChoose": {
+    "title": "Deux raisons de choisir EventQuorum",
+    "blocks": [
+      {
+        "title": "Digitalisez et accélérez vos assemblées générales",
+        "content": "Supprimez les lenteurs liées aux votes manuels et à l’enregistrement papier. Avec EventQuorum, tous les processus sont fluides, rapides et traçables.",
+        "image": "/images/assemblees/voting-system.jpg",
+        "bgColor": "bg-emerald-50"
+      },
+      {
+        "title": "Permettez une participation à distance complète",
+        "content": "Grâce à notre interface web personnalisée, vos membres peuvent s’inscrire, consulter les documents, suivre l’AG en direct, poser des questions et voter où qu’ils soient.",
+        "image": "/images/assemblees/discussion.jpg",
+        "bgColor": "bg-teal-50"
+      }
+    ]
+  },
+  "whyChoose": {
+    "title": "Pourquoi choisir notre solution d'assemblée générale ?",
+    "items": [
+      {
+        "icon": ["check-circle", "text-amber-600"],
+        "title": "Conformité légale",
+        "description": "Respect des obligations statutaires"
+      },
+      {
+        "icon": ["shield", "text-red-400"],
+        "title": "Sécurité renforcée",
+        "description": "Protection des données sensibles"
+      },
+      {
+        "icon": ["users-group", "text-orange-400"],
+        "title": "Participation inclusive",
+        "description": "Accessibilité pour tous les membres à distance ou sur place"
+      },
+      {
+        "icon": ["document", "text-yellow-400"],
+        "title": "Documentation complète",
+        "description": "Archivage, traçabilité et synthèse des résultats d’AG"
+      }
+    ],
+    "bgColor": "bg-emerald-50"
+  },
+  "functionalities": {
+    "title": "Nos fonctionnalités",
+    "items": [
+      {
+        "icon": ["tablet-check", "text-green-500"],
+        "title": "Enregistrement digitalisé",
+        "link": "fonctionnalite-1"
+      },
+      {
+        "icon": ["vote-yesno", "text-blue-400"],
+        "title": "Vote en ligne et sur site",
+        "link": "fonctionnalite-2"
+      },
+      {
+        "icon": ["calendar-clock", "text-purple-500"],
+        "title": "Vote anticipé",
+        "link": "fonctionnalite-3"
+      },
+      {
+        "icon": ["document-share", "text-green-400"],
+        "title": "Partage de documents",
+        "link": "fonctionnalite-4"
+      },
+      {
+        "icon": ["chat-question", "text-amber-600"],
+        "title": "Questions-réponses interactives",
+        "link": "fonctionnalite-5"
+      },
+      {
+        "icon": ["monitor-mobile", "text-cyan-600"],
+        "title": "Espace actionnaire en ligne",
+        "link": "fonctionnalite-6"
+      }
+    ]
+  },
+  "moreContent": {
+    "title": "Pour aller plus loin",
+    "buttonLabel": "Voir plus d'événements",
+    "items": [
+      {
+        "title": "Assemblée Générale Orange 2025 : retour en images",
+        "image": "/images/shared/testimonials.jpg"
+      },
+      {
+        "title": "Retour en images sur l'assemblée générale 2025 de la société SAPH",
+        "image": "/images/shared/customization.jpg"
+      },
+      {
+        "title": "Assemblée Générale extraordinaire et ordinaire 2024 de la société SGBCI ",
+        "image": "/images/shared/guide.jpg"
+      }
+    ]
+  }
+}

@@ -155,8 +155,11 @@ export function ParticipantTableFiltersResult({
       totalResults={totalResults} 
       onReset={handleReset} 
       sx={sx}
-      resultsLabel={getResultsLabel()}
     >
+      {/* Résumé des résultats */}
+      <FiltersBlock label="" isShow>
+        {getResultsLabel()}
+      </FiltersBlock>
       {/* Filtre par mot-clé (présent dans tous les onglets) */}
       <FiltersBlock label="Recherche:" isShow={!!currentFilters.name}>
         <Chip 

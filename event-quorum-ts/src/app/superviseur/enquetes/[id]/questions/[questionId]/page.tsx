@@ -7,6 +7,7 @@ import { Question } from '../../../types/survey';
 const mockQuestions: Question[] = [
   {
     id: 1,
+    type: 'choice',
     question: "Les participants de ce site d'étude pouvait-ils développer de nouvelles idées et trouver des réponses à leurs interrogations ?",
     responses: {
       "Oui": 45,
@@ -16,6 +17,7 @@ const mockQuestions: Question[] = [
   },
   {
     id: 2,
+    type: 'choice',
     question: "Quelles sont les bonnes modalités de création des activités ?",
     responses: {
       "Oui": 52,
@@ -25,6 +27,7 @@ const mockQuestions: Question[] = [
   },
   {
     id: 3,
+    type: 'choice',
     question: "Les prestataires de ce site d'étude pouvaient-ils développer de nouvelles idées et trouver des réponses à leurs interrogations ?",
     responses: {
       "Trop courte": 25,

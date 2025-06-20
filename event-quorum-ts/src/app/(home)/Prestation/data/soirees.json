@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "breadcrumb": "Événement / Soirées d'entreprise",
+    "title": "Créez des soirées d'entreprise exceptionnelles et mémorables",
+    "bgColor": "bg-purple-100",
+    "image": "/images/soirees/hero.jpg"
+  },
+  "introduction": {
+    "text": "Vous souhaitez organiser une soirée d'entreprise qui renforce la cohésion d'équipe, célèbre les succès ou marque un événement important dans la vie de votre organisation ?",
+    "bgColor": "bg-white-100"
+  },
+  "features": {
+    "title": "Rendez votre soirée inoubliable grâce à nos solutions digitales",
+    "items": [
+      "Créez une ambiance festive et personnalisée",
+      "Proposez des activités ludiques et interactives",
+      "Facilitez les échanges entre collaborateurs",
+      "Immortalisez les moments forts grâce à nos outils de partage"
+    ],
+    "bgColor": "bg-purple-100"
+  },
+  "reasonsToChoose": {
+    "title": "Deux raisons de choisir EventQuorum",
+    "blocks": [
+      {
+        "title": "Personnalisez l'expérience de chaque invité",
+        "content": "Notre plateforme permet de créer des parcours personnalisés pour vos invités en fonction de leurs préférences, de leur département ou de leur ancienneté. Offrez une expérience unique qui répond aux attentes de chacun.",
+        "image": "/images/soirees/personalization.jpg",
+        "bgColor": "bg-fuchsia-50"
+      },
+      {
+        "title": "Créez des moments d'interaction ludiques",
+        "content": "Intégrez des activités interactives comme des quiz, des défis d'équipe ou des jeux collaboratifs. Renforcez la cohésion et créez des souvenirs mémorables pour tous les participants.",
+        "image": "/images/soirees/interactive.jpg",
+        "bgColor": "bg-violet-50"
+      }
+    ]
+  },
+  "whyChoose": {
+    "title": "Pourquoi choisir notre solution pour votre soirée ?",
+    "items": [
+      {
+        "icon": ["star", "text-purple-400"],
+        "title": "Animation premium",
+        "description": "Des activités originales et engageantes"
+      },
+      {
+        "icon": ["camera", "text-yellow-400"],
+        "title": "Photobooth digital",
+        "description": "Création de souvenirs personnalisés"
+      },
+      {
+        "icon": ["music", "text-orage-400"],
+        "title": "Ambiance sonore",
+        "description": "Playlists adaptées à chaque moment"
+      },
+      {
+        "icon": ["confetti", "text-blue-400"],
+        "title": "Moments surprises",
+        "description": "Expériences mémorables garanties"
+      }
+    ],
+    "bgColor": "bg-violet-50"
+  },
+  "functionalities": {
+    "title": "Nos fonctionnalités",
+    "items": [
+      {
+        "icon": ["calendar-event", "text-purple-400"],
+        "title": "Planification",
+        "link": "fonctionnalite-3"
+      },
+      {
+        "icon": ["game", "text-green-400"],
+        "title": "Activités ludiques",
+        "link": "fonctionnalite-3"
+      },
+      {
+        "icon": ["camera-polaroid", "text-pink-400"],
+        "title": "Souvenirs partagés",
+        "link": "fonctionnalite-3"
+      }
+    ]
+  },
+  "moreContent": {
+    "title": "Pour aller plus loin",
+    "buttonLabel": "Voir plus de soirées",
+    "items": [
+      {
+        "title": "Soirée de fin d’année 2024 : ambiance garantie",
+        "image": "/content/webinar.jpg"
+      },
+      {
+        "title": "Afterwork d’équipe à Paris",
+        "image": "/images/shared/customization.jpg"
+      },
+      {
+        "title": "Soirée clients & partenaires 2023",
+        "image": "/content/webinar.jpg"
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "hero": {
+    "title": "Plateforme Événementielle Personnalisable",
+    "subtitle": "Concevez une expérience technique unique pour vos événements professionnels.",
+    "image": "/images/services/plateforme-hero.jpg"
+  },
+  "description": {
+    "text": "EventQuorum met à votre disposition une plateforme flexible et complète pour gérer tous les aspects techniques et numériques de vos événements. Que ce soit pour des conférences, des cérémonies, des forums ou des séminaires, vous pouvez tout personnaliser : enregistrement, billetterie, diffusion, votes électroniques, interactions en direct et plus encore.",
+    "image": "/images/services/plateforme-description.jpg"
+  },
+  "features": [
+    {
+      "title": "Personnalisation complète",
+      "description": "Adaptez chaque module (inscription, billetterie, diffusion, interactions) à la nature de votre événement.",
+      "icon": "SlidersHorizontal"
+    },
+    {
+      "title": "Diffusion en direct ou différée",
+      "description": "Offrez une retransmission fluide selon les besoins de vos participants.",
+      "icon": "Cast"
+    },
+    {
+      "title": "Analyse de performance",
+      "description": "Suivez les statistiques clés et visualisez les bénéfices générés par l'événement.",
+      "icon": "BarChart2"
+    },
+    {
+      "title": "Gestion multi-publics",
+      "description": "Une interface distincte pour les organisateurs, les participants et les équipes techniques.",
+      "icon": "Users"
+    },
+    {
+      "title": "Sécurité et fiabilité",
+      "description": "Des protocoles robustes pour la gestion des données, paiements et accès.",
+      "icon": "ShieldCheck"
+    }
+  ],
+  "support": [
+    {
+      "title": "Accompagnement technique",
+      "description": "Une équipe dédiée vous accompagne avant, pendant et après votre événement."
+    },
+    {
+      "title": "Assistance en temps réel",
+      "description": "Support en direct le jour J pour garantir le bon déroulement de l’événement."
+    },
+    {
+      "title": "Formation des équipes",
+      "description": "Des sessions de formation pour vous et vos collaborateurs sur la plateforme."
+    },
+    {
+      "title": "Documentation complète",
+      "description": "Des guides clairs et détaillés pour tirer pleinement parti de toutes les fonctionnalités."
+    }
+  ]
+}

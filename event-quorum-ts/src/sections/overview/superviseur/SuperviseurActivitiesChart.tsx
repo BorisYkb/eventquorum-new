@@ -36,12 +36,13 @@ export function SuperviseurActivitiesChart({ title, subheader, chart }: Props) {
     <Card>
       <CardHeader title={title} subheader={subheader} />
       <CardContent>
-        <Chart
-          type="pie"
-          series={values}
-          options={chartOptions}
-          height={320}
-        />
+        {chartOptions && (
+          <Chart
+            type="pie"
+            series={values}
+            options={{ ...chartOptions, chart: { ...chartOptions.chart, height: 320 } }}
+          />
+        )}
       </CardContent>
     </Card>
   );
