@@ -41,7 +41,7 @@ export default function Hero({ title, bgColor, image, breadcrumb }: HeroProps) {
     return (
         <section className={`w-full ${bgColor} dark:bg-gray-900 py-14 px-4 md:px-8 lg:px-16`}>
             <div className="max-w-6xl mx-auto space-y-6 mt-20">
-                <p className="text-amber-700 dark:text-amber-300 uppercase font-semibold tracking-wider animate-item">
+                <p className="text-amber-700 dark:text-amber-400 uppercase font-semibold tracking-wider animate-item">
                     {breadcrumb}
                 </p>
                 <h1
