@@ -1,14 +1,11 @@
 // components/EventsSection.jsx
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-
-import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 
 // Initialisation du plugin (une seule fois dans l'application)
 if (typeof window !== 'undefined') {
@@ -17,13 +14,13 @@ if (typeof window !== 'undefined') {
 
 export default function EventsSection() {
   // État pour suivre l'événement survolé/sélectionné
-  const [activeEvent, setActiveEvent] = useState<number | null>(null);
+  const [activeEvent, setActiveEvent] = useState(null);
 
   // Références pour les éléments à animer
   const titleRef = useRef(null);
   const introRef = useRef(null);
   const liRef = useRef(null);
-  
+
   // Données des événements (à remplacer par vos propres événements)
   const events = [
     {
@@ -61,16 +58,12 @@ export default function EventsSection() {
   ];
 
   // Formatage de la date en français
-  const formatEventDate = (date: Date) => {
+  const formatEventDate = (date) => {
     return format(date, "d MMMM yyyy", { locale: fr });
   };
 
-  // Référence pour la section des événements
-  
-
   // Animation GSAP pour la section des événements
   useEffect(() => {
-
     if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
     }
@@ -82,6 +75,7 @@ export default function EventsSection() {
         toggleActions: "play none none none"
       }
     });
+
     tl.fromTo(
       titleRef.current,
       { y: 50, opacity: 0 },
@@ -99,17 +93,18 @@ export default function EventsSection() {
       { x: 0, opacity: 1, duration: 0.8 },
       "-=0.4"
     );
-    
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
-  
- 
-
   return (
-    <section className="mt-12 py-15 bg-gray-50">
+    <section className="mt-12 py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12">
-          
+
           {/* Titre et intro (gauche) */}
           <div className="w-full lg:w-1/3 lg:sticky lg:top-24 lg:self-start">
             <h2 ref={titleRef} className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
@@ -119,20 +114,22 @@ export default function EventsSection() {
             <p ref={introRef} className="text-lg text-gray-600 mb-8">
               Rejoignez-nous lors de nos événements exclusifs pour apprendre, réseauter et découvrir les dernières innovations du secteur.
             </p>
-            <a href="/Explorer" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800">
+            <a
+              href="/Explorer"
+              className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors no-underline"
+            >
               Voir tous les événements
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </a>
           </div>
-          
+
           {/* Liste des événements (droite) */}
           <div ref={liRef} className="w-full lg:w-2/3">
             <ul className="space-y-6">
               {events.map((event) => (
-                <li 
-                  
+                <li
                   key={event.id}
                   className={`bg-white rounded-xl shadow-md transition-all duration-300 ${
                     activeEvent === event.id ? 'scale-[1.02] shadow-xl' : 'hover:shadow-lg'
@@ -140,29 +137,32 @@ export default function EventsSection() {
                   onMouseEnter={() => setActiveEvent(event.id)}
                   onMouseLeave={() => setActiveEvent(null)}
                 >
-                  <a  href={`/evenements/${event.id}`} className="block p-6">
+                  <a
+                    href={`/evenements/${event.id}`}
+                    className="block p-6 no-underline hover:no-underline"
+                  >
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-                      <div className="flex items-center">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mr-3 ${
-                          event.category === 'Conférence' ? 'bg-blue-100 text-blue-800' : 
-                          event.category === 'Atelier' ? 'bg-green-100 text-green-800' : 
-                          event.category === 'Hackathon' ? 'bg-purple-100 text-purple-800' : 
+                      <div className="flex items-center flex-wrap gap-3">
+                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                          event.category === 'Conférence' ? 'bg-blue-100 text-blue-800' :
+                          event.category === 'Atelier' ? 'bg-green-100 text-green-800' :
+                          event.category === 'Hackathon' ? 'bg-purple-100 text-purple-800' :
                           'bg-orange-100 text-orange-800'
                         }`}>
                           {event.category}
                         </span>
                         <h3 className="text-xl font-semibold text-gray-900">{event.title}</h3>
                       </div>
-                      <div className="flex items-center text-gray-500 text-sm">
+                      <div className="flex items-center text-gray-500 text-sm flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         {formatEventDate(event.date)}
                       </div>
                     </div>
-                    
-                    <p className="text-gray-600 mb-4">{event.description}</p>
-                    
+
+                    <p className="text-gray-600 mb-4 leading-relaxed">{event.description}</p>
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center text-gray-500 text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -171,7 +171,7 @@ export default function EventsSection() {
                         </svg>
                         {event.location}
                       </div>
-                      <span className="inline-flex items-center text-blue-600 font-medium text-sm">
+                      <span className="inline-flex items-center text-blue-600 font-medium text-sm transition-colors hover:text-blue-800">
                         En savoir plus
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -183,7 +183,7 @@ export default function EventsSection() {
               ))}
             </ul>
           </div>
-          
+
         </div>
       </div>
     </section>

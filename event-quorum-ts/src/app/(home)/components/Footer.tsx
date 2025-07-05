@@ -4,16 +4,16 @@ import React, { useEffect, useRef } from 'react';
 import { Mail, Phone, MapPin, Instagram, Twitter, Facebook, Linkedin, ArrowUp } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import  footerData from '../data/footer.json'; // Import des données JSON
+import footerData from '../data/footer.json'; // Import des données JSON
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement | null>(null);
-  const columnRefs = useRef<HTMLDivElement[]>([]);
+  const footerRef = useRef(null);
+  const columnRefs = useRef([]);
   const logoRef = useRef(null);
   const copyrightRef = useRef(null);
-  const gsapRef = useRef<typeof gsap | null>(null);
+  const gsapRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -76,10 +76,12 @@ const Footer = () => {
   return (
     <footer
       ref={footerRef}
-      className="relative bg-gradient-to-br from-gray-900 via-blue-950 to-black text-gray-100 px-6 pt-20 pb-10 overflow-hidden" id='Footer'>
+      className="relative bg-gradient-to-br from-gray-900 via-blue-950 to-black text-gray-100 px-6 pt-10 pb-10 overflow-hidden"
+      id='Footer'
+    >
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Logo + description */}
-        <div ref={(el) => { columnRefs.current[0] = el!; }} className="space-y-4">
+        <div ref={(el) => { columnRefs.current[0] = el; }} className="space-y-4">
           <div ref={logoRef} className="flex items-center space-x-3">
             <div className="bg-blue-500 h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-xl">
               {logo.icon}
@@ -90,12 +92,15 @@ const Footer = () => {
         </div>
 
         {/* Services */}
-        <div ref={(el) => { columnRefs.current[1] = el!; }} className="space-y-4">
+        <div ref={(el) => { columnRefs.current[1] = el; }} className="space-y-4">
           <h3 className="text-lg font-semibold border-b border-blue-500 pb-2 inline-block">Nos Services</h3>
           <ul className="space-y-2 text-sm">
             {services.map((service, idx) => (
               <li key={idx}>
-                <a href={service.url} className="hover:text-blue-400 transition-all duration-300">
+                <a
+                  href={service.url}
+                  className="hover:text-blue-400 transition-all duration-300 no-underline"
+                >
                   {service.label}
                 </a>
               </li>
@@ -104,12 +109,15 @@ const Footer = () => {
         </div>
 
         {/* Liens utiles */}
-        <div ref={(el) => { columnRefs.current[2] = el!; }} className="space-y-4">
+        <div ref={(el) => { columnRefs.current[2] = el; }} className="space-y-4">
           <h3 className="text-lg font-semibold border-b border-blue-500 pb-2 inline-block">Liens utiles</h3>
           <ul className="space-y-2 text-sm">
             {useful_links.map((link, idx) => (
               <li key={idx}>
-                <a href={link.url} className="hover:text-blue-400 transition-all duration-300">
+                <a
+                  href={link.url}
+                  className="hover:text-blue-400 transition-all duration-300 no-underline"
+                >
                   {link.label}
                 </a>
               </li>
@@ -118,7 +126,7 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-        <div ref={(el) => { columnRefs.current[3] = el!; }} className="space-y-4">
+        <div ref={(el) => { columnRefs.current[3] = el; }} className="space-y-4">
           <h3 className="text-lg font-semibold border-b border-blue-500 pb-2 inline-block">Contact</h3>
           <div className="text-sm space-y-3">
             <div className="flex items-start space-x-2">
@@ -131,7 +139,10 @@ const Footer = () => {
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="h-5 w-5 text-blue-400" />
-              <a href={`mailto:${contact.email}`} className="hover:text-blue-400 transition-all">
+              <a
+                href={`mailto:${contact.email}`}
+                className="hover:text-blue-400 transition-all no-underline"
+              >
                 {contact.email}
               </a>
             </div>
@@ -140,22 +151,42 @@ const Footer = () => {
           {/* Réseaux sociaux */}
           <div className="flex space-x-3 mt-6">
             {social_media.facebook && (
-              <a href={social_media.facebook} target="_blank" className="social-icon">
+              <a
+                href={social_media.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon"
+              >
                 <Facebook className="h-5 w-5" />
               </a>
             )}
             {social_media.twitter && (
-              <a href={social_media.twitter} target="_blank" className="social-icon">
+              <a
+                href={social_media.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon"
+              >
                 <Twitter className="h-5 w-5" />
               </a>
             )}
             {social_media.instagram && (
-              <a href={social_media.instagram} target="_blank" className="social-icon">
+              <a
+                href={social_media.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon"
+              >
                 <Instagram className="h-5 w-5" />
               </a>
             )}
             {social_media.linkedin && (
-              <a href={social_media.linkedin} target="_blank" className="social-icon">
+              <a
+                href={social_media.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon"
+              >
                 <Linkedin className="h-5 w-5" />
               </a>
             )}
@@ -179,7 +210,11 @@ const Footer = () => {
               )
             )
             .map((link, idx) => (
-              <a key={idx} href={link.url} className="hover:text-blue-400 transition-all">
+              <a
+                key={idx}
+                href={link.url}
+                className="hover:text-blue-400 transition-all no-underline"
+              >
                 {link.label}
               </a>
             ))}
@@ -192,7 +227,7 @@ const Footer = () => {
       {/* Styles utilitaires supplémentaires */}
       <style jsx>{`
         .social-icon {
-          @apply bg-gray-800 hover:bg-blue-600 text-white p-2 rounded-full transition-all;
+          @apply bg-gray-800 hover:bg-blue-600 text-white p-2 rounded-full transition-all no-underline;
         }
       `}</style>
     </footer>

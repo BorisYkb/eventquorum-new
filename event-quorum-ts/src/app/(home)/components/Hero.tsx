@@ -7,8 +7,8 @@ import Link from 'next/link';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  
-  
+
+
   useEffect(() => {
     // Animation d'entrée au chargement
     setIsVisible(true);
@@ -18,17 +18,14 @@ export default function Hero() {
 
   return (
     <header className="bg-gradient-to-br mt-0 pt-4 pb-10 overflow-hidden">
-      <div className="max-w-13xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-22">
-          
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+
           {/* Partie texte (gauche) */}
           <div
             className={`w-full lg:w-1/2 transition-all duration-2000 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
               }`}
           >
-            <span className="inline-block bg-blue-100 text-blue-800 px-4 py-1 rounded-full text-sm font-semibold mb-4">
-              EventQuorum
-            </span>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-300 leading-tight mb-4">
               Créer des <span className="text-blue-600">moments</span> extraordinaires
@@ -42,16 +39,16 @@ export default function Hero() {
             <div className="flex flex-wrap gap-4 mb-8">
               <Link
                 href="/DemoRequest"
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white no-underline rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
                 Créer un événement
               </Link>
 
-              
-              
+
+
             </div>
 
             {/* Statistiques */}
-            <div className="flex gap-10 md:gap-14 mt-8">
+            <div className="flex gap-6 md:gap-14 mt-8">
               <div className="text-center md:text-left">
                 <p className="text-xl font-bold">
                   <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">14k+</span>
@@ -75,9 +72,9 @@ export default function Hero() {
             </div>
           </div>
 
-          
+
           {/* Image (droite) */}
-          <div 
+          <div
             className={`w-full lg:w-1/2 transition-all duration-2000 transform ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
             }`}
@@ -89,19 +86,19 @@ export default function Hero() {
                 {/* Simuler une image - remplacez par votre propre image */}
                 <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/30 rounded-full blur-3xl"></div>
                 <div className="absolute top-10 left-10 w-40 h-40 bg-yellow-400/20 rounded-full blur-xl"></div>
-                
+
                 {/* Quand vous aurez une vraie image, utilisez : */}
-                { <Image 
-                  src="/event2.avif" 
-                  alt="une evenement" 
-                  fill 
+                { <Image
+                  src="/event2.avif"
+                  alt="une evenement"
+                  fill
                   style={{ objectFit: 'cover' }}
                   priority
                 /> }
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
     </header>
