@@ -1,20 +1,71 @@
-
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const intervalRef = useRef(null);
 
+  // Données du carrousel - remplacez par vos propres images
+  const carouselData = [
+    {
+      id: "1",
+      title: "Conférence d'entreprise festive",
+      coverUrl: "/event2.avif",
+      description: "Organisez des conférences d'entreprise mémorables"
+    },
+    {
+      id: "2",
+      title: "Soirée de gala",
+      coverUrl: "/event10.jpg",
+      description: "Créez des soirées de gala mémorables"
+    },
+    {
+      id: "3",
+      title: "Concert",
+      coverUrl: "/event9.jpg",
+      description: "Organisez des concerts inoubliables"
+    },
+    {
+      id: "4",
+      title: "Événement networking",
+      coverUrl: "/event8.jpg",
+      description: "Créez des moments de networking"
+    },
+    {
+      id: "5",
+      title: "Lancement de produit",
+      coverUrl: "/produit1.png",
+      description: "Organisez vos lancements de produits"
+    }
+  ];
 
   useEffect(() => {
     // Animation d'entrée au chargement
     setIsVisible(true);
-
-
   }, []);
+
+  // Carrousel automatique
+  useEffect(() => {
+    const startCarousel = () => {
+      intervalRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % carouselData.length);
+      }, 3000); // Change toutes les 3 secondes
+    };
+
+    // Démarrage après que l'animation d'entrée soit terminée
+    const timer = setTimeout(startCarousel, 2500);
+
+    return () => {
+      clearTimeout(timer);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [carouselData.length]);
 
   return (
     <header className="bg-gradient-to-br mt-0 pt-4 pb-10 overflow-hidden">
@@ -23,28 +74,26 @@ export default function Hero() {
 
           {/* Partie texte (gauche) */}
           <div
-            className={`w-full lg:w-1/2 transition-all duration-2000 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
-              }`}
+            className={`w-full lg:w-1/2 transition-all duration-2000 transform ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
+            }`}
           >
-
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-300 leading-tight mb-4">
               Créer des <span className="text-blue-600">moments</span> extraordinaires
             </h1>
 
             <p className="text-lg text-gray-600 mb-6">
-            Nous transformons vos idées en événements exceptionnels qui dépassent toutes les attentes. Commencez dès aujourd'hui.
+              Nous transformons vos idées en événements exceptionnels qui dépassent toutes les attentes. Commencez dès aujourd'hui.
             </p>
 
             {/* Boutons */}
             <div className="flex flex-wrap gap-4 mb-8">
               <Link
                 href="/DemoRequest"
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white no-underline rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white no-underline rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl"
+              >
                 Créer un événement
               </Link>
-
-
-
             </div>
 
             {/* Statistiques */}
@@ -72,35 +121,86 @@ export default function Hero() {
             </div>
           </div>
 
-
-          {/* Image (droite) */}
+          {/* Carrousel (droite) */}
           <div
             className={`w-full lg:w-1/2 transition-all duration-2000 transform ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
             }`}
           >
-            <div className="relative h-80 md:h-96 lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
-              {/* Remplacez ceci par votre propre image */}
-              <div className="absolute inset-0 bg-blue-300 opacity-20 z-10 animate-pulse"></div>
-              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 relative">
-                {/* Simuler une image - remplacez par votre propre image */}
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/30 rounded-full blur-3xl"></div>
-                <div className="absolute top-10 left-10 w-40 h-40 bg-yellow-400/20 rounded-full blur-xl"></div>
+            <div className="relative h-80 md:h-96 lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl">
 
-                {/* Quand vous aurez une vraie image, utilisez : */}
-                { <Image
-                  src="/event2.avif"
-                  alt="une evenement"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                /> }
+              {/* Conteneur du carrousel */}
+              <div className="relative w-full h-full">
+                {carouselData.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                      index === currentSlide
+                        ? 'opacity-100 scale-100'
+                        : 'opacity-0 scale-105'
+                    }`}
+                  >
+                    <Image
+                      src={item.coverUrl}
+                      alt={item.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      priority={index === 0}
+                      className="transition-transform duration-1000"
+                    />
+
+                    {/* Overlay avec informations */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent">
+                      <div className="absolute bottom-6 left-6 text-white">
+                        <h3 className="text-lg md:text-xl font-semibold mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm opacity-90">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
+
+              {/* Indicateurs de slides */}
+              <div className="absolute bottom-4 right-4 flex space-x-2">
+                {carouselData.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? 'bg-white w-6'
+                        : 'bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Effet de brillance lors du changement */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 transition-transform duration-1000 ${
+                  currentSlide % 2 === 0 ? 'translate-x-full' : '-translate-x-full'
+                }`}
+                style={{
+                  animation: `shine 3s infinite ${currentSlide * 0.5}s`
+                }}
+              />
             </div>
           </div>
 
         </div>
       </div>
+
+      {/* Styles pour l'animation de brillance */}
+      <style jsx>{`
+        @keyframes shine {
+          0% { transform: translateX(-100%) skewX(-12deg); }
+          20% { transform: translateX(100%) skewX(-12deg); }
+          100% { transform: translateX(100%) skewX(-12deg); }
+        }
+      `}</style>
     </header>
   );
 }

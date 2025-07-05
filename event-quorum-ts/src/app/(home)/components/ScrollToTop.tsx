@@ -49,7 +49,7 @@ export default function ScrollToTop() {
       ref={buttonRef}
       onClick={scrollToTop}
       aria-label="Retour en haut de la page"
-      className="fixed cursor-pointer bottom-6 right-6 z-50 p-3 rounded-full shadow-lg bg-gradient-to-br from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+      className="fixed cursor-pointer bottom-6 right-6 z-50 p-3 border-none rounded-full shadow-lg bg-gradient-to-br from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       style={{ opacity: 0 }} // Initialement invisible
     >
       <FaArrowUp className="w-5 h-5" />

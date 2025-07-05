@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
+import {
   Calendar, MessageSquare, Network, Award, Vote, Radio, FileText, FileOutput, CalendarCheck, Gamepad2, Camera
 } from 'lucide-react';
 
@@ -44,7 +44,7 @@ export default function FunctionalitiesSection({ title, items }: Functionalities
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
+
     // Animation for the title
     if (titleRef.current) {
       gsap.fromTo(
@@ -63,7 +63,7 @@ export default function FunctionalitiesSection({ title, items }: Functionalities
         }
       );
     }
-    
+
     // Animation for each item
     itemsRef.current.forEach((item, index) => {
       if (item) {
@@ -117,21 +117,21 @@ export default function FunctionalitiesSection({ title, items }: Functionalities
   };
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="w-full bg-gray-50 dark:bg-gray-900 py-16 px-4 md:px-8 lg:px-16"
     >
       <div className="max-w-6xl mx-auto">
-        <h2 
+        <h2
           ref={titleRef}
           className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-12 text-center"
         >
           {title}
         </h2>
-        
+
         <div className="flex flex-wrap justify-center gap-10 mb-12">
           {items.map((item, index) => (
-            <a 
+            <a
               href={item.link}
               key={index}
               ref={el => { itemsRef.current[index] = el; }}
@@ -140,17 +140,17 @@ export default function FunctionalitiesSection({ title, items }: Functionalities
               <div className="bg-white dark:bg-gray-700 rounded-full p-4 shadow-md mb-3">
                 {renderIcon(item.icon)}
               </div>
-              <span className="text-gray-700  dark:text-gray-200 font-medium">
+              <span className="text-gray-700  dark:text-gray-200 font-medium no-underline">
                 {item.title}
               </span>
             </a>
           ))}
         </div>
-        
+
         <div className="text-center">
           <button
             ref={buttonRef}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full transition-colors cursor-pointer duration-300 shadow-md"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full transition-colors cursor-pointer border-none duration-300 shadow-md"
           >
             En savoir plus sur nos fonctionnalités
           </button>

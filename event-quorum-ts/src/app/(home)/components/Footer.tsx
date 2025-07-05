@@ -82,7 +82,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Logo + description */}
         <div ref={(el) => { columnRefs.current[0] = el; }} className="space-y-4">
-          <div ref={logoRef} className="flex items-center space-x-3">
+          <div ref={logoRef} className="flex items-center space-x-3 pt-4">
             <div className="bg-blue-500 h-10 w-10 rounded-full flex items-center justify-center text-white font-bold text-xl">
               {logo.icon}
             </div>
@@ -99,7 +99,7 @@ const Footer = () => {
               <li key={idx}>
                 <a
                   href={service.url}
-                  className="hover:text-blue-400 transition-all duration-300 no-underline"
+                  className="hover:text-blue-400 text-white transition-all duration-300 no-underline"
                 >
                   {service.label}
                 </a>
@@ -116,7 +116,7 @@ const Footer = () => {
               <li key={idx}>
                 <a
                   href={link.url}
-                  className="hover:text-blue-400 transition-all duration-300 no-underline"
+                  className="hover:text-blue-400 text-white transition-all duration-300 no-underline"
                 >
                   {link.label}
                 </a>
@@ -128,7 +128,7 @@ const Footer = () => {
         {/* Contact */}
         <div ref={(el) => { columnRefs.current[3] = el; }} className="space-y-4">
           <h3 className="text-lg font-semibold border-b border-blue-500 pb-2 inline-block">Contact</h3>
-          <div className="text-sm space-y-3">
+          <div className="text-sm text-white space-y-3">
             <div className="flex items-start space-x-2">
               <MapPin className="h-5 w-5 text-blue-400" />
               <span>{contact.address}</span>
@@ -202,7 +202,7 @@ const Footer = () => {
         <div ref={copyrightRef}>
           © {new Date().getFullYear()} {logo.name}. Tous droits réservés.
         </div>
-        <div className="flex space-x-6">
+        <div className="flex space-x-6 text-white">
           {useful_links
             .filter((link) =>
               ['confidentialite', 'conditions-utilisation', 'mentions-legales'].some((slug) =>

@@ -63,10 +63,10 @@ export default function Functionalities({ isLoaded, data }: FunctionalitiesProps
           Découvrez nos fonctionnalités pour vos conférences ou colloques
         </h2>
 
-        <div id='fonctionnalite' className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id='fonctionnalite' className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 no-underline">
           {data.items.map((functionalitie) => (
             <a href={functionalitie.link} key={functionalitie.id} className="functionality-item dark:hover:bg-gray-700 hover:bg-gray-200 p-4 transform transition-all flex flex-col items-center text-center">
-              <div className="bg-gray-100 p-4 rounded-full mb-4">
+              <div className="bg-gray-100 p-4 rounded-full mb-4 no-underline">
                 <svg
                   className={functionalitie.icon.className}
                   fill="none"
@@ -82,8 +82,8 @@ export default function Functionalities({ isLoaded, data }: FunctionalitiesProps
                 </svg>
 
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{functionalitie.title}</h3>
-              <p className="text-gray-400">{functionalitie.description}</p>
+              <h3 className="text-xl font-semibold text-gray-900 no-underline dark:text-white mb-2">{functionalitie.title}</h3>
+              <p className="text-gray-400 no-underline">{functionalitie.description}</p>
             </a>
           ))}
         </div>

@@ -76,6 +76,7 @@
         "icon": ["vote-yesno", "text-blue-400"],
         "title": "Vote en ligne et sur site",
         "link": "fonctionnalite-2"
+
       },
       {
         "icon": ["calendar-clock", "text-purple-500"],
