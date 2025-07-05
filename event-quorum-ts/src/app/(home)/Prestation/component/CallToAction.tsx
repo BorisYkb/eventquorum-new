@@ -96,7 +96,7 @@ export default function CallToAction() {
         <a
           ref={buttonRef}
           href='\DemoRequest'
-          className="mt-6 bg-white text-indigo-600 font-semibold py-3 px-6 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg"
+          className="mt-6 bg-white text-indigo-600 font-semibold no-underline py-3 px-6 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg"
         >
           Demander une démo
         </a>
