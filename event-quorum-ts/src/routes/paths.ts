@@ -1,3 +1,5 @@
+//src/routes/paths.ts
+
 import { kebabCase } from 'es-toolkit';
 
 import { _id, _postTitles } from 'src/_mock/assets';
@@ -15,6 +17,7 @@ const ROOTS = {
   ADMIN: '/admin',
   ORGANISATEUR: '/organisateur',
   SUPERVISEUR: '/superviseur',
+  INTERVENANT: '/intervenant',
 };
 
 // ----------------------------------------------------------------------
@@ -125,10 +128,26 @@ export const paths = {
       invites: `${ROOTS.SUPERVISEUR}/participants/invites`,
       listes: `${ROOTS.SUPERVISEUR}/participants/listes`,
     },
-    ACTIVITES:{
-      root: `${ROOTS.SUPERVISEUR}/activites`} ,
+    ACTIVITES: {
+      root: `${ROOTS.SUPERVISEUR}/activites`
+    },
     ENQUETES: {
       root: `${ROOTS.SUPERVISEUR}/enquetes`,
+    },
+  },
+
+  // ESPACE INTERVENANT
+  intervenant: {
+    root: ROOTS.INTERVENANT,
+    ACTIVITES: {
+      root: `${ROOTS.INTERVENANT}/activites`,
+      detail: (id: string) => `${ROOTS.INTERVENANT}/activites/${id}`,
+      edit: (id: string) => `${ROOTS.INTERVENANT}/activites/${id}/edit`,
+    },
+    ENQUETES: {
+      root: `${ROOTS.INTERVENANT}/enquetes`,
+      detail: (id: string) => `${ROOTS.INTERVENANT}/enquetes/${id}`,
+      resultats: (id: string) => `${ROOTS.INTERVENANT}/enquetes/${id}/resultats`,
     },
   },
   // ESPACE ORGANISATEUR

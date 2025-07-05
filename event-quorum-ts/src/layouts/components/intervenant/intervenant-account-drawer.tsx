@@ -1,5 +1,3 @@
-//src/layouts/components/admin/admin-account-drawer.tsx
-
 'use client';
 
 import type { IconButtonProps } from '@mui/material/IconButton';
@@ -45,7 +43,7 @@ export type AccountDrawerProps = IconButtonProps & {
     }[];
 };
 
-export function AdminAccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
+export function IntervenantAccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
     const pathname = usePathname();
 
     const { user } = useMockedUser();

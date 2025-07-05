@@ -1,5 +1,3 @@
-//src/layouts/admin/layout.tsx
-
 'use client';
 
 import type { Breakpoint } from '@mui/material/styles';
@@ -19,12 +17,12 @@ import { NavMobile } from './nav-mobile';
 import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { layoutClasses } from '../core/classes';
-import { _account, _accountAdmin } from '../nav-config-account';
+import { _account, _accountIntervenant } from '../nav-config-account';
 import { MainSection } from '../core/main-section';
 import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
-import { adminNavData as dashboardNavData } from '../nav-config-admin';
+import { intervenantNavData as dashboardNavData } from '../nav-config-intervenant';
 import { dashboardLayoutVars, dashboardNavColorVars } from './css-vars';
 
 import type { MainSectionProps } from '../core/main-section';
@@ -32,7 +30,7 @@ import type { HeaderSectionProps } from '../core/header-section';
 import type { LayoutSectionProps } from '../core/layout-section';
 import { Typography } from '@mui/material';
 import { AccountDrawer } from '../components/account-drawer';
-import { AdminAccountDrawer } from '../components/admin/admin-account-drawer';
+import { IntervenantAccountDrawer } from '../components/intervenant/intervenant-account-drawer';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +47,7 @@ export type DashboardLayoutProps = LayoutBaseProps & {
   };
 };
 
-export function AdminLayout({
+export function IntervenantLayout({
   sx,
   cssVars,
   children,
@@ -90,13 +88,13 @@ export function AdminLayout({
           <NavMobile data={navData} open={open} onClose={onClose} cssVars={navVars.section} />
 
           {/* <Logo /> */}
-          {/* <Typography variant='h4'>Espace Administrateur</Typography> */}
+          {/* <Typography variant='h4'>Espace Intervenant</Typography> */}
         </>
       ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
           {/** @slot Account drawer */}
-          <AdminAccountDrawer data={_accountAdmin} />
+          <IntervenantAccountDrawer data={_accountIntervenant} />
         </Box>
       ),
     };

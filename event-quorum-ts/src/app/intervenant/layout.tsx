@@ -1,10 +1,7 @@
-//src/app/admin/layout.tsx
-
 import { CONFIG } from 'src/global-config';
-// import { AdminLayout } from 'src/layouts/admin';
 
 import { AuthGuard } from 'src/auth/guard';
-import { AdminLayout } from 'src/layouts/admin';
+import { IntervenantLayout } from 'src/layouts/intervenant';
 
 // ----------------------------------------------------------------------
 
@@ -14,12 +11,12 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   if (CONFIG.auth.skip) {
-    return <AdminLayout>{children}</AdminLayout>;
+    return <IntervenantLayout>{children}</IntervenantLayout>;
   }
 
   return (
     <AuthGuard>
-      <AdminLayout>{children}</AdminLayout>
+      <IntervenantLayout>{children}</IntervenantLayout>
     </AuthGuard>
   );
 }

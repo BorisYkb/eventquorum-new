@@ -1,5 +1,3 @@
-//src/layouts/nav-config-admin.tsx
-
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import { paths } from 'src/routes/paths';
@@ -48,17 +46,16 @@ const ICONS = {
 
 // ----------------------------------------------------------------------
 
-export const adminNavData: NavSectionProps['data'] = [
+export const intervenantNavData: NavSectionProps['data'] = [
     /**
-     * Overview
+     * Intervenant Overview
      */
     {
         // subheader: 'Aperçu',
         items: [
-            { title: 'Accueil', path: paths.admin.root, icon: ICONS.dashboard },
-            { title: 'Gestion client', path: paths.admin.GESTION_CLIENT.root, icon: ICONS.job },
-            { title: 'Planifier un evenement', path: paths.admin.PLANIFIER_UN_EVENEMENT.root, icon: ICONS.calendar },
-            { title: 'Photothèque', path: paths.admin.PHOTOTHEQUE.root, icon: ICONS.phototheque },
+            { title: 'Accueil', path: paths.intervenant.root, icon: ICONS.dashboard },
+            { title: 'Activités', path: paths.intervenant.ACTIVITES.root, icon: ICONS.course },
+            { title: 'Enquêtes', path: paths.intervenant.ENQUETES.root, icon: ICONS.analytics },
         ],
     },
 ];
