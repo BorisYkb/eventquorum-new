@@ -77,7 +77,7 @@ export default function MoreContent({ isLoaded, data }: MoreContentProps) {
         <div className="mt-8 text-center">
           <Link
             href="#"
-            className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+            className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg transition no-underline"
           >
             {data.buttonLabel}
           </Link>

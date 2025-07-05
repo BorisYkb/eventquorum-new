@@ -21,7 +21,7 @@ export default function ConferencePage() {
   }, []);
 
   return (
-    <main className="bg-white">
+    <main className="bg-white no-underline">
       {/* Hero Section avec les données spécifiques */}
       <HeroSection isLoaded={isLoaded} data={conferencesData.hero} />
 
