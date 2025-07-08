@@ -31,7 +31,7 @@ const SurveyList: React.FC<SurveyListProps> = ({ surveys }) => {
   const uniqueActivities = [...new Set(surveys.map(s => s.activity))];
 
   const handleViewSurvey = (surveyId: number) => {
-    router.push(`/superviseur/enquetes/${surveyId}`);
+    router.push(`/intervenant/enquetes/${surveyId}`);
   };
 
   const columns = [

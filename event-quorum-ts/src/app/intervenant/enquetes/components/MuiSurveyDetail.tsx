@@ -145,7 +145,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
           </Button>
         </div>
 
-        <Card sx={{ p: 4 }}>
+        <Card sx={{ p: 3 }}>
           {/* Titre de l'enquête */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
@@ -225,12 +225,17 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                   onClick={handleStartSurvey}
                   startIcon={<PlayArrow />}
                   sx={{
-                    backgroundColor: '#4caf50',
-                    color: 'white',
-                    '&:hover': { backgroundColor: '#45a049' },
-                    minWidth: 140,
-                    py: 1.5,
-                    px: 3
+                    backgroundColor: 'transparent',
+                    color: '#4caf50',
+                    '&:hover': { backgroundColor: '#4caf50', color: 'white' },
+                    borderColor: '#4caf50',
+                    borderWidth: 2,
+                    borderStyle: 'solid',
+                    minWidth: 80,
+                    py: 0.2,
+                    px: 1.5,
+                    fontSize: '0.7rem',
+                    lineHeight: 1.2,
                   }}
                 >
                   Démarrer
@@ -243,12 +248,17 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                   onClick={handleSuspendSurvey}
                   startIcon={<Pause />}
                   sx={{
-                    backgroundColor: '#2196f3',
-                    color: 'white',
-                    '&:hover': { backgroundColor: '#1976d2' },
-                    minWidth: 140,
-                    py: 1.5,
-                    px: 3
+                    backgroundColor: 'transparent',
+                    color: '#2196f3',
+                    '&:hover': { backgroundColor: '#2196f3', color: 'white' },
+                    borderColor: '#2196f3',
+                    borderWidth: 2,
+                    borderStyle: 'solid',
+                    minWidth: 80,
+                    py: 0.2,
+                    px: 1.5,
+                    fontSize: '0.7rem',
+                    lineHeight: 1.2,
                   }}
                 >
                   Suspendre
@@ -261,12 +271,17 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                   onClick={handleEndSurvey}
                   startIcon={<Stop />}
                   sx={{
-                    backgroundColor: '#f44336',
-                    color: 'white',
-                    '&:hover': { backgroundColor: '#d32f2f' },
-                    minWidth: 140,
-                    py: 1.5,
-                    px: 3
+                    backgroundColor: 'transparent',
+                    color: '#f44336',
+                    '&:hover': { backgroundColor: '#f44336', color: 'white' },
+                    borderColor: '#f44336',
+                    borderWidth: 2,
+                    borderStyle: 'solid',
+                    minWidth: 80,
+                    py: 0.2,
+                    px: 1.5,
+                    fontSize: '0.7rem',
+                    lineHeight: 1.2,
                   }}
                 >
                   Terminer
