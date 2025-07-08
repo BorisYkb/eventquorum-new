@@ -140,7 +140,7 @@ export default function FunctionalitiesSection({ title, items }: Functionalities
               <div className="bg-white dark:bg-gray-700 rounded-full p-4 shadow-md mb-3">
                 {renderIcon(item.icon)}
               </div>
-              <span className="text-gray-700  dark:text-gray-200 font-medium no-underline">
+              <span className="text-gray-700  dark:text-gray-200 font-medium">
                 {item.title}
               </span>
             </a>
