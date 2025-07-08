@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -41,7 +42,7 @@ const MOCK_ACTIVITIES = [
   },
   {
     id: 2,
-    name: 'Activité 2', 
+    name: 'Activité 2',
     type: 'Salon',
     title: 'Innovations',
     status: 'Non démarrée',
@@ -50,7 +51,7 @@ const MOCK_ACTIVITIES = [
   {
     id: 3,
     name: 'Activité 3',
-    type: 'Conférence', 
+    type: 'Conférence',
     title: 'Diversité',
     status: 'Terminée',
     date: '12/12/24 10H00 -> 12/12/24 17H00',
@@ -59,7 +60,7 @@ const MOCK_ACTIVITIES = [
     id: 4,
     name: 'Activité 4',
     type: 'Festival',
-    title: 'Planète Verte', 
+    title: 'Planète Verte',
     status: 'Non démarrée',
     date: '13/12/24 10H00 -> 13/12/24 17H00',
   },
@@ -119,7 +120,7 @@ export function OverviewIntervenantView() {
                   LA LISTE DES ACTIVITÉS
                 </Typography>
               </Grid>
-              
+
               <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   fullWidth
@@ -171,17 +172,17 @@ export function OverviewIntervenantView() {
                       <TableCell align="center" sx={{ fontWeight: 600 }}>Consulter</TableCell>
                     </TableRow>
                   </TableHead>
-                  
+
                   <TableBody>
                     {filteredActivities.map((activity) => (
-                      <TableRow 
+                      <TableRow
                         key={activity.id}
                         hover
-                        sx={{ 
-                          '&:hover': { 
+                        sx={{
+                          '&:hover': {
                             bgcolor: 'action.hover',
-                            cursor: 'pointer' 
-                          } 
+                            cursor: 'pointer'
+                          }
                         }}
                       >
                         <TableCell>
@@ -189,34 +190,34 @@ export function OverviewIntervenantView() {
                             {activity.name}
                           </Typography>
                         </TableCell>
-                        
+
                         <TableCell>
                           <Typography variant="body2">
                             {activity.type}
                           </Typography>
                         </TableCell>
-                        
+
                         <TableCell>
                           <Typography variant="body2">
                             {activity.title}
                           </Typography>
                         </TableCell>
-                        
+
                         <TableCell>
-                          <Label 
-                            variant="soft" 
+                          <Label
+                            variant="soft"
                             color={getStatusColor(activity.status)}
                           >
                             {activity.status}
                           </Label>
                         </TableCell>
-                        
+
                         <TableCell>
                           <Typography variant="body2" color="text.secondary">
                             {activity.date}
                           </Typography>
                         </TableCell>
-                        
+
                         <TableCell align="center">
                           <Tooltip title="Voir détails" placement="top" arrow>
                             <IconButton
@@ -240,10 +241,10 @@ export function OverviewIntervenantView() {
 
             {/* Message si aucun résultat */}
             {filteredActivities.length === 0 && (
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                align="center" 
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                align="center"
                 sx={{ py: 4 }}
               >
                 Aucune activité trouvée pour "{searchTerm}"
@@ -258,17 +259,17 @@ export function OverviewIntervenantView() {
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
               NOS SPONSORS ET PARTENAIRES
             </Typography>
-            
+
             <Grid container spacing={2} justifyContent="center" alignItems="center">
               {/* Logos des sponsors - À remplacer par les vrais logos */}
               {[1, 2, 3, 4, 5].map((index) => (
                 <Grid key={index} size={{ xs: 6, sm: 4, md: 2 }}>
-                  <Card 
-                    sx={{ 
-                      p: 2, 
-                      height: 80, 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                  <Card
+                    sx={{
+                      p: 2,
+                      height: 80,
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'center',
                       bgcolor: 'grey.50',
                       '&:hover': {
@@ -297,21 +298,21 @@ export function OverviewIntervenantView() {
                   © 2024 QUORUM ÉVÉNEMENTIEL | Powered by PX_LABS SARL
                 </Typography>
               </Grid>
-              
+
               <Grid size={{ xs: 12, md: 6 }}>
                 <Grid container spacing={1} justifyContent="flex-end">
                   <Grid>
-                    <Button 
-                      size="small" 
-                      color="inherit" 
+                    <Button
+                      size="small"
+                      color="inherit"
                       sx={{ textTransform: 'none' }}
                     >
                       Confidentialité
                     </Button>
                   </Grid>
                   <Grid>
-                    <Button 
-                      size="small" 
+                    <Button
+                      size="small"
                       color="inherit"
                       sx={{ textTransform: 'none' }}
                     >

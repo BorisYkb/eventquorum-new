@@ -20,7 +20,12 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { ArrowBack } from '@mui/icons-material';
+import {
+  ArrowBack,
+  PlayArrow,
+  Pause,
+  Stop
+} from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 import { Survey, Question } from '../types/survey';
@@ -46,11 +51,26 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
 
   const handleViewResults = () => {
     console.log('Navigating to results for survey:', survey.id);
-    router.push(`/superviseur/enquetes/${survey.id}/resultats`);
+    router.push(`/intervenant/enquetes/${survey.id}/resultats`);
   };
 
   const handleBack = () => {
-    router.push('/superviseur/enquetes');
+    router.push('/intervenant/enquetes');
+  };
+
+  const handleStartSurvey = () => {
+    console.log('Démarrage de l\'enquête:', survey.id);
+    // Logique pour démarrer l'enquête
+  };
+
+  const handleSuspendSurvey = () => {
+    console.log('Suspension de l\'enquête:', survey.id);
+    // Logique pour suspendre l'enquête
+  };
+
+  const handleEndSurvey = () => {
+    console.log('Fin de l\'enquête:', survey.id);
+    // Logique pour terminer l'enquête
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +113,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
   const handleViewQuestion = (questionId: number) => {
     // Logique pour voir les détails de la question
     // Naviguer vers la page de détail de la question
-    router.push(`/superviseur/enquetes/${survey.id}/questions/${questionId}`);
+    router.push(`/intervenant/enquetes/${survey.id}/questions/${questionId}`);
     console.log('Viewing question:', questionId);
   };
 
@@ -124,7 +144,6 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
             Retour
           </Button>
         </div>
-
 
         <Card sx={{ p: 4 }}>
           {/* Titre de l'enquête */}
@@ -190,29 +209,71 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                 </Stack>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                <Stack alignItems="center" spacing={1}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
-                    Participants
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {survey.participants}
-                  </Typography>
-                </Stack>
-              </Grid>
 
-              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                <Stack alignItems="center" spacing={1}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
-                    Date de création
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {survey.dateCreation}
-                  </Typography>
-                </Stack>
-              </Grid>
             </Grid>
           </Paper>
+
+          {/* Boutons d'action de l'enquête */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
+              Actions sur l'enquête
+            </Typography>
+            <Stack direction="row" spacing={2} justifyContent="center">
+              <Tooltip title="Démarrer l'enquête" placement="top" arrow>
+                <Button
+                  variant="contained"
+                  onClick={handleStartSurvey}
+                  startIcon={<PlayArrow />}
+                  sx={{
+                    backgroundColor: '#4caf50',
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#45a049' },
+                    minWidth: 140,
+                    py: 1.5,
+                    px: 3
+                  }}
+                >
+                  Démarrer
+                </Button>
+              </Tooltip>
+
+              <Tooltip title="Suspendre l'enquête" placement="top" arrow>
+                <Button
+                  variant="contained"
+                  onClick={handleSuspendSurvey}
+                  startIcon={<Pause />}
+                  sx={{
+                    backgroundColor: '#2196f3',
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#1976d2' },
+                    minWidth: 140,
+                    py: 1.5,
+                    px: 3
+                  }}
+                >
+                  Suspendre
+                </Button>
+              </Tooltip>
+
+              <Tooltip title="Terminer l'enquête" placement="top" arrow>
+                <Button
+                  variant="contained"
+                  onClick={handleEndSurvey}
+                  startIcon={<Stop />}
+                  sx={{
+                    backgroundColor: '#f44336',
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#d32f2f' },
+                    minWidth: 140,
+                    py: 1.5,
+                    px: 3
+                  }}
+                >
+                  Terminer
+                </Button>
+              </Tooltip>
+            </Stack>
+          </Box>
 
           {/* Section des questions */}
           <Box>
