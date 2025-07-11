@@ -52,7 +52,7 @@ export default function Hero({ title, bgColor, image, breadcrumb }: HeroProps) {
                 </h1>
                 <div
                     ref={imageRef}
-                    className="w-full rounded-lg overflow-hidden shadow-xl relative h-64 md:h-80 -mb-50 lg:h-96"
+                    className="w-full rounded-lg overflow-hidden shadow-xl relative h-64 md:h-80 -mb-96 lg:h-96"
                 >
                     <Image
                         src={image}

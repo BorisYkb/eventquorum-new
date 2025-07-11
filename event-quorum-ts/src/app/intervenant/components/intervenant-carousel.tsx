@@ -15,13 +15,13 @@ const CAROUSEL_DATA = [
   {
     id: '1',
     title: 'BIIC',
-    coverUrl: '/logo_biic.png',
+    coverUrl: '/logo_biic1.png',
     description: 'Partenaire BIIC',
   },
   {
     id: '2',
     title: 'INB', 
-    coverUrl: '/logo_inb.jpg',
+    coverUrl: '/logo_lnb.jpg',
     description: 'Partenaire INB',
   },
   {
