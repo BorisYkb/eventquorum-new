@@ -158,6 +158,8 @@ export const paths = {
     },
     gestionparticipant: {
       root: `${ROOTS.ORGANISATEUR}/gestionparticipant`,
+      add: `${ROOTS.ORGANISATEUR}/gestionparticipant/add-new`,
+      edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionparticipant/edit/${id}`,
     },
     gestionhabilitations: {
       root: `${ROOTS.ORGANISATEUR}/gestionhabilitations`,
