@@ -153,23 +153,6 @@ export default function ActivitiesPage() {
               </FormControl>
             </Grid>
 
-            <Grid size={{ xs: 12, md: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel sx={{ fontSize: '0.875rem' }}>Type</InputLabel>
-                <Select
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                  label="Type"
-                  sx={{ fontSize: '0.875rem' }}
-                >
-                  <MenuItem value="" sx={{ fontSize: '0.875rem' }}>Tous les types</MenuItem>
-                  <MenuItem value="Atelier" sx={{ fontSize: '0.875rem' }}>Atelier</MenuItem>
-                  <MenuItem value="Salon" sx={{ fontSize: '0.875rem' }}>Salon</MenuItem>
-                  <MenuItem value="Conférence" sx={{ fontSize: '0.875rem' }}>Conférence</MenuItem>
-                  <MenuItem value="Festival" sx={{ fontSize: '0.875rem' }}>Festival</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
               <TextField

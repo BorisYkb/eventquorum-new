@@ -35,6 +35,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+import { date } from 'zod';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -97,9 +98,9 @@ export default function ActivityDetailPage() {
   };
 
   const participantsList = [
-    { id: 1, name: 'Chonou Oriane', email: 'oriane.chonou@email.com', type: 'Présentiel', status: 'Connecté' },
-    { id: 2, name: 'Kouamé Boris Yakoué', email: 'kouame.boris@email.com', type: 'En ligne', status: 'Connecté' },
-    { id: 3, name: 'Kouakou Evariste', email: 'kouakou.evariste@email.com', type: 'Présentiel', status: 'Déconnecté' }
+    { id: 1, name: 'Chonou Oriane', email: 'oriane.chonou@email.com', type: 'Présentiel', status: 'Connecté', dateRegistered: '2025/05/01 09:00' },
+    { id: 2, name: 'Kouamé Boris Yakoué', email: 'kouame.boris@email.com', type: 'En ligne', status: 'Connecté', dateRegistered: '2025/05/01 09:00' },
+    { id: 3, name: 'Kouakou Evariste', email: 'kouakou.evariste@email.com', type: 'Présentiel', status: 'Déconnecté', dateRegistered: '2025/05/01 09:00' },
   ];
 
   const questionsList = [
@@ -323,8 +324,8 @@ export default function ActivityDetailPage() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <SuperviseurWidgetSummary
-            title="Statut"
-            total={0}
+            title="Présence confirmée"
+            total={10}
             color={getWidgetColor(5)}
             sx={{ height: 180 }}
           />
@@ -363,7 +364,7 @@ export default function ActivityDetailPage() {
                   </Typography>
                   <Stack spacing={2}>
                     {renderInfoBox("Type d'activité", activity.type)}
-                    {renderInfoBox("Nom d'intervenant", activity.consultant)}
+
                     {renderInfoBox("Statut", activity.status)}
                     {renderInfoBox("Durée", activity.duration)}
                   </Stack>
@@ -461,9 +462,9 @@ export default function ActivityDetailPage() {
               sx={{
                 borderRadius: 2,
                 textTransform: 'none',
-                bgcolor: 'success.main',
+                bgcolor: 'black.main',
                 '&:hover': {
-                  bgcolor: 'success.dark'
+                  bgcolor: 'black.dark'
                 }
               }}
             >
@@ -479,6 +480,7 @@ export default function ActivityDetailPage() {
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Email</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Type</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Statut</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Enregistrée le</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -507,6 +509,17 @@ export default function ActivityDetailPage() {
                         >
                           {person.status}
                         </Label>
+                      </TableCell>
+                      <TableCell sx={{ py: 2 }}>
+                        <Typography variant="body2" sx={{ fontSize: '14px', color: '#6B7280' }}>
+                          {new Date(person.dateRegistered).toLocaleString('fr-FR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </Typography>
                       </TableCell>
                     </TableRow>
                   );
