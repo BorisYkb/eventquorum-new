@@ -55,8 +55,7 @@ export const operatorNavData: NavSectionProps['data'] = [
     {
         // subheader: 'Aperçu',
         items: [
-            { title: 'Accueil', path: paths.operateur.root, icon: ICONS.dashboard },
-            { title: 'Admission d\'entrée', path: paths.operateur.ADMISSION_ENTREE.root, icon: ICONS.user },
+            { title: 'Admission d\'entrée', path: paths.operateur.root, icon: ICONS.dashboard },
             { title: 'Admission d\'activité', path: paths.operateur.ADMISSION_ACTIVITE.root, icon: ICONS.booking },
         ],
     },
