@@ -19,7 +19,11 @@ const ROOTS = {
   ORGANISATEUR: '/organisateur',
   SUPERVISEUR: '/superviseur',
   INTERVENANT: '/intervenant',
+<<<<<<< HEAD
   GUICHET: '/guichet',
+=======
+  OPERATEUR: '/operateur',
+>>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
 };
 
 // ----------------------------------------------------------------------
@@ -170,6 +174,7 @@ export const paths = {
       root: `${ROOTS.ORGANISATEUR}/gestionenquete`,
     },
   },
+<<<<<<< HEAD
 
   // GUICHET
   guichet: {
@@ -181,6 +186,27 @@ export const paths = {
     },
   },
 
+=======
+  // OPERATEUR
+operateur: {
+  root: ROOTS.OPERATEUR,
+  ADMISSION_ENTREE: {
+    root: `${ROOTS.OPERATEUR}/admission-entree`,
+    scan: `${ROOTS.OPERATEUR}/admission-entree/scan`,
+    liste: `${ROOTS.OPERATEUR}/admission-entree/liste`,
+    participant: (id: string) => `${ROOTS.OPERATEUR}/admission-entree/participant/${id}`,
+    recherche: `${ROOTS.OPERATEUR}/admission-entree/recherche`,
+  },
+  ADMISSION_ACTIVITE: {
+    root: `${ROOTS.OPERATEUR}/admission-activite`,
+    scan: `${ROOTS.OPERATEUR}/admission-activite/scan`,
+    liste: `${ROOTS.OPERATEUR}/admission-activite/liste`,
+    activite: (id: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${id}`,
+    participant: (activityId: string, participantId: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${activityId}/participant/${participantId}`,
+    recherche: `${ROOTS.OPERATEUR}/admission-activite/recherche`,
+  }
+},
+>>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,

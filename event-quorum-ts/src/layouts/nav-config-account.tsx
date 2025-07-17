@@ -133,7 +133,11 @@ export const _accountIntervenant: AccountDrawerProps['data'] = [
   { label: 'Parametres', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
 ];
 
+<<<<<<< HEAD
 export const _accountGuichet: AccountDrawerProps['data'] = [
+=======
+export const _accountOperator: AccountDrawerProps['data'] = [
+>>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
   {
     label: 'Profil',
     href: '#',
@@ -145,16 +149,26 @@ export const _accountGuichet: AccountDrawerProps['data'] = [
           fill="currentColor"
         />
         <path
+<<<<<<< HEAD
           d="M12 8.5C13.3807 8.5 14.5 7.38071 14.5 6C14.5 4.61929 13.3807 3.5 12 3.5C10.6193 3.5 9.5 4.61929 9.5 6C9.5 7.38071 10.6193 8.5 12 8.5Z"
           fill="currentColor"
         />
         <path
           d="M12 15.5C13.3807 15.5 14.5 14.3807 14.5 13C14.5 11.6193 13.3807 10.5 12 10.5C10.6193 10.5 9.5 11.6193 9.5 13C9.5 14.3807 10.6193 15.5 12 15.5Z"
+=======
+          d="M13.9382 13.8559C15.263 13.1583 16.1663 11.7679 16.1663 10.1666C16.1663 7.8655 14.3008 6 11.9996 6C9.69841 6 7.83291 7.8655 7.83291 10.1666C7.83291 11.768 8.73626 13.1584 10.0612 13.856C8.28691 14.532 6.93216 16.1092 6.51251 18.0529C6.45446 18.3219 6.60246 18.5981 6.87341 18.6471C7.84581 18.8231 9.45616 19 12.0006 19C14.545 19 16.1554 18.8231 17.1278 18.6471C17.3977 18.5983 17.5454 18.3231 17.4876 18.0551C17.0685 16.1103 15.7133 14.5321 13.9382 13.8559Z"
+>>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
           fill="currentColor"
         />
       </SvgIcon>
     ),
   },
+<<<<<<< HEAD
   { label: 'Securite', href: '#', icon: <Iconify icon="solar:shield-keyhole-bold-duotone" /> },
   { label: 'Parametres', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
 ];
+=======
+  { label: 'Sécurité', href: '#', icon: <Iconify icon="solar:shield-keyhole-bold-duotone" /> },
+  { label: 'Paramètres', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
+];
+>>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
