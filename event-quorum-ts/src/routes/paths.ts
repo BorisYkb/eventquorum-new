@@ -1,5 +1,6 @@
 //src/routes/paths.ts
 
+import { tr } from 'date-fns/locale';
 import { kebabCase } from 'es-toolkit';
 
 import { _id, _postTitles } from 'src/_mock/assets';
@@ -18,6 +19,7 @@ const ROOTS = {
   ORGANISATEUR: '/organisateur',
   SUPERVISEUR: '/superviseur',
   INTERVENANT: '/intervenant',
+  GUICHET: '/guichet',
 };
 
 // ----------------------------------------------------------------------
@@ -168,6 +170,17 @@ export const paths = {
       root: `${ROOTS.ORGANISATEUR}/gestionenquete`,
     },
   },
+
+  // GUICHET
+  guichet: {
+    root: ROOTS.GUICHET,
+    transactions: {
+      root: `${ROOTS.GUICHET}/transactions`,
+      new: `${ROOTS.GUICHET}/transactions/new`,
+      detail: (id: string) => `${ROOTS.GUICHET}/transactions/${id}`,
+    },
+  },
+
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,

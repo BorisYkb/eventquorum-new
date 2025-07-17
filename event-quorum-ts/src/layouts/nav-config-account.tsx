@@ -132,3 +132,29 @@ export const _accountIntervenant: AccountDrawerProps['data'] = [
   { label: 'Securite', href: '#', icon: <Iconify icon="solar:shield-keyhole-bold-duotone" /> },
   { label: 'Parametres', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
 ];
+
+export const _accountGuichet: AccountDrawerProps['data'] = [
+  {
+    label: 'Profil',
+    href: '#',
+    icon: (
+      <SvgIcon>
+        <path
+          opacity="0.5"
+          d="M2.28099 19.6575C2.36966 20.5161 2.93261 21.1957 3.77688 21.3755C5.1095 21.6592 7.6216 22 12 22C16.3784 22 18.8905 21.6592 20.2232 21.3755C21.0674 21.1957 21.6303 20.5161 21.719 19.6575C21.8505 18.3844 22 16.0469 22 12C22 7.95305 21.8505 5.6156 21.719 4.34251C21.6303 3.48389 21.0674 2.80424 20.2231 2.62451C18.8905 2.34081 16.3784 2 12 2C7.6216 2 5.1095 2.34081 3.77688 2.62451C2.93261 2.80424 2.36966 3.48389 2.28099 4.34251C2.14952 5.6156 2 7.95305 2 12C2 16.0469 2.14952 18.3844 2.28099 19.6575Z"
+          fill="currentColor"
+        />
+        <path
+          d="M12 8.5C13.3807 8.5 14.5 7.38071 14.5 6C14.5 4.61929 13.3807 3.5 12 3.5C10.6193 3.5 9.5 4.61929 9.5 6C9.5 7.38071 10.6193 8.5 12 8.5Z"
+          fill="currentColor"
+        />
+        <path
+          d="M12 15.5C13.3807 15.5 14.5 14.3807 14.5 13C14.5 11.6193 13.3807 10.5 12 10.5C10.6193 10.5 9.5 11.6193 9.5 13C9.5 14.3807 10.6193 15.5 12 15.5Z"
+          fill="currentColor"
+        />
+      </SvgIcon>
+    ),
+  },
+  { label: 'Securite', href: '#', icon: <Iconify icon="solar:shield-keyhole-bold-duotone" /> },
+  { label: 'Parametres', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
+];
