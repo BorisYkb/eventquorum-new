@@ -1,3 +1,4 @@
+//src/sections/user/profile-cover.tsx
 import type { BoxProps } from '@mui/material/Box';
 import type { IUserProfileCover } from 'src/types/user';
 

@@ -19,11 +19,8 @@ const ROOTS = {
   ORGANISATEUR: '/organisateur',
   SUPERVISEUR: '/superviseur',
   INTERVENANT: '/intervenant',
-<<<<<<< HEAD
   GUICHET: '/guichet',
-=======
   OPERATEUR: '/operateur',
->>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
 };
 
 // ----------------------------------------------------------------------
@@ -174,7 +171,6 @@ export const paths = {
       root: `${ROOTS.ORGANISATEUR}/gestionenquete`,
     },
   },
-<<<<<<< HEAD
 
   // GUICHET
   guichet: {
@@ -186,7 +182,6 @@ export const paths = {
     },
   },
 
-=======
   // OPERATEUR
 operateur: {
   root: ROOTS.OPERATEUR,
@@ -206,7 +201,6 @@ operateur: {
     recherche: `${ROOTS.OPERATEUR}/admission-activite/recherche`,
   }
 },
->>>>>>> 30fc29003ccb3a8b76f9dfe6dbd9e7542efc0b56
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,

@@ -299,7 +299,7 @@ export function OverviewOperateurView() {
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 1.5,
+        gap: 7.5,
         flexShrink: 1,
         minWidth: 0
       }}>
@@ -336,7 +336,7 @@ export function OverviewOperateurView() {
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 1.5,
+        gap: 7.5,
         flexShrink: 0
       }}>
         <Box sx={{ 

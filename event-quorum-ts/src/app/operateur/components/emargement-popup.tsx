@@ -294,7 +294,7 @@ export function EmargementPopup({
                 }}
               >
                 <Typography variant="body2" color="text.disabled">
-                  Dessinez votre signature ici
+                  Signer ici
                 </Typography>
               </Box>
             )}
@@ -313,26 +313,13 @@ export function EmargementPopup({
             </Button>
           </Box>
         </Box>
-
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            textAlign: 'center',
-            color: 'error.main',
-            fontWeight: 500,
-            textDecoration: 'underline',
-            cursor: 'pointer'
-          }}
-        >
-          Signer ici
-        </Typography>
       </DialogContent>
 
       <DialogActions sx={{ p: 3, pt: 0, gap: 2 }}>
         <Button 
           onClick={onClose} 
           variant="outlined" 
-          color="error"
+          color="inherit"
           sx={{ flex: 1 }}
         >
           Annuler
