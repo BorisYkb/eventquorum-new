@@ -30,18 +30,12 @@ const slideInBounce = keyframes`
   }
 `;
 
-const checkmarkAnimation = keyframes`
+const checkmarkDraw = keyframes`
   0% {
-    stroke-dasharray: 0 50;
-    opacity: 0;
-  }
-  50% {
-    stroke-dasharray: 25 50;
-    opacity: 1;
+    stroke-dashoffset: 50;
   }
   100% {
-    stroke-dasharray: 50 50;
-    opacity: 1;
+    stroke-dashoffset: 0;
   }
 `;
 
@@ -83,6 +77,15 @@ const fadeInUp = keyframes`
   }
 `;
 
+// const progressBar = keyframes`
+//   0% {
+//     transform: scaleX(1);
+//   }
+//   100% {
+//     transform: scaleX(0);
+//   }
+// `;
+
 // ----------------------------------------------------------------------
 
 interface SuccessPopupProps {
@@ -94,7 +97,7 @@ interface SuccessPopupProps {
 export function SuccessPopup({ 
   open, 
   onClose, 
-  autoCloseDelay = 3000 
+  autoCloseDelay = 3700 
 }: SuccessPopupProps) {
   
   const [showContent, setShowContent] = useState(false);
@@ -105,8 +108,10 @@ export function SuccessPopup({
       setShowContent(false);
       const timer = setTimeout(() => {
         setShowContent(true);
-      }, 100);
+      }, 200);
       return () => clearTimeout(timer);
+    } else {
+      setShowContent(false);
     }
   }, [open]);
 
@@ -128,8 +133,9 @@ export function SuccessPopup({
       maxWidth="xs"
       PaperProps={{
         sx: {
-          borderRadius: 3,
-          width: 340,
+          borderRadius: 2,
+          width: 500,
+          height: 300,
           textAlign: 'center',
           position: 'relative',
           overflow: 'visible',
@@ -206,28 +212,31 @@ export function SuccessPopup({
             }}
           >
             {/* SVG Checkmark animé */}
-            <svg
-              width="50"
-              height="50"
-              viewBox="0 0 50 50"
-              style={{
+            <Box
+              component="svg"
+              sx={{
+                width: 50,
+                height: 50,
                 overflow: 'visible'
               }}
+              viewBox="0 0 50 50"
             >
-              <path
-                d="M14 27l8 8 16-16"
-                fill="none"
-                stroke="white"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="50"
-                strokeDashoffset="50"
-                style={{
-                  animation: showContent ? `${checkmarkAnimation} 0.6s ease-out 0.5s both` : 'none'
+              <Box
+                component="path"
+                sx={{
+                  fill: 'none',
+                  stroke: 'white',
+                  strokeWidth: 4,
+                  strokeLinecap: 'round',
+                  strokeLinejoin: 'round',
+                  strokeDasharray: 50,
+                  strokeDashoffset: showContent ? 0 : 50,
+                  animation: showContent ? `${checkmarkDraw} 0.6s ease-out 0.5s both` : 'none',
+                  transition: 'stroke-dashoffset 0.6s ease-out'
                 }}
+                d="M14 27l8 8 16-16"
               />
-            </svg>
+            </Box>
           </Box>
 
           {/* Particules décoratives */}
@@ -262,7 +271,7 @@ export function SuccessPopup({
             fontSize: '1.4rem',
             mb: 1,
             animation: showContent ? `${fadeInUp} 0.5s ease-out 0.6s both` : 'none',
-            opacity: 0
+            opacity: showContent ? 1 : 0
           }}
         >
           Enregistrement effectué
@@ -275,14 +284,14 @@ export function SuccessPopup({
             color: 'text.secondary',
             fontSize: '0.95rem',
             animation: showContent ? `${fadeInUp} 0.5s ease-out 0.7s both` : 'none',
-            opacity: 0
+            opacity: showContent ? 1 : 0
           }}
         >
           Le participant a été émargé avec succès
         </Typography>
 
         {/* Barre de progression pour l'auto-fermeture */}
-        <Box
+        {/* <Box
           sx={{
             mt: 3,
             height: 3,
@@ -290,7 +299,7 @@ export function SuccessPopup({
             bgcolor: 'grey.200',
             overflow: 'hidden',
             animation: showContent ? `${fadeInUp} 0.5s ease-out 0.8s both` : 'none',
-            opacity: 0
+            opacity: showContent ? 1 : 0
           }}
         >
           <Box
@@ -298,19 +307,11 @@ export function SuccessPopup({
               height: '100%',
               bgcolor: 'success.main',
               borderRadius: 1.5,
-              animation: showContent ? `progressBar ${autoCloseDelay}ms linear 0.8s both` : 'none',
+              animation: showContent ? `${progressBar} ${autoCloseDelay}ms linear 0.8s both` : 'none',
               transformOrigin: 'left center',
-              '@keyframes progressBar': {
-                '0%': {
-                  transform: 'scaleX(1)'
-                },
-                '100%': {
-                  transform: 'scaleX(0)'
-                }
-              }
             }}
           />
-        </Box>
+        </Box> */}
       </Box>
     </Dialog>
   );

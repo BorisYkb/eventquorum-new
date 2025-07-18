@@ -30,18 +30,12 @@ const slideInBounce = keyframes`
   }
 `;
 
-const checkmarkAnimation = keyframes`
+const checkmarkDraw = keyframes`
   0% {
-    stroke-dasharray: 0 50;
-    opacity: 0;
-  }
-  50% {
-    stroke-dasharray: 25 50;
-    opacity: 1;
+    stroke-dashoffset: 50;
   }
   100% {
-    stroke-dasharray: 50 50;
-    opacity: 1;
+    stroke-dashoffset: 0;
   }
 `;
 
@@ -91,12 +85,12 @@ interface PresenceConfirmeePopupProps {
   autoCloseDelay?: number; // en millisecondes
 }
 
-export function PresenceConfirmeePopup({ 
-  open, 
-  onClose, 
-  autoCloseDelay = 3000 
+export function PresenceConfirmeePopup({
+  open,
+  onClose,
+  autoCloseDelay = 3700
 }: PresenceConfirmeePopupProps) {
-  
+
   const [showContent, setShowContent] = useState(false);
 
   // Déclencher l'animation du contenu
@@ -129,7 +123,8 @@ export function PresenceConfirmeePopup({
       PaperProps={{
         sx: {
           borderRadius: 3,
-          width: 340,
+          width: 500,
+          height: 300,
           textAlign: 'center',
           position: 'relative',
           overflow: 'visible',
@@ -172,8 +167,8 @@ export function PresenceConfirmeePopup({
       {/* Contenu principal */}
       <Box sx={{ p: 4, pt: 5, pb: 4 }}>
         {/* Container pour l'icône avec animations */}
-        <Box 
-          sx={{ 
+        <Box
+          sx={{
             mb: 3,
             position: 'relative',
             display: 'flex',
@@ -206,28 +201,31 @@ export function PresenceConfirmeePopup({
             }}
           >
             {/* SVG Checkmark animé */}
-            <svg
-              width="50"
-              height="50"
-              viewBox="0 0 50 50"
-              style={{
+            <Box
+              component="svg"
+              sx={{
+                width: 50,
+                height: 50,
                 overflow: 'visible'
               }}
+              viewBox="0 0 50 50"
             >
-              <path
-                d="M14 27l8 8 16-16"
-                fill="none"
-                stroke="white"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="50"
-                strokeDashoffset="50"
-                style={{
-                  animation: showContent ? `${checkmarkAnimation} 0.6s ease-out 0.5s both` : 'none'
+              <Box
+                component="path"
+                sx={{
+                  fill: 'none',
+                  stroke: 'white',
+                  strokeWidth: 4,
+                  strokeLinecap: 'round',
+                  strokeLinejoin: 'round',
+                  strokeDasharray: 50,
+                  strokeDashoffset: showContent ? 0 : 50,
+                  animation: showContent ? `${checkmarkDraw} 0.6s ease-out 0.5s both` : 'none',
+                  transition: 'stroke-dashoffset 0.6s ease-out'
                 }}
+                d="M14 27l8 8 16-16"
               />
-            </svg>
+            </Box>
           </Box>
 
           {/* Particules décoratives */}
@@ -241,7 +239,7 @@ export function PresenceConfirmeePopup({
                 borderRadius: '50%',
                 bgcolor: 'success.main',
                 opacity: showContent ? 1 : 0,
-                animation: showContent ? `${fadeInUp} 0.5s ease-out ${0.8 + index * 0.1}s both` : 'none',
+                animation: showContent ? `${fadeInUp} 0.8s ease-out ${0.8 + index * 0.1}s both` : 'none',
                 ...(index === 0 && { top: 10, left: 20, transform: 'scale(0.8)' }),
                 ...(index === 1 && { top: 25, right: 15, transform: 'scale(1.2)' }),
                 ...(index === 2 && { bottom: 20, left: 25, transform: 'scale(0.6)' }),
@@ -254,9 +252,9 @@ export function PresenceConfirmeePopup({
         </Box>
 
         {/* Message principal */}
-        <Typography 
-          variant="h5" 
-          sx={{ 
+        <Typography
+          variant="h5"
+          sx={{
             color: 'success.main',
             fontWeight: 700,
             fontSize: '1.4rem',
@@ -269,9 +267,9 @@ export function PresenceConfirmeePopup({
         </Typography>
 
         {/* Message secondaire */}
-        <Typography 
-          variant="body2" 
-          sx={{ 
+        <Typography
+          variant="body2"
+          sx={{
             color: 'text.secondary',
             fontSize: '0.95rem',
             animation: showContent ? `${fadeInUp} 0.5s ease-out 0.7s both` : 'none',
@@ -282,7 +280,7 @@ export function PresenceConfirmeePopup({
         </Typography>
 
         {/* Barre de progression pour l'auto-fermeture */}
-        <Box
+        {/* <Box
           sx={{
             mt: 3,
             height: 3,
@@ -310,7 +308,7 @@ export function PresenceConfirmeePopup({
               }
             }}
           />
-        </Box>
+        </Box> */}
       </Box>
     </Dialog>
   );

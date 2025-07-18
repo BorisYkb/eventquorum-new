@@ -31,6 +31,7 @@ import { QRScannerPopup } from 'src/app/operateur/components/qr-scanner-popup';
 import { EmargementPopup } from 'src/app/operateur/components/emargement-popup';
 import { SuccessPopup } from 'src/app/operateur/components/success-popup';
 import { DetailPopup } from 'src/app/operateur/components/detail-popup';
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 // ----------------------------------------------------------------------
 
@@ -103,8 +104,52 @@ const PARTICIPANTS_DATA: ParticipantData[] = [
     email: 'evelet.boudou@gmail.com',
     telephone: '0703815849'
   },
-  {
+    {
     id: '6',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'Aucun',
+    dateEmargement: '---',
+    heureEmargement: '---',
+    peutEmarger: true,
+    email: 'boudoukoauacou000@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '7',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'En ligne',
+    dateEmargement: '16/07/2024',
+    heureEmargement: '19h51',
+    peutEmarger: false,
+    email: 'boudou.evelet@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '8',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'En physique',
+    dateEmargement: '16/07/2024',
+    heureEmargement: '19h51',
+    peutEmarger: false,
+    email: 'kouassi.boudou@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '9',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'Aucun',
+    dateEmargement: '---',
+    heureEmargement: '---',
+    peutEmarger: true,
+    email: 'evelet.boudou@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '10',
     nom: 'Kouame',
     prenom: 'Marie Claire',
     statut: 'En ligne',
@@ -115,7 +160,7 @@ const PARTICIPANTS_DATA: ParticipantData[] = [
     telephone: '0708123456'
   },
   {
-    id: '7',
+    id: '11',
     nom: 'Yao',
     prenom: 'Jean Baptiste',
     statut: 'Aucun',
@@ -124,6 +169,50 @@ const PARTICIPANTS_DATA: ParticipantData[] = [
     peutEmarger: true,
     email: 'jean.yao@gmail.com',
     telephone: '0709876543'
+  },
+    {
+    id: '12',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'Aucun',
+    dateEmargement: '---',
+    heureEmargement: '---',
+    peutEmarger: true,
+    email: 'boudoukoauacou000@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '13',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'En ligne',
+    dateEmargement: '16/07/2024',
+    heureEmargement: '19h51',
+    peutEmarger: false,
+    email: 'boudou.evelet@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '14',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'En physique',
+    dateEmargement: '16/07/2024',
+    heureEmargement: '19h51',
+    peutEmarger: false,
+    email: 'kouassi.boudou@gmail.com',
+    telephone: '0703815849'
+  },
+  {
+    id: '15',
+    nom: 'Boudou',
+    prenom: 'Kouassi Evelet',
+    statut: 'Aucun',
+    dateEmargement: '---',
+    heureEmargement: '---',
+    peutEmarger: true,
+    email: 'evelet.boudou@gmail.com',
+    telephone: '0703815849'
   },
 ];
 
@@ -144,6 +233,7 @@ export function OverviewOperateurView() {
   const handleChangePage = useCallback((event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
+
 
   const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -299,7 +389,7 @@ export function OverviewOperateurView() {
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 7.5,
+        gap: { xs: 1, md: 1.5, lg: 7.5 },
         flexShrink: 1,
         minWidth: 0
       }}>
@@ -336,7 +426,7 @@ export function OverviewOperateurView() {
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 7.5,
+        gap: { xs: 1, md: 1.5, lg: 7.5 },
         flexShrink: 0
       }}>
         <Box sx={{ 

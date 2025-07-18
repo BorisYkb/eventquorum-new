@@ -145,9 +145,10 @@ export function DetailPopup({
           {/* Panneau gauche */}
           <Box
             sx={{
-              width: 200,
+              width: 190,
+              height: '95%',
               bgcolor: 'grey.50',
-              borderRight: '1px solid',
+              border: '1px solid',
               borderColor: 'grey.300',
               p: 1.5,
               overflow: 'auto',

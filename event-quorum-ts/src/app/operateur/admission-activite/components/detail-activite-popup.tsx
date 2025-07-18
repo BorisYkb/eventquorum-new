@@ -133,9 +133,8 @@ export function DetailActivitePopup({
           <Button
             onClick={onClose}
             variant="contained"
-            color="error"
+            color="inherit"
             size="small"
-            startIcon={<Iconify icon="eva:arrow-back-fill" />}
             sx={{ px: 2 }}
           >
             Retour
@@ -149,10 +148,13 @@ export function DetailActivitePopup({
             sx={{
               width: 200,
               bgcolor: 'grey.50',
-              borderRight: '1px solid',
+              border: '1px solid',
               borderColor: 'grey.300',
               p: 1.5,
-              overflow: 'auto'
+              overflow: 'auto',
+              mt: 1,
+              borderRadius: 2,
+              height: '95%'
             }}
           >
             {/* Statuts de confirmation dans une Stack */}
@@ -250,7 +252,7 @@ export function DetailActivitePopup({
               </Box>
 
               {/* Informations en grid */}
-              <Box sx={{ bgcolor: 'background.paper', p: 1.5, border: '1px solid', borderColor: 'grey.300' }}>
+              <Box sx={{ bgcolor: 'background.paper', p: 1.5, border: '1px solid', borderColor: 'grey.300', borderRadius: 1.5 }}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '70px 1fr', gap: 1.5, alignItems: 'center' }}>
                   <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Nom</Typography>
                   <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.8rem' }}>
@@ -300,7 +302,7 @@ export function DetailActivitePopup({
                 sx={{ 
                   border: '1px solid', 
                   borderColor: 'grey.300',
-                  borderRadius: 0
+                  borderRadius: 1.5
                 }}
               >
                 <Table size="small">
