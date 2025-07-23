@@ -29,6 +29,7 @@ import { useMockedUser } from 'src/auth/hooks';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import  {GuichetWidgetSummary}  from 'src/sections/overview/e-commerce/guichet/guichet-widget-summary-2';
+import TransactionDetailModal from '../component/TransactionDetailModal';
 import {
   useTable,
   emptyRows,
@@ -48,6 +49,16 @@ type TransactionData = {
   email: string;
   montant: number;
   date: string;
+  statut : string;
+  activite: string;
+  activites?: {
+    id: number;
+    nom: string;
+    horaire: string;
+    type: string;
+    statut: string;
+    places: number;
+  }[];
 };
 
 // Configuration des en-têtes du tableau
@@ -70,7 +81,6 @@ const DATE_FILTER_OPTIONS = [
   { value: 'lastMonth', label: 'Mois dernier' },
 ];
 
-// Mock data pour les transactions
 const MOCK_TRANSACTIONS: TransactionData[] = [
   {
     id: 1,
@@ -79,6 +89,8 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'boudou@gmail.com',
     montant: 50000,
     date: '2024-07-17',
+    statut: 'Validé',
+    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE'
   },
   {
     id: 2,
@@ -86,7 +98,9 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Jean',
     email: 'kouame@gmail.com',
     montant: 25000,
-    date: '2024-07-16'
+    date: '2024-07-16',
+    statut: 'Validé',
+    activite: 'PANEL DE HAUT NIVEAU'
   },
   {
     id: 3,
@@ -95,6 +109,8 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'sidibemoussa@gmail.com',
     montant: 75000,
     date: '2024-07-15',
+    statut: 'En attente',
+    activite: 'POINT DE PRESSE'
   },
   {
     id: 4,
@@ -102,7 +118,9 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Amira',
     email: 'grabianira@gmail.com',
     montant: 30000,
-    date: '2024-07-14'
+    date: '2024-07-14',
+    statut: 'Validé',
+    activite: 'PANEL DE HAUT NIVEAU'
   },
   {
     id: 5,
@@ -110,7 +128,9 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Fatou',
     email: 'fatou.traore@gmail.com',
     montant: 45000,
-    date: '2024-07-10'
+    date: '2024-07-10',
+    statut: 'Validé',
+    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE'
   },
   {
     id: 6,
@@ -118,7 +138,9 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Mamadou',
     email: 'mamadou.diallo@gmail.com',
     montant: 60000,
-    date: '2024-06-28'
+    date: '2024-06-28',
+    statut: 'Validé',
+    activite: 'COOLING BREAK'
   },
   {
     id: 7,
@@ -126,7 +148,9 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Aissata',
     email: 'aissata.kone@gmail.com',
     montant: 35000,
-    date: '2024-06-25'
+    date: '2024-06-25',
+    statut: 'Refusé',
+    activite: 'PAUSE CAFE'
   },
   {
     id: 8,
@@ -134,9 +158,12 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     prenom: 'Ibrahim',
     email: 'ibrahim.ouattara@gmail.com',
     montant: 80000,
-    date: '2024-07-17'
+    date: '2024-07-17',
+    statut: 'Validé',
+    activite: 'PANEL DE HAUT NIVEAU'
   }
 ];
+
 
 // ----------------------------------------------------------------------
 
@@ -176,6 +203,11 @@ export default function TransactionsPage() {
     }
   };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedTransaction(null);
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'decimal',
@@ -193,6 +225,18 @@ export default function TransactionsPage() {
   };
 
 
+  const getStatusColor = (statut: string) => {
+    switch (statut) {
+      case 'Validé':
+        return 'success';
+      case 'En attente':
+        return 'warning';
+      case 'Refusé':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
 
   // Couleurs alternées pour les widgets
   const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
@@ -367,6 +411,9 @@ export default function TransactionsPage() {
                               >
                                 {transaction.nom} {transaction.prenom}
                               </Typography>
+                              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                {transaction.activite}
+                              </Typography>
 
                             </Box>
                           </TableCell>
@@ -389,6 +436,12 @@ export default function TransactionsPage() {
                                 {formatDate(transaction.date)}
                               </Typography>
 
+                              <Chip
+                                size="small"
+                                label={transaction.statut}
+                                color={getStatusColor(transaction.statut)}
+                                sx={{ minWidth: 80, fontSize: '0.75rem' }}
+                              />
                             </Box>
                           </TableCell>
 
@@ -472,7 +525,17 @@ export default function TransactionsPage() {
           </Card>
         </Grid>
       </Grid>
+
+      {/* Modal de détails de transaction */}
+      <TransactionDetailModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        transaction={selectedTransaction}
+      />
+
     </DashboardContent>
+
+
   );
 }
 

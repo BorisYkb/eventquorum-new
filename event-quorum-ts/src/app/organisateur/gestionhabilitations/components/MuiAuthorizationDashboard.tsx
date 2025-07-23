@@ -207,7 +207,8 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
               <Tooltip title="Exporter la liste des accès" placement="top" arrow>
                 <Button
                   variant="outlined"
-                  color="black"
+
+                  color="primary"
                   startIcon={<Iconify icon="eva:download-fill" />}
                   onClick={handleExportAuthorizations}
                   sx={{ minWidth: 'auto' }}

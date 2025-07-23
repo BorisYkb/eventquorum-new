@@ -29,7 +29,7 @@ import {
   TableCell,
   TableContainer
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { ArrowBack } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { Iconify } from 'src/components/iconify';
@@ -83,7 +83,12 @@ const CreateAccessPage: React.FC = () => {
   const handlePermissionChange = (permission: keyof CreateAccessForm['permissions']) => (
     event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
   ) => {
-    const value = event.target.type === 'checkbox' ? (event.target as HTMLInputElement).checked : event.target.value;
+    let value: boolean | string;
+    if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
+      value = event.target.checked;
+    } else {
+      value = (event.target as HTMLInputElement | { value: unknown }).value as string;
+    }
     setFormData(prev => ({
       ...prev,
       permissions: {

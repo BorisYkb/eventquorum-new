@@ -21,7 +21,6 @@ import { guichetNavData } from '../../../../layouts/nav-config-guichet';
 export type GuichetWidgetSummaryProps = BoxProps & {
   title: string;
   total: number | string;
-  total2 : string;
   unit?: string;
   subtitle?: string;
   percent?: number;
@@ -36,7 +35,6 @@ export type GuichetWidgetSummaryProps = BoxProps & {
 export function GuichetWidgetSummary({
   icon = 'solar:users-group-rounded-bold-duotone',
   title,
-  total2,
   total,
   unit,
   subtitle,
