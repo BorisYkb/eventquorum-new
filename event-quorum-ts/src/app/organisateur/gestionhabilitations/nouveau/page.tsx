@@ -391,11 +391,13 @@ const CreateAccessPage: React.FC = () => {
                                       onChange={handlePermissionChange(permission.key as keyof typeof formData.permissions)}
                                       displayEmpty
                                     >
-                                      {permission.options?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                          {option.label}
-                                        </MenuItem>
-                                      ))}
+                                      {(permission.type === 'select' && Array.isArray((permission as any).options)) &&
+                                        (permission as { options: { value: string; label: string }[] }).options.map((option) => (
+                                          <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                          </MenuItem>
+                                        ))
+                                      }
                                     </Select>
                                   </FormControl>
                                 ) : null}
