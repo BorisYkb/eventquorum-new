@@ -108,6 +108,7 @@ export function OverviewSuperviseurView() {
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurDonutChart
             title="Répartition des activités"
+            sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
             chart={{
               series: [
                 { label: 'Payantes', value: 9, color: '#4ade80' },
@@ -120,6 +121,7 @@ export function OverviewSuperviseurView() {
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurDonutChart
             title="Suivi des enquêtes"
+            sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
             chart={{
               series: [
                 { label: 'Réalisées', value: 5, color: '#4ade80' },
