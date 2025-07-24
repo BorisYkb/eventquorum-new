@@ -16,7 +16,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 1,
     firstName: "Jean",
     lastName: "Dupont",
-    phone: "+225 07 12 34 56 78",
+    phone: "07 12 34 56 78",
     email: "jean.dupont@example.com",
     role: "Superviseur",
     status: "Actif",
@@ -26,7 +26,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 2,
     firstName: "Marie",
     lastName: "Martin",
-    phone: "+225 05 98 76 54 32",
+    phone: "05 98 76 54 32",
     email: "marie.martin@example.com",
     role: "Intervenant",
     status: "Actif",
@@ -36,7 +36,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 3,
     firstName: "Pierre",
     lastName: "Kouassi",
-    phone: "+225 01 23 45 67 89",
+    phone: "01 23 45 67 89",
     email: "pierre.kouassi@example.com",
     role: "Opérateur de saisie",
     status: "Inactif",
@@ -46,7 +46,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 4,
     firstName: "Aminata",
     lastName: "Traoré",
-    phone: "+225 07 11 22 33 44",
+    phone: "07 11 22 33 44",
     email: "aminata.traore@example.com",
     role: "Organisateur",
     status: "Actif",
@@ -56,7 +56,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 5,
     firstName: "Kouadio",
     lastName: "Yao",
-    phone: "+225 05 44 55 66 77",
+    phone: "05 44 55 66 77",
     email: "kouadio.yao@example.com",
     role: "Intervenant",
     status: "Actif",
@@ -66,7 +66,7 @@ const sampleAuthorizations: Authorization[] = [
     id: 6,
     firstName: "Oriane",
     lastName: "Chonou",
-    phone: "+225 01 00 00 00 00",
+    phone: "01 00 00 00 00",
     email: "admin@system.com",
     role: "Tous accès",
     status: "Actif",
@@ -102,6 +102,7 @@ export default function Page() {
     loadAuthorizations();
   }, []);
 
+  {/*
   if (loading) {
     return (
       <div style={{
@@ -114,6 +115,7 @@ export default function Page() {
       </div>
     );
   }
+  */}
 
   return <MuiAuthorizationDashboard authorizations={authorizations} />;
 }

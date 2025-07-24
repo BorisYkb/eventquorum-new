@@ -207,11 +207,9 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
               <Tooltip title="Exporter la liste des accès" placement="top" arrow>
                 <Button
                   variant="outlined"
-
-                  color="primary"
                   startIcon={<Iconify icon="eva:download-fill" />}
                   onClick={handleExportAuthorizations}
-                  sx={{ minWidth: 'auto' }}
+                  sx={{ minWidth: 'auto', bgcolor: 'black', color: 'white', '&:hover': { boxShadow: 4, bgcolor: 'black', color: 'white' } }}
                 >
                   Exporter
                 </Button>
@@ -221,11 +219,11 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
               <Tooltip title="Créer un accès" placement="top" arrow>
                 <Button
                   variant="contained"
-                  color="primary"
                   startIcon={<Iconify icon="eva:plus-fill" />}
                   onClick={handleCreateAuthorization}
+                  sx={{ minWidth: 'auto', bgcolor: 'transparent', color: 'black',border: 1, '&:hover': { boxShadow: 4, borderColor: 'black', bgcolor: 'transparent', color: 'black' } }}
                 >
-                  Créer un accès
+                  Créer
                 </Button>
               </Tooltip>
             </Box>

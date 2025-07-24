@@ -119,15 +119,7 @@ const TransactionDetailModal: React.FC<TransactionDetailModalProps> = ({
 
   // Détails de paiement (exemple)
   const paymentDetails = [
-    {
-      category: 'Informations Bancaires',
-      items: [
-        { name: 'Banque émettrice', value: 'ECOBANK CI' },
-        { name: 'Type de carte', value: 'VISA' },
-        { name: 'Derniers chiffres', value: '**** 1234' },
-        { name: 'Date d\'autorisation', value: formatDate(transaction.date) },
-      ]
-    },
+
     {
       category: 'Détails du Paiement',
       items: [

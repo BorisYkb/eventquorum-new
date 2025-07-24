@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { z as zod } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -33,9 +33,9 @@ const MOCK_ACTIVITIES = [
         statusColor: 'warning',
         description: 'Formation professionnelle',
         typePlace: [
-            { label: 'Standard (500)', value: 'standard' },
-            { label: 'VIP (50)', value: 'vip' },
-            { label: 'VVIP (20)', value: 'vvip' }
+            { label: 'Standard', value: 'standard', price: 500 },
+            { label: 'VIP', value: 'vip', price: 50000 },
+            { label: 'VVIP', value: 'vvip', price: 100000 }
         ]
     },
     {
@@ -48,9 +48,9 @@ const MOCK_ACTIVITIES = [
         statusColor: 'error',
         description: 'Salon des innovations',
         typePlace: [
-            { label: 'Standard (300)', value: 'standard' },
-            { label: 'VIP (30)', value: 'vip' },
-            { label: 'VVIP (10)', value: 'vvip' }
+            { label: 'Standard', value: 'standard', price: 300 },
+            { label: 'VIP', value: 'vip', price: 30000 },
+            { label: 'VVIP', value: 'vvip', price: 75000 }
         ]
     },
     {
@@ -63,9 +63,9 @@ const MOCK_ACTIVITIES = [
         statusColor: 'success',
         description: 'Conférence sur la diversité',
         typePlace: [
-            { label: 'Standard (600)', value: 'standard' },
-            { label: 'VIP (80)', value: 'vip' },
-            { label: 'VVIP (30)', value: 'vvip' }
+            { label: 'Standard', value: 'standard', price: 600 },
+            { label: 'VIP', value: 'vip', price: 80000 },
+            { label: 'VVIP', value: 'vvip', price: 150000 }
         ]
     },
     {
@@ -78,9 +78,9 @@ const MOCK_ACTIVITIES = [
         statusColor: 'warning',
         description: 'Festival écologique',
         typePlace: [
-            { label: 'Standard (400)', value: 'standard' },
-            { label: 'VIP (50)', value: 'vip' },
-            { label: 'VVIP (15)', value: 'vvip' }
+            { label: 'Standard', value: 'standard', price: 400 },
+            { label: 'VIP', value: 'vip', price: 50000 },
+            { label: 'VVIP', value: 'vvip', price: 90000 }
         ]
     },
     {
@@ -93,9 +93,9 @@ const MOCK_ACTIVITIES = [
         statusColor: 'warning',
         description: 'Pause détente',
         typePlace: [
-            { label: 'Standard (200)', value: 'standard' },
-            { label: 'VIP (25)', value: 'vip' },
-            { label: 'VVIP (10)', value: 'vvip' }
+            { label: 'Standard', value: 'standard', price: 200 },
+            { label: 'VIP', value: 'vip', price: 25000 },
+            { label: 'VVIP', value: 'vvip', price: 50000 }
         ]
     },
 ];
@@ -237,9 +237,10 @@ function StepOne() {
   );
 }
 
-// Étape 2 : Sélection des activités
+// Étape 2 : Sélection des activités - VERSION CORRIGÉE
 function StepTwo() {
-  const [selectedActivities, setSelectedActivities] = useState<number[]>([]);
+  const { watch, setValue, getValues } = useFormContext<ParticipantSchemaType>();
+  const watchedActivities = watch('stepTwo.activites') || [];
 
   const getStatusColor = (statusColor: string) => {
     switch (statusColor) {
@@ -255,13 +256,40 @@ function StepTwo() {
   };
 
   const handleActivityToggle = (activityId: number) => {
-    setSelectedActivities(prev => {
-      if (prev.includes(activityId)) {
-        return prev.filter(id => id !== activityId);
-      } else {
-        return [...prev, activityId];
-      }
-    });
+    const currentActivities = getValues('stepTwo.activites') || [];
+    const existingIndex = currentActivities.findIndex(a => a.activityId === activityId);
+
+    if (existingIndex >= 0) {
+      // Retirer l'activité
+      const newActivities = currentActivities.filter(a => a.activityId !== activityId);
+      setValue('stepTwo.activites', newActivities, { shouldValidate: true });
+    } else {
+      // Ajouter l'activité avec une valeur par défaut pour typePlace
+      const newActivities = [...currentActivities, {
+        activityId,
+        typePlace: '' // Valeur vide qui forcera l'utilisateur à choisir
+      }];
+      setValue('stepTwo.activites', newActivities, { shouldValidate: true });
+    }
+  };
+
+  const handleTypePlaceChange = (activityId: number, typePlace: string) => {
+    const currentActivities = getValues('stepTwo.activites') || [];
+    const updatedActivities = currentActivities.map(activity =>
+      activity.activityId === activityId
+        ? { ...activity, typePlace }
+        : activity
+    );
+    setValue('stepTwo.activites', updatedActivities, { shouldValidate: true });
+  };
+
+  const isActivitySelected = (activityId: number) => {
+    return watchedActivities.some(a => a.activityId === activityId);
+  };
+
+  const getSelectedTypePlace = (activityId: number) => {
+    const activity = watchedActivities.find(a => a.activityId === activityId);
+    return activity?.typePlace || '';
   };
 
   return (
@@ -275,97 +303,112 @@ function StepTwo() {
       </Typography>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {MOCK_ACTIVITIES.map((activity) => (
-          <Box
-            key={activity.id}
-            sx={{
-              border: selectedActivities.includes(activity.id) ? '2px solid' : '1px solid',
-              borderColor: selectedActivities.includes(activity.id) ? 'primary.main' : 'grey.300',
-              borderRadius: 2,
-              p: 3,
-              bgcolor: selectedActivities.includes(activity.id) ? 'primary.50' : 'white',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease-in-out',
-              '&:hover': {
-                borderColor: 'primary.main',
-                boxShadow: 1
-              }
-            }}
-          >
-            {/* En-tête de l'activité */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-              <input
-                type="checkbox"
-                checked={selectedActivities.includes(activity.id)}
-                onChange={() => handleActivityToggle(activity.id)}
-                style={{
-                  marginTop: 4,
-                  width: 16,
-                  height: 16
-                }}
-              />
+        {MOCK_ACTIVITIES.map((activity) => {
+          const isSelected = isActivitySelected(activity.id);
+          const selectedTypePlace = getSelectedTypePlace(activity.id);
 
-              <Box sx={{ flex: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                  <Typography variant="body2" sx={{
-                    color: 'grey.600',
-                    fontSize: '0.75rem',
-                    fontWeight: 500
-                  }}>
-                    {activity.code}
-                  </Typography>
-                  <Typography variant="body1" sx={{
-                    fontWeight: 600,
-                    fontSize: '0.875rem'
-                  }}>
-                    {activity.name}
-                  </Typography>
-                </Box>
+          return (
+            <Box
+              key={activity.id}
+              sx={{
+                border: isSelected ? '2px solid' : '1px solid',
+                borderColor: isSelected ? 'primary.main' : 'grey.300',
+                borderRadius: 2,
+                p: 3,
+                bgcolor: isSelected ? 'primary.50' : 'white',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                  boxShadow: 1
+                }
+              }}
+            >
+              {/* En-tête de l'activité */}
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => handleActivityToggle(activity.id)}
+                  style={{
+                    marginTop: 4,
+                    width: 16,
+                    height: 16
+                  }}
+                />
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                  <Box
-                    sx={{
-                      px: 2,
-                      py: 0.5,
-                      borderRadius: 1,
-                      bgcolor: getStatusColor(activity.statusColor),
-                      color: 'white',
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                    <Typography variant="body2" sx={{
+                      color: 'grey.600',
                       fontSize: '0.75rem',
                       fontWeight: 500
-                    }}
-                  >
-                    {activity.status}
-                  </Box>
-                </Box>
-
-                {/* Type de places */}
-                {selectedActivities.includes(activity.id) && (
-                  <Box sx={{ mt: 2, pl: 2, borderLeft: '2px solid', borderColor: 'primary.main' }}>
-                    <Typography variant="body2" sx={{ mb: 2, fontWeight: 500 }}>
-                      Type de place
+                    }}>
+                      {activity.code}
                     </Typography>
-
-                    <Field.RadioGroup
-                      name={`stepTwo.activites.${selectedActivities.indexOf(activity.id)}.typePlace`}
-                      options={activity.typePlace.map(place => ({
-                        label: place.label,
-                        value: place.value
-                      }))}
-                      sx={{
-                        '& .MuiFormControlLabel-root': {
-                          mb: 1
-                        }
-                      }}
-                    />
+                    <Typography variant="body1" sx={{
+                      fontWeight: 600,
+                      fontSize: '0.875rem'
+                    }}>
+                      {activity.name}
+                    </Typography>
                   </Box>
-                )}
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <Box
+                      sx={{
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: 1,
+                        bgcolor: getStatusColor(activity.statusColor),
+                        color: 'white',
+                        fontSize: '0.75rem',
+                        fontWeight: 500
+                      }}
+                    >
+                      {activity.status}
+                    </Box>
+                  </Box>
+
+                  {/* Type de places */}
+                  {isSelected && (
+                    <Box sx={{ mt: 2, pl: 2, borderLeft: '2px solid', borderColor: 'primary.main' }}>
+                      <Typography variant="body2" sx={{ mb: 2, fontWeight: 500 }}>
+                        Type de place *
+                      </Typography>
+
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {activity.typePlace.map((place) => (
+                          <Box key={place.value} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1, borderRadius: 1, bgcolor: selectedTypePlace === place.value ? 'primary.50' : 'transparent' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <input
+                                type="radio"
+                                name={`typePlace_${activity.id}`}
+                                value={place.value}
+                                checked={selectedTypePlace === place.value}
+                                onChange={(e) => handleTypePlaceChange(activity.id, e.target.value)}
+                                style={{ marginRight: 8 }}
+                              />
+                              <Typography variant="body2">
+                                {place.label}
+                              </Typography>
+                            </Box>
+                            <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                              {place.price.toLocaleString()} F CFA
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
               </Box>
             </Box>
-          </Box>
-        ))}
+          );
+        })}
       </Box>
 
-      {selectedActivities.length === 0 && (
+      {watchedActivities.length === 0 && (
         <Typography variant="body2" color="text.secondary" align="center" sx={{ py: 2 }}>
           Sélectionnez au moins une activité pour continuer
         </Typography>
@@ -376,29 +419,39 @@ function StepTwo() {
 
 // Étape 3 : Confirmation
 function StepThree({ watchedValues }: { watchedValues: any }) {
+  // Calculer le montant total
+  const calculateTotal = () => {
+    if (!watchedValues.stepTwo?.activites) return 0;
+
+    return watchedValues.stepTwo.activites.reduce((total: number, selectedActivity: any) => {
+      const activity = MOCK_ACTIVITIES.find(a => a.id === selectedActivity.activityId);
+      if (activity) {
+        const typePlace = activity.typePlace.find(t => t.value === selectedActivity.typePlace);
+        if (typePlace) {
+          return total + typePlace.price;
+        }
+      }
+      return total;
+    }, 0);
+  };
+
+  const totalAmount = calculateTotal();
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Confirmation et commentaires
+        Résumé et confirmation
       </Typography>
 
-      <Field.Text
-        name="stepThree.commentaires"
-        label="Commentaires (optionnel)"
-        placeholder="Ajoutez des commentaires si nécessaire..."
-        multiline
-        rows={4}
-      />
-
-      {/* Résumé des informations */}
-      <Box sx={{ mt: 4, p: 3, bgcolor: 'grey.50', borderRadius: 1 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Résumé des informations
+      {/* Résumé des informations personnelles */}
+      <Box sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 1 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+          Informations personnelles
         </Typography>
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body2" color="text.secondary">Nom complet:</Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
               {watchedValues.stepOne?.nom} {watchedValues.stepOne?.prenom}
             </Typography>
           </Grid>
@@ -410,18 +463,74 @@ function StepThree({ watchedValues }: { watchedValues: any }) {
             <Typography variant="body2" color="text.secondary">Téléphone:</Typography>
             <Typography variant="body1">{watchedValues.stepOne?.telephone}</Typography>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Typography variant="body2" color="text.secondary">Activités sélectionnées:</Typography>
-            <Typography variant="body1">
-              {watchedValues.stepTwo?.activites?.length || 0} activité(s)
-            </Typography>
-            {watchedValues.stepTwo?.activites?.map((activity: any, index: number) => (
-              <Typography key={index} variant="body2" sx={{ ml: 2, color: 'text.secondary' }}>
-                • {MOCK_ACTIVITIES.find(a => a.id === activity.activityId)?.name} ({activity.typePlace})
-              </Typography>
-            ))}
-          </Grid>
         </Grid>
+      </Box>
+
+      {/* Résumé des activités sélectionnées */}
+      <Box sx={{ p: 3, bgcolor: 'grey.50', borderRadius: 1 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+          Activités sélectionnées ({watchedValues.stepTwo?.activites?.length || 0})
+        </Typography>
+
+        {watchedValues.stepTwo?.activites?.map((selectedActivity: any, index: number) => {
+          const activity = MOCK_ACTIVITIES.find(a => a.id === selectedActivity.activityId);
+          const typePlace = activity?.typePlace.find(t => t.value === selectedActivity.typePlace);
+
+          return (
+            <Box key={index} sx={{
+              mb: 2,
+              p: 2,
+              bgcolor: 'white',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'grey.200'
+            }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {activity?.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    {activity?.code}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" sx={{
+                      px: 1.5,
+                      py: 0.5,
+                      bgcolor: 'primary.100',
+                      color: 'primary.main',
+                      borderRadius: 1,
+                      fontWeight: 'medium'
+                    }}>
+                      {typePlace?.label}
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                      {typePlace?.price.toLocaleString()} F CFA
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          );
+        })}
+      </Box>
+
+      {/* Montant total */}
+      <Box sx={{
+        p: 3,
+        bgcolor: 'primary.50',
+        borderRadius: 1,
+        border: '2px solid',
+        borderColor: 'primary.main'
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ color: 'primary.main' }}>
+            Montant total à payer
+          </Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+            {totalAmount.toLocaleString()} F CFA
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
@@ -431,8 +540,8 @@ function StepThree({ watchedValues }: { watchedValues: any }) {
 function StepCompleted({ onReset, onBackToList }: { onReset: () => void; onBackToList: () => void }) {
   return (
     <Box sx={{ textAlign: 'center', py: 4 }}>
-      <Box sx={{ mb: 3 }}>
-        <Iconify icon="eva:checkmark-circle-2-fill" sx={{ fontSize: 64, color: 'success.main' }} />
+      <Box sx={{ mb: 4 }}>
+        <Iconify icon="eva:checkmark-circle-2-fill" sx={{ fontSize: 100, color: 'success.main' }} />
       </Box>
 
       <Typography variant="h5" sx={{ mb: 2 }}>
