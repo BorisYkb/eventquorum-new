@@ -26,6 +26,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 
 import { DashboardContent } from 'src/layouts/operateur';
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -53,6 +54,7 @@ interface ParticipantActiviteData {
 }
 
 // Mock data pour les participants d'activité
+// ...existing code...
 const PARTICIPANTS_ACTIVITE_DATA: ParticipantActiviteData[] = [
   {
     id: '1',
@@ -114,6 +116,107 @@ const PARTICIPANTS_ACTIVITE_DATA: ParticipantActiviteData[] = [
     email: 'popo.couleur@gmail.com',
     telephone: '0703815854'
   },
+  // --- 10 nouveaux participants ---
+  {
+    id: '7',
+    nom: 'Traoré',
+    prenom: 'Fatou',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'traore.fatou@gmail.com',
+    telephone: '0703815855'
+  },
+  {
+    id: '8',
+    nom: 'Koné',
+    prenom: 'Moussa',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'kone.moussa@gmail.com',
+    telephone: '0703815856'
+  },
+  {
+    id: '9',
+    nom: 'Yao',
+    prenom: 'Awa',
+    statutEmargement: 'Physique',
+    dateHeure: '17/07/2024 à 09h15',
+    peutConfirmer: false,
+    email: 'yao.awa@gmail.com',
+    telephone: '0703815857'
+  },
+  {
+    id: '10',
+    nom: 'Coulibaly',
+    prenom: 'Issa',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'coulibaly.issa@gmail.com',
+    telephone: '0703815858'
+  },
+  {
+    id: '11',
+    nom: 'Kouassi',
+    prenom: 'Brigitte',
+    statutEmargement: 'En ligne',
+    dateHeure: '17/07/2024 à 10h05',
+    peutConfirmer: false,
+    email: 'kouassi.brigitte@gmail.com',
+    telephone: '0703815859'
+  },
+  {
+    id: '12',
+    nom: 'Zoungrana',
+    prenom: 'Paul',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'zoungrana.paul@gmail.com',
+    telephone: '0703815860'
+  },
+  {
+    id: '13',
+    nom: 'N\'Guessan',
+    prenom: 'Marie',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'nguessan.marie@gmail.com',
+    telephone: '0703815861'
+  },
+  {
+    id: '14',
+    nom: 'Bakayoko',
+    prenom: 'Adama',
+    statutEmargement: 'Physique',
+    dateHeure: '17/07/2024 à 11h20',
+    peutConfirmer: false,
+    email: 'bakayoko.adama@gmail.com',
+    telephone: '0703815862'
+  },
+  {
+    id: '15',
+    nom: 'Toure',
+    prenom: 'Salimata',
+    statutEmargement: 'Aucun',
+    dateHeure: '------',
+    peutConfirmer: true,
+    email: 'toure.salimata@gmail.com',
+    telephone: '0703815863'
+  },
+  {
+    id: '16',
+    nom: 'Diarra',
+    prenom: 'Mamadou',
+    statutEmargement: 'En ligne',
+    dateHeure: '17/07/2024 à 12h00',
+    peutConfirmer: false,
+    email: 'diarra.mamadou@gmail.com',
+    telephone: '0703815864'
+  }
 ];
 
 const ACTIVITES_LIST = [
@@ -235,8 +338,11 @@ export default function AdmissionActivitePage() {
     setPage(newPage);
   }, []);
 
-  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+
+
+  const handleChangeRowsPerPage = useCallback((event: SelectChangeEvent<number>) => {
+    const value = Number(event.target.value);
+    setRowsPerPage(value);
     setPage(0);
   }, []);
 
@@ -462,7 +568,7 @@ export default function AdmissionActivitePage() {
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        // onRowsPerPageChange={handleChangeRowsPerPage}
         labelDisplayedRows={({ from, to, count }) => `${from}-${to} sur ${count}`}
       />
     </Card>
@@ -532,7 +638,7 @@ function ParticipantActiviteTableRow({ row, onConfirmer, onVoirDetail }: Partici
       <TableCell>
         <Button
           variant="contained"
-          color="error"
+          color="inherit"
           size="small"
           onClick={onConfirmer}
           disabled={!row.peutConfirmer}

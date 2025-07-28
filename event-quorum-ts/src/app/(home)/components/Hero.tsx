@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Données du carrousel - remplacez par vos propres images
   const carouselData = [

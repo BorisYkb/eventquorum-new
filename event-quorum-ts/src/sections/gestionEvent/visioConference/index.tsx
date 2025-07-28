@@ -24,8 +24,8 @@ const VisioConference = () => {
   return (
     <Card>
       <CardHeader
-        title="Charte Graphique de l'évènement"
-        subheader="Configurez la charte graphique de votre événement pour une expérience utilisateur cohérente."
+        title="Configurer les visio-conférence"
+        // subheader="Configurez la charte graphique de votre événement pour une expérience utilisateur cohérente."
       />
       <CardContent>
         <Form methods={methods} onSubmit={onSubmit}>
@@ -113,21 +113,26 @@ const VisioConference = () => {
                   />
                 )}
               />
+              <div className=' '>
+              <p className='text-sm '>Retransmission</p>
+              <div className=' flex flex-row'>
 
               <Controller
                 name="isYoutube"
                 control={control}
                 render={({ field }) => (
-                  <Field.Checkbox {...field} label="Intitulé de la conférence" />
+                  <Field.Checkbox {...field} label="Youtube" />
                 )}
               />
               <Controller
                 name="isFacebook"
                 control={control}
                 render={({ field }) => (
-                  <Field.Checkbox {...field} label="Intitulé de la conférence" />
+                  <Field.Checkbox {...field} label="Facebook" />
                 )}
               />
+              </div>
+              </div>
               <Controller
                 name="lien_stream"
                 control={control}
@@ -139,6 +144,7 @@ const VisioConference = () => {
                   />
                 )}
               />
+              
 
               <Controller
                 name="diffusion_key"

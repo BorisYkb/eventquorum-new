@@ -63,8 +63,6 @@ export function QRScannerActivitePopup({
       open={open} 
       onClose={handleClose}
       showInstructions={isScanning}
-      title={`Scanner QR Code - ${activiteSelectionnee || 'Activité'}`}
-      instructions="Placez le QR code du participant dans le cadre pour confirmer sa présence à l'activité"
     >
       <CameraView
         videoRef={videoRef}

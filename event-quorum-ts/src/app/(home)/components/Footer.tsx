@@ -9,11 +9,11 @@ import footerData from '../data/footer.json'; // Import des données JSON
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
-  const footerRef = useRef(null);
-  const columnRefs = useRef([]);
+  const footerRef = useRef<HTMLElement | null>(null);
+  const columnRefs = useRef<Array<HTMLDivElement | null>>([]);
   const logoRef = useRef(null);
   const copyrightRef = useRef(null);
-  const gsapRef = useRef(null);
+  const gsapRef = useRef<typeof gsap | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -48,7 +48,7 @@ const Footer = () => {
       '-=0.5'
     );
 
-    const links = footerRef.current.querySelectorAll('a');
+    const links = (footerRef.current as HTMLElement).querySelectorAll('a');
     links.forEach((link) => {
       link.addEventListener('mouseenter', () => {
         gsap.to(link, {

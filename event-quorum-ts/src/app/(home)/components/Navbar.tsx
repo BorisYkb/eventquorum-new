@@ -14,7 +14,7 @@ export default function Navbar() {
   const titleref = useRef(null);
   const linkref = useRef(null);
   const logoref = useRef(null);
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {

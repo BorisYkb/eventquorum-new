@@ -1,19 +1,24 @@
 'use client';
 
 import React from 'react';
+import { useState } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, Card, CardHeader, Typography, CardContent, InputAdornment } from '@mui/material';
+import { Box, Card, CardHeader, Typography, CardContent, InputAdornment, Select, MenuItem } from '@mui/material';
+import { Grid2  as Grid } from '@mui/material';
 
 import { fData } from 'src/utils/format-number';
 
 import { Form, Field } from 'src/components/hook-form';
 
 import { useCharteGraphiqueView } from './controller';
+import { Upload } from 'src/components/upload';
 
 const CharteGraphiqueView = () => {
-  const { isSubmitting, methods, onSubmit, handleRemoveFile, handleRemoveAllFiles } =
+  const { isSubmitting, methods, onSubmit, handleRemoveFile, handleRemoveAllFiles, handleRemovePartnerAllFiles, handleRemovePartnerFile} =
     useCharteGraphiqueView();
+
+  const [selectedTemplate, setSelectedTemplate] = useState('');
 
   return (
     <Card>
@@ -67,53 +72,37 @@ const CharteGraphiqueView = () => {
                   </div>
 
                   <div className="flex flex-col text-center  ">
-                    <h4>Logo Partenaire</h4>
-                    <Field.UploadLogo
-                      name="logo_partenaire"
-                      maxSize={3145728}
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                            fontSize: '0.6rem',
-                          }}
-                        >
-                          Formats autorisés *.jpeg, *.jpg, *.png, *.gif
-                          <br /> La taille maximale est de {fData(5242880)}
-                        </Typography>
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col text-center  ">
-                    <h4>Modèle LandingPage</h4>
-                    <Field.UploadLogo
-                      name="model_landing_page"
+                    <h4>Logo Partenaires</h4>
+                    <Field.Upload
                       multiple
-                      placeholder="Logo partenaire"
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                            fontSize: '0.6rem',
-                          }}
-                        >
-                          Formats autorisés *.jpeg, *.jpg, *.png, *.gif
-                          <br /> La taille maximale est de {fData(5242880)}
-                        </Typography>
-                      }
+                      name="logo_partenaire"
+                      onRemove={handleRemovePartnerFile}
+                      onRemoveAll={handleRemovePartnerAllFiles}
+                      onUpload={() => console.info('ON UPLOAD')}
                     />
                   </div>
+                  <Box
+                    sx={{
+                      mb: 5,
+                      pb: 5,
+                      marginBottom: 3,
+                      // borderBottom: 'dashed 1px #cccdcf',
+                    }}
+                  >
+                <div className="flex flex-col text-center relative">
+                  <h4>Slides</h4>
+                  <Field.Upload
+                    multiple
+                    thumbnail={true}
+                    name="slides"
+                    onRemove={handleRemoveFile}
+                    onRemoveAll={handleRemoveAllFiles}
+                    onUpload={() => console.info('ON UPLOAD')}
+                  />
+                </div>
+              </Box>
+
+                  
                 </div>
               </Box>
 
@@ -223,26 +212,41 @@ const CharteGraphiqueView = () => {
                 </div>
               </Box>
 
-              <Box
-                sx={{
-                  mb: 5,
-                  pb: 5,
-                  marginBottom: 3,
-                  borderBottom: 'dashed 1px #cccdcf',
-                }}
-              >
-                <div className="flex flex-col text-center relative">
-                  <h4>Slides</h4>
-                  <Field.Upload
-                    multiple
-                    thumbnail
-                    name="slides"
-                    onRemove={handleRemoveFile}
-                    onRemoveAll={handleRemoveAllFiles}
-                    onUpload={() => console.info('ON UPLOAD')}
-                  />
-                </div>
-              </Box>
+              <div className="flex flex-col text-center  ">
+                    <h4>Modèle LandingPage</h4>
+                    <Select
+                        value={selectedTemplate}
+                        onChange={(e) => setSelectedTemplate(e.target.value)}
+                        label="Modele"
+                        sx={{ fontSize: '0.8rem' }}
+                      >
+                        <MenuItem value="" sx={{ fontSize: '0.8rem' }}>TEMPLATE 1</MenuItem>
+                        <MenuItem value="En cours" sx={{ fontSize: '0.8rem' }}>TEMPLATE 2</MenuItem>
+                        <MenuItem value="Non démarrée" sx={{ fontSize: '0.8rem' }}>TEMPLATE 3</MenuItem>
+                        <MenuItem value="Terminée" sx={{ fontSize: '0.8rem' }}>TEMPLATE 4</MenuItem>
+                      </Select>
+                    {/* <Field.UploadLogo
+                      name="model_landing_page"
+                      multiple
+                      placeholder="Logo partenaire"
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+                            fontSize: '0.6rem',
+                          }}
+                        >
+                          Formats autorisés *.jpeg, *.jpg, *.png, *.gif
+                          <br /> La taille maximale est de {fData(5242880)}
+                        </Typography>
+                      }
+                    /> */}
+                  </div>
 
               <LoadingButton
                 fullWidth

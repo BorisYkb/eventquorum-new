@@ -2,7 +2,9 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+
 const InscriptionSchema = z.object({
+  attribuer_boitier: z.boolean(),
   nom: z.boolean(),
   prenom: z.boolean(),
   email: z.boolean(),
@@ -21,6 +23,7 @@ export type GenerateQrCodeSchemaType = z.infer<typeof GenerateQrCodeSchema>;
 
 export const useInscription = () => {
   const defaultValues = {
+    attribuer_boitier: false,
     nom: false,
     prenom: false,
     email: false,
@@ -40,6 +43,8 @@ export const useInscription = () => {
     defaultValues,
   });
 
+
+
   const methodsQrCode = useForm<GenerateQrCodeSchemaType>({
     resolver: zodResolver(GenerateQrCodeSchema),
     defaultValues: defaultValuesQrCode,
@@ -48,9 +53,12 @@ export const useInscription = () => {
   const {
     handleSubmit,
     control,
+    watch,
     formState: { isSubmitting },
   } = methods;
 
+  const watchAttribuerBoitier = watch('attribuer_boitier')
+  
   const {
     handleSubmit: handleSubmitQrCode,
     control: controlQrCode,
@@ -84,5 +92,6 @@ export const useInscription = () => {
     isSubmittingQrCode,
     onSubmit,
     onSubmitQrCode,
+    watchAttribuerBoitier,
   };
 };

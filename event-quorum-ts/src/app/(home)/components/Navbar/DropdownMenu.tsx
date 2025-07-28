@@ -1,7 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useState, useRef } from 'react';
-import { eventTypes } from '@/lib/navLinks';
+// Update the import path below if navLinks.ts is located elsewhere in your project structure
+import { eventTypes } from 'src/lib/navLinks';
 
 export default function DropdownMenu() {
   const [open, setOpen] = useState(false);

@@ -14,6 +14,8 @@ import { CustomTabs } from 'src/components/custom-tabs';
 import Inscription from '../inscription';
 import VisioConference from '../visioConference';
 import CharteGraphiqueView from '../charte-graphique-view';
+import LandingPage from '../landingPage';
+import InfoPaiement from '../infosPaiement';
 
 const TABS = [
   {
@@ -23,8 +25,9 @@ const TABS = [
   },
   { value: 'inscription', label: 'Inscription', render: () => <Inscription /> },
   { value: 'visioconference', label: 'Visioconférence', render: () => <VisioConference /> },
-  { value: 'landingPage', label: 'LandingPage', render: () => <div>Charte graphique</div> },
-  { value: 'infosPaiement', label: 'Infos paiement', render: () => <div>Charte graphique</div> },
+  { value: 'landingPage', label: 'LandingPage', render: () => <LandingPage /> },
+  { value: 'infosPaiement', label: 'Infos paiement', render: () => <InfoPaiement/> },
+  { value: 'phototheque', label: 'Photothèque', render: () => <div>Photothèque</div> },
 ];
 
 const GestionEventView = () => {

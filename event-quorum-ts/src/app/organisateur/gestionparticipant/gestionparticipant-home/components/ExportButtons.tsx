@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Button,
   Stack,
@@ -40,6 +41,7 @@ const EXPORT_PRESENCE_OPTIONS: ExportOption[] = [
 ];
 
 const ExportButtons = () => {
+  const router = useRouter(); // ✅ Déplacé ici
   const [inviteMenuAnchor, setInviteMenuAnchor] = useState<null | HTMLElement>(null);
   const [presenceMenuAnchor, setPresenceMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -70,7 +72,7 @@ const ExportButtons = () => {
   };
 
   const handleConsultConnected = () => {
-    console.log('Consulter la liste des connectés');
+    router.push('/organisateur/gestionparticipant/consultation');
   };
 
   return (

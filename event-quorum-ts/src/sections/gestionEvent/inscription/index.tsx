@@ -16,12 +16,13 @@ const Inscription = () => {
     methodsQrCode,
     onSubmitQrCode,
     isSubmittingQrCode,
+    watchAttribuerBoitier,
   } = useInscription();
 
   return (
     <Card>
       <CardHeader
-        title="Charte Graphique de l'évènement"
+        title="Parametres d'inscription"
         subheader="Configurez la charte graphique de votre événement pour une expérience utilisateur cohérente."
       />
       <CardContent>
@@ -34,7 +35,7 @@ const Inscription = () => {
             }}
           >
             <Controller
-              name="nom"
+              name="attribuer_boitier"
               control={control}
               render={({ field }) => (
                 <Field.Switch
@@ -43,13 +44,23 @@ const Inscription = () => {
                 />
               )}
             />
+            {watchAttribuerBoitier === true && (
+              <div className="flex gap-2 ">
+                <p className="text-sm">
+                  L&apos;ID virtuel des participants en ligne commence à partir de :{' '}
+                  {/* <span className="border border-gray-700 p-3 border-dashed">3001</span> */}
+                </p>
+                <Field.Text
+                  type="number"
+                  itemType="number"
+                  name='id_virtuel'
+                  value={3001}
+                  sx={{ width: '100px', display: 'flex' }}
+                />
+              </div>
+            )
+            }
 
-            <div className="ml-16">
-              <p className="text-sm">
-                L&apos;ID virtuel des participants en ligne commence à partir de :{' '}
-                <span className="border border-gray-700 p-3 border-dashed">3001</span>
-              </p>
-            </div>
           </Box>
 
           <Box
@@ -130,10 +141,16 @@ const Inscription = () => {
               />
 
               <div className="flex flex-wrap gap-5 items-end">
-                <div className="ml-14 border border-dashed border-gray-700 px-4 rounded-lg w-fit">
-                  <p className="text-sm">Titre</p>
+                <div className="ml-14 border  px-4 rounded-lg w-fit">
+                  <p className="text-sm">Texte</p>
                   <div>
-                    <p className="text-sm">Scanner ici pour vous inscrire</p>
+                    {/* <p className="text-sm">Scanner ici pour vous inscrire</p> */}
+                    <Field.Text
+                      type="text"
+                      value="Scanner ici pour vous inscrire"
+                      name=''
+                      sx={{ width: '300px', display: 'flex', }}
+                    />
 
                     {/* Code QR */}
                     <div className="flex flex-col items-center">

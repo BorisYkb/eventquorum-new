@@ -20,6 +20,7 @@ export type IAddressItem = {
 };
 
 export type IDateValue = string | number | null;
+export type IDateHourValue = string | number | null;
 
 export type IDatePickerControl = Dayjs | null;
 

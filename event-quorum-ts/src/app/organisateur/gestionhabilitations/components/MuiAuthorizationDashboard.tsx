@@ -29,6 +29,7 @@ import { useTheme } from '@mui/material/styles';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import AuthorizationDetailModal from './AuthorizationDetailModal';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface Authorization {
   id: number;
@@ -320,25 +321,27 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
                             <Tooltip title="Voir détails" placement="top" arrow>
                               <IconButton
                                 color="info"
+                                sx={{ color: '#374151' }} // Tailwind gray-700
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleViewAuthorization(auth.id);
                                 }}
                                 size="small"
                               >
-                                <Iconify icon="solar:eye-bold" />
+                                <Iconify icon="solar:eye-bold" width={17} height={17} />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Modifier" placement="top" arrow>
                               <IconButton
                                 color="warning"
+                                sx={{ color: '#00B8D9' }}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleEditAuthorization(auth.id);
                                 }}
                                 size="small"
                               >
-                                <Iconify icon="solar:pen-bold" />
+                                <Icon icon="solar:pen-new-square-linear" width={15} height={15} />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Supprimer" placement="top" arrow>
