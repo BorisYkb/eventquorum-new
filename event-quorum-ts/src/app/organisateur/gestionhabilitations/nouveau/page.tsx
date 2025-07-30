@@ -2,6 +2,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import {
   Box,
   Card,
@@ -80,23 +81,37 @@ const CreateAccessPage: React.FC = () => {
     }));
   };
 
-  const handlePermissionChange = (permission: keyof CreateAccessForm['permissions']) => (
-    event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
-  ) => {
-    let value: boolean | string;
-    if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
-      value = event.target.checked;
-    } else {
-      value = (event.target as HTMLInputElement | { value: unknown }).value as string;
-    }
+  // Handler specifically for MUI Select (role)
+  const handleRoleChange = (event: SelectChangeEvent<string>) => {
     setFormData(prev => ({
       ...prev,
-      permissions: {
-        ...prev.permissions,
-        [permission]: value
-      }
+      role: event.target.value
     }));
   };
+
+  const handleCheckboxPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({
+        ...prev,
+        permissions: {
+          ...prev.permissions,
+          [permission]: event.target.checked
+        }
+      }));
+    };
+
+  const handleSelectPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
+    (event: SelectChangeEvent<string | boolean>) => {
+      setFormData(prev => ({
+        ...prev,
+        permissions: {
+          ...prev.permissions,
+          [permission]: event.target.value
+        }
+      }));
+    };
+
+
 
   const handleCancel = () => {
     router.push('/organisateur/gestionhabilitations');
@@ -309,7 +324,7 @@ const CreateAccessPage: React.FC = () => {
                       <InputLabel>Rôle</InputLabel>
                       <Select
                         value={formData.role}
-                        onChange={handleInputChange('role')}
+                        onChange={handleRoleChange}
                         label="Rôle"
                       >
                         {roles.map((role) => (
@@ -381,14 +396,15 @@ const CreateAccessPage: React.FC = () => {
                                 {permission.type === 'checkbox' ? (
                                   <Checkbox
                                     checked={formData.permissions[permission.key as keyof typeof formData.permissions] as boolean}
-                                    onChange={handlePermissionChange(permission.key as keyof typeof formData.permissions)}
+                                    onChange={handleCheckboxPermissionChange(permission.key as keyof typeof formData.permissions)}
                                     size="small"
                                   />
+
                                 ) : permission.type === 'select' ? (
                                   <FormControl size="small" sx={{ minWidth: 180 }}>
                                     <Select
                                       value={formData.permissions[permission.key as keyof typeof formData.permissions]}
-                                      onChange={handlePermissionChange(permission.key as keyof typeof formData.permissions)}
+                                      onChange={handleSelectPermissionChange(permission.key as keyof typeof formData.permissions)}
                                       displayEmpty
                                     >
                                       {(permission.type === 'select' && Array.isArray((permission as any).options)) &&
@@ -396,10 +412,10 @@ const CreateAccessPage: React.FC = () => {
                                           <MenuItem key={option.value} value={option.value}>
                                             {option.label}
                                           </MenuItem>
-                                        ))
-                                      }
+                                        ))}
                                     </Select>
                                   </FormControl>
+
                                 ) : null}
                               </TableCell>
                             </TableRow>

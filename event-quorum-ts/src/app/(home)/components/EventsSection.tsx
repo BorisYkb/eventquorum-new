@@ -14,7 +14,7 @@ if (typeof window !== 'undefined') {
 
 export default function EventsSection() {
   // État pour suivre l'événement survolé/sélectionné
-  const [activeEvent, setActiveEvent] = useState(null);
+  const [activeEvent, setActiveEvent] = useState<number | null>(null);
 
   // Références pour les éléments à animer
   const titleRef = useRef(null);
@@ -58,7 +58,7 @@ export default function EventsSection() {
   ];
 
   // Formatage de la date en français
-  const formatEventDate = (date) => {
+  const formatEventDate = (date: Date) => {
     return format(date, "d MMMM yyyy", { locale: fr });
   };
 

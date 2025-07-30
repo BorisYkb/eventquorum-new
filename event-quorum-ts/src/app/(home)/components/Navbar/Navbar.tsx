@@ -4,7 +4,7 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import NavItem from './NavItem';
 import DropdownMenu from './DropdownMenu';
-import useScroll from '@/hooks/useScroll';
+import useScroll from 'src/routes/hooks/useScroll';
 import MobileMenu from './MobileMenu';
 
 export default function Navbar() {

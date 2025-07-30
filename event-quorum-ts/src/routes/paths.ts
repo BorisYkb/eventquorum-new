@@ -158,11 +158,18 @@ export const paths = {
     root: ROOTS.ORGANISATEUR,
     gestionevent: {
       root: `${ROOTS.ORGANISATEUR}/gestionevent`,
+      newactivity: `${ROOTS.ORGANISATEUR}/gestionevent/newactivity`,
+      eventfinancialsituation: {
+        root: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation`,
+        perboxoffice: (id: string) =>`${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/boxoffice/${id}`
+      },
+      edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionevent/${id}/editactivity`,
     },
     gestionparticipant: {
       root: `${ROOTS.ORGANISATEUR}/gestionparticipant`,
       add: `${ROOTS.ORGANISATEUR}/gestionparticipant/add-new`,
       edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionparticipant/edit/${id}`,
+      consultation: `${ROOTS.ORGANISATEUR}/gestionparticipant/consultation`,
     },
     gestionhabilitations: {
       root: `${ROOTS.ORGANISATEUR}/gestionhabilitations`,

@@ -1,3 +1,4 @@
+// src/routes/hooks/useScroll.ts
 import { useEffect, useState } from 'react';
 
 export default function useScroll(threshold = 10) {

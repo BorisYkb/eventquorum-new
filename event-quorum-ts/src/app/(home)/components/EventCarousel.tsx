@@ -154,7 +154,7 @@ const EventCarousel = () => {
                     </h3>
 
                     {/* Lien "Learn more" avec icône */}
-                    <div className="flex items-center gap-2 text-sm opacity-90 hover:opacity-100 transition-opacity group-hover:translate-x-1 transition-transform duration-300">
+                    <div className="flex items-center gap-2 text-sm opacity-90 hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">
                       <span>En savoir plus</span>
                       <svg
                         className="w-4 h-4"

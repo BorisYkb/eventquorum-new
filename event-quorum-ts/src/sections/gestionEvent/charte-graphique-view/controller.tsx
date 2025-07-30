@@ -12,7 +12,7 @@ export type CharteGraphiqueSchemaType = zod.infer<typeof CharteGraphiqueSchema>;
 
 export const CharteGraphiqueSchema = zod.object({
   logo_event: schemaHelper.file({ message: "L'image est requise !" }),
-  logo_partenaire: schemaHelper.file({ message: "L'image est requise !" }),
+  logo_partenaire: schemaHelper.files({ message: "L'image est requise !" }),
   slides: schemaHelper.files({ message: 'Images is required!' }),
   taille_logo_event_login: zod.coerce
     .number()
@@ -48,7 +48,7 @@ export const useCharteGraphiqueView = () => {
 
   const defaultValues: CharteGraphiqueSchemaType = {
     logo_event: '',
-    logo_partenaire: '',
+    logo_partenaire: [''],
     slides: [''],
     taille_logo_event_login: 0,
     taille_logo_event_navbar: 0,
@@ -91,6 +91,17 @@ export const useCharteGraphiqueView = () => {
   const handleRemoveAllFiles = useCallback(() => {
     setValue('slides', [], { shouldValidate: true });
   }, [setValue]);
+  const handleRemovePartnerFile = useCallback(
+    (inputFile: File | string) => {
+      const filtered = values.logo_partenaire && values.logo_partenaire?.filter((file) => file !== inputFile);
+      setValue('logo_partenaire', filtered);
+    },
+    [setValue, values.logo_partenaire]
+  );
+
+  const handleRemovePartnerAllFiles = useCallback(() => {
+    setValue('logo_partenaire', [], { shouldValidate: true });
+  }, [setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -112,6 +123,8 @@ export const useCharteGraphiqueView = () => {
     control,
     handleRemoveAllFiles,
     handleRemoveFile,
+    handleRemovePartnerAllFiles,
+    handleRemovePartnerFile,
     onSubmit,
   };
 };

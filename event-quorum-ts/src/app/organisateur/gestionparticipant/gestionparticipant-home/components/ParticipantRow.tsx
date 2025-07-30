@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { paths } from 'src/routes/paths';
+import { Icon } from '@iconify/react';
 
 // Types
 type Participant = {
@@ -117,27 +118,27 @@ const ParticipantRow = ({
           <IconButton 
             size="small" 
             onClick={() => onView(participant.id)}
-            sx={{ color: 'info.main' }}
+            sx={{ color: '#374151' }} // Tailwind gray-700
           >
-            <ViewIcon />
+            <ViewIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Modifier" arrow>
-          <IconButton 
-            size="small" 
-            onClick={handleEdit}
-            sx={{ color: 'warning.main' }}
-          >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Modifier" arrow>
+            <IconButton
+              size="small"
+              onClick={handleEdit}
+              sx={{ color: '#00B8D9' }}
+            >
+              <Icon icon="solar:pen-new-square-linear" width={15} height={15} />
+            </IconButton>
+          </Tooltip>
         <Tooltip title="Supprimer" arrow>
           <IconButton 
             size="small" 
             onClick={() => onDelete(participant.id)}
             sx={{ color: 'error.main' }}
           >
-            <DeleteIcon />
+            <DeleteIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       </Stack>

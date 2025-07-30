@@ -39,6 +39,7 @@ import {
   _city,
   _periods,
   _eventDescriptions,
+  _activityNames,
 } from './assets';
 
 // ----------------------------------------------------------------------
@@ -53,6 +54,7 @@ export const _mock = {
   courseNames: (index: number) => _courseNames[index],
   fileNames: (index: number) => _fileNames[index],
   eventNames: (index: number) => _eventNames[index],
+  activityNames: (index: number) => _activityNames[index],
   eventDescription: (index: number) => _eventDescriptions[index],
   eventTypes: (index: number) => _eventTypes[index],
   taskNames: (index: number) => _taskNames[index],

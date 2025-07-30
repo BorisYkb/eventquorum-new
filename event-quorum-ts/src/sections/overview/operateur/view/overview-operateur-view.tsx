@@ -235,8 +235,9 @@ export function OverviewOperateurView() {
   }, []);
 
 
-  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = useCallback((event: SelectChangeEvent<number>) => {
+    const value = typeof event.target.value === 'number' ? event.target.value : parseInt(event.target.value as string, 10);
+    setRowsPerPage(value);
     setPage(0);
   }, []);
 
@@ -491,7 +492,7 @@ export function OverviewOperateurView() {
   const renderTableHead = () => (
     <TableHead>
       <TableRow>
-        <TableCell sx={{ width: 120 }}>Actions</TableCell>
+        <TableCell sx={{ width: 120 }}>       </TableCell>
         <TableCell>Nom Prénom</TableCell>
         <TableCell>Statut émargement</TableCell>
         <TableCell>Date et heure</TableCell>
@@ -537,7 +538,6 @@ export function OverviewOperateurView() {
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
         labelDisplayedRows={({ from, to, count }) => `${from}-${to} sur ${count}`}
       />
     </Card>
@@ -612,7 +612,7 @@ function ParticipantTableRow({ row, onEmarger, onVoirDetail }: ParticipantTableR
       <TableCell>
         <Button
           variant="contained"
-          color="error"
+          color="inherit"
           size="small"
           onClick={onEmarger}
           disabled={!row.peutEmarger}

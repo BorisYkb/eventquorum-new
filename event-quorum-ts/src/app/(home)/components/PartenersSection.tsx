@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 export default function PartnersSection() {
-  const sectionRef = useRef(null);
-  const scrollRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -52,7 +52,7 @@ export default function PartnersSection() {
     let scrollDirection = 1;
     let scrollSpeed = isMobile ? 0.3 : 0.5;
     let isPaused = false;
-    let animationId;
+    let animationId: number | undefined;
 
     const scroll = () => {
       if (!isPaused && container) {

@@ -700,6 +700,29 @@ export const _eventNames = [
   `Wedding Expo`,
 ];
 
+export const _activityNames = [
+  `Formation premiers secours`,
+  `Atelier d'initiation au codage`,
+  `Club de débat citoyen`,
+  `Atelier d'écriture créative`,
+  `Marche solidaire `,
+  `Cours de cuisine africaine`,
+  `Club de lecture mensuel`,
+  `Yoga en plein air`,
+  `Randonnée découverte nature`,
+  `Atelier de peinture intuitive`,
+  `Rencontre des jeunes leaders`,
+  `Séance photo communautaire`,
+  `Projection de film en plein air`,
+  `Tournoi d'échecs local`,
+  `Initiation à la permaculture`,
+  `Soirée poésie et slam`,
+  `Atelier d'art floral`,
+  `Session de mentorat professionnel`,
+  `Atelier théâtre pour débutants`,
+  `Sortie photo urbaine`,
+];
+
 export const _eventDescriptions = [
   `Réunion annuelle cruciale rassemblant actionnaires, dirigeants et membres du conseil d'administration pour examiner les performances de l'entreprise et définir les orientations stratégiques futures. Les participants discutent des résultats financiers, élisent les administrateurs et votent sur les questions importantes de gouvernance.`,
 

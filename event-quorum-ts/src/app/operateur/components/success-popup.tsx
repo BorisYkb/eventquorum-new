@@ -207,7 +207,7 @@ export function SuccessPopup({
                 bottom: -10,
                 borderRadius: '50%',
                 background: 'linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1))',
-                animation: showContent ? `${pulseAnimation} 2s infinite 1s` : 'none',
+                animation: showContent ? `${pulseAnimation} 2.2s infinite 1.2s` : 'none',
               }
             }}
           >
@@ -250,7 +250,7 @@ export function SuccessPopup({
                 borderRadius: '50%',
                 bgcolor: 'success.main',
                 opacity: showContent ? 1 : 0,
-                animation: showContent ? `${fadeInUp} 0.5s ease-out ${0.8 + index * 0.1}s both` : 'none',
+                animation: showContent ? `${fadeInUp} 0.7s ease-out ${1 + index * 0.1}s both` : 'none',
                 ...(index === 0 && { top: 10, left: 20, transform: 'scale(0.8)' }),
                 ...(index === 1 && { top: 25, right: 15, transform: 'scale(1.2)' }),
                 ...(index === 2 && { bottom: 20, left: 25, transform: 'scale(0.6)' }),
