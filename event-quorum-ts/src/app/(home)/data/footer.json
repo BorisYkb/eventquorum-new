@@ -13,11 +13,10 @@
       { "label": "Suivi des performances & statistiques", "url": "/services/statistiques" }
     ],
     "useful_links": [
-      { "label": "À propos de nous", "url": "/a-propos" },
+      { "label": "À propos de nous", "url": "/Quinoussommes" },
       { "label": "Témoignages clients", "url": "/temoignages" },
-      { "label": "FAQ", "url": "/faq" },
+      { "label": "FAQ", "url": "/Faqevent" },
       { "label": "Carrières", "url": "/carriere" },
-      { "label": "Mentions légales", "url": "/mentions-legales" },
       { "label": "Politique de confidentialité", "url": "/confidentialite" },
       { "label": "Conditions d'utilisation", "url": "/conditions-utilisation" }
     ],
@@ -28,9 +27,7 @@
     },
     "social_media": {
       "facebook": "https://facebook.com/eventquorum",
-      "twitter": "https://twitter.com/eventquorum",
       "instagram": "https://instagram.com/eventquorum",
       "linkedin": "https://linkedin.com/company/eventquorum"
     }
   }
-  

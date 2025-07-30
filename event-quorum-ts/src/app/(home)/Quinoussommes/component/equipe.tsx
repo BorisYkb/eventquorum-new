@@ -51,22 +51,22 @@ export default function Equipe({ isLoaded }: EquipeProps) {
     {
       name: 'Evariste Kouassi',
       role: 'Employé',
-      image: '/personne1.jpg',
+      image: '/boss.png',
     },
     {
       name: 'Chonou Oriane',
       role: 'Employée',
-      image: '/personne2.jpg',
+      image: '/femme.png',
     },
     {
       name: 'Emmanuel Yao',
       role: 'Employé',
-      image: '/personne1.jpg',
+      image: '/boss.png',
     },
     {
       name: 'Boris Yakoué',
       role: 'Employé',
-      image: '/personne1.jpg',
+      image: '/boss.png',
     },
   ];
 

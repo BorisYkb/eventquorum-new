@@ -1,7 +1,24 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { Mail, Phone, MapPin, Instagram, Twitter, Facebook, Linkedin, ArrowUp } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
+
+import {
+  SentIcon,
+  GithubIcon,
+  GoogleIcon,
+  TwitterIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  PasswordIcon,
+  PlanFreeIcon,
+  InstagramIcon,
+  EmailInboxIcon,
+  NewPasswordIcon,
+  PlanPremiumIcon,
+  PlanStarterIcon,
+} from 'src/assets/icons';
+
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import footerData from '../data/footer.json'; // Import des données JSON
@@ -157,17 +174,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="social-icon"
               >
-                <Facebook className="h-5 w-5" />
-              </a>
-            )}
-            {social_media.twitter && (
-              <a
-                href={social_media.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon"
-              >
-                <Twitter className="h-5 w-5" />
+                <FacebookIcon sx={{ width: 24 }} />
               </a>
             )}
             {social_media.instagram && (
@@ -177,7 +184,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="social-icon"
               >
-                <Instagram className="h-5 w-5" />
+                <InstagramIcon sx={{ width: 24 }} />
               </a>
             )}
             {social_media.linkedin && (
@@ -187,7 +194,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="social-icon"
               >
-                <Linkedin className="h-5 w-5" />
+                <LinkedinIcon sx={{ width: 24 }} />
               </a>
             )}
           </div>
@@ -203,21 +210,7 @@ const Footer = () => {
           © {new Date().getFullYear()} {logo.name}. Tous droits réservés.
         </div>
         <div className="flex space-x-6 text-white">
-          {useful_links
-            .filter((link) =>
-              ['confidentialite', 'conditions-utilisation', 'mentions-legales'].some((slug) =>
-                link.url.includes(slug)
-              )
-            )
-            .map((link, idx) => (
-              <a
-                key={idx}
-                href={link.url}
-                className="hover:text-blue-400 transition-all no-underline"
-              >
-                {link.label}
-              </a>
-            ))}
+
         </div>
       </div>
 

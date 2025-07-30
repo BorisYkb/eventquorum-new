@@ -144,19 +144,7 @@ export function OverviewIntervenantView() {
                                 />
                             </Grid>
 
-                            <Grid size={{ xs: 12, md: 2 }}>
-                                <Button
-                                    variant="outlined"
-                                    sx={{
-                                        borderRadius: 2,
-                                        textTransform: 'none',
-                                        color: theme.palette.text.secondary,
-                                        borderColor: theme.palette.divider,
-                                    }}
-                                >
-                                    Select
-                                </Button>
-                            </Grid>
+
                         </Grid>
 
                         {/* Tableau des activités */}

@@ -6,15 +6,15 @@ export default function UpcomingEvents() {
   const upcomingEvents = [
     {
       id: 1,
-      title: "Assemblée Générale de la Société Générale de Côte d'Ivoire",
-      date: "20 Mai 2025",
-      location: "Sofitel, Abidjan",
+      title: "Assemblée Générale de SITAB",
+      date: "30 Juillet 2025",
+      location: "Plateau, Abidjan",
       link: "/events/heavent-meetings-cannes"
     },
     {
         id: 2,
         title: "Assemblée Générale de la Société Générale de Côte d'Ivoire",
-        date: "20 Mai 2025",
+        date: "14 Juillet 2025",
         location: "Novotel, Abidjan",
         link: "/events/heavent-meetings-cannes"
     }

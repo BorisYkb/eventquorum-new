@@ -102,20 +102,5 @@ export default function Page() {
     loadAuthorizations();
   }, []);
 
-  {/*
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '50vh'
-      }}>
-        Chargement des habilitations...
-      </div>
-    );
-  }
-  */}
-
   return <MuiAuthorizationDashboard authorizations={authorizations} />;
 }

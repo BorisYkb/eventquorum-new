@@ -110,7 +110,7 @@ export default function Fonctionnalite() {
   ]
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-0">
+    <div className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-0 flex flex-col items-center justify-center">
       <h1 ref={headingRef} className="text-3xl sm:text-4xl font-bold text-center mb-6">
         Les fonctionnalités personnalisables <br />
         <span className="text-pink-400">préférées</span> de nos clients
@@ -122,7 +122,7 @@ export default function Fonctionnalite() {
 
       <div
         ref={sectionRef}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 "
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 center justify-center"
       >
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col gap-2 max-w-sm w-full">

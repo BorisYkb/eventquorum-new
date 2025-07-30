@@ -7,7 +7,7 @@ import Link from 'next/link';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Données du carrousel - remplacez par vos propres images
   const carouselData = [
@@ -96,7 +96,7 @@ export default function Hero() {
               </Link>
             </div>
 
-            {/* Statistiques */}
+            {/* Statistiques
             <div className="flex gap-6 md:gap-14 mt-8">
               <div className="text-center md:text-left">
                 <p className="text-xl font-bold">
@@ -118,7 +118,7 @@ export default function Hero() {
                 </p>
                 <p className="text-sm text-gray-500">Graduates</p>
               </div>
-            </div>
+            </div>*/}
           </div>
 
           {/* Carrousel (droite) */}

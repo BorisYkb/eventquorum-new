@@ -420,7 +420,7 @@ const CreateAccessPage: React.FC = () => {
             variant="outlined"
             color="error"
             onClick={handleCancel}
-            startIcon={<Iconify icon="eva:close-fill" />}
+
             sx={{ px: 4 }}
           >
             Annuler
@@ -429,7 +429,7 @@ const CreateAccessPage: React.FC = () => {
             variant="contained"
             color="success"
             onClick={handleSubmit}
-            startIcon={<Iconify icon="eva:save-fill" />}
+
             sx={{ px: 4 }}
           >
             Enregistrer l'Accès
