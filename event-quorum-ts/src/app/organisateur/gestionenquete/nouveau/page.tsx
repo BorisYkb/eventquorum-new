@@ -2,228 +2,434 @@
 
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormLabel from '@mui/material/FormLabel';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import Grid from '@mui/material/Grid2';
-import { useTheme } from '@mui/material/styles';
+import { Box, Button, Typography } from '@mui/material';
 
-import { Iconify } from 'src/components/iconify';
+// Import des types et composants
+import { Enquete, Question, EnqueteFormData, CurrentQuestion } from './types';
+import CreateEnqueteForm from './components/CreateEnqueteForm';
+import AddQuestionForm from './components/AddQuestionForm';
+import QuestionsListWithFilter from './components/QuestionsListWithFilter';
+
+// Import des modals
 import QuestionDetailModal from '../components/QuestionDetailModal';
+import QuestionEditModal from '../components/QuestionEditModal';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import { LoadingScreen } from 'src/components/loading-screen';
 
-// Types
-interface Question {
-  id: number;
-  question: string;
-  type: 'choix_multiple' | 'echelle_appreciation' | 'zone_saisie' | 'choix_unique' | 'liste_deroulante' | 'note_etoile';
-  reponses: string[];
-  enqueteConcernee: string;
-  nombrePoints: number;
-  bonneReponse: number;
-  required: boolean;
-}
-
-interface EnqueteForm {
-  titre: string;
-  activite: string;
-  typeEnquete: 'live' | 'asynchrone';
-  enqueteAnonymat: boolean;
-  authentificationNumerique: boolean;
-  questions: Question[];
-}
-
+/**
+ * Page de création d'enquêtes et de questions - Version refactorisée
+ * Divisée en 3 parties indépendantes avec logique modulaire
+ */
 const CreateEnquetePage: React.FC = () => {
-  const theme = useTheme();
   const router = useRouter();
 
-  const [enqueteForm, setEnqueteForm] = useState<EnqueteForm>({
-    titre: '',
-    activite: '',
-    typeEnquete: 'live',
-    enqueteAnonymat: false,
-    authentificationNumerique: false,
-    questions: []
-  });
+  // États principaux
+  const [enquetes, setEnquetes] = useState<Enquete[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [currentQuestion, setCurrentQuestion] = useState({
+  // Compteur pour les IDs uniques
+  const [nextEnqueteId, setNextEnqueteId] = useState(1);
+  const [nextQuestionId, setNextQuestionId] = useState(1);
+
+  // États pour les modals
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
+  const [questionToEdit, setQuestionToEdit] = useState<Question | null>(null);
+  const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
+
+  // État pour la question en cours de modification (compatible avec le modal)
+  const [currentQuestionEdit, setCurrentQuestionEdit] = useState<CurrentQuestion>({
     question: '',
-    type: 'choix_multiple' as Question['type'],
+    type: 'liste_deroulante',
     reponses: [''],
-    enqueteConcernee: '',
+    enqueteId: 0,
     nombrePoints: 0,
     bonneReponse: 0,
-    required: false
+    required: false,
+    echelleMin: 1,
+    echelleMax: 10,
+    labelMin: '',
+    labelMax: ''
   });
 
-  // État pour le modal de détail de question
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
+  /**
+   * Chargement initial des données depuis la base de données
+   */
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        setLoading(true);
 
-  // Options disponibles pour les activités
-  const activites = [
-    "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
-    "PANEL DE HAUT NIVEAU",
-    "POINT DE PRESSE",
-    "COOLING BREAK",
-    "PAUSE CAFE"
-  ];
+        // TODO: Remplacer par vos vrais appels API
+        // const enquetesResponse = await fetch('/api/enquetes');
+        // const questionsResponse = await fetch('/api/questions');
+        // const enquetesData = await enquetesResponse.json();
+        // const questionsData = await questionsResponse.json();
+        
+        // Données fictives initiales (enquêtes existantes de la BDD)
+        const initialEnquetes: Enquete[] = [
+          {
+            id: 1,
+            titre: "Satisfaction générale événement",
+            activite: "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+            typeEnquete: "live",
+            enqueteAnonymat: true,
+            authentificationNumerique: false,
+            createdAt: "2024-01-15"
+          },
+          {
+            id: 2,
+            titre: "Évaluation des intervenants",
+            activite: "PANEL DE HAUT NIVEAU",
+            typeEnquete: "asynchrone",
+            enqueteAnonymat: false,
+            authentificationNumerique: true,
+            createdAt: "2024-01-20"
+          },
+          {
+            id: 3,
+            titre: "Feedback organisation logistique",
+            activite: "POINT DE PRESSE",
+            typeEnquete: "live",
+            enqueteAnonymat: true,
+            authentificationNumerique: false,
+            createdAt: "2024-01-25"
+          }
+        ];
 
-  // Options pour les enquêtes concernées
-  const enquetesConcernees = [
-    "Enquête 1",
-    "Enquête 2",
-    "Enquête 3",
-    "Enquête 4"
-  ];
+        // Questions fictives existantes
+        const initialQuestions: Question[] = [
+          {
+            id: 1,
+            question: "Comment évaluez-vous la qualité générale de l'événement ?",
+            type: "choix_multiple",
+            reponses: ["Excellent", "Très bien", "Bien", "Moyen", "Insuffisant"],
+            enqueteId: 1,
+            nombrePoints: 10,
+            bonneReponse: 0,
+            required: true
+          },
+          {
+            id: 2,
+            question: "Quels aspects avez-vous le plus appréciés ?",
+            type: "case_a_cocher",
+            reponses: ["Organisation", "Contenu", "Intervenants", "Logistique"],
+            enqueteId: 1,
+            nombrePoints: 5,
+            bonneReponse: 0,
+            required: false
+          },
+          {
+            id: 3,
+            question: "Vos commentaires et suggestions",
+            type: "question_libre",
+            reponses: [],
+            enqueteId: 1,
+            nombrePoints: 0,
+            bonneReponse: 0,
+            required: false
+          },
+          {
+            id: 4,
+            question: "Notez la qualité des intervenants de 1 à 5",
+            type: "echelle_lineaire",
+            reponses: [],
+            enqueteId: 2,
+            nombrePoints: 8,
+            bonneReponse: 0,
+            required: true,
+            echelleMin: 1,
+            echelleMax: 5,
+            labelMin: "Très mauvais",
+            labelMax: "Excellent"
+          }
+        ];
 
-  // Types de questions disponibles
-  const typeQuestions = [
-    { value: 'choix_multiple', label: 'Choix multiple' },
-    { value: 'echelle_appreciation', label: 'Échelle d\'appréciation' },
-    { value: 'zone_saisie', label: 'Zone de saisie' },
-    { value: 'choix_unique', label: 'Choix unique' },
-    { value: 'liste_deroulante', label: 'Liste déroulante' },
-    { value: 'note_etoile', label: 'Note étoile' }
-  ];
+        setEnquetes(initialEnquetes);
+        setQuestions(initialQuestions);
+        
+        // Définir les prochains IDs
+        setNextEnqueteId(Math.max(...initialEnquetes.map(e => e.id)) + 1);
+        setNextQuestionId(Math.max(...initialQuestions.map(q => q.id)) + 1);
 
-  const handleEnqueteFormChange = (field: keyof EnqueteForm, value: any) => {
-    setEnqueteForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleCurrentQuestionChange = (field: string, value: any) => {
-    setCurrentQuestion(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleAddReponse = () => {
-    setCurrentQuestion(prev => ({
-      ...prev,
-      reponses: [...prev.reponses, '']
-    }));
-  };
-
-  const handleRemoveReponse = (index: number) => {
-    setCurrentQuestion(prev => ({
-      ...prev,
-      reponses: prev.reponses.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleReponseChange = (index: number, value: string) => {
-    setCurrentQuestion(prev => ({
-      ...prev,
-      reponses: prev.reponses.map((rep, i) => i === index ? value : rep)
-    }));
-  };
-
-  const handleAddQuestion = () => {
-    if (!currentQuestion.question.trim()) return;
-
-    const newQuestion: Question = {
-      id: Date.now(),
-      question: currentQuestion.question,
-      type: currentQuestion.type,
-      reponses: currentQuestion.reponses.filter(rep => rep.trim()),
-      enqueteConcernee: currentQuestion.enqueteConcernee,
-      nombrePoints: currentQuestion.nombrePoints,
-      bonneReponse: currentQuestion.bonneReponse,
-      required: currentQuestion.required
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setEnqueteForm(prev => ({
-      ...prev,
-      questions: [...prev.questions, newQuestion]
-    }));
+    loadInitialData();
+  }, []);
 
-    // Reset current question
-    setCurrentQuestion({
-      question: '',
-      type: 'choix_multiple',
-      reponses: [''],
-      enqueteConcernee: '',
-      nombrePoints: 0,
-      bonneReponse: 0,
-      required: false
-    });
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - ENQUÊTES
+  // ===========================================
+
+  /**
+   * Création d'une nouvelle enquête (Partie 1)
+   */
+  const handleEnqueteCreated = (enqueteData: EnqueteFormData) => {
+    const newEnquete: Enquete = {
+      id: nextEnqueteId,
+      ...enqueteData,
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+
+    setEnquetes(prev => [...prev, newEnquete]);
+    setNextEnqueteId(prev => prev + 1);
+
+    console.log('Nouvelle enquête créée:', newEnquete);
+    // TODO: Appel API pour sauvegarder l'enquête
   };
 
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - QUESTIONS
+  // ===========================================
+
+  /**
+   * Ajout d'une nouvelle question (Partie 2)
+   */
+  const handleQuestionAdded = (questionData: Omit<Question, 'id'>) => {
+    const newQuestion: Question = {
+      id: nextQuestionId,
+      ...questionData
+    };
+
+    setQuestions(prev => [...prev, newQuestion]);
+    setNextQuestionId(prev => prev + 1);
+
+    console.log('Nouvelle question ajoutée:', newQuestion);
+    // TODO: Appel API pour sauvegarder la question
+  };
+
+  /**
+   * Modification d'une question (Partie 3)
+   */
+  const handleEditQuestion = (questionId: number) => {
+    const question = questions.find(q => q.id === questionId);
+    if (question) {
+      setQuestionToEdit(question);
+      
+      // Préparer les données pour le modal d'édition
+      setCurrentQuestionEdit({
+        question: question.question,
+        type: question.type,
+        reponses: question.reponses.length > 0 ? question.reponses : [''],
+        enqueteId: question.enqueteId,
+        nombrePoints: question.nombrePoints,
+        bonneReponse: question.bonneReponse,
+        required: question.required,
+        echelleMin: question.echelleMin || 1,
+        echelleMax: question.echelleMax || 10,
+        labelMin: question.labelMin || '',
+        labelMax: question.labelMax || ''
+      });
+      
+      setEditModalOpen(true);
+    }
+  };
+
+  /**
+   * Suppression d'une question (Partie 3)
+   */
+  const handleDeleteQuestion = (questionId: number) => {
+    const question = questions.find(q => q.id === questionId);
+    if (question) {
+      setQuestionToDelete(question);
+      setDeleteModalOpen(true);
+    }
+  };
+
+  /**
+   * Visualisation des détails d'une question (Partie 3)
+   */
   const handleViewQuestion = (questionId: number) => {
-    const question = enqueteForm.questions.find(q => q.id === questionId);
+    const question = questions.find(q => q.id === questionId);
     if (question) {
       setSelectedQuestionForView(question);
       setDetailModalOpen(true);
     }
   };
 
-  const handleEditQuestion = (questionId: number) => {
-    const question = enqueteForm.questions.find(q => q.id === questionId);
-    if (question) {
-      setCurrentQuestion({
-        question: question.question,
-        type: question.type,
-        reponses: question.reponses.length > 0 ? question.reponses : [''],
-        enqueteConcernee: question.enqueteConcernee,
-        nombrePoints: question.nombrePoints,
-        bonneReponse: question.bonneReponse,
-        required: question.required
-      });
-      handleDeleteQuestion(questionId);
-    }
-  };
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - NAVIGATION
+  // ===========================================
 
-  const handleDeleteQuestion = (questionId: number) => {
-    setEnqueteForm(prev => ({
-      ...prev,
-      questions: prev.questions.filter(q => q.id !== questionId)
-    }));
-  };
+  /**
+   * Sauvegarde finale et retour
+   */
+  const handleSaveAndExit = () => {
+    console.log('Sauvegarde finale des données...');
+    console.log('Enquêtes créées:', enquetes);
+    console.log('Questions créées:', questions);
 
-  const handleSaveEnquete = () => {
-    if (!enqueteForm.titre.trim() || !enqueteForm.activite || enqueteForm.questions.length === 0) {
-      alert('Veuillez remplir tous les champs obligatoires et ajouter au moins une question.');
-      return;
-    }
-
-    // Logique de sauvegarde
-    console.log('Enquête à sauvegarder:', enqueteForm);
-
+    // TODO: Appels API finaux pour sauvegarder toutes les données
+    alert('Toutes les enquêtes et questions ont été sauvegardées avec succès !');
+    
     // Redirection vers la liste des enquêtes
     router.push('/organisateur/gestionenquetes');
   };
 
+  /**
+   * Annulation et retour sans sauvegarder
+   */
   const handleCancel = () => {
-    router.push('/organisateur/gestionenquetes');
+    if (window.confirm('Êtes-vous sûr de vouloir quitter sans sauvegarder ?')) {
+      router.push('/organisateur/gestionenquetes');
+    }
   };
 
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - MODALS
+  // ===========================================
+
+  /**
+   * Changement des propriétés de la question en cours de modification
+   */
+  const handleCurrentQuestionEditChange = (field: string, value: any) => {
+    setCurrentQuestionEdit(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Réinitialiser les réponses lors du changement de type
+      if (field === 'type') {
+        if (value === 'question_libre') {
+          updated.reponses = [];
+        } else if (value === 'echelle_lineaire') {
+          updated.reponses = [];
+        } else if (updated.reponses.length === 0) {
+          updated.reponses = [''];
+        }
+        updated.bonneReponse = 0;
+      }
+      
+      return updated;
+    });
+  };
+
+  /**
+   * Ajouter une réponse à la question en cours de modification
+   */
+  const handleAddReponseEdit = () => {
+    setCurrentQuestionEdit(prev => ({
+      ...prev,
+      reponses: [...prev.reponses, '']
+    }));
+  };
+
+  /**
+   * Supprimer une réponse de la question en cours de modification
+   */
+  const handleRemoveReponseEdit = (index: number) => {
+    setCurrentQuestionEdit(prev => ({
+      ...prev,
+      reponses: prev.reponses.filter((_, i) => i !== index),
+      bonneReponse: prev.bonneReponse >= index ? Math.max(0, prev.bonneReponse - 1) : prev.bonneReponse
+    }));
+  };
+
+  /**
+   * Modifier une réponse de la question en cours de modification
+   */
+  const handleReponseEditChange = (index: number, value: string) => {
+    setCurrentQuestionEdit(prev => ({
+      ...prev,
+      reponses: prev.reponses.map((rep, i) => i === index ? value : rep)
+    }));
+  };
+
+  /**
+   * Sauvegarder les modifications d'une question
+   */
+  const handleSaveEditedQuestion = () => {
+    if (!currentQuestionEdit.question.trim() || !questionToEdit) {
+      alert('Veuillez saisir une question valide.');
+      return;
+    }
+
+    const updatedQuestion: Question = {
+      ...questionToEdit,
+      question: currentQuestionEdit.question,
+      type: currentQuestionEdit.type,
+      reponses: currentQuestionEdit.reponses.filter(rep => rep.trim()),
+      enqueteId: currentQuestionEdit.enqueteId,
+      nombrePoints: currentQuestionEdit.nombrePoints,
+      bonneReponse: currentQuestionEdit.bonneReponse,
+      required: currentQuestionEdit.required,
+      ...(currentQuestionEdit.type === 'echelle_lineaire' && {
+        echelleMin: currentQuestionEdit.echelleMin,
+        echelleMax: currentQuestionEdit.echelleMax,
+        labelMin: currentQuestionEdit.labelMin,
+        labelMax: currentQuestionEdit.labelMax
+      })
+    };
+
+    // Mettre à jour la liste des questions
+    setQuestions(prev => prev.map(q => 
+      q.id === questionToEdit.id ? updatedQuestion : q
+    ));
+
+    setEditModalOpen(false);
+    setQuestionToEdit(null);
+    console.log('Question modifiée:', updatedQuestion);
+    alert('Question modifiée avec succès !');
+    // TODO: Appel API pour sauvegarder les modifications
+  };
+
+  /**
+   * Confirmation de suppression d'une question
+   */
+  const handleConfirmDeleteQuestion = () => {
+    if (questionToDelete) {
+      setQuestions(prev => prev.filter(q => q.id !== questionToDelete.id));
+      setQuestionToDelete(null);
+      console.log('Question supprimée:', questionToDelete.id);
+      alert('Question supprimée avec succès !');
+      // TODO: Appel API pour supprimer la question
+    }
+  };
+
+  /**
+   * Fermeture des modals
+   */
+  const handleCloseModals = () => {
+    setDetailModalOpen(false);
+    setEditModalOpen(false);
+    setDeleteModalOpen(false);
+    setSelectedQuestionForView(null);
+    setQuestionToEdit(null);
+    setQuestionToDelete(null);
+  };
+
+  /**
+   * Fonction utilitaire pour obtenir le label d'un type de question
+   */
   const getTypeQuestionLabel = (type: string) => {
+    const typeQuestions = [
+      { value: 'liste_deroulante', label: 'Liste déroulante' },
+      { value: 'case_a_cocher', label: 'Case à cocher' },
+      { value: 'question_libre', label: 'Question libre' },
+      { value: 'echelle_lineaire', label: 'Échelle linéaire' },
+      { value: 'choix_multiple', label: 'Choix multiple' }
+    ];
     return typeQuestions.find(t => t.value === type)?.label || type;
   };
 
+  // ===========================================
+  // RENDU CONDITIONNEL - CHARGEMENT
+  // ===========================================
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  // ===========================================
+  // RENDU PRINCIPAL
+  // ===========================================
   return (
     <Box sx={{ p: 4, backgroundColor: '#fafafa', minHeight: '100vh' }}>
       {/* En-tête avec titre et bouton retour */}
@@ -261,556 +467,43 @@ const CreateEnquetePage: React.FC = () => {
             transition: 'all 0.2s ease'
           }}
         >
-          ← Retour
+          Retour
         </Button>
       </Box>
 
-      {/* Section principale en deux colonnes */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
-        {/* Colonne gauche - Informations générales */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card sx={{
-            p: 4,
-            borderRadius: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            border: '1px solid #f0f0f0'
-          }}>
-            <Typography variant="h6" sx={{
-              mb: 3,
-              fontWeight: 600,
-              color: '#333',
-              fontSize: '1.2rem'
-            }}>
-              Informations générales
-            </Typography>
+      {/* PARTIE 1 - Créer des enquêtes */}
+      <CreateEnqueteForm onEnqueteCreated={handleEnqueteCreated} />
 
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Titre de l'enquête
-              </Typography>
-              <TextField
-                fullWidth
-                placeholder="Entrez le titre de votre enquête"
-                value={enqueteForm.titre}
-                onChange={(e) => handleEnqueteFormChange('titre', e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#fafafa'
-                  }
-                }}
-              />
-            </Box>
+      {/* PARTIE 2 - Ajouter des questions */}
+      <AddQuestionForm
+        enquetes={enquetes}
+        onQuestionAdded={handleQuestionAdded}
+      />
 
-            <Box>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Activité associée
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={enqueteForm.activite}
-                  onChange={(e) => handleEnqueteFormChange('activite', e.target.value)}
-                  displayEmpty
-                  sx={{
-                    borderRadius: '8px',
-                    backgroundColor: '#fafafa'
-                  }}
-                >
-                  <MenuItem value="">
-                    <em>Sélectionner une activité</em>
-                  </MenuItem>
-                  {activites.map((activite) => (
-                    <MenuItem key={activite} value={activite}>
-                      {activite}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          </Card>
-        </Grid>
+      {/* PARTIE 3 - Liste des questions avec filtre */}
+      <QuestionsListWithFilter
+        questions={questions}
+        enquetes={enquetes}
+        onEditQuestion={handleEditQuestion}
+        onDeleteQuestion={handleDeleteQuestion}
+        onViewQuestion={handleViewQuestion}
+      />
 
-        {/* Colonne droite - Options */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card sx={{
-            p: 4,
-            borderRadius: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            border: '1px solid #f0f0f0'
-          }}>
-            <Typography variant="h6" sx={{
-              mb: 3,
-              fontWeight: 600,
-              color: '#333',
-              fontSize: '1.2rem'
-            }}>
-              Options de l'enquête
-            </Typography>
-
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{
-                mb: 2,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Type d'enquête
-              </Typography>
-              <RadioGroup
-                value={enqueteForm.typeEnquete}
-                onChange={(e) => handleEnqueteFormChange('typeEnquete', e.target.value)}
-                row
-              >
-                <FormControlLabel
-                  value="live"
-                  control={<Radio sx={{ color: '#666' }} />}
-                  label="Live"
-                  sx={{ mr: 3 }}
-                />
-                <FormControlLabel
-                  value="asynchrone"
-                  control={<Radio sx={{ color: '#666' }} />}
-                  label="Asynchrone"
-                />
-              </RadioGroup>
-            </Box>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={enqueteForm.enqueteAnonymat}
-                    onChange={(e) => handleEnqueteFormChange('enqueteAnonymat', e.target.checked)}
-                    sx={{ ml: 1 }}
-                  />
-                }
-                label="Enquête anonyme"
-                sx={{
-                  justifyContent: 'space-between',
-                  ml: 0,
-                  '& .MuiFormControlLabel-label': {
-                    fontWeight: 500,
-                    color: '#555'
-                  }
-                }}
-              />
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={enqueteForm.authentificationNumerique}
-                    onChange={(e) => handleEnqueteFormChange('authentificationNumerique', e.target.checked)}
-                    sx={{ ml: 1 }}
-                  />
-                }
-                label="Authentification numérique"
-                sx={{
-                  justifyContent: 'space-between',
-                  ml: 0,
-                  '& .MuiFormControlLabel-label': {
-                    fontWeight: 500,
-                    color: '#555'
-                  }
-                }}
-              />
-            </Box>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Section Ajouter une question - Pleine largeur */}
-      <Card sx={{
-        p: 4,
-        mb: 4,
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        border: '1px solid #f0f0f0'
-      }}>
-        <Typography variant="h6" sx={{
-          mb: 4,
-          fontWeight: 600,
-          color: '#333',
-          fontSize: '1.2rem'
-        }}>
-          Ajouter une question
-        </Typography>
-
-        <Grid container spacing={4}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Question
-              </Typography>
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                placeholder="Saisissez votre question..."
-                value={currentQuestion.question}
-                onChange={(e) => handleCurrentQuestionChange('question', e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#fafafa'
-                  }
-                }}
-              />
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Réponses possibles
-              </Typography>
-              {currentQuestion.reponses.map((reponse, index) => (
-                <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
-                  <Box sx={{
-                    minWidth: 40,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
-                  }}>
-                    <Radio
-                      checked={currentQuestion.bonneReponse === index}
-                      onChange={() => handleCurrentQuestionChange('bonneReponse', index)}
-                      size="small"
-                      sx={{ p: 0.5 }}
-                    />
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {index + 1}.
-                    </Typography>
-                  </Box>
-                  <TextField
-                    size="small"
-                    fullWidth
-                    placeholder={`Réponse ${index + 1}`}
-                    value={reponse}
-                    onChange={(e) => handleReponseChange(index, e.target.value)}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '6px'
-                      }
-                    }}
-                  />
-                  {currentQuestion.reponses.length > 1 && (
-                    <Button
-                      size="small"
-                      color="error"
-                      onClick={() => handleRemoveReponse(index)}
-                      sx={{ minWidth: 'auto', px: 1 }}
-                    >
-                      ✕
-                    </Button>
-                  )}
-                </Box>
-              ))}
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleAddReponse}
-                sx={{
-                  mt: 1,
-                  textTransform: 'none',
-                  borderRadius: '6px'
-                }}
-              >
-                + Ajouter une réponse
-              </Button>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              <Box>
-                <Typography variant="subtitle2" sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: '#555'
-                }}>
-                  Type de question
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={currentQuestion.type}
-                    onChange={(e) => handleCurrentQuestionChange('type', e.target.value)}
-                    sx={{
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
-                    }}
-                  >
-                    {typeQuestions.map((type) => (
-                      <MenuItem key={type.value} value={type.value}>
-                        {type.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Box>
-                <Typography variant="subtitle2" sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: '#555'
-                }}>
-                  Enquête concernée
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={currentQuestion.enqueteConcernee}
-                    onChange={(e) => handleCurrentQuestionChange('enqueteConcernee', e.target.value)}
-                    displayEmpty
-                    sx={{
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>Sélectionner une enquête</em>
-                    </MenuItem>
-                    {enquetesConcernees.map((enquete) => (
-                      <MenuItem key={enquete} value={enquete}>
-                        {enquete}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Box>
-                <Typography variant="subtitle2" sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: '#555'
-                }}>
-                  Nombre de points
-                </Typography>
-                <TextField
-                  fullWidth
-                  type="number"
-                  placeholder="0"
-                  value={currentQuestion.nombrePoints}
-                  onChange={(e) => handleCurrentQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
-                    }
-                  }}
-                />
-              </Box>
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={currentQuestion.required}
-                    onChange={(e) => handleCurrentQuestionChange('required', e.target.checked)}
-                  />
-                }
-                label="Question obligatoire"
-                sx={{
-                  '& .MuiFormControlLabel-label': {
-                    fontWeight: 500,
-                    color: '#555'
-                  }
-                }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-          <Button
-            variant="contained"
-            onClick={handleAddQuestion}
-            disabled={!currentQuestion.question.trim()}
-            sx={{
-              bgcolor: '#2e7d32',
-              px: 4,
-              py: 1.5,
-              borderRadius: '8px',
-              textTransform: 'none',
-              fontWeight: 600,
-              '&:hover': {
-                bgcolor: '#1b5e20',
-                transform: 'translateY(-1px)',
-                boxShadow: '0 4px 12px rgba(46,125,50,0.3)'
-              },
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Ajouter la question
-          </Button>
-        </Box>
-      </Card>
-
-      {/* Section Liste des questions - Pleine largeur */}
-      {enqueteForm.questions.length > 0 && (
-        <Card sx={{
-          p: 4,
-          mb: 4,
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-          border: '1px solid #f0f0f0'
-        }}>
-          <Typography variant="h6" sx={{
-            mb: 3,
-            fontWeight: 600,
-            color: '#333',
-            fontSize: '1.2rem'
-          }}>
-            Questions ajoutées ({enqueteForm.questions.length})
-          </Typography>
-
-          <TableContainer sx={{ borderRadius: '8px', border: '1px solid #e0e0e0' }}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#f8f9fa', py: 2 } }}>
-                  <TableCell sx={{
-                    fontWeight: 600,
-                    color: '#555',
-                    fontSize: '14px',
-                    width: '60px',
-                    textAlign: 'center'
-                  }}>
-                    N°
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: '#555', fontSize: '14px' }}>
-                    Question
-                  </TableCell>
-                  <TableCell sx={{
-                    fontWeight: 600,
-                    color: '#555',
-                    fontSize: '14px',
-                    width: '150px',
-                    textAlign: 'center'
-                  }}>
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {enqueteForm.questions.map((question, index) => (
-                  <TableRow key={question.id} hover>
-                    <TableCell sx={{
-                      py: 3,
-                      fontWeight: 600,
-                      textAlign: 'center',
-                      color: '#666'
-                    }}>
-                      {index + 1}
-                    </TableCell>
-                    <TableCell sx={{ py: 3 }}>
-                      <Typography variant="body2" sx={{
-                        fontSize: '15px',
-                        color: '#333',
-                        mb: 1,
-                        fontWeight: 500
-                      }}>
-                        {question.question}
-                      </Typography>
-                      <Typography variant="caption" sx={{
-                        color: '#666',
-                        fontSize: '12px'
-                      }}>
-                        {getTypeQuestionLabel(question.type)} •
-                        {question.required ? ' Obligatoire' : ' Facultative'} •
-                        {question.nombrePoints} points
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={{ py: 3, textAlign: 'center' }}>
-                      <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                        <Tooltip title="Voir détails" placement="top" arrow>
-                          <IconButton
-                            color="info"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewQuestion(question.id);
-                            }}
-                            size="small"
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              '&:hover': { bgcolor: 'rgba(33, 150, 243, 0.08)' }
-                            }}
-                          >
-                            <Iconify icon="solar:eye-bold" width={16} />
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Modifier" placement="top" arrow>
-                          <IconButton
-                            color="warning"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditQuestion(question.id);
-                            }}
-                            size="small"
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              '&:hover': { bgcolor: 'rgba(255, 152, 0, 0.08)' }
-                            }}
-                          >
-                            <Iconify icon="solar:pen-bold" width={16} />
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Supprimer" placement="top" arrow>
-                          <IconButton
-                            color="error"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteQuestion(question.id);
-                            }}
-                            size="small"
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              '&:hover': { bgcolor: 'rgba(244, 67, 54, 0.08)' }
-                            }}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
-      )}
-
-      {/* Boutons finaux - Pleine largeur */}
+      {/* Boutons finaux - Sauvegarde globale */}
       <Box sx={{
         display: 'flex',
         gap: 3,
         justifyContent: 'flex-end',
         pt: 3,
+        mt: 4,
         borderTop: '1px solid #e0e0e0'
       }}>
         <Button
           variant="outlined"
           onClick={handleCancel}
           sx={{
-            minWidth: 100,
-            py: 1,
+            minWidth: 120,
+            py: 1.5,
             borderRadius: '8px',
             textTransform: 'none',
             fontWeight: 600,
@@ -829,10 +522,9 @@ const CreateEnquetePage: React.FC = () => {
         </Button>
         <Button
           variant="contained"
-          onClick={handleSaveEnquete}
-          disabled={!enqueteForm.titre.trim() || !enqueteForm.activite || enqueteForm.questions.length === 0}
+          onClick={handleSaveAndExit}
           sx={{
-            minWidth: 140,
+            minWidth: 160,
             py: 1.5,
             borderRadius: '8px',
             textTransform: 'none',
@@ -843,23 +535,40 @@ const CreateEnquetePage: React.FC = () => {
               transform: 'translateY(-1px)',
               boxShadow: '0 4px 12px rgba(25,118,210,0.3)'
             },
-            '&:disabled': {
-              bgcolor: '#ccc',
-              color: '#999'
-            },
             transition: 'all 0.2s ease'
           }}
         >
-          Enregistrer
+          Enregistrer tout
         </Button>
       </Box>
 
-      {/* Modal de détail de question */}
+      {/* Modals */}
       <QuestionDetailModal
         open={detailModalOpen}
-        onClose={() => setDetailModalOpen(false)}
+        onClose={handleCloseModals}
         question={selectedQuestionForView}
         getTypeQuestionLabel={getTypeQuestionLabel}
+      />
+
+      <QuestionEditModal
+        open={editModalOpen}
+        onClose={handleCloseModals}
+        question={questionToEdit}
+        currentQuestion={currentQuestionEdit}
+        enquetes={enquetes}
+        onQuestionChange={handleCurrentQuestionEditChange}
+        onAddReponse={handleAddReponseEdit}
+        onRemoveReponse={handleRemoveReponseEdit}
+        onReponseChange={handleReponseEditChange}
+        onSave={handleSaveEditedQuestion}
+      />
+
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleCloseModals}
+        onConfirm={handleConfirmDeleteQuestion}
+        title={questionToDelete ? `Êtes-vous sûr de supprimer la question "${questionToDelete.question.substring(0, 30)}..." ?` : "Êtes-vous sûr de supprimer cette question ?"}
+        message="Vous ne pourrez pas annuler cette action !"
       />
     </Box>
   );

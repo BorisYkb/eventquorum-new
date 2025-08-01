@@ -1,32 +1,20 @@
+// File: src/app/organisateur/gestionenquetes/[id]/detail/page.tsx
 
 'use client'
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import IconButton from '@mui/material/IconButton';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
-import { useTheme } from '@mui/material/styles';
+import { Box, Card, Typography } from '@mui/material';
 
-import { Iconify } from 'src/components/iconify';
+// Import des composants modulaires
+import EnqueteHeader from '../components/EnqueteHeader';
+import EnqueteInfoCard from '../components/EnqueteInfoCard';
+import EnqueteStatsCards from '../components/EnqueteStatsCards';
+import EnqueteActionButtons from '../components/EnqueteActionButtons';
+import EnqueteQuestionsTable from '../components/EnqueteQuestionsTable';
 import QuestionDetailModal from '../components/QuestionDetailModal';
+import QuestionEditModal from '../components/QuestionEditModal';
+import Loading from 'src/app/loading';
 
 // Types
 interface Question {
@@ -54,7 +42,17 @@ interface EnqueteDetail {
   questions: Question[];
 }
 
-// Données d'exemple - remplacez par vos vraies données
+interface CurrentQuestion {
+  question: string;
+  type: Question['type'];
+  reponses: string[];
+  enqueteConcernee: string;
+  nombrePoints: number;
+  bonneReponse: number;
+  required: boolean;
+}
+
+// Données d'exemple - à remplacer par vos vraies données
 const sampleEnqueteData: EnqueteDetail = {
   id: 1,
   titre: "Satisfaction des participants",
@@ -100,108 +98,131 @@ const sampleEnqueteData: EnqueteDetail = {
   ]
 };
 
+/**
+ * Page de détail d'une enquête - Version modulaire
+ * Affiche toutes les informations détaillées d'une enquête spécifique
+ */
 const EnqueteDetailPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
-  const theme = useTheme();
-
-  const [enqueteData, setEnqueteData] = useState<EnqueteDetail | null>(null);
-  const [selected, setSelected] = useState<number[]>([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [dense, setDense] = useState(false);
-
-  // État pour le modal de détail de question
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
-
   const enqueteId = params.id as string;
 
+  // États principaux
+  const [enqueteData, setEnqueteData] = useState<EnqueteDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // États pour les modals
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
+  const [questionToEdit, setQuestionToEdit] = useState<Question | null>(null);
+
+  // État pour la question en cours de modification
+  const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>({
+    question: '',
+    type: 'choix_multiple',
+    reponses: [''],
+    enqueteConcernee: '',
+    nombrePoints: 0,
+    bonneReponse: 0,
+    required: false
+  });
+
+  /**
+   * Chargement des données de l'enquête au montage du composant
+   */
   useEffect(() => {
-    // Simuler le chargement des données de l'enquête
-    // Remplacez par votre appel API réel
     const loadEnqueteData = async () => {
       try {
+        setLoading(true);
+        
         // TODO: Remplacer par votre appel API réel
         // const response = await fetch(`/api/enquetes/${enqueteId}`);
         // const data = await response.json();
         // setEnqueteData(data);
 
-        // Pour la démo, on utilise les données d'exemple
+        // Simulation d'un délai de chargement
+        await new Promise(resolve => setTimeout(resolve, 500));
         setEnqueteData(sampleEnqueteData);
+        
       } catch (error) {
         console.error('Erreur lors du chargement de l\'enquête:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    loadEnqueteData();
+    if (enqueteId) {
+      loadEnqueteData();
+    }
   }, [enqueteId]);
 
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - NAVIGATION
+  // ===========================================
+
+  /**
+   * Retour vers la liste des enquêtes
+   */
   const handleBack = () => {
-    router.push('/organisateur/gestionenquetes');
+    router.push('/organisateur/gestionenquete');
   };
 
-  const handleStartSurvey = () => {
-    console.log('Démarrage de l\'enquête:', enqueteId);
-    // Logique pour démarrer l'enquête
+  /**
+   * Redirection vers la page de modification de l'enquête
+   */
+  const handleEditEnquete = () => {
+    router.push(`/organisateur/gestionenquete/${enqueteId}/modifier`);
   };
 
-  const handleSuspendSurvey = () => {
-    console.log('Suspension de l\'enquête:', enqueteId);
-    // Logique pour suspendre l'enquête
-  };
-
-  const handleEndSurvey = () => {
-    console.log('Fin de l\'enquête:', enqueteId);
-    // Logique pour terminer l'enquête
-  };
-
+  /**
+   * Redirection vers les résultats de l'enquête
+   */
   const handleViewResults = () => {
     console.log('Consultation des résultats pour l\'enquête:', enqueteId);
-    router.push(`/organisateur/gestionenquetes/${enqueteId}/resultats`);
+    router.push(`/organisateur/gestionenquete/${enqueteId}/resultats`);
   };
 
-  const handleEditEnquete = () => {
-    router.push(`/organisateur/gestionenquetes/${enqueteId}/modifier`);
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - ACTIONS ENQUÊTE
+  // ===========================================
+
+  /**
+   * Démarrage de l'enquête
+   */
+  const handleStartSurvey = () => {
+    console.log('Démarrage de l\'enquête:', enqueteId);
+    // TODO: Logique pour démarrer l'enquête
+    alert('Enquête démarrée avec succès !');
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked && enqueteData) {
-      const newSelected = enqueteData.questions.map((_, index) => index);
-      setSelected(newSelected);
-      return;
+  /**
+   * Suspension de l'enquête
+   */
+  const handleSuspendSurvey = () => {
+    console.log('Suspension de l\'enquête:', enqueteId);
+    // TODO: Logique pour suspendre l'enquête
+    alert('Enquête suspendue !');
+  };
+
+  /**
+   * Fin de l'enquête
+   */
+  const handleEndSurvey = () => {
+    if (window.confirm('Êtes-vous sûr de vouloir terminer cette enquête ?')) {
+      console.log('Fin de l\'enquête:', enqueteId);
+      // TODO: Logique pour terminer l'enquête
+      alert('Enquête terminée !');
     }
-    setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, index: number) => {
-    const selectedIndex = selected.indexOf(index);
-    let newSelected: number[] = [];
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - QUESTIONS
+  // ===========================================
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, index);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
+  /**
+   * Affichage des détails d'une question
+   */
   const handleViewQuestion = (questionId: number) => {
     if (enqueteData) {
       const question = enqueteData.questions.find(q => q.id === questionId);
@@ -212,21 +233,128 @@ const EnqueteDetailPage: React.FC = () => {
     }
   };
 
-  const isSelected = (index: number) => selected.indexOf(index) !== -1;
-
-  const getStatutColor = (statut: string): 'default' | 'success' | 'warning' | 'error' => {
-    switch (statut) {
-      case 'Terminé':
-        return 'success';
-      case 'En cours':
-        return 'warning';
-      case 'Non démarré':
-        return 'error';
-      default:
-        return 'default';
+  /**
+   * Modification d'une question
+   */
+  const handleEditQuestion = (questionId: number) => {
+    if (enqueteData) {
+      const question = enqueteData.questions.find(q => q.id === questionId);
+      if (question) {
+        setQuestionToEdit(question);
+        setCurrentQuestion({
+          question: question.question,
+          type: question.type,
+          reponses: question.reponses.length > 0 ? question.reponses : [''],
+          enqueteConcernee: question.enqueteConcernee,
+          nombrePoints: question.nombrePoints,
+          bonneReponse: question.bonneReponse,
+          required: question.required
+        });
+        setEditModalOpen(true);
+      }
     }
   };
 
+  /**
+   * Suppression d'une question
+   */
+  const handleDeleteQuestion = (questionId: number) => {
+    if (enqueteData) {
+      const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
+      setEnqueteData({
+        ...enqueteData,
+        questions: updatedQuestions
+      });
+      console.log('Question supprimée:', questionId);
+      // TODO: Appel API pour supprimer la question
+      alert('Question supprimée avec succès !');
+    }
+  };
+
+  // ===========================================
+  // GESTIONNAIRES D'ÉVÉNEMENTS - MODIFICATION QUESTION
+  // ===========================================
+
+  /**
+   * Changement des propriétés de la question en cours de modification
+   */
+  const handleCurrentQuestionChange = (field: string, value: any) => {
+    setCurrentQuestion(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  /**
+   * Ajout d'une réponse à la question en cours de modification
+   */
+  const handleAddReponse = () => {
+    setCurrentQuestion(prev => ({
+      ...prev,
+      reponses: [...prev.reponses, '']
+    }));
+  };
+
+  /**
+   * Suppression d'une réponse de la question en cours de modification
+   */
+  const handleRemoveReponse = (index: number) => {
+    setCurrentQuestion(prev => ({
+      ...prev,
+      reponses: prev.reponses.filter((_, i) => i !== index)
+    }));
+  };
+
+  /**
+   * Modification d'une réponse de la question en cours de modification
+   */
+  const handleReponseChange = (index: number, value: string) => {
+    setCurrentQuestion(prev => ({
+      ...prev,
+      reponses: prev.reponses.map((rep, i) => i === index ? value : rep)
+    }));
+  };
+
+  /**
+   * Sauvegarde des modifications d'une question
+   */
+  const handleSaveEditedQuestion = () => {
+    if (!currentQuestion.question.trim() || !questionToEdit) {
+      alert('Veuillez saisir une question valide.');
+      return;
+    }
+
+    const updatedQuestion: Question = {
+      ...questionToEdit,
+      question: currentQuestion.question,
+      type: currentQuestion.type,
+      reponses: currentQuestion.reponses.filter(rep => rep.trim()),
+      enqueteConcernee: currentQuestion.enqueteConcernee,
+      nombrePoints: currentQuestion.nombrePoints,
+      bonneReponse: currentQuestion.bonneReponse,
+      required: currentQuestion.required
+    };
+
+    if (enqueteData) {
+      const updatedQuestions = enqueteData.questions.map(q => 
+        q.id === questionToEdit.id ? updatedQuestion : q
+      );
+      setEnqueteData({
+        ...enqueteData,
+        questions: updatedQuestions
+      });
+    }
+
+    setEditModalOpen(false);
+    setQuestionToEdit(null);
+    console.log('Question modifiée:', updatedQuestion);
+    // TODO: Appel API pour sauvegarder les modifications
+    alert('Question modifiée avec succès !');
+  };
+
+  /**
+   * Fonction utilitaire pour obtenir le label d'un type de question
+   */
   const getTypeQuestionLabel = (type: string) => {
     const typeQuestions = [
       { value: 'choix_multiple', label: 'Choix multiple' },
@@ -239,462 +367,84 @@ const EnqueteDetailPage: React.FC = () => {
     return typeQuestions.find(t => t.value === type)?.label || type;
   };
 
+  // ===========================================
+  // RENDU CONDITIONNEL - CHARGEMENT
+  // ===========================================
+  if (loading) {
+    return <Loading />;
+  }
+
+  // ===========================================
+  // RENDU CONDITIONNEL - ERREUR
+  // ===========================================
   if (!enqueteData) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Typography>Chargement...</Typography>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        backgroundColor: '#fafafa'
+      }}>
+        <Typography variant="h6" color="error">
+          Enquête introuvable
+        </Typography>
       </Box>
     );
   }
 
+  // ===========================================
+  // RENDU PRINCIPAL
+  // ===========================================
   return (
-    <Box sx={{ p: 4, backgroundColor: '#fafafa', minHeight: '100vh' }}>
-      {/* En-tête avec titre et bouton retour */}
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        mb: 4,
-        pb: 2,
-        borderBottom: '1px solid #e0e0e0'
-      }}>
-        <Typography variant="h4" component="h1" sx={{
-          fontWeight: 700,
-          color: '#1a1a1a',
-          fontSize: '2rem'
-        }}>
-          Détail de l'enquête
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={handleEditEnquete}
-            startIcon={<Iconify icon="solar:pen-bold" />}
-            sx={{
-              borderColor: '#1976d2',
-              color: '#1976d2',
-              '&:hover': {
-                borderColor: '#1565c0',
-                bgcolor: 'rgba(25, 118, 210, 0.04)'
-              }
-            }}
-          >
-            Modifier
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleBack}
-            startIcon={<Iconify icon="eva:arrow-back-fill" />}
-            sx={{
-              bgcolor: '#2c2c2c',
-              color: 'white',
-              '&:hover': { bgcolor: '#1a1a1a' }
-            }}
-          >
-            Retour
-          </Button>
-        </Box>
-      </Box>
+    <Box sx={{ 
+      p: 4, 
+      backgroundColor: '#fafafa', 
+      minHeight: '100vh' 
+    }}>
+      {/* En-tête de la page */}
+      <EnqueteHeader
+        onBack={handleBack}
+        onEdit={handleEditEnquete}
+      />
 
+      {/* Contenu principal dans une carte */}
       <Card sx={{
         p: 4,
         borderRadius: '12px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         border: '1px solid #f0f0f0'
       }}>
-        {/* Titre de l'enquête avec options */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>
-            Titre de l'enquête
-          </Typography>
-          <Card sx={{
-            p: 3,
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #e9ecef'
-          }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h5" sx={{
-                color: '#333',
-                fontWeight: 600
-              }}>
-                {enqueteData.titre}
-              </Typography>
+        {/* Informations générales de l'enquête */}
+        <EnqueteInfoCard
+          titre={enqueteData.titre}
+          enqueteAnonymat={enqueteData.enqueteAnonymat}
+          authentificationNumerique={enqueteData.authentificationNumerique}
+        />
 
-              {/* Options à droite */}
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={enqueteData.enqueteAnonymat || false}
-                      disabled
-                      sx={{ color: '#666' }}
-                    />
-                  }
-                  label="Enquête avec notation"
-                  sx={{
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: '0.875rem',
-                      color: '#555'
-                    }
-                  }}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={enqueteData.authentificationNumerique || false}
-                      disabled
-                      sx={{ color: '#666' }}
-                    />
-                  }
-                  label="Autoriser plusieurs réponses"
-                  sx={{
-                    '& .MuiFormControlLabel-label': {
-                      fontSize: '0.875rem',
-                      color: '#555'
-                    }
-                  }}
-                />
-              </Box>
-            </Box>
-          </Card>
-        </Box>
+        {/* Cartes de statistiques */}
+        <EnqueteStatsCards
+          createdAt={enqueteData.createdAt}
+          typeEnquete={enqueteData.typeEnquete}
+          activite={enqueteData.activite}
+        />
 
-        {/* Statistiques avec SuperviseurWidgetSummary */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card sx={{
-              p: 3,
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-              border: '1px solid #f0f0f0',
-              height: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: 'primary.lighter'
-            }}>
-              <Typography variant="body2" sx={{
-                fontWeight: 600,
-                color: 'text.secondary',
-                mb: 1,
-                textAlign: 'center'
-              }}>
-                Date de création
-              </Typography>
-              <Typography variant="h6" sx={{
-                fontWeight: 700,
-                color: 'primary.main',
-                textAlign: 'center'
-              }}>
-                {new Date(enqueteData.createdAt).toLocaleDateString('fr-FR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
-              </Typography>
-            </Card>
-          </Grid>
+        {/* Boutons d'actions sur l'enquête */}
+        <EnqueteActionButtons
+          onStartSurvey={handleStartSurvey}
+          onSuspendSurvey={handleSuspendSurvey}
+          onEndSurvey={handleEndSurvey}
+          onViewResults={handleViewResults}
+        />
 
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card sx={{
-              p: 3,
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-              border: '1px solid #f0f0f0',
-              height: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: 'secondary.lighter'
-            }}>
-              <Typography variant="body2" sx={{
-                fontWeight: 600,
-                color: 'text.secondary',
-                mb: 1,
-                textAlign: 'center'
-              }}>
-                Option de l'enquête
-              </Typography>
-              <Typography variant="h6" sx={{
-                fontWeight: 700,
-                color: 'secondary.main',
-                textAlign: 'center'
-              }}>
-                {enqueteData.typeEnquete === 'live' ? 'Synchrone' : 'Asynchrone'}
-              </Typography>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card sx={{
-              p: 3,
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-              border: '1px solid #f0f0f0',
-              height: 140,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: 'success.lighter'
-            }}>
-              <Typography variant="body2" sx={{
-                fontWeight: 600,
-                color: 'text.secondary',
-                mb: 1,
-                textAlign: 'center'
-              }}>
-                Activité concernée
-              </Typography>
-              <Typography variant="body1" sx={{
-                fontWeight: 600,
-                color: 'success.main',
-                textAlign: 'center',
-                fontSize: '0.95rem',
-                lineHeight: 1.3
-              }}>
-                {enqueteData.activite}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Boutons d'action de l'enquête */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: '#333' }}>
-            Actions sur l'enquête
-          </Typography>
-          <Stack direction="row" spacing={2} justifyContent="center">
-            <Tooltip title="Démarrer l'enquête" placement="top" arrow>
-              <Button
-                variant="outlined"
-                onClick={handleStartSurvey}
-                startIcon={<Iconify icon="solar:play-bold" />}
-                sx={{
-                  borderColor: '#4caf50',
-                  color: '#4caf50',
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    backgroundColor: '#4caf50',
-                    color: 'white',
-                    transform: 'translateY(-1px)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Démarrer
-              </Button>
-            </Tooltip>
-
-            <Tooltip title="Suspendre l'enquête" placement="top" arrow>
-              <Button
-                variant="outlined"
-                onClick={handleSuspendSurvey}
-                startIcon={<Iconify icon="solar:pause-bold" />}
-                sx={{
-                  borderColor: '#2196f3',
-                  color: '#2196f3',
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    backgroundColor: '#2196f3',
-                    color: 'white',
-                    transform: 'translateY(-1px)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Suspendre
-              </Button>
-            </Tooltip>
-
-            <Tooltip title="Terminer l'enquête" placement="top" arrow>
-              <Button
-                variant="outlined"
-                onClick={handleEndSurvey}
-                startIcon={<Iconify icon="solar:stop-bold" />}
-                sx={{
-                  borderColor: '#f44336',
-                  color: '#f44336',
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    backgroundColor: '#f44336',
-                    color: 'white',
-                    transform: 'translateY(-1px)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Terminer
-              </Button>
-            </Tooltip>
-          </Stack>
-        </Box>
-
-        {/* Section des questions */}
-        <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#333' }}>
-              Liste des questions ({enqueteData.questions.length})
-            </Typography>
-            <Tooltip title="Consulter les résultats de l'enquête" placement="top" arrow>
-              <Button
-                variant="contained"
-                onClick={handleViewResults}
-                startIcon={<Iconify icon="solar:chart-bold" />}
-                sx={{
-                  backgroundColor: '#1976d2',
-                  color: 'white',
-                  px: 3,
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
-                    transform: 'translateY(-1px)',
-                    boxShadow: '0 4px 12px rgba(25,118,210,0.3)'
-                  },
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Consulter les résultats
-              </Button>
-            </Tooltip>
-          </Box>
-
-          {/* Tableau des questions */}
-          <Card sx={{
-            backgroundColor: 'white',
-            border: '1px solid #e0e0e0',
-            borderRadius: '12px',
-            overflow: 'hidden'
-          }}>
-            <TableContainer>
-              <Table size={dense ? 'small' : 'medium'}>
-                <TableHead sx={{ backgroundColor: '#f8f9fa' }}>
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        indeterminate={selected.length > 0 && selected.length < enqueteData.questions.length}
-                        checked={enqueteData.questions.length > 0 && selected.length === enqueteData.questions.length}
-                        onChange={handleSelectAllClick}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#555', width: '60px', textAlign: 'center' }}>
-                      N°
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: '#555' }}>
-                      Question
-                    </TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 600, color: '#555', width: '100px' }}>
-                      Actions
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {enqueteData.questions
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((question, index) => {
-                      const isItemSelected = isSelected(index);
-                      const actualIndex = page * rowsPerPage + index;
-
-                      return (
-                        <TableRow
-                          key={question.id}
-                          hover
-                          onClick={(event) => handleClick(event, index)}
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          selected={isItemSelected}
-                          sx={{ cursor: 'pointer' }}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                            />
-                          </TableCell>
-                          <TableCell align="center">
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#666' }}>
-                              {actualIndex + 1}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2" sx={{
-                              color: '#333',
-                              fontWeight: 500,
-                              mb: 0.5
-                            }}>
-                              {question.question}
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: '#666' }}>
-                              {getTypeQuestionLabel(question.type)} •
-                              {question.required ? ' Obligatoire' : ' Facultative'} •
-                              {question.nombrePoints} points
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Tooltip title="Voir détails" placement="top" arrow>
-                              <IconButton
-                                color="info"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleViewQuestion(question.id);
-                                }}
-                                size="small"
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  '&:hover': { bgcolor: 'rgba(33, 150, 243, 0.08)' }
-                                }}
-                              >
-                                <Iconify icon="solar:eye-bold" width={16} />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            {/* Footer avec Dense et Pagination */}
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2,
-              borderTop: '1px solid #e0e0e0',
-              backgroundColor: '#f8f9fa'
-            }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={dense}
-                    onChange={(e) => setDense(e.target.checked)}
-                  />
-                }
-                label="Dense"
-              />
-
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={enqueteData.questions.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage="Rows per page:"
-                labelDisplayedRows={({ from, to, count }) => `${from}-${to} of ${count}`}
-              />
-            </Box>
-          </Card>
-        </Box>
+        {/* Tableau des questions */}
+        <EnqueteQuestionsTable
+          questions={enqueteData.questions}
+          onViewQuestion={handleViewQuestion}
+          onEditQuestion={handleEditQuestion}
+          onDeleteQuestion={handleDeleteQuestion}
+          onViewResults={handleViewResults}
+        />
       </Card>
 
       {/* Modal de détail de question */}
@@ -703,6 +453,19 @@ const EnqueteDetailPage: React.FC = () => {
         onClose={() => setDetailModalOpen(false)}
         question={selectedQuestionForView}
         getTypeQuestionLabel={getTypeQuestionLabel}
+      />
+
+      {/* Modal de modification de question */}
+      <QuestionEditModal
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        question={questionToEdit}
+        currentQuestion={currentQuestion}
+        onQuestionChange={handleCurrentQuestionChange}
+        onAddReponse={handleAddReponse}
+        onRemoveReponse={handleRemoveReponse}
+        onReponseChange={handleReponseChange}
+        onSave={handleSaveEditedQuestion}
       />
     </Box>
   );

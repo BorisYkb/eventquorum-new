@@ -387,7 +387,7 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                 }}
                                 size="small"
                               >
-                                <Iconify icon="solar:eye-bold" />
+                                <Iconify icon="solar:eye-bold" width={16}/>
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Modifier" placement="top" arrow>
@@ -399,7 +399,7 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                 }}
                                 size="small"
                               >
-                                <Iconify icon="solar:pen-bold" />
+                                <Iconify icon="solar:pen-new-square-linear" width={16} />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Supprimer" placement="top" arrow>
@@ -411,7 +411,7 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                 }}
                                 size="small"
                               >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16}/>
                               </IconButton>
                             </Tooltip>
                           </Box>

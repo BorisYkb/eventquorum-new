@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 
 import MuiEnquetesDashboard, { Enquete } from './components/MuiEnquetesDashboard';
+import { LoadingScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -129,6 +130,10 @@ export default function Page() {
 
     loadEnquetes();
   }, []);
+  
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
 
 
