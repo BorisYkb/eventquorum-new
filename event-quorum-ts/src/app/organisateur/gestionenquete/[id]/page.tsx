@@ -1,4 +1,4 @@
-// File: src/app/organisateur/gestionenquetes/[id]/detail/page.tsx
+// File: src/app/organisateur/gestionenquetes/[id]/page.tsx
 
 'use client'
 
@@ -16,43 +16,23 @@ import QuestionDetailModal from '../components/QuestionDetailModal';
 import QuestionEditModal from '../components/QuestionEditModal';
 import Loading from 'src/app/loading';
 
-// Types
-interface Question {
-  id: number;
-  question: string;
-  type: 'choix_multiple' | 'echelle_appreciation' | 'zone_saisie' | 'choix_unique' | 'liste_deroulante' | 'note_etoile';
-  reponses: string[];
-  enqueteConcernee: string;
-  nombrePoints: number;
-  bonneReponse: number;
-  required: boolean;
-}
+// Import des types mis à jour
+import { Question, CurrentQuestion, Enquete } from '../nouveau/types';
 
-interface EnqueteDetail {
-  id: number;
-  titre: string;
-  activite: string;
-  code: string;
+/**
+ * Interface pour les détails complets d'une enquête avec ses questions
+ */
+interface EnqueteDetail extends Enquete {
   nombreParticipants: number;
   statut: 'Terminé' | 'En cours' | 'Non démarré';
-  typeEnquete: 'live' | 'asynchrone';
-  enqueteAnonymat: boolean;
-  authentificationNumerique: boolean;
-  createdAt: string;
+  code: string;
   questions: Question[];
 }
 
-interface CurrentQuestion {
-  question: string;
-  type: Question['type'];
-  reponses: string[];
-  enqueteConcernee: string;
-  nombrePoints: number;
-  bonneReponse: number;
-  required: boolean;
-}
-
-// Données d'exemple - à remplacer par vos vraies données
+/**
+ * Données d'exemple - à remplacer par vos vraies données
+ * Utilise les nouveaux types pour assurer la compatibilité
+ */
 const sampleEnqueteData: EnqueteDetail = {
   id: 1,
   titre: "Satisfaction des participants",
@@ -68,9 +48,9 @@ const sampleEnqueteData: EnqueteDetail = {
     {
       id: 1,
       question: "Comment évaluez-vous la qualité de l'organisation de cet événement ?",
-      type: "choix_unique",
+      type: "choix_multiple",
       reponses: ["Excellent", "Très bien", "Bien", "Moyen", "Insuffisant"],
-      enqueteConcernee: "Enquête 1",
+      enqueteId: 1, // ✅ Utilise enqueteId au lieu de enqueteConcernee
       nombrePoints: 10,
       bonneReponse: 0,
       required: true
@@ -78,9 +58,9 @@ const sampleEnqueteData: EnqueteDetail = {
     {
       id: 2,
       question: "Quels aspects de l'événement avez-vous le plus appréciés ?",
-      type: "choix_multiple",
+      type: "case_a_cocher",
       reponses: ["Les intervenants", "Le contenu", "L'organisation", "Les pauses", "Le lieu"],
-      enqueteConcernee: "Enquête 1",
+      enqueteId: 1,
       nombrePoints: 15,
       bonneReponse: 0,
       required: false
@@ -88,19 +68,42 @@ const sampleEnqueteData: EnqueteDetail = {
     {
       id: 3,
       question: "Avez-vous des suggestions d'amélioration ?",
-      type: "zone_saisie",
+      type: "question_libre",
       reponses: [],
-      enqueteConcernee: "Enquête 1",
-      nombrePoints: 5,
+      enqueteId: 1,
+      nombrePoints: 0, // ✅ 0 points pour question libre
       bonneReponse: 0,
       required: false
+    },
+    {
+      id: 4,
+      question: "Sur une échelle de 1 à 10, comment évaluez-vous l'événement ?",
+      type: "echelle_lineaire",
+      reponses: [],
+      enqueteId: 1,
+      nombrePoints: 0, // ✅ 0 points pour échelle linéaire
+      bonneReponse: 0,
+      required: true,
+      echelleMin: 1,
+      echelleMax: 10,
+      labelMin: "Très mauvais",
+      labelMax: "Excellent"
     }
   ]
 };
 
 /**
- * Page de détail d'une enquête - Version modulaire
- * Affiche toutes les informations détaillées d'une enquête spécifique
+ * Liste des enquêtes disponibles pour le modal d'édition
+ */
+const sampleEnquetes = [
+  { id: 1, titre: "Satisfaction des participants" },
+  { id: 2, titre: "Évaluation des intervenants" },
+  { id: 3, titre: "Feedback général" }
+];
+
+/**
+ * Page de détail d'une enquête - Version adaptée
+ * Compatible avec les nouveaux types et composants modaux
  */
 const EnqueteDetailPage: React.FC = () => {
   const router = useRouter();
@@ -117,15 +120,20 @@ const EnqueteDetailPage: React.FC = () => {
   const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
   const [questionToEdit, setQuestionToEdit] = useState<Question | null>(null);
 
-  // État pour la question en cours de modification
+  // État pour la question en cours de modification - Utilise le nouveau type CurrentQuestion
   const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>({
     question: '',
     type: 'choix_multiple',
     reponses: [''],
-    enqueteConcernee: '',
+    enqueteId: 0,
     nombrePoints: 0,
     bonneReponse: 0,
-    required: false
+    required: false,
+    // ✅ Propriétés pour échelle linéaire
+    echelleMin: 1,
+    echelleMax: 10,
+    labelMin: '',
+    labelMax: ''
   });
 
   /**
@@ -235,6 +243,7 @@ const EnqueteDetailPage: React.FC = () => {
 
   /**
    * Modification d'une question
+   * ✅ Adaptée pour utiliser les nouveaux types
    */
   const handleEditQuestion = (questionId: number) => {
     if (enqueteData) {
@@ -245,10 +254,15 @@ const EnqueteDetailPage: React.FC = () => {
           question: question.question,
           type: question.type,
           reponses: question.reponses.length > 0 ? question.reponses : [''],
-          enqueteConcernee: question.enqueteConcernee,
+          enqueteId: question.enqueteId, // ✅ Utilise enqueteId
           nombrePoints: question.nombrePoints,
           bonneReponse: question.bonneReponse,
-          required: question.required
+          required: question.required,
+          // ✅ Propriétés pour échelle linéaire avec valeurs par défaut
+          echelleMin: question.echelleMin || 1,
+          echelleMax: question.echelleMax || 10,
+          labelMin: question.labelMin || '',
+          labelMax: question.labelMax || ''
         });
         setEditModalOpen(true);
       }
@@ -259,15 +273,17 @@ const EnqueteDetailPage: React.FC = () => {
    * Suppression d'une question
    */
   const handleDeleteQuestion = (questionId: number) => {
-    if (enqueteData) {
-      const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
-      setEnqueteData({
-        ...enqueteData,
-        questions: updatedQuestions
-      });
-      console.log('Question supprimée:', questionId);
-      // TODO: Appel API pour supprimer la question
-      alert('Question supprimée avec succès !');
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette question ?')) {
+      if (enqueteData) {
+        const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
+        setEnqueteData({
+          ...enqueteData,
+          questions: updatedQuestions
+        });
+        console.log('Question supprimée:', questionId);
+        // TODO: Appel API pour supprimer la question
+        alert('Question supprimée avec succès !');
+      }
     }
   };
 
@@ -277,6 +293,7 @@ const EnqueteDetailPage: React.FC = () => {
 
   /**
    * Changement des propriétés de la question en cours de modification
+   * ✅ Mise à jour pour supporter tous les champs du nouveau type
    */
   const handleCurrentQuestionChange = (field: string, value: any) => {
     setCurrentQuestion(prev => ({
@@ -299,10 +316,12 @@ const EnqueteDetailPage: React.FC = () => {
    * Suppression d'une réponse de la question en cours de modification
    */
   const handleRemoveReponse = (index: number) => {
-    setCurrentQuestion(prev => ({
-      ...prev,
-      reponses: prev.reponses.filter((_, i) => i !== index)
-    }));
+    if (currentQuestion.reponses.length > 1) {
+      setCurrentQuestion(prev => ({
+        ...prev,
+        reponses: prev.reponses.filter((_, i) => i !== index)
+      }));
+    }
   };
 
   /**
@@ -317,22 +336,46 @@ const EnqueteDetailPage: React.FC = () => {
 
   /**
    * Sauvegarde des modifications d'une question
+   * ✅ Adaptée pour les nouveaux types
    */
   const handleSaveEditedQuestion = () => {
-    if (!currentQuestion.question.trim() || !questionToEdit) {
+    if (!currentQuestion.question.trim()) {
       alert('Veuillez saisir une question valide.');
       return;
     }
+
+    if (!currentQuestion.enqueteId) {
+      alert('Veuillez sélectionner une enquête.');
+      return;
+    }
+
+    // Validation spécifique selon le type
+    if (['liste_deroulante', 'case_a_cocher', 'choix_multiple'].includes(currentQuestion.type)) {
+      const validReponses = currentQuestion.reponses.filter(rep => rep.trim());
+      if (validReponses.length < 2) {
+        alert('Veuillez saisir au moins 2 réponses.');
+        return;
+      }
+    }
+
+    if (!questionToEdit) return;
 
     const updatedQuestion: Question = {
       ...questionToEdit,
       question: currentQuestion.question,
       type: currentQuestion.type,
       reponses: currentQuestion.reponses.filter(rep => rep.trim()),
-      enqueteConcernee: currentQuestion.enqueteConcernee,
+      enqueteId: currentQuestion.enqueteId,
       nombrePoints: currentQuestion.nombrePoints,
       bonneReponse: currentQuestion.bonneReponse,
-      required: currentQuestion.required
+      required: currentQuestion.required,
+      // ✅ Propriétés pour échelle linéaire
+      ...(currentQuestion.type === 'echelle_lineaire' && {
+        echelleMin: currentQuestion.echelleMin,
+        echelleMax: currentQuestion.echelleMax,
+        labelMin: currentQuestion.labelMin,
+        labelMax: currentQuestion.labelMax
+      })
     };
 
     if (enqueteData) {
@@ -354,15 +397,15 @@ const EnqueteDetailPage: React.FC = () => {
 
   /**
    * Fonction utilitaire pour obtenir le label d'un type de question
+   * ✅ Mise à jour avec les nouveaux types
    */
   const getTypeQuestionLabel = (type: string) => {
     const typeQuestions = [
-      { value: 'choix_multiple', label: 'Choix multiple' },
-      { value: 'echelle_appreciation', label: 'Échelle d\'appréciation' },
-      { value: 'zone_saisie', label: 'Zone de saisie' },
-      { value: 'choix_unique', label: 'Choix unique' },
       { value: 'liste_deroulante', label: 'Liste déroulante' },
-      { value: 'note_etoile', label: 'Note étoile' }
+      { value: 'case_a_cocher', label: 'Case à cocher' },
+      { value: 'question_libre', label: 'Question libre' },
+      { value: 'echelle_lineaire', label: 'Échelle linéaire' },
+      { value: 'choix_multiple', label: 'Choix multiple' }
     ];
     return typeQuestions.find(t => t.value === type)?.label || type;
   };
@@ -398,7 +441,7 @@ const EnqueteDetailPage: React.FC = () => {
   // ===========================================
   return (
     <Box sx={{ 
-      p: 4, 
+      p: { xs: 2, sm: 3, md: 4 }, // ✅ Responsive padding
       backgroundColor: '#fafafa', 
       minHeight: '100vh' 
     }}>
@@ -410,7 +453,7 @@ const EnqueteDetailPage: React.FC = () => {
 
       {/* Contenu principal dans une carte */}
       <Card sx={{
-        p: 4,
+        p: { xs: 2, sm: 3, md: 4 }, // ✅ Responsive padding
         borderRadius: '12px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         border: '1px solid #f0f0f0'
@@ -447,7 +490,7 @@ const EnqueteDetailPage: React.FC = () => {
         />
       </Card>
 
-      {/* Modal de détail de question */}
+      {/* Modal de détail de question - ✅ Compatible avec le nouveau composant */}
       <QuestionDetailModal
         open={detailModalOpen}
         onClose={() => setDetailModalOpen(false)}
@@ -455,12 +498,13 @@ const EnqueteDetailPage: React.FC = () => {
         getTypeQuestionLabel={getTypeQuestionLabel}
       />
 
-      {/* Modal de modification de question */}
+      {/* Modal de modification de question - ✅ Compatible avec le nouveau composant */}
       <QuestionEditModal
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         question={questionToEdit}
         currentQuestion={currentQuestion}
+        enquetes={sampleEnquetes} // ✅ Passe la liste des enquêtes
         onQuestionChange={handleCurrentQuestionChange}
         onAddReponse={handleAddReponse}
         onRemoveReponse={handleRemoveReponse}

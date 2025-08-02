@@ -68,6 +68,20 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
   };
 
   /**
+ * Obtient l'activité associée à l'enquête
+ */
+  const getEnqueteActivity = (enqueteId: number) => {
+    // TODO: Récupérer la vraie activité depuis la liste des enquêtes
+    // Pour l'instant, on utilise des données d'exemple
+    const activities = {
+      1: "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+      2: "PANEL DE HAUT NIVEAU",
+      3: "POINT DE PRESSE"
+    };
+    return activities[enqueteId as keyof typeof activities] || "Activité non définie";
+  };
+
+  /**
    * Formatage des points
    */
   const formatPoints = (points: number) => {
@@ -96,7 +110,12 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
 
       case 'echelle_lineaire':
         return (
-          <Box>
+          <Box sx={{ 
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' }, // Colonne sur mobile, ligne sur desktop
+            gap: 5,
+            mb: 2
+          }}>
             {/* Configuration de l'échelle */}
             <Box sx={{ mb: 2 }}>
               <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
@@ -144,7 +163,7 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
               </Box>
             </Box>
 
-            {/* Labels des extrémités */}
+            {/* Labels des extrémités
             {(question.labelMin || question.labelMax) && (
               <Box>
                 <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
@@ -163,7 +182,7 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
                   )}
                 </Box>
               </Box>
-            )}
+            )} */}
           </Box>
         );
 
@@ -329,9 +348,14 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
             </Typography>
             <Box sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)'
+              },
               gap: 2
             }}>
+              {/* Type de question */}
               <Box sx={{
                 p: 2,
                 bgcolor: '#f8f9fa',
@@ -350,6 +374,7 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
                 </Typography>
               </Box>
 
+              {/* Statut */}
               <Box sx={{
                 p: 2,
                 bgcolor: '#f8f9fa',
@@ -369,24 +394,28 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
                 </Box>
               </Box>
 
-              <Box sx={{
-                p: 2,
-                bgcolor: '#f8f9fa',
-                borderRadius: '8px',
-                border: '1px solid #e9ecef'
-              }}>
-                <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
-                  Points attribués
-                </Typography>
-                <Typography variant="body2" sx={{
-                  fontWeight: 500,
-                  color: '#333',
-                  mt: 0.5
+              {/* Points attribués - Masqué pour question libre et échelle linéaire */}
+              {!['question_libre', 'echelle_lineaire'].includes(question.type) && (
+                <Box sx={{
+                  p: 2,
+                  bgcolor: '#f8f9fa',
+                  borderRadius: '8px',
+                  border: '1px solid #e9ecef'
                 }}>
-                  {formatPoints(question.nombrePoints)}
-                </Typography>
-              </Box>
+                  <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                    Points attribués
+                  </Typography>
+                  <Typography variant="body2" sx={{
+                    fontWeight: 500,
+                    color: '#333',
+                    mt: 0.5
+                  }}>
+                    {formatPoints(question.nombrePoints)}
+                  </Typography>
+                </Box>
+              )}
 
+              {/* Enquête associée */}
               <Box sx={{
                 p: 2,
                 bgcolor: '#f8f9fa',
@@ -402,6 +431,25 @@ const QuestionDetailModal: React.FC<QuestionDetailModalProps> = ({
                   mt: 0.5
                 }}>
                   {getEnqueteName(question.enqueteId)}
+                </Typography>
+              </Box>
+
+              {/* Activité concernée */}
+              <Box sx={{
+                p: 2,
+                bgcolor: '#f8f9fa',
+                borderRadius: '8px',
+                border: '1px solid #e9ecef'
+              }}>
+                <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
+                  Activité concernée
+                </Typography>
+                <Typography variant="body2" sx={{
+                  fontWeight: 500,
+                  color: '#333',
+                  mt: 0.5
+                }}>
+                  {getEnqueteActivity(question.enqueteId)}
                 </Typography>
               </Box>
             </Box>

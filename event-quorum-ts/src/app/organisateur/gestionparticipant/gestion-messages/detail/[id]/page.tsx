@@ -35,6 +35,7 @@ import {
 
 // Import du composant de statistiques
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+import { WidgetSummary } from 'src/app/organisateur/gestionenquete/components/WidgetSummary';
 
 // Interface pour un message
 interface MessageDetail {
@@ -255,41 +256,20 @@ const DetailMessagePage = () => {
                 {/* Statistiques */}
                 <Grid container spacing={3}>
                     <Grid size={{ xs: 12, md: 4 }}>
-                        <SuperviseurWidgetSummary
+                        <WidgetSummary
                             title="Nombre destinataires"
                             total={message.destinataires.nombre}
                             color="info"
-                            sx={{ height: 140 }}
                         />
                     </Grid>
                     <Grid size={{ xs: 12, md: 4 }}>
-                        <SuperviseurWidgetSummary
+                        <WidgetSummary
                             title="Statut"
-                            total={1}
-                            subtitle={message.statut}
-                            color={message.statut === 'Envoyé' ? 'success' : message.statut === 'Échec' ? 'error' : 'warning'}
-                            sx={{ height: 140 }}
+                            total="Envoyé"
+                            color="success"
+                            icon="solar:double-alt-arrow-up-bold-duotone"
+                            subtitle="✓ Transmis avec succès"
                         />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 4 }}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            startIcon={<SendIcon />}
-                            onClick={handleResend}
-                            sx={{
-                                height: 140,
-                                backgroundColor: '#00BCD4',
-                                color: 'white',
-                                '&:hover': { backgroundColor: '#00ACC1' },
-                                borderRadius: 2,
-                                textTransform: 'none',
-                                fontWeight: 600,
-                                fontSize: '1.1rem',
-                            }}
-                        >
-                            Envoyer
-                        </Button>
                     </Grid>
                 </Grid>
 

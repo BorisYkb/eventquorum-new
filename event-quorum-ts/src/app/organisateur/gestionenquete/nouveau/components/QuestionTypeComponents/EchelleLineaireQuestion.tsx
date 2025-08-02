@@ -42,18 +42,33 @@ const EchelleLineaireQuestion: React.FC<EchelleLineaireQuestionProps> = ({
         }}>
           Configuration de l'échelle
         </Typography>
-        
+
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
           <TextField
             size="small"
             type="number"
             value={currentQuestion.echelleMin}
             onChange={(e) => onQuestionChange('echelleMin', parseInt(e.target.value) || 1)}
+            inputProps={{
+              min: 1,
+              max: 50,
+              step: 1
+            }}
             sx={{
-              width: '80px',
+              width: '60px',
               '& .MuiOutlinedInput-root': {
                 borderRadius: '6px',
-                backgroundColor: '#fafafa'
+                backgroundColor: '#fafafa',
+                height: '40px'
+              },
+              '& input[type=number]': {
+                textAlign: 'center',
+                fontWeight: 600,
+                MozAppearance: 'textfield'
+              },
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'auto',
+                margin: 0
               }
             }}
           />
@@ -63,11 +78,26 @@ const EchelleLineaireQuestion: React.FC<EchelleLineaireQuestionProps> = ({
             type="number"
             value={currentQuestion.echelleMax}
             onChange={(e) => onQuestionChange('echelleMax', parseInt(e.target.value) || 10)}
+            inputProps={{
+              min: 2,
+              max: 100,
+              step: 1
+            }}
             sx={{
-              width: '80px',
+              width: '60px',
               '& .MuiOutlinedInput-root': {
                 borderRadius: '6px',
-                backgroundColor: '#fafafa'
+                backgroundColor: '#fafafa',
+                height: '40px'
+              },
+              '& input[type=number]': {
+                textAlign: 'center',
+                fontWeight: 600,
+                MozAppearance: 'textfield'
+              },
+              '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                WebkitAppearance: 'auto',
+                margin: 0
               }
             }}
           />
@@ -113,7 +143,7 @@ const EchelleLineaireQuestion: React.FC<EchelleLineaireQuestionProps> = ({
       </Box>
 
       {/* Labels des extrémités */}
-      <Box>
+      {/* <Box>
         <Typography variant="subtitle2" sx={{
           mb: 2,
           fontWeight: 600,
@@ -161,7 +191,7 @@ const EchelleLineaireQuestion: React.FC<EchelleLineaireQuestionProps> = ({
             />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

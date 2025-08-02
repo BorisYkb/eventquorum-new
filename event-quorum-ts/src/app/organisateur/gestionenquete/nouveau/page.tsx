@@ -273,7 +273,7 @@ const CreateEnquetePage: React.FC = () => {
     alert('Toutes les enquêtes et questions ont été sauvegardées avec succès !');
     
     // Redirection vers la liste des enquêtes
-    router.push('/organisateur/gestionenquetes');
+    router.push('/organisateur/gestionenquete');
   };
 
   /**
@@ -281,7 +281,7 @@ const CreateEnquetePage: React.FC = () => {
    */
   const handleCancel = () => {
     if (window.confirm('Êtes-vous sûr de vouloir quitter sans sauvegarder ?')) {
-      router.push('/organisateur/gestionenquetes');
+      router.push('/organisateur/gestionenquete');
     }
   };
 
@@ -496,7 +496,6 @@ const CreateEnquetePage: React.FC = () => {
         justifyContent: 'flex-end',
         pt: 3,
         mt: 4,
-        borderTop: '1px solid #e0e0e0'
       }}>
         <Button
           variant="outlined"

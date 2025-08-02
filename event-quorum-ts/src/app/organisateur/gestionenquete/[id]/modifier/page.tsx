@@ -281,7 +281,6 @@ const ModifyEnquetePage: React.FC = () => {
                 justifyContent: 'space-between',
                 mb: 4,
                 pb: 2,
-                borderBottom: '1px solid #e0e0e0'
             }}>
                 <Box>
                     <Typography variant="h4" component="h1" sx={{

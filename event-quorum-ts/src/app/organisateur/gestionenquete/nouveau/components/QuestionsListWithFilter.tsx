@@ -205,6 +205,7 @@ const QuestionsListWithFilter: React.FC<QuestionsListWithFilterProps> = ({
                   </TableCell>
 
                   {/* Contenu de la question */}
+                  {/* Contenu de la question */}
                   <TableCell>
                     <Typography variant="body2" sx={{
                       color: '#333',
@@ -221,7 +222,12 @@ const QuestionsListWithFilter: React.FC<QuestionsListWithFilterProps> = ({
                     }}>
                       <strong>Type:</strong> {getTypeQuestionLabel(question.type)} •{' '}
                       <strong>Enquête:</strong> {getEnqueteName(question.enqueteId)} •{' '}
-                      <strong>Points:</strong> {question.nombrePoints} •{' '}
+                      {/* Points - Affichés seulement pour certains types */}
+                      {!['question_libre', 'echelle_lineaire'].includes(question.type) && (
+                        <>
+                          <strong>Points:</strong> {question.nombrePoints} •{' '}
+                        </>
+                      )}
                       {question.required ? 'Obligatoire' : 'Facultative'}
                     </Typography>
                   </TableCell>
@@ -304,15 +310,8 @@ const QuestionsListWithFilter: React.FC<QuestionsListWithFilterProps> = ({
           borderTop: '1px solid #e0e0e0',
           backgroundColor: '#f8f9fa'
         }}>
-          <Typography variant="body2" sx={{ color: '#666' }}>
-            {filteredQuestions.length} question(s) affichée(s)
-            {selectedEnqueteId > 0 && (
-              <span> pour "{getEnqueteName(selectedEnqueteId)}"</span>
-            )}
-          </Typography>
-          
           <Typography variant="caption" sx={{ color: '#999' }}>
-            Total: {questions.length} question(s) créée(s)
+            Total: {questions.length} question(s)
           </Typography>
         </Box>
       </Card>

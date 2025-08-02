@@ -57,19 +57,21 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
   const handleQuestionChange = (field: string, value: any) => {
     setCurrentQuestion(prev => {
       const updated = { ...prev, [field]: value };
-      
+
       // Réinitialiser les réponses lors du changement de type
       if (field === 'type') {
         if (value === 'question_libre') {
           updated.reponses = [];
+          updated.nombrePoints = 0; // ✅ Pas de points pour question libre
         } else if (value === 'echelle_lineaire') {
           updated.reponses = [];
+          updated.nombrePoints = 0; // ✅ Pas de points pour échelle linéaire
         } else if (updated.reponses.length === 0) {
           updated.reponses = [''];
         }
         updated.bonneReponse = 0;
       }
-      
+
       return updated;
     });
   };
@@ -305,29 +307,31 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
               </FormControl>
             </Box>
 
-            {/* Nombre de points */}
-            <Box>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Entrer le nombre de points
-              </Typography>
-              <TextField
-                fullWidth
-                type="number"
-                placeholder="0"
-                value={currentQuestion.nombrePoints}
-                onChange={(e) => handleQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: '#fafafa'
-                  }
-                }}
-              />
-            </Box>
+            {/* Nombre de points - Masqué pour question libre et échelle linéaire */}
+            {!['question_libre', 'echelle_lineaire'].includes(currentQuestion.type) && (
+              <Box>
+                <Typography variant="subtitle2" sx={{
+                  mb: 1.5,
+                  fontWeight: 600,
+                  color: '#555'
+                }}>
+                  Entrer le nombre de points
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="number"
+                  placeholder="0"
+                  value={currentQuestion.nombrePoints}
+                  onChange={(e) => handleQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      backgroundColor: '#fafafa'
+                    }
+                  }}
+                />
+              </Box>
+            )}
 
             {/* Question obligatoire */}
             <FormControlLabel

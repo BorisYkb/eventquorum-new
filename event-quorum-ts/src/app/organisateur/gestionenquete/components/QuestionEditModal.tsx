@@ -117,21 +117,26 @@ const QuestionEditModal: React.FC<QuestionEditModalProps> = ({
   /**
    * Gestion du changement de type de question
    */
+/**
+ * Gestion du changement de type de question
+ */
   const handleTypeChange = (newType: string) => {
     onQuestionChange('type', newType);
-    
+
     // Réinitialiser les réponses selon le nouveau type
     if (newType === 'question_libre') {
       onQuestionChange('reponses', []);
+      onQuestionChange('nombrePoints', 0); // ✅ Réinitialiser les points à 0
     } else if (newType === 'echelle_lineaire') {
       onQuestionChange('reponses', []);
+      onQuestionChange('nombrePoints', 0); // ✅ Réinitialiser les points à 0
       // Réinitialiser les propriétés de l'échelle si nécessaire
       if (!currentQuestion.echelleMin) onQuestionChange('echelleMin', 1);
       if (!currentQuestion.echelleMax) onQuestionChange('echelleMax', 10);
     } else if (currentQuestion.reponses.length === 0) {
       onQuestionChange('reponses', ['']);
     }
-    
+
     // Réinitialiser la bonne réponse
     onQuestionChange('bonneReponse', 0);
   };
@@ -166,7 +171,7 @@ const QuestionEditModal: React.FC<QuestionEditModalProps> = ({
       </DialogTitle>
 
       {/* Contenu */}
-      <DialogContent sx={{ p: 4 }}>
+      <DialogContent sx={{ p: 4, mt: 2}}>
         <Grid container spacing={4}>
           {/* Colonne gauche - Question et réponses dynamiques */}
           <Grid item xs={12} md={6}>
@@ -229,6 +234,37 @@ const QuestionEditModal: React.FC<QuestionEditModalProps> = ({
                 </FormControl>
               </Box>
 
+              {/* Sélection d'enquête */}
+              <Box>
+                <Typography variant="subtitle2" sx={{
+                  mb: 1.5,
+                  fontWeight: 600,
+                  color: '#555'
+                }}>
+                  Sélectionner l'enquête concernée *
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={currentQuestion.enqueteId}
+                    onChange={(e) => onQuestionChange('enqueteId', e.target.value)}
+                    displayEmpty
+                    sx={{
+                      borderRadius: '8px',
+                      backgroundColor: '#fafafa'
+                    }}
+                  >
+                    <MenuItem value={0}>
+                      <em>Sélectionner une enquête</em>
+                    </MenuItem>
+                    {enquetes.map((enquete) => (
+                      <MenuItem key={enquete.id} value={enquete.id}>
+                        {enquete.titre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
               {/* Section "Choisir la bonne réponse" - Affichée selon le type */}
               {['liste_deroulante', 'case_a_cocher', 'choix_multiple'].includes(currentQuestion.type) && (
                 <Box>
@@ -259,60 +295,32 @@ const QuestionEditModal: React.FC<QuestionEditModalProps> = ({
                 </Box>
               )}
 
-              {/* Nombre de points */}
-              <Box>
-                <Typography variant="subtitle2" sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: '#555'
-                }}>
-                  Entrer le nombre de points
-                </Typography>
-                <TextField
-                  fullWidth
-                  type="number"
-                  placeholder="0"
-                  value={currentQuestion.nombrePoints}
-                  onChange={(e) => onQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
-                    }
-                  }}
-                />
-              </Box>
-
-              {/* Sélection d'enquête */}
-              <Box>
-                <Typography variant="subtitle2" sx={{
-                  mb: 1.5,
-                  fontWeight: 600,
-                  color: '#555'
-                }}>
-                  *Sélectionner l'enquête concernée
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    value={currentQuestion.enqueteId}
-                    onChange={(e) => onQuestionChange('enqueteId', e.target.value)}
-                    displayEmpty
+              {/* Nombre de points - Masqué pour question libre et échelle linéaire */}
+              {!['question_libre', 'echelle_lineaire'].includes(currentQuestion.type) && (
+                <Box>
+                  <Typography variant="subtitle2" sx={{
+                    mb: 1.5,
+                    fontWeight: 600,
+                    color: '#555'
+                  }}>
+                    Entrer le nombre de points
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    placeholder="0"
+                    value={currentQuestion.nombrePoints}
+                    onChange={(e) => onQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
                     sx={{
-                      borderRadius: '8px',
-                      backgroundColor: '#fafafa'
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '8px',
+                        backgroundColor: '#fafafa'
+                      }
                     }}
-                  >
-                    <MenuItem value={0}>
-                      <em>Sélectionner une enquête</em>
-                    </MenuItem>
-                    {enquetes.map((enquete) => (
-                      <MenuItem key={enquete.id} value={enquete.id}>
-                        {enquete.titre}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+                  />
+                </Box>
+              )}
+
 
               {/* Question obligatoire */}
               <FormControlLabel
@@ -337,7 +345,7 @@ const QuestionEditModal: React.FC<QuestionEditModalProps> = ({
 
       {/* Actions */}
       <DialogActions sx={{
-        p: 3,
+        p: 2,
         borderTop: '1px solid #e0e0e0',
         display: 'flex',
         gap: 2,

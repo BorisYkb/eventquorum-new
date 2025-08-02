@@ -86,16 +86,26 @@ const ChoixMultipleQuestion: React.FC<ChoixMultipleQuestionProps> = ({
 
       {/* Bouton Ajouter une réponse */}
       <Button
-        variant="text"
+        variant="outlined"
         size="small"
         onClick={onAddReponse}
+        startIcon={<span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span>}
         sx={{
           mt: 1,
-          border:"1px solid",
           mb: 3,
           textTransform: 'none',
-          color: '#1976d2',
-          fontWeight: 500
+          borderColor: '#ddd',
+          color: '#333',
+          fontWeight: 500,
+          backgroundColor: '#f8f9fa',
+          borderRadius: 1,
+          px: 2,
+          py: 0.5,
+          fontSize: '0.875rem',
+          '&:hover': {
+            backgroundColor: '#e9ecef',
+            borderColor: '#ccc'
+          }
         }}
       >
         Ajouter une réponse

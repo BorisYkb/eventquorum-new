@@ -132,11 +132,11 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
   const getStatutColor = (statut: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (statut) {
       case 'Terminé':
-        return 'success';
+        return 'success';      // ✅ Vert pour Terminé
       case 'En cours':
-        return 'warning';
+        return 'warning';      // 🟠 Orange pour En cours
       case 'Non démarré':
-        return 'secondary';
+        return 'error';        // 🔴 Rouge pour Non démarré
       default:
         return 'default';
     }
@@ -151,8 +151,8 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
   };
 
   // Couleurs alternées pour les widgets
-  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
-    const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
+  const getWidgetColor = (index: number): 'primary' | 'warning' | 'error' | 'success' => {
+    const colors: Array<'primary' | 'warning' | 'error' | 'success'> = ['primary', 'warning', 'error', 'success'];
     return colors[index % colors.length];
   };
 

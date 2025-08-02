@@ -92,7 +92,7 @@ const CreateEnqueteForm: React.FC<CreateEnqueteFormProps> = ({
         color: '#333',
         fontSize: '1.2rem'
       }}>
-        Créer une nouvelle enquête
+        Informations de l'enquête
       </Typography>
 
       {/* Formulaire en deux colonnes */}
@@ -160,7 +160,7 @@ const CreateEnqueteForm: React.FC<CreateEnqueteFormProps> = ({
               fontWeight: 600,
               color: '#555'
             }}>
-              Option d'enquête
+              Options d'enquête
             </Typography>
             <RadioGroup
               value={enqueteForm.typeEnquete}
@@ -209,7 +209,7 @@ const CreateEnqueteForm: React.FC<CreateEnqueteFormProps> = ({
                   sx={{ ml: 1 }}
                 />
               }
-              label="Authentification numérique"
+              label="Autoriser plusieurs réponses"
               sx={{
                 justifyContent: 'start',
                 ml: 0,
