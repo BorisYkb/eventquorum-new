@@ -417,13 +417,13 @@ const PlanifierEnvoiPage = () => {
                                     {destinataires.individuel && (
                                         <Paper variant="outlined" sx={{ p: 2, ml: 4, mt: 1, maxWidth: 300 }}>
                                             <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
-                                                Participants sélectionnés :
+                                                Coordonnées du participant :
                                             </Typography>
                                             <TextField
                                                 fullWidth
                                                 multiline
                                                 rows={3}
-                                                placeholder="Sélectionnez les participants..."
+                                                placeholder="Mail / SMS / Whatsapp"
                                                 variant="outlined"
                                                 size="small"
                                             />
@@ -470,7 +470,7 @@ const PlanifierEnvoiPage = () => {
                     gap: 2,
                 }}>
                     <Typography variant="body2" color="text.secondary">
-                        © 2024 EVENTQUORUM EVENTS. Powered by PCI_LABS SARL.
+                        © 2024 EVENTQUORUM. Powered by FX_LABS SARL.
                     </Typography>
                     <Stack direction="row" spacing={2}>
                         <Button variant="text" size="small" sx={{ textTransform: 'none' }}>

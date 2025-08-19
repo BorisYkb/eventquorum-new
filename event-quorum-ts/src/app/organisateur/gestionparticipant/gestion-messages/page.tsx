@@ -372,6 +372,19 @@ const GestionMessagesPage = () => {
               {/* Zone droite : Actions principales */}
               <Stack direction="row" spacing={2}>
                 <Button
+                  variant="outlined"
+                  startIcon={<DownloadIcon />}
+                  onClick={handleExport}
+                  sx={{
+                    borderRadius: 1,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  Exporter
+                </Button>
+
+                <Button
                   variant="contained"
                   onClick={handleNouveauMessage}
                   sx={{
@@ -493,7 +506,7 @@ const GestionMessagesPage = () => {
 
             {/* Contrôles de pagination */}
             <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mt: 3 }}>
-              <Button
+              {/* <Button
                 variant="outlined"
                 startIcon={<DownloadIcon />}
                 onClick={handleExport}
@@ -504,7 +517,7 @@ const GestionMessagesPage = () => {
                 }}
               >
                 Exporter
-              </Button>
+              </Button> */}
 
               <Pagination
                 count={totalPages}
@@ -530,7 +543,7 @@ const GestionMessagesPage = () => {
           gap: 2,
         }}>
           <Typography variant="body2" color="text.secondary">
-            © 2024 EVENTQUORUM EVENTS. Powered by PCI_LABS SARL.
+            © 2024 EVENTQUORUM. Powered by FX_LABS SARL.
           </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="text" size="small" sx={{ textTransform: 'none' }}>

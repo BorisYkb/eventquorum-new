@@ -1,3 +1,4 @@
+//src/layouts/nav-config-organisateur.tsx
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import { paths } from 'src/routes/paths';
@@ -55,7 +56,36 @@ export const organisateurNavData: NavSectionProps['data'] = [
         items: [
             { title: 'Accueil', path: paths.organisateur.root, icon: ICONS.dashboard },
             { title: 'Gestion Evenement', path: paths.organisateur.gestionevent.root, icon: ICONS.calendar },
-            { title: 'Gestion Participant', path: paths.organisateur.gestionparticipant.root, icon: ICONS.user },
+            
+            // ✅ Transformation de "Gestion Participant" en dropdown avec sous-éléments
+            { 
+                title: 'Gestion Participant', 
+                path: paths.organisateur.gestionparticipant.root, 
+                icon: ICONS.user,
+                children: [
+                    {
+                        title: 'Liste des invités',
+                        path: paths.organisateur.gestionparticipant.root,
+                        icon: ICONS.user,
+                    },
+                    {
+                        title: 'Gestion des demandes d\'inscription',
+                        path: `${paths.organisateur.gestionparticipant.root}/demandes-inscription`,
+                        icon: ICONS.menuItem,
+                    },
+                    {
+                        title: 'Gestion des messages',
+                        path: `${paths.organisateur.gestionparticipant.root}/gestion-messages`,
+                        icon: ICONS.chat,
+                    },
+                    {
+                        title: 'Gestion des boitiers electroniques',
+                        path: `${paths.organisateur.gestionparticipant.root}/gestion-boitiers`,
+                        icon: ICONS.parameter,
+                    }
+                ]
+            },
+            
             { title: 'Gestion Habilitations', path: paths.organisateur.gestionhabilitations.root, icon: ICONS.habilitation },
             { title: 'Gestion Enquete', path: paths.organisateur.gestionenquete.root, icon: ICONS.analytics },
         ],

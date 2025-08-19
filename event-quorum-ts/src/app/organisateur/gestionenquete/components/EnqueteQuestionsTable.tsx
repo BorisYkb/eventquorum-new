@@ -22,16 +22,8 @@ import {
 import { Iconify } from 'src/components/iconify';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
-interface Question {
-  id: number;
-  question: string;
-  type: 'choix_multiple' | 'echelle_appreciation' | 'zone_saisie' | 'choix_unique' | 'liste_deroulante' | 'note_etoile';
-  reponses: string[];
-  enqueteConcernee: string;
-  nombrePoints: number;
-  bonneReponse: number;
-  required: boolean;
-}
+// Import the correct Question type from the types file
+import { Question } from '../nouveau/types';
 
 interface EnqueteQuestionsTableProps {
   questions: Question[];
@@ -62,14 +54,13 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
 
-  // Types de questions disponibles pour l'affichage
+  // Types de questions disponibles pour l'affichage - Updated to match new types
   const typeQuestions = [
-    { value: 'choix_multiple', label: 'Choix multiple' },
-    { value: 'echelle_appreciation', label: 'Échelle d\'appréciation' },
-    { value: 'zone_saisie', label: 'Zone de saisie' },
-    { value: 'choix_unique', label: 'Choix unique' },
     { value: 'liste_deroulante', label: 'Liste déroulante' },
-    { value: 'note_etoile', label: 'Note étoile' }
+    { value: 'case_a_cocher', label: 'Case à cocher' },
+    { value: 'question_libre', label: 'Question libre' },
+    { value: 'echelle_lineaire', label: 'Échelle linéaire' },
+    { value: 'choix_multiple', label: 'Choix multiple' }
   ];
 
   /**

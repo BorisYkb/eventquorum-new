@@ -5,7 +5,7 @@ import type { PaletteColorKey } from 'src/theme/core';
 
 import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import Card, { CardProps } from '@mui/material/Card';
 import { useTheme } from '@mui/material/styles';
 import { fNumber, fPercent } from 'src/utils/format-number';
 import { CONFIG } from 'src/global-config';
@@ -14,7 +14,7 @@ import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
-export type WidgetSummaryProps = BoxProps & {
+export type WidgetSummaryProps = CardProps & {
   title: string;
   total: number | string; // ✅ Seule modification : accepte string aussi
   unit?: string;

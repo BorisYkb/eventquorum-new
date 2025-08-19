@@ -1,3 +1,4 @@
+//src/layouts/organisateur/nav-vertical.tsx
 import type { NavSectionProps } from 'src/components/nav-section';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 

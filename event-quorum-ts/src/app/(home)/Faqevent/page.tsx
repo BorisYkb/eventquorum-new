@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { ChevronDown, Send, Mail, MessageSquare, User } from 'lucide-react';
 import Headerfaq from './component/header';
 
 const EventQuorumFAQ = () => {
-  const [expandedItem, setExpandedItem] = useState(null);
+const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -58,11 +58,13 @@ const EventQuorumFAQ = () => {
     }
   ];
 
-  const toggleExpand = (id) => {
+  const toggleExpand = (id: number) => {
     setExpandedItem(expandedItem === id ? null : id);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -70,7 +72,8 @@ const EventQuorumFAQ = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e) e.preventDefault();
     if (!formData.name || !formData.email || !formData.question) {
       alert('Veuillez remplir tous les champs');
       return;
@@ -78,13 +81,13 @@ const EventQuorumFAQ = () => {
 
     setIsSubmitting(true);
 
-    // Simulation d'envoi du formulaire
     setTimeout(() => {
       alert('Votre question a été envoyée avec succès ! Nous vous répondrons dans les plus brefs délais.');
       setFormData({ name: '', email: '', question: '' });
       setIsSubmitting(false);
     }, 1000);
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -108,7 +111,7 @@ const EventQuorumFAQ = () => {
                 >
                   <button
                     onClick={() => toggleExpand(item.id)}
-                    className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-150"
+                    className="bg-gray-100 w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-150"
                   >
                     <span className="font-medium text-gray-900 pr-4">
                       {item.question}

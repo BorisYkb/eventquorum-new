@@ -19,6 +19,8 @@ type ExportOption = {
 };
 
 const EXPORT_INVITE_OPTIONS: ExportOption[] = [
+  { value: 'tous', label: 'Tous (PDF)' },
+  { value: 'tous', label: 'Tous (Excel)' },
   { value: 'pdf-conference', label: 'Conférence principale (PDF)' },
   { value: 'excel-conference', label: 'Conférence principale (Excel)' },
   { value: 'pdf-workshop', label: 'Atelier pratique (PDF)' },
@@ -30,6 +32,8 @@ const EXPORT_INVITE_OPTIONS: ExportOption[] = [
 ];
 
 const EXPORT_PRESENCE_OPTIONS: ExportOption[] = [
+  { value: 'tous', label: 'Tous (PDF)' },
+  { value: 'tous', label: 'Tous (Excel)' },
   { value: 'pdf-conference', label: 'Présence Conférence (PDF)' },
   { value: 'excel-conference', label: 'Présence Conférence (Excel)' },
   { value: 'pdf-workshop', label: 'Présence Atelier (PDF)' },
