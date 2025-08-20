@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect, useState, useRef } from 'react';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -83,7 +83,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-lg text-gray-600 mb-6">
-              Nous transformons vos idées en événements exceptionnels qui dépassent toutes les attentes. Commencez dès aujourd'hui.
+              Nous transformons vos idées en événements exceptionnels qui dépassent toutes les attentes. Commencez dès aujourd&apos;hui.
             </p>
 
             {/* Boutons */}
@@ -194,7 +194,7 @@ export default function Hero() {
       </div>
 
       {/* Styles pour l'animation de brillance */}
-      <style jsx>{`
+      <style >{`
         @keyframes shine {
           0% { transform: translateX(-100%) skewX(-12deg); }
           20% { transform: translateX(100%) skewX(-12deg); }

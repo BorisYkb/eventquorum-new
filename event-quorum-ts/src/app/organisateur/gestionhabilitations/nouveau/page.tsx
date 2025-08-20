@@ -1,8 +1,16 @@
 // File: src/app/organisateur/gestionhabilitations/nouveau/page.tsx
+
 'use client'
+
+import type { SelectChangeEvent } from '@mui/material/Select';
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { SelectChangeEvent } from '@mui/material/Select';
+
+import Grid from '@mui/material/Grid';
+import Switch from '@mui/material/Switch';
+import { ArrowBack } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -28,14 +36,12 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TableContainer
+  TableContainer,
+  Collapse
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { ArrowBack } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import { Iconify } from 'src/components/iconify';
+
 import { Label } from 'src/components/label';
-import Checkbox from '@mui/material/Checkbox';
+import { Iconify } from 'src/components/iconify';
 
 interface CreateAccessForm {
   nom: string;
@@ -61,7 +67,7 @@ const CreateAccessPage: React.FC = () => {
     prenom: '',
     email: '',
     telephone: '',
-    role: 'Operateur de saisie',
+    role: 'Opérateur de saisie',
     mdp: '',
     permissions: {
       preciserEnregistrements: false,
@@ -83,13 +89,22 @@ const CreateAccessPage: React.FC = () => {
 
   // Handler specifically for MUI Select (role)
   const handleRoleChange = (event: SelectChangeEvent<string>) => {
+    const newRole = event.target.value;
     setFormData(prev => ({
       ...prev,
-      role: event.target.value
+      role: newRole,
+      // Réinitialiser les permissions lors du changement de rôle
+      permissions: {
+        preciserEnregistrements: false,
+        admissionActivite: '',
+        autoriserConsulter: false,
+        autoriserRepondre: false,
+        autoriserAjout: false,
+      }
     }));
   };
 
-  const handleCheckboxPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
+  const handleSwitchPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setFormData(prev => ({
         ...prev,
@@ -111,8 +126,6 @@ const CreateAccessPage: React.FC = () => {
       }));
     };
 
-
-
   const handleCancel = () => {
     router.push('/organisateur/gestionhabilitations');
   };
@@ -126,11 +139,10 @@ const CreateAccessPage: React.FC = () => {
   };
 
   const roles = [
-    'Operateur de saisie',
+    'Opérateur de saisie',
     'Intervenant',
     'Superviseur',
-    'Organisateur',
-    'Tous accès'
+    'Guichetier'
   ];
 
   const getRoleColor = (role: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
@@ -158,7 +170,7 @@ const CreateAccessPage: React.FC = () => {
         {
           key: 'preciserEnregistrements',
           name: 'Préciser les enregistrements sur espace Opérateur',
-          type: 'checkbox'
+          type: 'switch'
         }
       ]
     },
@@ -169,6 +181,7 @@ const CreateAccessPage: React.FC = () => {
           key: 'admissionActivite',
           name: 'Type d\'admission',
           type: 'select',
+          conditional: true, // Cette permission dépend de preciserEnregistrements
           options: [
             { value: '', label: 'Aucune admission' },
             { value: 'Admission à une activité', label: 'Admission à une activité' },
@@ -183,17 +196,17 @@ const CreateAccessPage: React.FC = () => {
         {
           key: 'autoriserConsulter',
           name: 'Consulter Tel & Email des participants',
-          type: 'checkbox'
+          type: 'switch'
         },
         {
           key: 'autoriserRepondre',
           name: 'Répondre aux questions des participants',
-          type: 'checkbox'
+          type: 'switch'
         },
         {
           key: 'autoriserAjout',
           name: 'Ajouter des participants depuis l\'espace guichet',
-          type: 'checkbox'
+          type: 'switch'
         }
       ]
     }
@@ -385,41 +398,53 @@ const CreateAccessPage: React.FC = () => {
                     <TableContainer component={Paper} variant="outlined" sx={{ mb: 2 }}>
                       <Table size="small">
                         <TableBody>
-                          {category.items.map((permission, index) => (
-                            <TableRow key={index}>
-                              <TableCell sx={{ border: 'none', py: 1 }}>
-                                <Typography variant="body2">
-                                  {permission.name}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ border: 'none', py: 1, width: 200 }} align="right">
-                                {permission.type === 'checkbox' ? (
-                                  <Checkbox
-                                    checked={formData.permissions[permission.key as keyof typeof formData.permissions] as boolean}
-                                    onChange={handleCheckboxPermissionChange(permission.key as keyof typeof formData.permissions)}
-                                    size="small"
-                                  />
+                          {category.items.map((permission, index) => {
+                            // Vérifier si cette permission doit être affichée conditionnellement
+                            const shouldShow = !permission.conditional || 
+                              (permission.conditional && formData.permissions.preciserEnregistrements);
 
-                                ) : permission.type === 'select' ? (
-                                  <FormControl size="small" sx={{ minWidth: 180 }}>
-                                    <Select
-                                      value={formData.permissions[permission.key as keyof typeof formData.permissions]}
-                                      onChange={handleSelectPermissionChange(permission.key as keyof typeof formData.permissions)}
-                                      displayEmpty
-                                    >
-                                      {(permission.type === 'select' && Array.isArray((permission as any).options)) &&
-                                        (permission as { options: { value: string; label: string }[] }).options.map((option) => (
-                                          <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                          </MenuItem>
-                                        ))}
-                                    </Select>
-                                  </FormControl>
-
-                                ) : null}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                            return (
+                              <TableRow key={index}>
+                                <TableCell sx={{ border: 'none', py: 2 }}>
+                                  <Typography variant="body2">
+                                    {permission.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell sx={{ border: 'none', py: 2, width: 200 }} align="right">
+                                  {permission.type === 'switch' ? (
+                                    <Switch
+                                      checked={formData.permissions[permission.key as keyof typeof formData.permissions] as boolean}
+                                      onChange={handleSwitchPermissionChange(permission.key as keyof typeof formData.permissions)}
+                                      color="primary"
+                                      size="small"
+                                      inputProps={{ 
+                                        'aria-label': permission.name,
+                                        id: `${permission.key}-switch`
+                                      }}
+                                    />
+                                  ) : permission.type === 'select' ? (
+                                    <Collapse in={shouldShow} timeout="auto" unmountOnExit>
+                                      <FormControl size="small" sx={{ minWidth: 180 }}>
+                                        <Select
+                                          value={formData.permissions[permission.key as keyof typeof formData.permissions]}
+                                          onChange={handleSelectPermissionChange(permission.key as keyof typeof formData.permissions)}
+                                          displayEmpty
+                                          disabled={!shouldShow}
+                                        >
+                                          {(permission.type === 'select' && Array.isArray((permission as any).options)) &&
+                                            (permission as { options: { value: string; label: string }[] }).options.map((option) => (
+                                              <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                              </MenuItem>
+                                            ))}
+                                        </Select>
+                                      </FormControl>
+                                    </Collapse>
+                                  ) : null}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -436,7 +461,6 @@ const CreateAccessPage: React.FC = () => {
             variant="outlined"
             color="error"
             onClick={handleCancel}
-
             sx={{ px: 4 }}
           >
             Annuler
@@ -445,10 +469,9 @@ const CreateAccessPage: React.FC = () => {
             variant="contained"
             color="success"
             onClick={handleSubmit}
-
             sx={{ px: 4 }}
           >
-            Enregistrer l'Accès
+            Enregistrer l&apos;Accès
           </Button>
         </Box>
       </Box>
