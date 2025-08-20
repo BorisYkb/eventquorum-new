@@ -6,7 +6,6 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import {
   Box,
   Card,
-  CardContent,
   Typography,
   TextField,
   Select,
@@ -14,28 +13,20 @@ import {
   FormControl,
   InputLabel,
   Button,
-  FormControlLabel,
-  FormGroup,
-  Divider,
   IconButton,
   Stack,
-  Breadcrumbs,
-  Link,
-  Paper,
-  Chip,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { ArrowBack } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
-import Checkbox from '@mui/material/Checkbox';
+
+// Import des composants de permissions
+import BasePermissionsBlock from './components/BasePermissionsBlock';
+import SupervisorPermissionsBlock from './components/SupervisorPermissionsBlock';
+import OperatorPermissionsBlock from './components/OperatorPermissionsBlock';
+import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
+import GuichetierPermissionsBlock from './components/GuichetierPermissionsBlock';
 
 interface CreateAccessForm {
   nom: string;
@@ -45,11 +36,25 @@ interface CreateAccessForm {
   role: string;
   mdp: string;
   permissions: {
+    // Permissions de base pour tous les rôles
+    lecture: boolean;
+    ecriture: boolean;
+    modification: boolean;
+    
+    // Permissions spécifiques Superviseur
+    autoriserExport: boolean;
+    
+    // Permissions spécifiques Opérateur de saisie
     preciserEnregistrements: boolean;
+    typeEntree: string;
     admissionActivite: string;
-    autoriserConsulter: boolean;
-    autoriserRepondre: boolean;
-    autoriserAjout: boolean;
+    
+    // Permissions spécifiques Intervenant
+    consulterTelEmail: boolean;
+    repondreQuestions: boolean;
+    
+    // Permissions spécifiques Guichetier
+    ajouterParticipants: boolean;
   };
 }
 
@@ -64,11 +69,19 @@ const CreateAccessPage: React.FC = () => {
     role: 'Operateur de saisie',
     mdp: '',
     permissions: {
+      // Permissions de base
+      lecture: false,
+      ecriture: false,
+      modification: false,
+      
+      // Permissions spécifiques
+      autoriserExport: false,
       preciserEnregistrements: false,
+      typeEntree: '',
       admissionActivite: '',
-      autoriserConsulter: false,
-      autoriserRepondre: false,
-      autoriserAjout: false,
+      consulterTelEmail: false,
+      repondreQuestions: false,
+      ajouterParticipants: false,
     }
   });
 
@@ -81,37 +94,36 @@ const CreateAccessPage: React.FC = () => {
     }));
   };
 
-  // Handler specifically for MUI Select (role)
   const handleRoleChange = (event: SelectChangeEvent<string>) => {
     setFormData(prev => ({
       ...prev,
-      role: event.target.value
+      role: event.target.value,
+      // Réinitialiser les permissions lors du changement de rôle
+      permissions: {
+        lecture: false,
+        ecriture: false,
+        modification: false,
+        autoriserExport: false,
+        preciserEnregistrements: false,
+        typeEntree: '',
+        admissionActivite: '',
+        consulterTelEmail: false,
+        repondreQuestions: false,
+        ajouterParticipants: false,
+      }
     }));
   };
 
-  const handleCheckboxPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePermissionChange = (permission: string) =>
+    (value: boolean | string) => {
       setFormData(prev => ({
         ...prev,
         permissions: {
           ...prev.permissions,
-          [permission]: event.target.checked
+          [permission]: value
         }
       }));
     };
-
-  const handleSelectPermissionChange = (permission: keyof CreateAccessForm['permissions']) =>
-    (event: SelectChangeEvent<string | boolean>) => {
-      setFormData(prev => ({
-        ...prev,
-        permissions: {
-          ...prev.permissions,
-          [permission]: event.target.value
-        }
-      }));
-    };
-
-
 
   const handleCancel = () => {
     router.push('/organisateur/gestionhabilitations');
@@ -120,8 +132,6 @@ const CreateAccessPage: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Données du formulaire:', formData);
-
-    // TODO: Envoyer les données à votre API
     router.push('/organisateur/gestionhabilitations');
   };
 
@@ -130,7 +140,7 @@ const CreateAccessPage: React.FC = () => {
     'Intervenant',
     'Superviseur',
     'Organisateur',
-    'Tous accès'
+    'Guichetier' // Changé de "Tous accès" à "Guichetier"
   ];
 
   const getRoleColor = (role: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
@@ -139,70 +149,65 @@ const CreateAccessPage: React.FC = () => {
         return 'primary';
       case 'Intervenant':
         return 'info';
-      case 'Opérateur de saisie':
+      case 'Operateur de saisie':
         return 'secondary';
       case 'Organisateur':
         return 'success';
-      case 'Tous accès':
-        return 'error';
+      case 'Guichetier':
+        return 'warning';
       default:
         return 'default';
     }
   };
 
-  // Permissions organisées par catégories
-  const permissionCategories = [
-    {
-      category: 'Enregistrements',
-      items: [
-        {
-          key: 'preciserEnregistrements',
-          name: 'Préciser les enregistrements sur espace Opérateur',
-          type: 'checkbox'
-        }
-      ]
-    },
-    {
-      category: 'Activités',
-      items: [
-        {
-          key: 'admissionActivite',
-          name: 'Type d\'admission',
-          type: 'select',
-          options: [
-            { value: '', label: 'Aucune admission' },
-            { value: 'Admission à une activité', label: 'Admission à une activité' },
-            { value: 'Admission/Gestion d\'une activité', label: 'Admission/Gestion d\'une activité' }
-          ]
-        }
-      ]
-    },
-    {
-      category: 'Participants',
-      items: [
-        {
-          key: 'autoriserConsulter',
-          name: 'Consulter Tel & Email des participants',
-          type: 'checkbox'
-        },
-        {
-          key: 'autoriserRepondre',
-          name: 'Répondre aux questions des participants',
-          type: 'checkbox'
-        },
-        {
-          key: 'autoriserAjout',
-          name: 'Ajouter des participants depuis l\'espace guichet',
-          type: 'checkbox'
-        }
-      ]
+  // Fonction pour rendre les permissions spécifiques selon le rôle
+  const renderRoleSpecificPermissions = () => {
+    switch (formData.role) {
+      case 'Superviseur':
+        return (
+          <SupervisorPermissionsBlock
+            autoriserExport={formData.permissions.autoriserExport}
+            onPermissionChange={handlePermissionChange}
+          />
+        );
+      
+      case 'Operateur de saisie':
+        return (
+          <OperatorPermissionsBlock
+            preciserEnregistrements={formData.permissions.preciserEnregistrements}
+            typeEntree={formData.permissions.typeEntree}
+            admissionActivite={formData.permissions.admissionActivite}
+            onPermissionChange={handlePermissionChange}
+          />
+        );
+        
+      case 'Intervenant':
+        return (
+          <IntervenantPermissionsBlock
+            consulterTelEmail={formData.permissions.consulterTelEmail}
+            repondreQuestions={formData.permissions.repondreQuestions}
+            onPermissionChange={handlePermissionChange}
+          />
+        );
+        
+      case 'Guichetier':
+        return (
+          <GuichetierPermissionsBlock
+            ajouterParticipants={formData.permissions.ajouterParticipants}
+            onPermissionChange={handlePermissionChange}
+          />
+        );
+        
+      case 'Organisateur':
+      default:
+        return null; // Pas de permissions spécifiques
     }
-  ];
+  };
 
   return (
     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
-      {/* En-tête similaire au modal */}
-      <Card sx={{ borderRadius: 2, mb: 3 }}>
+      {/* En-tête */}
+      <Card sx={{ borderRadius: 2, mb: 2 }}>
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -212,10 +217,7 @@ const CreateAccessPage: React.FC = () => {
           borderBottom: '1px solid #e0e0e0'
         }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              onClick={handleCancel}
-              sx={{ mr: 2 }}
-            >
+            <IconButton onClick={handleCancel} sx={{ mr: 2 }}>
               <ArrowBack />
             </IconButton>
             <Box>
@@ -240,9 +242,9 @@ const CreateAccessPage: React.FC = () => {
 
       {/* Contenu principal */}
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {/* Informations utilisateur */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <Card sx={{ height: 'fit-content' }}>
               <Box sx={{
                 p: 2,
@@ -350,8 +352,8 @@ const CreateAccessPage: React.FC = () => {
             </Card>
           </Grid>
 
-          {/* Permissions */}
-          <Grid item xs={12} md={7}>
+          {/* Permissions dynamiques */}
+          <Grid item xs={12} md={6}>
             <Card>
               <Box sx={{
                 p: 2,
@@ -363,68 +365,16 @@ const CreateAccessPage: React.FC = () => {
                 </Typography>
               </Box>
               <Box sx={{ p: 3 }}>
-                {permissionCategories.map((category, categoryIndex) => (
-                  <Box key={categoryIndex} sx={{ mb: 3 }}>
-                    <Typography variant="subtitle1" sx={{
-                      fontWeight: 600,
-                      mb: 2,
-                      color: '#374151',
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}>
-                      <Box sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        backgroundColor: theme.palette.primary.main,
-                        mr: 1
-                      }} />
-                      {category.category}
-                    </Typography>
+                {/* Permissions de base (pour tous les rôles) */}
+                <BasePermissionsBlock
+                  lecture={formData.permissions.lecture}
+                  ecriture={formData.permissions.ecriture}
+                  modification={formData.permissions.modification}
+                  onPermissionChange={handlePermissionChange}
+                />
 
-                    <TableContainer component={Paper} variant="outlined" sx={{ mb: 2 }}>
-                      <Table size="small">
-                        <TableBody>
-                          {category.items.map((permission, index) => (
-                            <TableRow key={index}>
-                              <TableCell sx={{ border: 'none', py: 1 }}>
-                                <Typography variant="body2">
-                                  {permission.name}
-                                </Typography>
-                              </TableCell>
-                              <TableCell sx={{ border: 'none', py: 1, width: 200 }} align="right">
-                                {permission.type === 'checkbox' ? (
-                                  <Checkbox
-                                    checked={formData.permissions[permission.key as keyof typeof formData.permissions] as boolean}
-                                    onChange={handleCheckboxPermissionChange(permission.key as keyof typeof formData.permissions)}
-                                    size="small"
-                                  />
-
-                                ) : permission.type === 'select' ? (
-                                  <FormControl size="small" sx={{ minWidth: 180 }}>
-                                    <Select
-                                      value={formData.permissions[permission.key as keyof typeof formData.permissions]}
-                                      onChange={handleSelectPermissionChange(permission.key as keyof typeof formData.permissions)}
-                                      displayEmpty
-                                    >
-                                      {(permission.type === 'select' && Array.isArray((permission as any).options)) &&
-                                        (permission as { options: { value: string; label: string }[] }).options.map((option) => (
-                                          <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                          </MenuItem>
-                                        ))}
-                                    </Select>
-                                  </FormControl>
-
-                                ) : null}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-                ))}
+                {/* Permissions spécifiques selon le rôle */}
+                {renderRoleSpecificPermissions()}
               </Box>
             </Card>
           </Grid>
@@ -436,7 +386,6 @@ const CreateAccessPage: React.FC = () => {
             variant="outlined"
             color="error"
             onClick={handleCancel}
-
             sx={{ px: 4 }}
           >
             Annuler
@@ -445,7 +394,6 @@ const CreateAccessPage: React.FC = () => {
             variant="contained"
             color="success"
             onClick={handleSubmit}
-
             sx={{ px: 4 }}
           >
             Enregistrer l'Accès

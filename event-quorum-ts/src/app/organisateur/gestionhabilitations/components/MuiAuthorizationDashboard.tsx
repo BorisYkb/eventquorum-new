@@ -1,4 +1,4 @@
-// components/MuiAuthorizationDashboard.tsx
+// src/app/organisateur/gestionhabilitations/components/MuiAuthorizationDashboard.tsx
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';

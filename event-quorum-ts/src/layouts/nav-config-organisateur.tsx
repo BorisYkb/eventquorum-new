@@ -64,7 +64,7 @@ export const organisateurNavData: NavSectionProps['data'] = [
                 icon: ICONS.user,
                 children: [
                     {
-                        title: 'Liste des invités',
+                        title: 'Liste des invités et participants',
                         path: paths.organisateur.gestionparticipant.root,
                         icon: ICONS.user,
                     },
