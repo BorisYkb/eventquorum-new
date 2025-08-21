@@ -1,6 +1,6 @@
 // src/app/organisateur/gestionhabilitations/components/MuiAuthorizationDashboard.tsx
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,11 +24,13 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { useTheme } from '@mui/material/styles';
 
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
-import AuthorizationDetailModal from './AuthorizationDetailModal';
+import DeleteConfirmationModal from 'src/app/organisateur/gestionenquete/components/DeleteConfirmationModal';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface Authorization {
@@ -44,47 +46,129 @@ interface Authorization {
 
 interface MuiAuthorizationDashboardProps {
   authorizations: Authorization[];
+  onAuthorizationDelete?: (id: number) => void;
 }
 
-const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ authorizations }) => {
+/**
+ * Composant Dashboard pour la gestion des habilitations
+ * Affiche la liste des habilitations avec filtres, recherche et actions CRUD
+ */
+const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ 
+  authorizations: authorizationsProp,
+  onAuthorizationDelete
+}) => {
   const theme = useTheme();
   const router = useRouter();
+  
+  // États pour la gestion des données locales
+  const [localAuthorizations, setLocalAuthorizations] = useState<Authorization[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [selected, setSelected] = useState<number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dense, setDense] = useState(false);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedAuthorization, setSelectedAuthorization] = useState<Authorization | null>(null);
+  
+  // États pour la gestion du modal de suppression et alerte de succès
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [authToDelete, setAuthToDelete] = useState<Authorization | null>(null);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
+  /**
+   * Synchronisation des données reçues en props avec l'état local
+   */
+  useEffect(() => {
+    setLocalAuthorizations(authorizationsProp);
+  }, [authorizationsProp]);
+
+  /**
+   * Navigation vers la page de détail d'une habilitation
+   */
   const handleViewAuthorization = (authId: number) => {
-    const auth = authorizations.find(a => a.id === authId);
-    if (auth) {
-      setSelectedAuthorization(auth);
-      setDetailModalOpen(true);
-    }
+    router.push(`/organisateur/gestionhabilitations/${authId}`);
   };
 
-
+  /**
+   * Navigation vers la page de modification d'une habilitation
+   */
   const handleEditAuthorization = (authId: number) => {
     router.push(`/organisateur/gestionhabilitations/${authId}/modifier`);
   };
 
-  const handleDeleteAuthorization = (authId: number) => {
-    // Logique de suppression
-    console.log('Supprimer accès:', authId);
+  /**
+   * Ouvre le modal de confirmation de suppression
+   */
+  const handleDeleteClick = (auth: Authorization) => {
+    setAuthToDelete(auth);
+    setDeleteModalOpen(true);
   };
 
+  /**
+   * Ferme le modal de suppression
+   */
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setAuthToDelete(null);
+  };
+
+  /**
+   * Confirme et exécute la suppression de l'habilitation
+   */
+  const handleConfirmDelete = () => {
+    if (authToDelete) {
+      // Suppression locale immédiate pour une meilleure UX
+      const updatedAuthorizations = localAuthorizations.filter(a => a.id !== authToDelete.id);
+      setLocalAuthorizations(updatedAuthorizations);
+      
+      // Mise à jour de la sélection si l'habilitation supprimée était sélectionnée
+      setSelected(prev => prev.filter(id => id !== authToDelete.id));
+      
+      // Callback vers le composant parent si fourni
+      if (onAuthorizationDelete) {
+        onAuthorizationDelete(authToDelete.id);
+      }
+      
+      console.log('Habilitation supprimée:', authToDelete.id);
+      // TODO: Appel API pour supprimer l'habilitation
+      // await deleteAuthorization(authToDelete.id);
+      
+      // Affichage de l'alerte de succès
+      setShowSuccessAlert(true);
+      
+      // Fermeture du modal
+      setAuthToDelete(null);
+    }
+  };
+
+  /**
+   * Navigation vers la page de création d'une nouvelle habilitation
+   */
   const handleCreateAuthorization = () => {
     router.push('/organisateur/gestionhabilitations/nouveau');
   };
 
+  /**
+   * Fonction d'export des habilitations
+   */
   const handleExportAuthorizations = () => {
-    // Logique d'export
-    console.log('Exporter les accès pour le rôle:', roleFilter);
+    const dataToExport = roleFilter 
+      ? localAuthorizations.filter(auth => auth.role === roleFilter)
+      : localAuthorizations;
+    
+    console.log('Export des habilitations:', dataToExport);
+    // TODO: Implémenter la logique d'export (CSV, Excel, etc.)
   };
 
+  /**
+   * Ferme l'alerte de succès
+   */
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
+  };
+
+  /**
+   * Gestion de la sélection multiple d'habilitations
+   */
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = filteredAuthorizations.map((auth) => auth.id);
@@ -94,6 +178,9 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
     setSelected([]);
   };
 
+  /**
+   * Gestion de la sélection d'une habilitation individuelle
+   */
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: number[] = [];
@@ -113,18 +200,30 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
     setSelected(newSelected);
   };
 
+  /**
+   * Gestion du changement de page
+   */
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
+  /**
+   * Gestion du changement du nombre de lignes par page
+   */
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  /**
+   * Vérifie si une habilitation est sélectionnée
+   */
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  const filteredAuthorizations = authorizations.filter(auth => {
+  /**
+   * Filtrage des habilitations selon les critères de recherche et filtres
+   */
+  const filteredAuthorizations = localAuthorizations.filter(auth => {
     const matchesSearch = auth.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          auth.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          auth.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,8 +233,11 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
     return matchesSearch && matchesRole;
   });
 
-  const uniqueRoles = [...new Set(authorizations.map(auth => auth.role))];
+  const uniqueRoles = [...new Set(localAuthorizations.map(auth => auth.role))];
 
+  /**
+   * Détermine la couleur du label de rôle
+   */
   const getRoleColor = (role: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (role) {
       case 'Superviseur':
@@ -146,6 +248,8 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
         return 'secondary';
       case 'Organisateur':
         return 'success';
+      case 'Guichetier':
+        return 'warning';
       case 'Tous accès':
         return 'error';
       default:
@@ -210,7 +314,17 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
                   variant="outlined"
                   startIcon={<Iconify icon="eva:download-fill" />}
                   onClick={handleExportAuthorizations}
-                  sx={{ minWidth: 'auto', bgcolor: 'black', color: 'white', '&:hover': { boxShadow: 4, bgcolor: 'black', color: 'white' } }}
+                  sx={{ 
+                    minWidth: 'auto', 
+                    bgcolor: 'black', 
+                    color: 'white', 
+                    border: '1px solid black',
+                    '&:hover': { 
+                      boxShadow: 4, 
+                      bgcolor: 'black', 
+                      color: 'white' 
+                    } 
+                  }}
                 >
                   Exporter
                 </Button>
@@ -219,10 +333,21 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
               {/* Bouton Créer */}
               <Tooltip title="Créer un accès" placement="top" arrow>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   startIcon={<Iconify icon="eva:plus-fill" />}
                   onClick={handleCreateAuthorization}
-                  sx={{ minWidth: 'auto', bgcolor: 'transparent', color: 'black',border: 1, '&:hover': { boxShadow: 4, borderColor: 'black', bgcolor: 'transparent', color: 'black' } }}
+                  sx={{ 
+                    minWidth: 'auto', 
+                    bgcolor: 'transparent', 
+                    color: 'black',
+                    border: '1px solid black', 
+                    '&:hover': { 
+                      boxShadow: 4, 
+                      borderColor: 'black', 
+                      bgcolor: 'transparent', 
+                      color: 'black' 
+                    } 
+                  }}
                 >
                   Créer
                 </Button>
@@ -321,12 +446,19 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
                             <Tooltip title="Voir détails" placement="top" arrow>
                               <IconButton
                                 color="info"
-                                sx={{ color: '#374151' }} // Tailwind gray-700
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleViewAuthorization(auth.id);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  color: '#374151',
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(55, 65, 81, 0.08)' 
+                                  }
+                                }}
                               >
                                 <Iconify icon="solar:eye-bold" width={17} height={17} />
                               </IconButton>
@@ -334,12 +466,19 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
                             <Tooltip title="Modifier" placement="top" arrow>
                               <IconButton
                                 color="warning"
-                                sx={{ color: '#00B8D9' }}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleEditAuthorization(auth.id);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  color: '#00B8D9',
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(0, 184, 217, 0.08)' 
+                                  }
+                                }}
                               >
                                 <Icon icon="solar:pen-new-square-linear" width={15} height={15} />
                               </IconButton>
@@ -349,11 +488,18 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
                                 color="error"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleDeleteAuthorization(auth.id);
+                                  handleDeleteClick(auth);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(244, 67, 54, 0.08)' 
+                                  }
+                                }}
                               >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
+                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -385,23 +531,44 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({ a
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
-              labelRowsPerPage="Rows per page:"
+              labelRowsPerPage="Lignes par page:"
             />
           </Box>
         </Box>
       </Card>
 
-      {/* Modal de détails */}
-      <AuthorizationDetailModal
-        open={detailModalOpen}
-        onClose={() => setDetailModalOpen(false)}
-        authorization={selectedAuthorization}
+      {/* Modal de confirmation de suppression */}
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Êtes-vous sûr de supprimer cette habilitation ?"
+        message="Vous ne pourrez pas annuler cette action !"
       />
+
+      {/* Alert de succès pour la suppression */}
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ mt: 8 }}
+      >
+        <Alert 
+          onClose={handleCloseSuccessAlert} 
+          severity="success" 
+          sx={{ 
+            width: '100%',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        >
+          Habilitation supprimée avec succès !
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
 export default MuiAuthorizationDashboard;
-
-// Types à exporter également
 export type { Authorization };

@@ -23,6 +23,8 @@ import SupervisorPermissionsDisplay from './components/SupervisorPermissionsDisp
 import OperatorPermissionsDisplay from './components/OperatorPermissionsDisplay';
 import IntervenantPermissionsDisplay from './components/IntervenantPermissionsDisplay';
 import GuichetierPermissionsDisplay from './components/GuichetierPermissionsDisplay';
+import { Iconify } from 'src/components/iconify';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface UserAccess {
   id: number;
@@ -34,19 +36,25 @@ interface UserAccess {
   createdAt: string;
   status: string;
   permissions: {
-    // Permissions de base (toujours présentes)
+    // Permissions de base pour tous les rôles
     lecture: boolean;
     ecriture: boolean;
     modification: boolean;
-
-    // Permissions spécifiques (optionnelles selon le rôle)
-    autoriserExport?: boolean;
-    preciserEnregistrements?: boolean;
-    typeEntree?: string;
-    admissionActivite?: string;
-    consulterTelEmail?: boolean;
-    repondreQuestions?: boolean;
-    ajouterParticipants?: boolean;
+    
+    // Permissions spécifiques Superviseur
+    autoriserExport: boolean;
+    
+    // Permissions spécifiques Opérateur de saisie
+    preciserEnregistrements: boolean;
+    typeEntree: string;
+    admissionActivite: string;
+    
+    // Permissions spécifiques Intervenant
+    consulterTelEmail: boolean;
+    repondreQuestions: boolean;
+    
+    // Permissions spécifiques Guichetier
+    ajouterParticipants: boolean;
   };
 }
 
@@ -70,15 +78,38 @@ const DetailAccessPage: React.FC = () => {
     createdAt: '2024-01-15',
     status: 'Actif',
     permissions: {
-      // Permissions de base
       lecture: true,
       ecriture: true,
       modification: false,
-
-      // SEULEMENT les permissions du Superviseur
       autoriserExport: true,
-      // Les autres permissions ne sont pas définies
+      preciserEnregistrements: false,
+      typeEntree: '',
+      admissionActivite: '',
+      consulterTelEmail: false,
+      repondreQuestions: false,
+      ajouterParticipants: false,
     }
+
+    // id: 1,
+    // nom: 'Dupont',
+    // prenom: 'Jean',
+    // email: 'jean.dupont@example.com',
+    // telephone: '0123456789',
+    // role: 'Opérateur de saisie',
+    // createdAt: '2024-01-15',
+    // status: 'Actif',
+    // permissions: {
+    //   lecture: true,
+    //   ecriture: true,
+    //   modification: true,
+    //   autoriserExport: false,
+    //   preciserEnregistrements: true,
+    //   typeEntree: 'Admission à une activité',
+    //   admissionActivite: 'Activité A',
+    //   consulterTelEmail: false,
+    //   repondreQuestions: false,
+    //   ajouterParticipants: false,
+    // }
   };
 
   // Chargement des données
@@ -86,16 +117,16 @@ const DetailAccessPage: React.FC = () => {
     const loadUserData = async () => {
       try {
         setLoading(true);
-
+        
         // TODO: Remplacer par l'appel API réel
         // const response = await fetch(`/api/authorizations/${authId}`);
         // const data = await response.json();
-
+        
         // Simulation d'un délai de chargement
         await new Promise(resolve => setTimeout(resolve, 800));
-
+        
         setUserData(mockUserData);
-
+        
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       } finally {
@@ -157,7 +188,7 @@ const DetailAccessPage: React.FC = () => {
             autoriserExport={userData.permissions.autoriserExport}
           />
         );
-
+      
       case 'Operateur de saisie':
         return (
           <OperatorPermissionsDisplay
@@ -166,7 +197,7 @@ const DetailAccessPage: React.FC = () => {
             admissionActivite={userData.permissions.admissionActivite}
           />
         );
-
+        
       case 'Intervenant':
         return (
           <IntervenantPermissionsDisplay
@@ -174,14 +205,14 @@ const DetailAccessPage: React.FC = () => {
             repondreQuestions={userData.permissions.repondreQuestions}
           />
         );
-
+        
       case 'Guichetier':
         return (
           <GuichetierPermissionsDisplay
             ajouterParticipants={userData.permissions.ajouterParticipants}
           />
         );
-
+        
       case 'Organisateur':
       default:
         return null;
@@ -244,16 +275,16 @@ const DetailAccessPage: React.FC = () => {
               size="small"
               variant="filled"
             />
-            <IconButton
+            <IconButton 
               onClick={handleEdit}
-              sx={{
-                bgcolor: '#00B8D9',
-                color: 'white',
-                '&:hover': { bgcolor: '#00A3C4' }
+              sx={{ 
+                bgcolor: 'white', 
+                color: '#00B8D9',
+                '&:hover': { bgcolor: '#F3F4F6' }
               }}
               size="small"
             >
-              <Edit sx={{ fontSize: 18 }} />
+              <Icon icon="solar:pen-new-square-linear" width={18} height={18} />
             </IconButton>
           </Box>
         </Box>
@@ -263,7 +294,7 @@ const DetailAccessPage: React.FC = () => {
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={3}>
           {/* Informations utilisateur */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
             <Card sx={{ height: 'fit-content' }}>
               <Box sx={{
                 p: 2,
@@ -372,7 +403,7 @@ const DetailAccessPage: React.FC = () => {
           </Grid>
 
           {/* Permissions en lecture seule */}
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={7}>
             <Card>
               <Box sx={{
                 p: 2,
@@ -403,3 +434,59 @@ const DetailAccessPage: React.FC = () => {
 };
 
 export default DetailAccessPage;
+
+
+//'use client'
+// import { useState, useEffect } from 'react';
+// import { useRouter, useParams } from 'next/navigation';
+// import Loading from 'src/app/loading';
+
+// export default function DetailAccessPage() {
+//   const router = useRouter();
+//   const params = useParams();
+//   const authId = params.id as string;
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const loadUserAndRedirect = async () => {
+//       try {
+//         // TODO: Appel API pour récupérer le rôle
+//         // const response = await fetch(`/api/authorizations/${authId}`);
+//         // const userData = await response.json();
+        
+//         // Simulation
+//         await new Promise(resolve => setTimeout(resolve, 500));
+//         const mockRole = 'Operateur de saisie'; // Remplacer par userData.role
+        
+//         // Redirection selon le rôle
+//         switch(mockRole) {
+//           case 'Superviseur':
+//             router.replace(`/organisateur/gestionhabilitations/${authId}/superviseur`);
+//             break;
+//           case 'Operateur de saisie':
+//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/operateur`);
+//             break;
+//           case 'Intervenant':
+//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/intervenant`);
+//             break;
+//           case 'Organisateur':
+//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/organisateur`);
+//             break;
+//           case 'Guichetier':
+//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/guichetier`);
+//             break;
+//           default:
+//             router.push('/organisateur/gestionhabilitations');
+//         }
+//       } catch (error) {
+//         router.push('/organisateur/gestionhabilitations');
+//       }
+//     };
+
+//     if (authId) {
+//       loadUserAndRedirect();
+//     }
+//   }, [authId, router]);
+
+//   return <Loading />;
+// }

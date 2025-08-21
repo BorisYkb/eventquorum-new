@@ -450,9 +450,10 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
         open={deleteModalOpen}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        title={questionToDelete ? `Êtes-vous sûr de supprimer la question "${questionToDelete.question.substring(0, 30)}..." ?` : "Êtes-vous sûr de supprimer cette question ?"}
+        title="Êtes-vous sûr de supprimer la question ?"
         message="Vous ne pourrez pas annuler cette action !"
       />
+      
     </Box>
   );
 };

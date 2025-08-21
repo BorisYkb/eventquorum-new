@@ -1,4 +1,4 @@
-// components/MuiEnquetesDashboard.tsx
+// File: src/app/organisateur/gestionenquete/components/MuiEnquetesDashboard.tsx
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -25,11 +25,14 @@ import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid2';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { useTheme } from '@mui/material/styles';
 
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { GuichetWidgetSummary } from 'src/sections/overview/e-commerce/guichet/guichet-widget-summary-2';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface Enquete {
   id: number;
@@ -48,9 +51,16 @@ interface MuiEnquetesDashboardProps {
   enquetes: Enquete[];
 }
 
-const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes }) => {
+/**
+ * Composant Dashboard pour la gestion des enquêtes
+ * Affiche la liste des enquêtes avec filtres, recherche et actions CRUD
+ */
+const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes: initialEnquetes }) => {
   const theme = useTheme();
   const router = useRouter();
+  
+  // États pour la gestion des données et filtres
+  const [enquetes, setEnquetes] = useState<Enquete[]>(initialEnquetes);
   const [searchTerm, setSearchTerm] = useState('');
   const [statutFilter, setStatutFilter] = useState('');
   const [activiteFilter, setActiviteFilter] = useState('');
@@ -58,26 +68,82 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dense, setDense] = useState(false);
+  
+  // États pour la gestion du modal de suppression et alerte de succès
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [enqueteToDelete, setEnqueteToDelete] = useState<Enquete | null>(null);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
+  /**
+   * Navigation vers la page de détail d'une enquête
+   */
   const handleViewEnquete = (enqueteId: number) => {
     router.push(`/organisateur/gestionenquete/${enqueteId}`);
   };
 
+  /**
+   * Navigation vers la page de modification d'une enquête
+   */
   const handleEditEnquete = (enqueteId: number) => {
     router.push(`/organisateur/gestionenquete/${enqueteId}/modifier`);
   };
 
-  const handleDeleteEnquete = (enqueteId: number) => {
-    // Logique de suppression
-    console.log('Supprimer enquête:', enqueteId);
+  /**
+   * Ouvre le modal de confirmation de suppression
+   */
+  const handleDeleteClick = (enquete: Enquete) => {
+    setEnqueteToDelete(enquete);
+    setDeleteModalOpen(true);
   };
 
+  /**
+   * Ferme le modal de suppression
+   */
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setEnqueteToDelete(null);
+  };
+
+  /**
+   * Confirme et exécute la suppression de l'enquête
+   */
+  const handleConfirmDelete = () => {
+    if (enqueteToDelete) {
+      // Suppression de l'enquête de la liste
+      const updatedEnquetes = enquetes.filter(e => e.id !== enqueteToDelete.id);
+      setEnquetes(updatedEnquetes);
+      
+      // Mise à jour de la sélection si l'enquête supprimée était sélectionnée
+      setSelected(prev => prev.filter(id => id !== enqueteToDelete.id));
+      
+      console.log('Enquête supprimée:', enqueteToDelete.id);
+      // TODO: Appel API pour supprimer l'enquête
+      
+      // Affichage de l'alerte de succès
+      setShowSuccessAlert(true);
+      
+      // Fermeture du modal
+      setEnqueteToDelete(null);
+    }
+  };
+
+  /**
+   * Navigation vers la page de création d'une nouvelle enquête
+   */
   const handleCreateEnquete = () => {
     router.push('/organisateur/gestionenquete/nouveau');
   };
 
+  /**
+   * Ferme l'alerte de succès
+   */
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
+  };
 
-
+  /**
+   * Gestion de la sélection multiple d'enquêtes
+   */
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = filteredEnquetes.map((enquete) => enquete.id);
@@ -87,6 +153,9 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
     setSelected([]);
   };
 
+  /**
+   * Gestion de la sélection d'une enquête individuelle
+   */
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: number[] = [];
@@ -106,17 +175,29 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
     setSelected(newSelected);
   };
 
+  /**
+   * Gestion du changement de page
+   */
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
+  /**
+   * Gestion du changement du nombre de lignes par page
+   */
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  /**
+   * Vérifie si une enquête est sélectionnée
+   */
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
+  /**
+   * Filtrage des enquêtes selon les critères de recherche et filtres
+   */
   const filteredEnquetes = enquetes.filter(enquete => {
     const matchesSearch = enquete.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          enquete.activite.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -129,20 +210,25 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
   const uniqueStatuts = ['Terminé', 'En cours', 'Non démarré'];
   const uniqueActivites = [...new Set(enquetes.map(enquete => enquete.activite))];
 
+  /**
+   * Détermine la couleur du label de statut
+   */
   const getStatutColor = (statut: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (statut) {
       case 'Terminé':
-        return 'success';      // ✅ Vert pour Terminé
+        return 'success';
       case 'En cours':
-        return 'warning';      // 🟠 Orange pour En cours
+        return 'warning';
       case 'Non démarré':
-        return 'error';        // 🔴 Rouge pour Non démarré
+        return 'error';
       default:
         return 'default';
     }
   };
 
-  // Calcul des statistiques
+  /**
+   * Calcul des statistiques pour les widgets
+   */
   const stats = {
     totalEnquetes: enquetes.length,
     enquetesEnCours: enquetes.filter(e => e.statut === 'En cours').length,
@@ -150,12 +236,17 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
     enquetesTerminees: enquetes.filter(e => e.statut === 'Terminé').length,
   };
 
-  // Couleurs alternées pour les widgets
+  /**
+   * Couleurs alternées pour les widgets de statistiques
+   */
   const getWidgetColor = (index: number): 'primary' | 'warning' | 'error' | 'success' => {
     const colors: Array<'primary' | 'warning' | 'error' | 'success'> = ['primary', 'warning', 'error', 'success'];
     return colors[index % colors.length];
   };
 
+  /**
+   * Formatage des nombres pour l'affichage
+   */
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('fr-FR').format(num);
   };
@@ -264,8 +355,6 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                   ),
                 }}
               />
-
-
 
               {/* Bouton Créer */}
               <Tooltip title="Créer une enquête" placement="top" arrow>
@@ -386,6 +475,13 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                   handleViewEnquete(enquete.id);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(33, 150, 243, 0.08)' 
+                                  }
+                                }}
                               >
                                 <Iconify icon="solar:eye-bold" width={16}/>
                               </IconButton>
@@ -398,6 +494,13 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                   handleEditEnquete(enquete.id);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(255, 152, 0, 0.08)' 
+                                  }
+                                }}
                               >
                                 <Iconify icon="solar:pen-new-square-linear" width={16} />
                               </IconButton>
@@ -407,9 +510,16 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
                                 color="error"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleDeleteEnquete(enquete.id);
+                                  handleDeleteClick(enquete);
                                 }}
                                 size="small"
+                                sx={{
+                                  width: 32,
+                                  height: 32,
+                                  '&:hover': { 
+                                    bgcolor: 'rgba(244, 67, 54, 0.08)' 
+                                  }
+                                }}
                               >
                                 <Iconify icon="solar:trash-bin-trash-bold" width={16}/>
                               </IconButton>
@@ -448,11 +558,39 @@ const MuiEnquetesDashboard: React.FC<MuiEnquetesDashboardProps> = ({ enquetes })
           </Box>
         </Box>
       </Card>
+
+      {/* Modal de confirmation de suppression */}
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Êtes-vous sûr de supprimer cette enquête ?"
+        message="Vous ne pourrez pas annuler cette action !"
+      />
+
+      {/* Alert de succès pour la suppression */}
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ mt: 8 }}
+      >
+        <Alert 
+          onClose={handleCloseSuccessAlert} 
+          severity="success" 
+          sx={{ 
+            width: '100%',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        >
+          Enquête supprimée avec succès !
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
 export default MuiEnquetesDashboard;
-
-// Types à exporter également
 export type { Enquete };
