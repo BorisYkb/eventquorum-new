@@ -13,6 +13,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { Iconify } from 'src/components/iconify';
+import { ParticipantBadgeDialog, useParticipantBadgeDialog } from 'src/app/participant/components/participant-badge-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -22,9 +23,14 @@ interface ParticipantHeaderActionsProps {
 
 export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsProps) {
     const router = useRouter();
+    
+    // États pour les dialogs existants
     const [confirmPresenceOpen, setConfirmPresenceOpen] = useState(false);
     const [followLiveOpen, setFollowLiveOpen] = useState(false);
     const [participationType, setParticipationType] = useState<'enligne' | 'enpresentiel'>('enpresentiel');
+    
+    // Hook pour le dialog badge
+    const badgeDialog = useParticipantBadgeDialog();
 
     // Actions selon le niveau de progression
     const renderActions = () => {
@@ -123,23 +129,30 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
             pathname.startsWith('/participant/enligne/payer/suivredirecte')
         ) {
             return (
-                <Button
-                    variant="outlined"
-                    // color="primary"
-                    startIcon={<Iconify icon="solar:card-bold" />}
-                    sx={{
-                        fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' },
-                        // color: '#000',
-                        border: '1.5px solid #000',             // 👈 texte noir
-                        '&:hover': {
-                            backgroundColor: '#000', // 👈 léger gris au hover
-                            color: '#fff',
-                            border: '1.5px solid #000', // 👈 bordure noire au hover
-                        },
-                    }}
-                >
-                    Afficher mon badge
-                </Button>
+                <>
+                    <Button
+                        variant="outlined"
+                        onClick={badgeDialog.handleOpen} // 👈 Action d'ouverture du dialog badge
+                        startIcon={<Iconify icon="solar:card-bold" />}
+                        sx={{
+                            fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' },
+                            border: '1.5px solid #000',
+                            '&:hover': {
+                                backgroundColor: '#000',
+                                color: '#fff',
+                                border: '1.5px solid #000',
+                            },
+                        }}
+                    >
+                        Afficher mon badge
+                    </Button>
+
+                    {/* Dialog badge participant */}
+                    <ParticipantBadgeDialog
+                        open={badgeDialog.open}
+                        onClose={badgeDialog.handleClose}
+                    />
+                </>
             );
         }
 

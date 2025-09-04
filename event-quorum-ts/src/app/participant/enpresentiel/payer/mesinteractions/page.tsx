@@ -1,7 +1,8 @@
-//src/app/participant/enpresentiel/mesinteractions/page.tsx
+//src/app/participant/enpresentiel/payer/mesinteractions/page.tsx
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -62,7 +63,7 @@ const SURVEY_STATS = [
  */
 const SURVEY_DATA = [
   {
-    id: 1,
+    id: 'survey-1',
     title: 'PANEL DE HAUT NIVEAU',
     type: 'Satisfaction',
     date: '10/09/2024 10H00',
@@ -73,7 +74,7 @@ const SURVEY_DATA = [
     score: null,
   },
   {
-    id: 2,
+    id: 'survey-2',
     title: 'PANEL DE HAUT NIVEAU',
     type: 'Evaluation',
     date: '10/09/2024 11H00',
@@ -84,7 +85,7 @@ const SURVEY_DATA = [
     score: 7,
   },
   {
-    id: 3,
+    id: 'survey-3',
     title: 'WORKSHOP',
     type: 'Evaluation',
     date: '12/05/2023 à 08H00',
@@ -95,7 +96,7 @@ const SURVEY_DATA = [
     score: 10,
   },
   {
-    id: 4,
+    id: 'survey-4',
     title: 'WORKSHOP',
     type: 'Evaluation',
     date: '12/05/2023 à 08H00',
@@ -128,14 +129,17 @@ const TABS_CONFIG = [
 /**
  * Composant principal de la page Mes Interactions
  * Affiche les statistiques des enquêtes et un tableau détaillé avec navigation par onglets
- * Inclut désormais la section complète des avis
+ * Inclut désormais la section complète des avis et la navigation vers les détails
  * 
  * @returns JSX.Element - Interface complète des interactions participant
  */
 export default function MesInteractionsPage() {
+  // Navigation
+  const router = useRouter();
+
   // Gestion de l'onglet actif
   const [currentTab, setCurrentTab] = useState('results');
-  
+
   // Gestion de la recherche
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -159,6 +163,23 @@ export default function MesInteractionsPage() {
    */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+  };
+
+  /**
+   * Navigation vers le détail d'une enquête
+   * @param surveyId - ID de l'enquête
+   */
+  const handleViewSurveyDetail = (surveyId: string) => {
+    router.push(`/participant/enpresentiel/payer/mesinteractions/${surveyId}`);
+  };
+
+  /**
+   * Téléchargement des résultats d'une enquête
+   * @param surveyId - ID de l'enquête
+   */
+  const handleDownloadSurvey = (surveyId: string) => {
+    console.log(`Téléchargement de l'enquête: ${surveyId}`);
+    // TODO: Implémenter le téléchargement
   };
 
   /**
@@ -210,13 +231,13 @@ export default function MesInteractionsPage() {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <Iconify 
-                icon="solar:magnifer-linear" 
-                sx={{ 
+              <Iconify
+                icon="solar:magnifer-linear"
+                sx={{
                   color: 'text.disabled',
                   width: { xs: 18, sm: 20 },
                   height: { xs: 18, sm: 20 },
-                }} 
+                }}
               />
             </InputAdornment>
           ),
@@ -241,14 +262,14 @@ export default function MesInteractionsPage() {
   const renderTableHeader = () => (
     <TableHead>
       <TableRow>
-        <TableCell sx={{ 
-          fontWeight: 600, 
+        <TableCell sx={{
+          fontWeight: 600,
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
         }}>
           Titre enquête
         </TableCell>
-        <TableCell sx={{ 
+        <TableCell sx={{
           fontWeight: 600,
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
@@ -256,7 +277,7 @@ export default function MesInteractionsPage() {
           Date
         </TableCell>
         {!isSmallMobile && (
-          <TableCell sx={{ 
+          <TableCell sx={{
             fontWeight: 600,
             fontSize: { xs: '0.75rem', sm: '0.875rem' },
             py: { xs: 1, sm: 1.5 },
@@ -264,21 +285,21 @@ export default function MesInteractionsPage() {
             Date d'expiration
           </TableCell>
         )}
-        <TableCell sx={{ 
+        <TableCell sx={{
           fontWeight: 600,
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
         }}>
           Statut de participation
         </TableCell>
-        <TableCell sx={{ 
+        <TableCell sx={{
           fontWeight: 600,
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
         }}>
           Note
         </TableCell>
-        <TableCell sx={{ 
+        <TableCell sx={{
           fontWeight: 600,
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
@@ -297,9 +318,9 @@ export default function MesInteractionsPage() {
     <TableRow key={survey.id} hover>
       <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
         <Box>
-          <Typography 
-            variant="subtitle2" 
-            sx={{ 
+          <Typography
+            variant="subtitle2"
+            sx={{
               fontWeight: 600,
               fontSize: { xs: '0.75rem', sm: '0.875rem' },
               mb: 0.5,
@@ -307,8 +328,8 @@ export default function MesInteractionsPage() {
           >
             {survey.title}
           </Typography>
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color="text.secondary"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
@@ -318,7 +339,7 @@ export default function MesInteractionsPage() {
       </TableCell>
 
       <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-        <Typography 
+        <Typography
           variant="body2"
           sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
         >
@@ -328,7 +349,7 @@ export default function MesInteractionsPage() {
 
       {!isSmallMobile && (
         <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-          <Typography 
+          <Typography
             variant="body2"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
@@ -351,9 +372,9 @@ export default function MesInteractionsPage() {
       </TableCell>
 
       <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-        <Typography 
-          variant="body2" 
-          sx={{ 
+        <Typography
+          variant="body2"
+          sx={{
             fontWeight: 600,
             fontSize: { xs: '0.75rem', sm: '0.875rem' },
           }}
@@ -364,23 +385,36 @@ export default function MesInteractionsPage() {
 
       <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
         <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+          {/* Bouton voir le détail - Navigation vers la page de détail */}
           <IconButton
             size={isMobile ? 'small' : 'medium'}
+            onClick={() => handleViewSurveyDetail(survey.id)}
+            title="Voir le détail de l'enquête"
             sx={{
-              color: 'text.secondary',
-              '&:hover': { color: 'primary.main' },
+              color: 'primary.main',
+              '&:hover': {
+                color: 'primary.main',
+                backgroundColor: 'primary.lighter'
+              },
             }}
           >
             <Iconify icon="solar:eye-bold-duotone" />
           </IconButton>
+
+          {/* Bouton télécharger */}
           <IconButton
             size={isMobile ? 'small' : 'medium'}
+            onClick={() => handleDownloadSurvey(survey.id)}
+            title="Télécharger les résultats"
             sx={{
               color: 'text.secondary',
-              '&:hover': { color: 'success.main' },
+              '&:hover': {
+                color: 'success.main',
+                backgroundColor: 'success.lighter'
+              },
             }}
           >
-            <Iconify icon="solar:download-bold-duotone" />
+            <Iconify icon="material-symbols:download-rounded" color="#4CAF50" width={24} />
           </IconButton>
         </Box>
       </TableCell>
@@ -439,9 +473,9 @@ export default function MesInteractionsPage() {
     <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
       {/* En-tête de la page */}
       <Box sx={{ mb: { xs: 3, sm: 4 } }}>
-        <Typography 
-          variant="h4" 
-          sx={{ 
+        <Typography
+          variant="h4"
+          sx={{
             fontWeight: 700,
             fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
             color: 'text.primary',
@@ -450,8 +484,8 @@ export default function MesInteractionsPage() {
         >
           Mes Interactions
         </Typography>
-        <Typography 
-          variant="body1" 
+        <Typography
+          variant="body1"
           color="text.secondary"
           sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
         >
@@ -474,6 +508,7 @@ export default function MesInteractionsPage() {
               minHeight: { xs: '40px', sm: '48px' },
               px: { xs: 2, sm: 3 },
             },
+            width: { xs: '100%', sm: 450 },
           }}
         >
           {TABS_CONFIG.map((tab) => (
@@ -482,13 +517,13 @@ export default function MesInteractionsPage() {
               value={tab.value}
               label={tab.label}
               icon={
-                <Iconify 
-                  icon={tab.icon} 
-                  sx={{ 
+                <Iconify
+                  icon={tab.icon}
+                  sx={{
                     mr: 1,
                     width: { xs: 18, sm: 20 },
                     height: { xs: 18, sm: 20 },
-                  }} 
+                  }}
                 />
               }
               iconPosition="start"

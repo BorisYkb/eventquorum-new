@@ -18,9 +18,9 @@ import { useBoolean } from 'minimal-shared/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { ActivitesSelection } from '../components/activites-selection';
+import { ActivitesSelection } from '../../enpresentiel/components/activites-selection';
 import { ActivitesSummary } from '../components/activites-summary';
-import { PaymentMethods } from '../components/payment-methods';
+import { PaymentMethods } from '../../enpresentiel/components/payment-methods';
 import { ACTIVITES_DISPONIBLES } from '../components/activites-data';
 
 import type { SelectedActivite } from '../components/activites-selection';

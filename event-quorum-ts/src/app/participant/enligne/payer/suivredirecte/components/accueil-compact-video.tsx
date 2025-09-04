@@ -35,7 +35,7 @@ export function AccueilCompactVideo() {
   };
 
   const handlePartagerAvis = () => {
-    router.push('/participant/enpresentiel/payer/avis');
+    router.push('/participant/enligne/payer/suivredirecte/mesinteractions');
   };
 
   const handleWatchVideo = () => {
@@ -46,7 +46,7 @@ export function AccueilCompactVideo() {
   const handleConfirmEnquete = () => {
     if (codeEnquete.trim()) {
       // Redirection avec le code d'enquête
-      router.push(`/participant/enpresentiel/payer/enquete?code=${codeEnquete}`);
+      router.push(`/participant/enligne/payer/suivredirecte/enquete?code=${codeEnquete}`);
       setEnqueteModalOpen(false);
       setCodeEnquete('');
     }

@@ -33,8 +33,9 @@ export function AuthSplitSection({
   methods,
   layoutQuery = 'md',
   title = 'Manage the job',
-  imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'More effectively with optimized workflows.',
+  imgUrl = `${CONFIG.assetsDir}/assets/illustrations/upscalemedia-transformed-removebg-preview.png`,
+  // imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
+  subtitle = 'Prêt à concevoir des choses extraodinaires.',
   ...other
 }: AuthSplitSectionProps) {
   return (
@@ -85,7 +86,7 @@ export function AuthSplitSection({
         sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover' }}
       />
 
-      {!!methods?.length && method && (
+      {/* {!!methods?.length && method && (
         <Box component="ul" sx={{ gap: 2, display: 'flex' }}>
           {methods.map((option) => {
             const selected = method === option.label.toLowerCase();
@@ -119,7 +120,7 @@ export function AuthSplitSection({
             );
           })}
         </Box>
-      )}
+      )} */}
     </Box>
   );
 }

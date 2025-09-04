@@ -58,31 +58,39 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                         value={currentTab}
                         onChange={handleTabChange}
                         variant="standard"
-                        sx={{
-                            borderRadius: 1,
-                            bgcolor: 'background.neutral',
-                            p: 0.5,
-                            '& .MuiTab-root': {
-                                borderRadius: 1,
-                                fontWeight: 600,
-                                textTransform: 'none',
-                                fontSize: '0.875rem',
-                                minHeight: 44,
-                                '&.Mui-selected': {
-                                    bgcolor: 'background.paper',
-                                    boxShadow: (theme) => theme.customShadows.z1,
-                                },
-                            },
-                            '& .MuiTabs-indicator': {
-                                display: 'none',
-                            },
-                        }}
+                    // sx={{
+                    //     borderRadius: 1,
+                    //     bgcolor: 'background.neutral',
+                    //     p: 0.5,
+                    //     '& .MuiTab-root': {
+                    //         borderRadius: 1,
+                    //         fontWeight: 600,
+                    //         textTransform: 'none',
+                    //         fontSize: '0.875rem',
+                    //         minHeight: 44,
+                    //         '&.Mui-selected': {
+                    //             bgcolor: 'background.paper',
+                    //             boxShadow: (theme) => theme.customShadows.z1,
+                    //         },
+                    //     },
+                    //     '& .MuiTabs-indicator': {
+                    //         display: 'none',
+                    //     },
+                    // }}
                     >
                         <Tab
                             value="payees"
                             label={
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    Activités payées
+                                    <Box
+                                        sx={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: '50%',
+                                            bgcolor: 'success.main',
+                                        }}
+                                    />
+                                    Activités payées ({ACTIVITES_PAYEES.length})
                                 </Box>
                             }
                         />
