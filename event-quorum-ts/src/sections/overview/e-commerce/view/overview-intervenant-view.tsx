@@ -254,7 +254,7 @@ export function OverviewIntervenantView() {
                         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
                             <Grid size={{ xs: 12, md: 6 }}>
                                 <Typography variant="body2" color="text.secondary">
-                                    © 2024 QUORUM ÉVÉNEMENTIEL | Powered by PX_LABS SARL
+                                    © 2024 QUORUM ÉVÉNEMENTIEL | Powered by FX_LABS SARL
                                 </Typography>
                             </Grid>
 
