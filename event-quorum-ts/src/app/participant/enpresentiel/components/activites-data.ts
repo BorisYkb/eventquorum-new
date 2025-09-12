@@ -1,4 +1,4 @@
-// src/app/participant/enligne/components/activites-data.ts
+// src/app/participant/enpresentiel/components/activites-data.ts
 
 import type { Activite } from './activites-selection';
 
@@ -29,9 +29,9 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         status: 'Non démarré',
         statusColor: 'default',
         priceOptions: [
-            { id: 'standard', label: 'Standard', price: 0, currency: 'FCFA' },
-            { id: 'vip', label: 'VIP', price: 0, currency: 'FCFA' },
-            { id: 'vvip', label: 'VVIP', price: 0, currency: 'FCFA' },
+            { id: 'standard', label: 'Standard', price: 5000, currency: 'FCFA' },
+            { id: 'vip', label: 'VIP', price: 10000, currency: 'FCFA' },
+            { id: 'vvip', label: 'VVIP', price: 15000, currency: 'FCFA' },
         ]
     },
     {
@@ -42,9 +42,9 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         status: 'En cours',
         statusColor: 'warning',
         priceOptions: [
-            { id: 'standard', label: 'Standard', price: 0, currency: 'FCFA' },
-            { id: 'vip', label: 'VIP', price: 0, currency: 'FCFA' },
-            { id: 'vvip', label: 'VVIP', price: 0, currency: 'FCFA' },
+            { id: 'standard', label: 'Standard', price: 10000, currency: 'FCFA' },
+            { id: 'vip', label: 'VIP', price: 20000, currency: 'FCFA' },
+            { id: 'vvip', label: 'VVIP', price: 30000, currency: 'FCFA' },
         ]
     },
     {
@@ -81,9 +81,9 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         status: 'Non démarré',
         statusColor: 'default',
         priceOptions: [
-            { id: 'standard', label: 'Standard', price: 0, currency: 'FCFA' },
-            { id: 'vip', label: 'VIP', price: 0, currency: 'FCFA' },
-            { id: 'vvip', label: 'VVIP', price: 0, currency: 'FCFA' },
+            { id: 'standard', label: 'Standard', price: 15000, currency: 'FCFA' },
+            { id: 'vip', label: 'VIP', price: 25000, currency: 'FCFA' },
+            { id: 'vvip', label: 'VVIP', price: 4000, currency: 'FCFA' },
         ]
     },
 ];

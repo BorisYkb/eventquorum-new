@@ -5,19 +5,14 @@ import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import DialogContent from '@mui/material/DialogContent';
-import { useTheme, useMediaQuery } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { useTheme, useMediaQuery, Stack, Card } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-/**
- * Données du participant (normalement récupérées depuis le contexte/API)
- */
 interface ParticipantData {
   nom: string;
   prenom: string;
@@ -37,9 +32,6 @@ interface ParticipantBadgeDialogProps {
   participantData?: ParticipantData;
 }
 
-/**
- * Données fictives du participant
- */
 const DEFAULT_PARTICIPANT_DATA: ParticipantData = {
   nom: 'Bouadou',
   prenom: 'Kouacou Evarist',
@@ -48,294 +40,196 @@ const DEFAULT_PARTICIPANT_DATA: ParticipantData = {
   codeParticipant: 'UM8765',
   evenement: {
     nom: 'SARA 2023',
-    dates: 'Du 29 sept. au 08 oct.',
-    lieu: 'Parc des Expositions d\'Abidjan'
-  }
+    dates: 'Du 29 sept. au 08 oct. 2023',
+    lieu: 'Parc des Expositions d\'Abidjan',
+  },
 };
 
 // ----------------------------------------------------------------------
 
-/**
- * Dialog d'affichage du badge participant
- */
-export function ParticipantBadgeDialog({ 
-  open, 
-  onClose, 
-  participantData = DEFAULT_PARTICIPANT_DATA 
+export function ParticipantBadgeDialog({
+  open,
+  onClose,
+  participantData = DEFAULT_PARTICIPANT_DATA,
 }: ParticipantBadgeDialogProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-
-  /**
-   * Calcule les tailles responsives
-   */
-  const getResponsiveSizes = () => {
-    if (isMobile) {
-      return {
-        badgeWidth: 280,
-        badgeHeight: 180,
-        eventTitle: { fontSize: '0.75rem', fontWeight: 700 },
-        eventDates: { fontSize: '0.625rem', fontWeight: 500 },
-        eventSlogan: { fontSize: '0.5rem', fontWeight: 400 },
-        codeLabel: { fontSize: '0.6rem', fontWeight: 600 },
-        codeValue: { fontSize: '0.75rem', fontWeight: 700 },
-        description: { fontSize: '0.5rem', fontWeight: 400 },
-        participantName: { fontSize: '0.7rem', fontWeight: 600 },
-        participantInfo: { fontSize: '0.55rem', fontWeight: 400 },
-        qrSize: 40,
-        iconSize: 16
-      };
-    }
-    
-    if (isTablet) {
-      return {
-        badgeWidth: 350,
-        badgeHeight: 220,
-        eventTitle: { fontSize: '0.875rem', fontWeight: 700 },
-        eventDates: { fontSize: '0.75rem', fontWeight: 500 },
-        eventSlogan: { fontSize: '0.625rem', fontWeight: 400 },
-        codeLabel: { fontSize: '0.7rem', fontWeight: 600 },
-        codeValue: { fontSize: '0.875rem', fontWeight: 700 },
-        description: { fontSize: '0.625rem', fontWeight: 400 },
-        participantName: { fontSize: '0.8rem', fontWeight: 600 },
-        participantInfo: { fontSize: '0.65rem', fontWeight: 400 },
-        qrSize: 50,
-        iconSize: 18
-      };
-    }
-
-    // Desktop
-    return {
-      badgeWidth: 420,
-      badgeHeight: 260,
-      eventTitle: { fontSize: '1rem', fontWeight: 700 },
-      eventDates: { fontSize: '0.875rem', fontWeight: 500 },
-      eventSlogan: { fontSize: '0.75rem', fontWeight: 400 },
-      codeLabel: { fontSize: '0.8rem', fontWeight: 600 },
-      codeValue: { fontSize: '1rem', fontWeight: 700 },
-      description: { fontSize: '0.7rem', fontWeight: 400 },
-      participantName: { fontSize: '0.9rem', fontWeight: 600 },
-      participantInfo: { fontSize: '0.75rem', fontWeight: 400 },
-      qrSize: 60,
-      iconSize: 20
-    };
-  };
-
-  const sizes = getResponsiveSizes();
-
-  /**
-   * Impression du badge
-   */
-  const handlePrintBadge = () => {
-    window.print();
-  };
-
-  /**
-   * Téléchargement du badge (simulation)
-   */
-  const handleDownloadBadge = () => {
-    console.log('Téléchargement du badge...');
-    // TODO: Implémenter le téléchargement en PDF
-  };
-
-  /**
-   * Génération du QR Code (simulation avec des carrés)
-   */
-  const renderQRCode = () => (
-    <Box
-      sx={{
-        width: sizes.qrSize,
-        height: sizes.qrSize,
-        bgcolor: 'black',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(8, 1fr)',
-        gridTemplateRows: 'repeat(8, 1fr)',
-        gap: '1px',
-        p: 0.5,
-        borderRadius: 0.5
-      }}
-    >
-      {/* Simulation d'un QR code avec un pattern */}
-      {Array.from({ length: 64 }, (_, index) => (
-        <Box
-          key={index}
-          sx={{
-            bgcolor: Math.random() > 0.6 ? 'black' : 'white',
-            borderRadius: 0.2
-          }}
-        />
-      ))}
-    </Box>
-  );
-
-  /**
-   * Rendu du badge principal - Version simplifiée
-   */
-  const renderBadge = () => (
-    <Box
-      sx={{
-        width: sizes.badgeWidth,
-        height: sizes.badgeHeight,
-        bgcolor: 'white',
-        border: '2px solid black',
-        borderRadius: 2,
-        p: 2,
-        position: 'relative',
-        mx: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
-      }}
-    >
-      {/* En-tête simple */}
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography 
-          sx={{ 
-            ...sizes.eventTitle,
-            textTransform: 'uppercase',
-            letterSpacing: 1,
-            mb: 1
-          }}
-        >
-          {participantData.evenement.nom}
-        </Typography>
-        
-        <Typography sx={{ ...sizes.eventDates, mb: 2 }}>
-          {participantData.evenement.dates}
-        </Typography>
-        
-        <Typography 
-          sx={{ 
-            ...sizes.eventSlogan,
-            textTransform: 'uppercase',
-            letterSpacing: 0.5
-          }}
-        >
-          VENEZ VIVRE LE {participantData.evenement.nom}
-        </Typography>
-      </Box>
-
-      {/* Section centrale - Informations essentielles */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 2 }}>
-        {/* Informations participant */}
-        <Box>
-          <Typography sx={{ ...sizes.participantName, mb: 0.5 }}>
-            {participantData.prenom} {participantData.nom}
-          </Typography>
-          <Typography sx={sizes.participantInfo}>
-            {participantData.email}
-          </Typography>
-          <Typography sx={sizes.participantInfo}>
-            {participantData.telephone}
-          </Typography>
-        </Box>
-
-        {/* QR Code simple */}
-        {renderQRCode()}
-      </Box>
-
-      {/* Code participant en bas */}
-      <Box 
-        sx={{ 
-          bgcolor: 'black',
-          color: 'white',
-          p: 1,
-          borderRadius: 1,
-          textAlign: 'center'
-        }}
-      >
-        <Typography sx={sizes.codeLabel}>
-          CODE PARTICIPANT: {participantData.codeParticipant}
-        </Typography>
-      </Box>
-    </Box>
-  );
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
+      fullScreen={isMobile}
       maxWidth="sm"
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 2,
-          p: 0
-        }
+          borderRadius: isMobile ? 0 : 2,
+          p: 0,
+        },
       }}
     >
-      <DialogContent sx={{ p: 3 }}>
-        {/* En-tête du dialog */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 600,
-              fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }
+      <Box sx={{ p: isMobile ? 2 : 4, backgroundColor: 'grey.100', position: 'relative' }}>
+        {/* Bouton fermer */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            right: 10,
+            top: 10,
+            color: 'grey.500',
+          }}
+        >
+          <Iconify icon="material-symbols:close" />
+        </IconButton>
+
+        {/* Badge en mode carte si mobile */}
+        <Card
+          sx={{
+            p: isMobile ? 2 : 4,
+            mt: 3,
+            // borderRadius: 2,
+            // boxShadow: isMobile ? 3 : 6,
+            // backgroundColor: 'background.paper',
+          }}
+        >
+          {/* Header */}
+          <Stack
+            direction={isMobile ? 'column' : 'row'}
+            justifyContent="space-between"
+            alignItems={isMobile ? 'center' : 'flex-start'}
+            sx={{ mb: 3, textAlign: isMobile ? 'center' : 'left' }}
+          >
+            <Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: '1rem', md: '1.125rem' },
+                }}
+              >
+                {participantData.evenement.nom}
+              </Typography>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent={isMobile ? 'center' : 'flex-start'}
+                alignItems="center"
+                sx={{ mt: 0.5 }}
+              >
+                <Iconify icon="solar:map-point-bold" width={16} color="text.secondary" />
+                <Typography variant="body2" sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                  {participantData.evenement.dates}
+                </Typography>
+              </Stack>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  mt: 0.5,
+                }}
+              >
+                VENEZ VIVRE LE {participantData.evenement.nom}
+              </Typography>
+            </Box>
+
+            {/* Infos participant */}
+            <Box sx={{ mt: isMobile ? 2 : 0 }}>
+              <Typography variant="caption" sx={{ fontSize: '1.5rem', fontWeight: 700, display: 'block' }}>
+                Infos participant
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
+                Nom_Prénom
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
+              >
+                {participantData.prenom} {participantData.nom}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
+                Email
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
+              >
+                {participantData.email}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
+                Téléphone
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
+              >
+                {participantData.telephone}
+              </Typography>
+            </Box>
+          </Stack>
+
+          {/* QR Code */}
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: isMobile ? 120 : 150,
+                height: isMobile ? 120 : 150,
+                mx: 'auto',
+                mb: 2,
+                backgroundColor: 'white',
+                border: '2px solid',
+                borderColor: 'text.primary',
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Box
+                component="img"
+                src="/assets/images/QR-code.png"
+                alt="QR Code"
+                sx={{
+                  width: isMobile ? 90 : 120,
+                  height: isMobile ? 90 : 120,
+                  mx: 'auto',
+                }}
+              />
+            </Box>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: '0.9rem', md: '1.125rem' },
+                mb: 0.5,
+              }}
+            >
+              CODE PARTICIPANT : {participantData.codeParticipant}
+            </Typography>
+          </Box>
+
+          {/* Message */}
+          <Typography
+            variant="body2"
+            sx={{
+              textAlign: 'center',
+              fontSize: { xs: '0.7rem', md: '0.85rem' },
+              lineHeight: 1.4,
+              color: 'text.secondary',
             }}
           >
-            Mon Badge Participant
+            Ce badge vous donne accès à vos activités. Veuillez le présenter lors de votre admission.
           </Typography>
-          
-          <IconButton onClick={onClose} size="small">
-            <Iconify icon="solar:close-bold" />
-          </IconButton>
-        </Box>
-
-        {/* Badge */}
-        <Box sx={{ mb: 3 }}>
-          {renderBadge()}
-        </Box>
-
-        {/* Boutons d'action */}
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="solar:printer-bold-duotone" />}
-            onClick={handlePrintBadge}
-            sx={{
-              fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              px: 3
-            }}
-          >
-            Imprimer
-          </Button>
-          
-          <Button
-            variant="outlined"
-            startIcon={<Iconify icon="solar:download-bold-duotone" />}
-            onClick={handleDownloadBadge}
-            sx={{
-              fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              px: 3
-            }}
-          >
-            Télécharger
-          </Button>
-          
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={onClose}
-            sx={{
-              fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              px: 3
-            }}
-          >
-            Fermer
-          </Button>
-        </Box>
-      </DialogContent>
+        </Card>
+      </Box>
     </Dialog>
   );
 }
 
 // ----------------------------------------------------------------------
 
-/**
- * Hook pour gérer l'ouverture/fermeture du dialog badge
- */
 export function useParticipantBadgeDialog() {
   const [open, setOpen] = useState(false);
 
@@ -349,5 +243,4 @@ export function useParticipantBadgeDialog() {
   };
 }
 
-// Export par défaut
 export default ParticipantBadgeDialog;

@@ -125,7 +125,7 @@ export default function EnquetePage() {
       
       // Afficher un message de succès et rediriger
       alert('Merci pour votre participation ! Vos réponses ont été enregistrées.');
-      router.push('/participant/enpresentiel/payer');
+      router.push('/participant/enligne/payer/suivredirecte');
     } catch (error) {
       console.error('Erreur lors de l\'envoi:', error);
       alert('Erreur lors de l\'envoi. Veuillez réessayer.');

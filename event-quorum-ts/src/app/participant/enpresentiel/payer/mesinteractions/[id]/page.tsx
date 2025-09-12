@@ -6,7 +6,9 @@ import { useParams, useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Divider from '@mui/material/Divider';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,6 +21,8 @@ import { useTheme, useMediaQuery } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { Scrollbar } from 'src/components/scrollbar';
+import { SurveyStatusAnalytic } from 'src/app/participant/components/survey-status-analytic';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +72,8 @@ const getSurveyData = (id: string) => ({
     title: 'Satisfaction',
     description: 'Enquête de satisfaction sur l\'activité',
     totalScore: '8/10',
-    status: 'Terminé',
+    status: 'En cours',
+    statusColor: 'success.main',
     questions: SURVEY_QUESTIONS,
 });
 
@@ -80,13 +85,13 @@ const getSurveyData = (id: string) => ({
 export default function SurveyDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const theme = useTheme();
 
     // Récupération de l'ID depuis l'URL
     const surveyId = params.id as string;
     const surveyData = getSurveyData(surveyId);
 
     // Hooks pour la responsivité
-    const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -160,59 +165,65 @@ export default function SurveyDetailPage() {
                 </IconButton>
             </Box>
 
-            {/* Navigation en chips */}
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
-                <Chip
-                    label="Titre de enquête"
-                    color="error"
-                    sx={{
-                        ...fontSizes.chip,
-                        fontWeight: 500,
-                        bgcolor: 'error.main',
-                        color: 'white'
-                    }}
-                />
-                <Chip
-                    label="Description"
-                    variant="outlined"
-                    sx={{
-                        ...fontSizes.chip,
-                        fontWeight: 500,
-                        borderColor: 'text.secondary',
-                        color: 'text.secondary'
-                    }}
-                />
-                <Chip
-                    label="Note obtenue"
-                    variant="outlined"
-                    sx={{
-                        ...fontSizes.chip,
-                        fontWeight: 500,
-                        borderColor: 'text.secondary',
-                        color: 'text.secondary'
-                    }}
-                />
-                <Chip
-                    label="Statut de enquête"
-                    variant="outlined"
-                    sx={{
-                        ...fontSizes.chip,
-                        fontWeight: 500,
-                        borderColor: 'text.secondary',
-                        color: 'text.secondary'
-                    }}
-                />
-                <Chip
-                    label="Placer"
-                    color="warning"
-                    sx={{
-                        ...fontSizes.chip,
-                        fontWeight: 500,
-                        bgcolor: 'warning.main',
-                        color: 'white'
-                    }}
-                />
-            </Box>
+            {/* Navigation en chips - responsive */}
+            <Stack
+                direction="column"
+                spacing={2}
+                sx={{ mb: 3 }}
+            >
+                {/* Chips - passent en haut sur mobile */}
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Chip
+                        label="Titre de enquête:"
+                        color="error"
+                        sx={{
+                            ...fontSizes.chip,
+                            fontWeight: 500,
+                            bgcolor: 'error.main',
+                            color: 'white'
+                        }}
+                    />
+                    <Chip
+                        label="Satisfaction du service"
+                        variant="outlined"
+                        sx={{
+                            ...fontSizes.chip,
+                            fontWeight: 500,
+                            borderColor: 'text.secondary',
+                            color: 'text.secondary'
+                        }}
+                    />
+                </Box>
+
+                {/* Statistiques */}
+                <Card sx={{
+                    maxWidth: '800px', // Maximum 500px de largeur
+                    minWidth: { xs: '100%', sm: '300px' },
+                    boxShadow: 1
+                }}>
+                    <Scrollbar sx={{ minHeight: { xs: 80, sm: 100 } }}>
+                        <Stack
+                            divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                            sx={{ py: 2, flexDirection: 'row' }}
+                        >
+                            <SurveyStatusAnalytic
+                                title="Note obtenue"
+                                value={surveyData.totalScore}
+                                icon="solar:medal-star-bold-duotone"
+                                color={theme.vars.palette.warning.main}
+                                subtitle="Score final"
+                            />
+                            <SurveyStatusAnalytic
+                                title="Statut de enquête"
+                                value={surveyData.status}
+                                icon="solar:check-circle-bold-duotone"
+                                color={surveyData.statusColor}
+                                subtitle="État actuel"
+                            />
+                        </Stack>
+                    </Scrollbar>
+                </Card>
+            </Stack>
 
             {/* Titre de l'enquête */}
             <Typography variant="h6" sx={{ ...fontSizes.h6, mb: 2 }}>

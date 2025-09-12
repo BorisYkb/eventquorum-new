@@ -12,7 +12,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 
 import { AccueilCompactVideo } from './components/accueil-compact-video';
-import AccueilProgrammeSection2 from './components/accueil-programme-section-3';
+import AccueilProgrammeSection3 from './components/accueil-programme-section-3';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import { Footer } from 'src/app/participant/components/footer';
 
@@ -36,7 +36,7 @@ export default function ParticipantEnresentielPage() {
                 <AccueilCompactVideo />
 
                 {/* Section 3 - Programme */}
-                <AccueilProgrammeSection2 />
+                <AccueilProgrammeSection3 />
 
                 {/* Section 4 - Sponsors/Footer */}
                 <Grid size={12}>

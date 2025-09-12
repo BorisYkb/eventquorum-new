@@ -35,7 +35,7 @@ export function AccueilCompactVideo() {
   };
 
   const handlePartagerAvis = () => {
-    router.push('/participant/enpresentiel/payer/avis');
+    router.push('/participant/enpresentiel/payer/mesinteractions');
   };
 
   const handleWatchVideo = () => {

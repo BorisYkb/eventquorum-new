@@ -1,5 +1,7 @@
-// src/app/participant/components/accueil-programme-section-2.tsx
+// src/app/participant/enligne/payer/suivredirecte/components/accueil-programme-section-3.tsx
 'use client';
+
+import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -102,7 +104,8 @@ const programmeData = [
 /**
  * Section programme pour les pages d'accueil - Version avec tailles de police responsives
  */
-export default function AccueilProgrammeSection2() {
+export default function AccueilProgrammeSection3() {
+    const router = useRouter();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -191,8 +194,7 @@ export default function AccueilProgrammeSection2() {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                // startIcon={<Iconify icon="solar:heart-bold" />}
-                                // onClick={handlePartagerAvis}
+                                onClick={() => router.push('/participant/enligne/payer/suivredirecte/question')}
                                 sx={{
                                     fontSize: { xs: '0.75rem', md: '0.875rem' },
                                     px: { xs: 1.5, md: 2 },
@@ -288,56 +290,91 @@ export default function AccueilProgrammeSection2() {
                                             {item.description}
                                         </Typography>
 
-                                        {(item.hasDocument || item.hasVideo) && (
-                                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                                                {item.hasDocument && (
-                                                    <Button
-                                                        size="small"
-                                                        startIcon={
-                                                            <Box
-                                                                component="img"
-                                                                src={`${CONFIG.assetsDir}/assets/icons/files/ic-document.svg`}
-                                                                sx={{
-                                                                    width: 18,
-                                                                    height: 18,
-                                                                }}
-                                                            />
-                                                        }
-                                                        sx={{
-                                                            ...fontSizes.button,
-                                                            borderRadius: 1,
-                                                            border: 1.5,
-                                                            borderColor: 'divider'
-                                                        }}
-                                                    >
-                                                        Document
-                                                    </Button>
-                                                )}
-                                                {item.hasVideo && (
-                                                    <Button
-                                                        size="small"
-                                                        startIcon={
-                                                            <Box
-                                                                component="img"
-                                                                src={`${CONFIG.assetsDir}/assets/icons/files/ic-video.svg`}
-                                                                sx={{
-                                                                    width: 18,
-                                                                    height: 18,
-                                                                }}
-                                                            />
-                                                        }
-                                                        sx={{
-                                                            ...fontSizes.button,
-                                                            borderRadius: 1,
-                                                            border: 1.5,
-                                                            borderColor: 'divider'
-                                                        }}
-                                                    >
-                                                        Voir la vidéo
-                                                    </Button>
-                                                )}
-                                            </Stack>
-                                        )}
+                                        <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap' }}>
+                                            {item.hasDocument && (
+                                                <Button
+                                                    size="small"
+                                                    startIcon={
+                                                        <Box
+                                                            component="img"
+                                                            src={`${CONFIG.assetsDir}/assets/icons/files/ic-document.svg`}
+                                                            sx={{
+                                                                width: 18,
+                                                                height: 18,
+                                                            }}
+                                                        />
+                                                    }
+                                                    sx={{
+                                                        ...fontSizes.button,
+                                                        borderRadius: 1,
+                                                        border: 1.5,
+                                                        borderColor: 'divider',
+                                                        mb: { xs: 1, sm: 0 }
+                                                    }}
+                                                >
+                                                    Document
+                                                </Button>
+                                            )}
+                                            {item.hasVideo && (
+                                                <Button
+                                                    size="small"
+                                                    startIcon={
+                                                        <Box
+                                                            component="img"
+                                                            src={`${CONFIG.assetsDir}/assets/icons/files/ic-video.svg`}
+                                                            sx={{
+                                                                width: 18,
+                                                                height: 18,
+                                                            }}
+                                                        />
+                                                    }
+                                                    sx={{
+                                                        ...fontSizes.button,
+                                                        borderRadius: 1,
+                                                        border: 1.5,
+                                                        borderColor: 'divider',
+                                                        mb: { xs: 1, sm: 0 }
+                                                    }}
+                                                >
+                                                    Voir la vidéo
+                                                </Button>
+                                            )}
+
+                                            {/* Boutons selon le statut de l'activité */}
+                                            {item.status === 'Terminé' && (
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
+                                                    color="info"
+                                                    startIcon={<Iconify icon="solar:play-circle-bold" />}
+                                                    onClick={() => console.log(`Voir replay: ${item.id}`)}
+                                                    sx={{
+                                                        ...fontSizes.button,
+                                                        borderRadius: 1,
+                                                        mb: { xs: 1, sm: 0 }
+                                                    }}
+                                                >
+                                                    Voir replay
+                                                </Button>
+                                            )}
+
+                                            {item.status === 'En cours' && (
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
+                                                    color="success"
+                                                    startIcon={<Iconify icon="solar:videocamera-record-bold" />}
+                                                    onClick={() => console.log(`Passer en direct: ${item.id}`)}
+                                                    sx={{
+                                                        ...fontSizes.button,
+                                                        borderRadius: 1,
+                                                        mb: { xs: 1, sm: 0 }
+                                                    }}
+                                                >
+                                                    Passer en direct
+                                                </Button>
+                                            )}
+                                        </Stack>
                                     </Stack>
                                 </AccordionDetails>
                             </Accordion>

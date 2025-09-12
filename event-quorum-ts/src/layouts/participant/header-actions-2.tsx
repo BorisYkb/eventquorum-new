@@ -71,7 +71,7 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
                             <Button
                                 variant="contained"
                                 onClick={() => {
-                                    router.push(`/participant/${participationType}/activites`);
+                                    router.push(`/participant/${participationType}`);
                                     setConfirmPresenceOpen(false);
                                 }}
                             >

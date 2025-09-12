@@ -26,7 +26,7 @@ export default function ParticipantPage() {
         <Grid size={12}>
           <AppWelcome
             title="Bienvenu(e) cher(e) participant(e)"
-            description="Le SARA 2023 se tiendra dans le tout nouveau Parc des Expositions d'Abidjan. En seulement cinq éditions, le SARA s'est imposé comme le salon de référence en matière d'agriculture, de ressources animales, halieutiques et forestières en Afrique subsaharienne. Trois ans après sa dernière édition, le Salon International de l'Agriculture et des Ressources Animales d'Abidjan a été relancé par le gouvernement ivoirien afin de valoriser, promouvoir et développer toutes les richesses du secteur agricole, de l'élevage et de la pêche de la Côte d'Ivoire."
+            description="Le SARA 2023 se tiendra dans le tout nouveau Parc des Expositions d'Abidjan. En seulement cinq éditions, le SARA s'est imposé comme le salon de référence en matière d'agriculture, de ressources animales, halieutiques et forestières en Afrique subsaharienne."
             img={<SeoIllustration hideBackground />}
           />
         </Grid>
