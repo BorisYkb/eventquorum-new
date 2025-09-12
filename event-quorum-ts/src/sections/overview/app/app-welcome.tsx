@@ -58,7 +58,7 @@ export function AppWelcome({ title, description, action, img, sx, ...other }: Pr
           {title}
         </Typography>
 
-        <Typography variant="body2" sx={{ opacity: 0.64, maxWidth: 360, ...(action && { mb: 3 }) }}>
+        <Typography variant="body2" sx={{ opacity: 0.64, maxWidth: 500, ...(action && { mb: 3 }) }}>
           {description}
         </Typography>
 

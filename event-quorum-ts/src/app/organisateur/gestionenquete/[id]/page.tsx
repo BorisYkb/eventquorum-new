@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Box, Card, Typography } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 
 // Import des composants modulaires
 import EnqueteHeader from '../components/EnqueteHeader';
@@ -119,6 +120,7 @@ const EnqueteDetailPage: React.FC = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedQuestionForView, setSelectedQuestionForView] = useState<Question | null>(null);
   const [questionToEdit, setQuestionToEdit] = useState<Question | null>(null);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   // État pour la question en cours de modification - Utilise le nouveau type CurrentQuestion
   const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>({
@@ -273,18 +275,24 @@ const EnqueteDetailPage: React.FC = () => {
    * Suppression d'une question
    */
   const handleDeleteQuestion = (questionId: number) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette question ?')) {
-      if (enqueteData) {
-        const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
-        setEnqueteData({
-          ...enqueteData,
-          questions: updatedQuestions
-        });
-        console.log('Question supprimée:', questionId);
-        // TODO: Appel API pour supprimer la question
-        alert('Question supprimée avec succès !');
-      }
+    // Suppression directe sans confirmation du navigateur
+    if (enqueteData) {
+      const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
+      setEnqueteData({
+        ...enqueteData,
+        questions: updatedQuestions
+      });
+      console.log('Question supprimée:', questionId);
+      // TODO: Appel API pour supprimer la question
+
+      // Afficher l'alerte de succès au lieu de alert()
+      setShowSuccessAlert(true);
     }
+  };
+
+  // Fonction pour fermer l'alerte de succès
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
   };
 
   // ===========================================
@@ -511,7 +519,30 @@ const EnqueteDetailPage: React.FC = () => {
         onReponseChange={handleReponseChange}
         onSave={handleSaveEditedQuestion}
       />
+
+      {/* Alert de succès pour la suppression */}
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ mt: 8 }}
+      >
+        <Alert
+          onClose={handleCloseSuccessAlert}
+          severity="success"
+          sx={{
+            width: '100%',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+        >
+          Question supprimée avec succès !
+        </Alert>
+      </Snackbar>
     </Box>
+
+    
   );
 };
 

@@ -77,6 +77,10 @@ const sampleAuthorizations: Authorization[] = [
 export default function Page() {
   const [authorizations, setAuthorizations] = useState<Authorization[]>([]);
   const [loading, setLoading] = useState(true);
+  const handleAuthorizationDelete = (deletedId: number) => {
+    // Optionnel : mettre à jour les données parent
+    setAuthorizations(prev => prev.filter(auth => auth.id !== deletedId));
+  };
 
   useEffect(() => {
     // Simuler un chargement de données
@@ -102,5 +106,10 @@ export default function Page() {
     loadAuthorizations();
   }, []);
 
-  return <MuiAuthorizationDashboard authorizations={authorizations} />;
+  return (
+    <MuiAuthorizationDashboard
+      authorizations={authorizations}
+      onAuthorizationDelete={handleAuthorizationDelete}
+    />
+  );
 }

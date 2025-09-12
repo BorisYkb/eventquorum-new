@@ -1,54 +1,41 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/participant-management-home.tsx
+
 'use client';
 
 import { useState } from 'react';
+import { useTabs } from 'minimal-shared/hooks';
+
 import {
   Box,
   Card,
   Container,
   Stack,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  Paper,
-  Button,
+  Tab,
   Snackbar,
   Alert,
 } from '@mui/material';
 
-// Import des composants existants
-import ExportButtons from './components/ExportButtons';
-import TableToolbar from './components/TableToolbar';
-import ParticipantRow from './components/ParticipantRow';
-// import NavigationButtons from './components/NavigationButtons';
-import PaginationControls from './components/PaginationControls';
+import { CustomTabs } from 'src/components/custom-tabs';
 
+// Import des types
+import { Participant } from './components/types';
+import InvitesTable from './components/InvitesTable';
+// Import des composants
+import ExportButtons from './components/ExportButtons';
+import ParticipantsTable from './components/ParticipantsTable';
 // Import des nouveaux composants modals
 import ParticipantDetailModal from '../components/ParticipantDetailModal';
 import ParticipantDeleteModal from '../components/ParticipantDeleteModal';
 
-// Import des types
-import { Participant } from './components/types';
-
 /**
  * Composant principal de gestion des participants
- * Permet de visualiser, rechercher, filtrer, et gérer les participants d'un événement
- * Intègre les fonctionnalités de détail et de suppression via des modals
+ * Intègre la navigation par onglets entre Invités et Participants
  */
 const ParticipantManagementPage = () => {
-  // États pour la sélection et la pagination
-  const [selectedParticipants, setSelectedParticipants] = useState<number[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activityFilter, setActivityFilter] = useState('');
-  const [signatureEnabled, setSignatureEnabled] = useState(true);
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+  // Gestion des onglets
+  const tabs = useTabs('invites');
+
   // États pour les modals
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -66,7 +53,7 @@ const ParticipantManagementPage = () => {
     severity: 'success',
   });
 
-  // Données d'exemple avec activités - Dans un vrai projet, ces données viendraient d'une API
+  // Données d'exemple - Dans un vrai projet, ces données viendraient d'une API
   const [participants, setParticipants] = useState<Participant[]>([
     {
       id: 1,
@@ -141,89 +128,7 @@ const ParticipantManagementPage = () => {
   ]);
 
   /**
-   * Filtrage des participants basé sur la recherche et les filtres
-   */
-  const filteredParticipants = participants.filter(participant => {
-    const matchesSearch = 
-      participant.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      participant.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      participant.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesActivity = !activityFilter || participant.activite === activityFilter;
-    
-    return matchesSearch && matchesActivity;
-  });
-
-  // Calcul de la pagination
-  const totalPages = Math.ceil(filteredParticipants.length / rowsPerPage);
-  const paginatedParticipants = filteredParticipants.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
-
-  /**
-   * Gestion de la sélection de tous les participants
-   */
-  const handleSelectAll = () => {
-    if (selectedParticipants.length === paginatedParticipants.length) {
-      setSelectedParticipants([]);
-    } else {
-      setSelectedParticipants(paginatedParticipants.map(p => p.id));
-    }
-  };
-
-  /**
-   * Gestion de la sélection d'un participant individuel
-   */
-  const handleSelectParticipant = (id: number) => {
-    if (selectedParticipants.includes(id)) {
-      setSelectedParticipants(selectedParticipants.filter(pid => pid !== id));
-    } else {
-      setSelectedParticipants([...selectedParticipants, id]);
-    }
-  };
-
-  /**
-   * Gestion de la suppression multiple (depuis la toolbar)
-   */
-  const handleDelete = async () => {
-    if (selectedParticipants.length === 0) return;
-    
-    try {
-      setIsDeleting(true);
-      
-      // Simulation d'un appel API pour la suppression multiple
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Suppression des participants sélectionnés
-      setParticipants(prev => 
-        prev.filter(p => !selectedParticipants.includes(p.id))
-      );
-      
-      // Réinitialisation de la sélection
-      setSelectedParticipants([]);
-      
-      // Affichage de la notification de succès
-      setSnackbar({
-        open: true,
-        message: `${selectedParticipants.length} participant(s) supprimé(s) avec succès`,
-        severity: 'success',
-      });
-      
-    } catch (error) {
-      // Gestion des erreurs
-      setSnackbar({
-        open: true,
-        message: 'Erreur lors de la suppression des participants',
-        severity: 'error',
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  /**
-   * Ouverture du modal de suppression pour un participant individuel
+   * Gestionnaires pour les actions sur les participants
    */
   const handleDeleteSingle = (id: number) => {
     const participant = participants.find(p => p.id === id);
@@ -233,9 +138,6 @@ const ParticipantManagementPage = () => {
     }
   };
 
-  /**
-   * Confirmation de la suppression individuelle
-   */
   const handleConfirmDelete = async (id: number) => {
     try {
       setIsDeleting(true);
@@ -258,7 +160,6 @@ const ParticipantManagementPage = () => {
       });
       
     } catch (error) {
-      // Gestion des erreurs
       setSnackbar({
         open: true,
         message: 'Erreur lors de la suppression du participant',
@@ -269,12 +170,7 @@ const ParticipantManagementPage = () => {
     }
   };
 
-  /**
-   * Gestion de l'ajout d'un nouveau participant
-   */
   const handleAdd = () => {
-    console.log('Ajouter un participant');
-    // TODO: Redirection vers la page d'ajout ou ouverture d'un modal d'ajout
     setSnackbar({
       open: true,
       message: 'Fonctionnalité d\'ajout à implémenter',
@@ -282,9 +178,6 @@ const ParticipantManagementPage = () => {
     });
   };
 
-  /**
-   * Ouverture du modal de détail pour un participant
-   */
   const handleView = (id: number) => {
     const participant = participants.find(p => p.id === id);
     if (participant) {
@@ -293,12 +186,7 @@ const ParticipantManagementPage = () => {
     }
   };
 
-  /**
-   * Gestion de l'édition d'un participant
-   */
   const handleEdit = (id: number) => {
-    console.log('Modifier participant:', id);
-    // TODO: Redirection vers la page d'édition
     setSnackbar({
       open: true,
       message: 'Redirection vers la page d\'édition',
@@ -306,30 +194,18 @@ const ParticipantManagementPage = () => {
     });
   };
 
-  /**
-   * Gestion du changement de page
-   */
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
-
-  /**
-   * Gestion du changement du nombre d'éléments par page
-   */
-  const handleRowsPerPageChange = (event: any) => {
-    setRowsPerPage(event.target.value);
-    setPage(1);
-  };
-
-  /**
-   * Fermeture de la notification
-   */
   const handleCloseSnackbar = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
+  // Configuration des onglets
+  const TABS = [
+    { value: 'invites', label: 'Liste des invités' },
+    { value: 'participants', label: 'Liste des participants' }
+  ];
+
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 2 }}>
       <Stack spacing={4}>
         {/* En-tête de la page */}
         <Box>
@@ -341,81 +217,55 @@ const ParticipantManagementPage = () => {
           </Typography>
         </Box>
 
-        {/* Boutons d'exportation */}
-        <ExportButtons />
+        {/* Navigation par onglets */}
+        <Box sx={{ mb: 2, width: 350 }}>
+          <CustomTabs
+            value={tabs.value}
+            onChange={tabs.onChange}
+            sx={{ 
+              borderRadius: 1 //,
+              // bgcolor: 'background.paper',
+              // boxShadow: '0 1px 3px rgba(0,0,0,0.12)'
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab 
+                key={tab.value} 
+                value={tab.value} 
+                label={tab.label}
+                sx={{
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: '0.9rem'
+                }}
+              />
+            ))}
+          </CustomTabs>
+        </Box>
 
-        {/* Tableau principal des participants */}
-        <Card sx={{ 
-          borderRadius: 2, 
-          boxShadow: 'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px' 
-        }}>
-          <Box sx={{ p: 3 }}>
-            {/* Barre d'outils du tableau */}
-            <TableToolbar
-              selectedCount={selectedParticipants.length}
-              onSelectAll={handleSelectAll}
-              isAllSelected={selectedParticipants.length === paginatedParticipants.length && paginatedParticipants.length > 0}
-              onDelete={handleDelete}
-              onAdd={handleAdd}
-              searchTerm={searchTerm}
-              onSearchChange={(e) => setSearchTerm(e.target.value)}
-              activityFilter={activityFilter}
-              onActivityFilterChange={(e) => setActivityFilter(e.target.value)}
-              signatureEnabled={signatureEnabled}
-              onSignatureToggle={setSignatureEnabled}
-              isDeleting={isDeleting}
-            />
+        {/* Boutons d'exportation - Adaptatifs selon l'onglet */}
+        <ExportButtons currentTab={tabs.value} />
 
-            {/* Tableau des participants */}
-            <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={selectedParticipants.length > 0 && selectedParticipants.length < paginatedParticipants.length}
-                        checked={paginatedParticipants.length > 0 && selectedParticipants.length === paginatedParticipants.length}
-                        onChange={handleSelectAll}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Nom & Prénoms</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Téléphone</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Connecté</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Émargement</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedParticipants.map((participant) => (
-                    <ParticipantRow
-                      key={`${participant.id}-${participant.email}`} // Clé unique pour éviter les doublons
-                      participant={participant}
-                      selected={selectedParticipants.includes(participant.id)}
-                      onSelect={() => handleSelectParticipant(participant.id)}
-                      onEdit={handleEdit}
-                      onView={handleView}
-                      onDelete={handleDeleteSingle}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+        {/* Contenu des onglets */}
+        {tabs.value === 'invites' && (
+          <InvitesTable
+            participants={participants}
+            onAdd={handleAdd}
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDeleteSingle}
+            isDeleting={isDeleting}
+            setParticipants={setParticipants}
+            setSnackbar={setSnackbar}
+          />
+        )}
 
-            {/* Contrôles de pagination */}
-            <PaginationControls
-              page={page}
-              totalPages={totalPages}
-              rowsPerPage={rowsPerPage}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              totalItems={filteredParticipants.length}
-            />
-          </Box>
-        </Card>
-
-        {/* Boutons de navigation */}
-        {/* <NavigationButtons /> */}
+        {tabs.value === 'participants' && (
+          <ParticipantsTable
+            participants={participants}
+            setSnackbar={setSnackbar}
+          />
+        )}
 
         {/* Footer de la page */}
         <Box sx={{
@@ -430,15 +280,27 @@ const ParticipantManagementPage = () => {
           gap: 2,
         }}>
           <Typography variant="body2" color="text.secondary">
-            © 2024 EVENTQUORUM. Powered by FX_LABS SARL.
+            © 2024 EVENTQUORUM EVENTS. Powered by FX_LABS SARL.
           </Typography>
           <Stack direction="row" spacing={2}>
-            <Button variant="text" size="small" sx={{ textTransform: 'none' }}>
+            <Typography variant="body2" color="text.secondary" component="button" sx={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              '&:hover': { color: 'primary.main' }
+            }}>
               Confidentialité
-            </Button>
-            <Button variant="text" size="small" sx={{ textTransform: 'none' }}>
+            </Typography>
+            <Typography variant="body2" color="text.secondary" component="button" sx={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              '&:hover': { color: 'primary.main' }
+            }}>
               Aide
-            </Button>
+            </Typography>
           </Stack>
         </Box>
       </Stack>
