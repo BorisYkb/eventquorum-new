@@ -6,6 +6,10 @@ import type { PaletteColorKey } from 'src/theme/core';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
+<<<<<<< HEAD
+=======
+import Card, { CardProps } from '@mui/material/Card';
+>>>>>>> a62e368bf6eece3e95c6ddd231612c1490f6ea5c
 import { useTheme } from '@mui/material/styles';
 import Card, { CardProps } from '@mui/material/Card';
 

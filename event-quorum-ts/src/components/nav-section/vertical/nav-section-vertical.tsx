@@ -1,3 +1,4 @@
+// src/components/nav-section/vertical/nav-section-vertical.tsx
 import { useBoolean } from 'minimal-shared/hooks';
 import { mergeClasses } from 'minimal-shared/utils';
 

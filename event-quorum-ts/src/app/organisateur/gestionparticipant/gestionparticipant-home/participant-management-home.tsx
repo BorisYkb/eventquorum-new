@@ -25,7 +25,7 @@ import {
 import ExportButtons from './components/ExportButtons';
 import TableToolbar from './components/TableToolbar';
 import ParticipantRow from './components/ParticipantRow';
-import NavigationButtons from './components/NavigationButtons';
+// import NavigationButtons from './components/NavigationButtons';
 import PaginationControls from './components/PaginationControls';
 
 // Import des nouveaux composants modals
@@ -415,7 +415,7 @@ const ParticipantManagementPage = () => {
         </Card>
 
         {/* Boutons de navigation */}
-        <NavigationButtons />
+        {/* <NavigationButtons /> */}
 
         {/* Footer de la page */}
         <Box sx={{
@@ -430,7 +430,7 @@ const ParticipantManagementPage = () => {
           gap: 2,
         }}>
           <Typography variant="body2" color="text.secondary">
-            © 2024 EVENTQUORUM EVENTS. Powered by PCI_LABS SARL.
+            © 2024 EVENTQUORUM. Powered by FX_LABS SARL.
           </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="text" size="small" sx={{ textTransform: 'none' }}>

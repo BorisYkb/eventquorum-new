@@ -506,7 +506,7 @@ const GestionBoitiersPage = () => {
                     gap: 2,
                 }}>
                     <Typography variant="body2" color="text.secondary">
-                        © 2024 EVENTQUORUM EVENTS. Powered by PCI_LABS SARL.
+                        © 2024 EVENTQUORUM. Powered by FX_LABS SARL.
                     </Typography>
                     <Stack direction="row" spacing={2}>
                         <Button variant="text" size="small" sx={{ textTransform: 'none' }}>

@@ -21,11 +21,8 @@ import {
   Tooltip
 } from '@mui/material';
 
-import { Iconify } from 'src/components/iconify';
-
 // Import the correct Question type from the types file
 import { Question } from '../nouveau/types';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface EnqueteQuestionsTableProps {
   questions: Question[];
