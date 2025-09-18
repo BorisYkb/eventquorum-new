@@ -1,12 +1,13 @@
 // src/layouts/participant/layout.tsx
+
 'use client';
 
 import type { Breakpoint } from '@mui/material/styles';
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import { merge } from 'es-toolkit';
-import { useBoolean } from 'minimal-shared/hooks';
 import { usePathname } from 'next/navigation';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -19,27 +20,27 @@ import { _contacts, _notifications } from 'src/_mock';
 import { Logo } from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
 
-import { NavMobile } from '../dashboard/nav-mobile';
-import { VerticalDivider } from '../dashboard/content';
-import { NavVertical } from '../dashboard/nav-vertical';
 import { layoutClasses } from '../core/classes';
-import { NavHorizontal } from '../dashboard/nav-horizontal';
-import { useParticipantAccountData } from '../nav-config-account-participant';
 import { MainSection } from '../core/main-section';
+import { NavMobile } from '../dashboard/nav-mobile';
 import { Searchbar } from '../components/searchbar';
 import { _workspaces } from '../nav-config-workspace';
+import { VerticalDivider } from '../dashboard/content';
 import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
+import { NavVertical } from '../dashboard/nav-vertical';
+import { NavHorizontal } from '../dashboard/nav-horizontal';
+import { ParticipantHeaderActions } from './header-actions';
 import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 import { LanguagePopover } from '../components/language-popover';
 import { ContactsPopover } from '../components/contacts-popover';
-import { WorkspacesPopover } from '../components/workspaces-popover';
 import { useParticipantNavData } from '../nav-config-participant';
-import { dashboardLayoutVars, dashboardNavColorVars } from '../dashboard/css-vars';
+import { WorkspacesPopover } from '../components/workspaces-popover';
 import { NotificationsDrawer } from '../components/notifications-drawer';
-import { ParticipantHeaderActions } from './header-actions';
+import { useParticipantAccountData } from '../nav-config-account-participant';
+import { dashboardLayoutVars, dashboardNavColorVars } from '../dashboard/css-vars';
 
 import type { MainSectionProps } from '../core/main-section';
 import type { HeaderSectionProps } from '../core/header-section';

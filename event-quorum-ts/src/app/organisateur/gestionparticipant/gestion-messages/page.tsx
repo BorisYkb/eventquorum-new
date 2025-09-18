@@ -1,9 +1,20 @@
 //src/app/organisateur/gestionparticipant/gestion-messages/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Label } from 'src/components/label';
+
+import {
+  ArrowBack as ArrowBackIcon,
+  Search as SearchIcon,
+  Download as DownloadIcon,
+  Message as MessageIcon,
+  Visibility as VisibilityIcon,
+  WhatsApp as WhatsAppIcon,
+  Call as CallIcon,
+  MailOutline as MailIcon,
+} from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -28,16 +39,8 @@ import {
   Grid2 as Grid,
   Tooltip,
 } from '@mui/material';
-import {
-  ArrowBack as ArrowBackIcon,
-  Search as SearchIcon,
-  Download as DownloadIcon,
-  Message as MessageIcon,
-  Visibility as VisibilityIcon,
-  WhatsApp as WhatsAppIcon,
-  Call as CallIcon,
-  MailOutline as MailIcon,
-} from '@mui/icons-material';
+
+import { Label } from 'src/components/label';
 
 // Import du composant de statistiques
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
@@ -262,16 +265,7 @@ const GestionMessagesPage = () => {
         <Box>
           {/* Titre principal */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton
-              onClick={handleBack}
-              sx={{
-                backgroundColor: 'grey.100',
-                '&:hover': { backgroundColor: 'grey.200' },
-                borderRadius: 1,
-              }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
+            
             <Box>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
                 Gestion des Messages

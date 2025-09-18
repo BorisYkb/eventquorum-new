@@ -2,32 +2,34 @@
 'use client';
 
 import React, { useState } from 'react';
-import Grid from '@mui/material/Grid2';
+
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 
 import { DashboardContent } from 'src/layouts/intervenant';
 import { MotivationIllustration } from 'src/assets/illustrations';
-import { useMockedUser } from 'src/auth/hooks';
+import { IntervenantCarousel } from 'src/app/intervenant/components/intervenant-carousel';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
+import { useMockedUser } from 'src/auth/hooks';
+
 import { EcommerceWelcome } from '../ecommerce-welcome';
-import { IntervenantCarousel } from 'src/app/intervenant/components/intervenant-carousel';
 
 // ----------------------------------------------------------------------
 

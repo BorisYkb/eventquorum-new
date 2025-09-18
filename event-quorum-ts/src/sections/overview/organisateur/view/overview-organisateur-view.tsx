@@ -68,7 +68,7 @@ export function OverviewOrganisateurView() {
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12}}>
           <AppWelcome
             title={`Bienvenue 👋 \n ${user?.displayName}`}
             description="Vous etes connecté(e) sur votre espace organisateur"
@@ -76,9 +76,7 @@ export function OverviewOrganisateurView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <EventsCarousel list={_eventsList} />
-        </Grid>
+        
 
         {/* Widgets Résumés - 3 par ligne sur 2 lignes avec couleurs alternées */}
         <Grid size={{ xs: 12, md: 4 }}>

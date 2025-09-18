@@ -1,6 +1,14 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/TableToolbar.tsx
+
 'use client';
 
+import { useRouter } from 'next/navigation';
+
+import {
+  Delete as DeleteIcon,
+  Search as SearchIcon,
+  Add as AddIcon,
+} from '@mui/icons-material';
 import {
   Stack,
   IconButton,
@@ -16,12 +24,7 @@ import {
   FormControlLabel,
   CircularProgress,
 } from '@mui/material';
-import {
-  Delete as DeleteIcon,
-  Search as SearchIcon,
-  Add as AddIcon,
-} from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+
 import { paths } from 'src/routes/paths';
 
 // Types

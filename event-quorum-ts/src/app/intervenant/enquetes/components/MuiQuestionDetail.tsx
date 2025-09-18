@@ -1,25 +1,30 @@
 // components/MuiQuestionDetail.tsx
+
 'use client'
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { ArrowBack, FileDownload } from '@mui/icons-material';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import { ArrowBack, FileDownload } from '@mui/icons-material';
 
-import { Question, OptionDetail } from '../types/survey';
-import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+
 import DetailModal from './modals/DetailModal';
+import { Question, OptionDetail } from '../types/survey';
 
 interface MuiQuestionDetailProps {
   surveyId: string;
@@ -178,10 +183,7 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
               </Typography>
 
               {question.responses ? (
-                <>
-
-
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     {Object.entries(question.responses)
                       .sort(([,a], [,b]) => b - a) // Trier par nombre de réponses décroissant
                       .map(([option, count]) => {
@@ -261,7 +263,6 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
                         );
                       })}
                   </Box>
-                </>
               ) : (
                 <Typography variant="body1" color="text.secondary">
                   Aucune réponse disponible pour cette question.

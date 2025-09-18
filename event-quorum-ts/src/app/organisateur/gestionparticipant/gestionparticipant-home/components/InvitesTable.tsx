@@ -1,7 +1,9 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/InvitesTable.tsx
+
 'use client';
 
 import { useState } from 'react';
+
 import {
     Box,
     Card,
@@ -15,13 +17,12 @@ import {
     Paper,
 } from '@mui/material';
 
+// Import des types
+import { Participant } from './types';
 // Import des composants existants
 import TableToolbar from './TableToolbar';
 import ParticipantRow from './ParticipantRow';
 import PaginationControls from './PaginationControls';
-
-// Import des types
-import { Participant } from './types';
 
 interface InvitesTableProps {
     participants: Participant[];

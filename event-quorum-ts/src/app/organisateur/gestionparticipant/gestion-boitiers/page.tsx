@@ -1,8 +1,15 @@
 //src/app/organisateur/gestionparticipant/gestion-boitiers/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import {
+    ArrowBack as ArrowBackIcon,
+    Search as SearchIcon,
+    ExpandMore as ExpandMoreIcon,
+} from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -28,11 +35,6 @@ import {
     FormControl,
     Select,
 } from '@mui/material';
-import {
-    ArrowBack as ArrowBackIcon,
-    Search as SearchIcon,
-    ExpandMore as ExpandMoreIcon,
-} from '@mui/icons-material';
 
 // Import du composant Label
 import { Label } from 'src/components/label';
@@ -239,9 +241,7 @@ const GestionBoitiersPage = () => {
     /**
      * Obtenir la couleur du statut
      */
-    const getStatutColor = (statut: string) => {
-        return statut === 'Obtenu' ? 'warning' : 'success';
-    };
+    const getStatutColor = (statut: string) => statut === 'Obtenu' ? 'warning' : 'success';
 
     return (
         <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -275,22 +275,7 @@ const GestionBoitiersPage = () => {
                             </Breadcrumbs>
                         </Box>
 
-                        <Button
-                            variant="contained"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={handleBack}
-                            sx={{
-                                backgroundColor: '#000',
-                                color: 'white',
-                                '&:hover': { backgroundColor: '#333' },
-                                borderRadius: 1,
-                                textTransform: 'none',
-                                fontWeight: 600,
-                                px: 3,
-                            }}
-                        >
-                            Retour
-                        </Button>
+                        
                     </Box>
                 </Box>
 

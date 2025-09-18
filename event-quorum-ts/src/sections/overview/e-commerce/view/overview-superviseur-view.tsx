@@ -6,14 +6,15 @@ import { useTheme } from '@mui/material/styles';
 import { DashboardContent } from 'src/layouts/superviseur';
 import { MotivationIllustration } from 'src/assets/illustrations';
 
+import { FicheClientHomeWidget } from 'src/sections/gestionclient/ficheclient/ficheclient-home-widget';
+
 import { useMockedSuperviseur } from 'src/auth/hooks';
 
 import { EcommerceWelcome } from '../ecommerce-welcome';
-import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary-2';
-import { SuperviseurRevenueChart } from '../../superviseur/superviseur-revenue-chart';
-import { SuperviseurDonutChart } from '../../superviseur/SuperviseurDonutChart';
 import { ActivitiesList } from '../../superviseur/superviseur-activities-list';
-import { FicheClientHomeWidget } from 'src/sections/gestionclient/ficheclient/ficheclient-home-widget';
+import { SuperviseurDonutChart } from '../../superviseur/SuperviseurDonutChart';
+import { SuperviseurRevenueChart } from '../../superviseur/superviseur-revenue-chart';
+import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary-2';
 
 // ----------------------------------------------------------------------
 

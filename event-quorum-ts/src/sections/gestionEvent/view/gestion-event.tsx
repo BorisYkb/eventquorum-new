@@ -59,7 +59,7 @@ const GestionEventView = () => {
         sx={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}
       >
         <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-          Gestion Events
+          Gestion de l&apos;événement
         </Typography>
 
         {renderTabs()}

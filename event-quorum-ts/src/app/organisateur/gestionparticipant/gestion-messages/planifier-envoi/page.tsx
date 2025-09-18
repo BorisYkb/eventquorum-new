@@ -1,9 +1,14 @@
 //src/app/organisateur/gestionparticipant/gestion-messages/planifier-envoi/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Editor } from 'src/components/editor';
+
+import {
+    ArrowBack as ArrowBackIcon,
+    Send as SendIcon,
+} from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -26,10 +31,8 @@ import {
     Alert,
     Divider,
 } from '@mui/material';
-import {
-    ArrowBack as ArrowBackIcon,
-    Send as SendIcon,
-} from '@mui/icons-material';
+
+import { Editor } from 'src/components/editor';
 
 /**
  * Page de planification d'envoi de message
@@ -150,17 +153,8 @@ const PlanifierEnvoiPage = () => {
                 {/* En-tête avec breadcrumbs et navigation */}
                 <Box>
                     {/* Titre principal */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <IconButton
-                            onClick={handleBack}
-                            sx={{
-                                backgroundColor: 'grey.100',
-                                '&:hover': { backgroundColor: 'grey.200' },
-                                borderRadius: 1,
-                            }}
-                        >
-                            <ArrowBackIcon />
-                        </IconButton>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        
                         <Box>
                             <Typography variant="h4" sx={{ fontWeight: 700 }}>
                                 Planifier l'envoi d'un message
@@ -198,6 +192,23 @@ const PlanifierEnvoiPage = () => {
                                 </Typography>
                             </Breadcrumbs>
                         </Box>
+
+                        <Button
+                            variant="contained"
+                            startIcon={<ArrowBackIcon />}
+                            onClick={handleBack}
+                            sx={{
+                                backgroundColor: '#000',
+                                color: 'white',
+                                '&:hover': { backgroundColor: '#333' },
+                                borderRadius: 1,
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                px: 3,
+                            }}
+                        >
+                            Retour
+                        </Button>
                     </Box>
                 </Box>
 

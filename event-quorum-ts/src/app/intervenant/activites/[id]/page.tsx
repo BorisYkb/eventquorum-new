@@ -1,41 +1,44 @@
 // superviseur/activites/[id]/page.tsx
+
 'use client';
 
+import { date } from 'zod';
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
 import DialogContentText from '@mui/material/DialogContentText';
-import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/superviseur';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
+
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
-import { date } from 'zod';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -262,7 +265,7 @@ export default function ActivityDetailPage() {
               '&:hover': { bgcolor: '#333' }
             }}
           >
-            Retour à la liste
+            Retour
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -484,8 +487,7 @@ export default function ActivityDetailPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredParticipants.map((person) => {
-                  return (
+                {filteredParticipants.map((person) => (
                     <TableRow key={person.id} hover sx={{ '&:hover': { bgcolor: '#F8F9FA' } }}>
                       <TableCell sx={{ py: 2 }}>
                         <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
@@ -522,8 +524,7 @@ export default function ActivityDetailPage() {
                         </Typography>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

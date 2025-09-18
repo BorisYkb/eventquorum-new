@@ -1,40 +1,106 @@
 'use client'
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import IconButton from '@mui/material/IconButton';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   ArrowBack,
   PlayArrow,
   Pause,
-  Stop
+  Stop,
+  Assignment,
+  Settings,
+  Work
 } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+
+import { Iconify } from 'src/components/iconify'; // Ajustez le chemin selon votre structure
 
 import { Survey, Question } from '../types/survey';
-import { Iconify } from 'src/components/iconify'; // Ajustez le chemin selon votre structure
+
 
 interface MuiSurveyDetailProps {
   survey: Survey;
   questions: Question[];
 }
+
+// Composant personnalisé pour les cards d'information
+const InfoCard: React.FC<{
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  color: string;
+}> = ({ title, value, icon, color }) => {
+  return (
+    <Card sx={{
+      p: 3,
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      background: `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
+      border: `1px solid ${color}30`,
+      borderRadius: 2,
+      transition: 'all 0.3s ease',
+      '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: `0 8px 25px ${color}20`,
+      }
+    }}>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        bgcolor: `${color}15`,
+        color: color,
+        mr: 2,
+        flexShrink: 0
+      }}>
+        {icon}
+      </Box>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography variant="body2" sx={{
+          color: 'text.secondary',
+          fontWeight: 500,
+          mb: 0.5,
+          fontSize: '0.875rem'
+        }}>
+          {title}
+        </Typography>
+        <Typography variant="h6" sx={{
+          fontWeight: 'bold',
+          color: 'text.primary',
+          wordBreak: 'break-word',
+          lineHeight: 1.2
+        }}>
+          {value || 'Non défini'}
+        </Typography>
+      </Box>
+    </Card>
+  );
+};
+
 
 const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) => {
   const router = useRouter();
@@ -43,6 +109,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dense, setDense] = useState(false);
+
 
   console.log('Survey data:', survey);
   console.log('Questions data:', questions);
@@ -152,66 +219,57 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               Titre de l'enquête
             </Typography>
             <Card sx={{
-              p: 2,
+              p: 3,
               backgroundColor: '#f8f9fa',
               display: 'inline-block',
-              minWidth: 'fit-content'
+              minWidth: 'fit-content',
+              borderRadius: 2,
+              border: '1px solid #e0e0e0'
             }}>
               <Typography variant="h6" sx={{
                 color: theme.palette.text.primary,
-                textAlign: 'center'
+                textAlign: 'center',
+                fontWeight: 600
               }}>
                 {survey.title}
               </Typography>
             </Card>
           </Box>
 
-          {/* Statistiques avec Paper horizontal */}
-          <Paper
-            sx={{
-              p: 3,
-              mb: 4,
-              backgroundColor: 'background.neutral',
-              borderLeft: (theme) => `6px solid ${theme.palette.primary.main}`
-            }}
-          >
+          {/* Cards d'informations améliorées */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
+              Informations de l'enquête
+            </Typography>
             <Grid container spacing={3}>
-              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                <Stack alignItems="center" spacing={1}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
-                    Code d'enquête
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {survey.code}
-                  </Typography>
-                </Stack>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <InfoCard
+                  title="Code d'enquête"
+                  value={survey.code}
+                  icon={<Assignment fontSize="large" />}
+                  color="#1976d2"
+                />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                <Stack alignItems="center" spacing={1}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
-                    Option
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {survey.option}
-                  </Typography>
-                </Stack>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <InfoCard
+                  title="Option"
+                  value={survey.option}
+                  icon={<Settings fontSize="large" />}
+                  color="#9c27b0"
+                />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
-                <Stack alignItems="center" spacing={1}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#666' }}>
-                    Activité
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {survey.activity}
-                  </Typography>
-                </Stack>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <InfoCard
+                  title="Activité"
+                  value={survey.activity}
+                  icon={<Work fontSize="large" />}
+                  color="#2e7d32"
+                />
               </Grid>
-
-
             </Grid>
-          </Paper>
+          </Box>
 
           {/* Boutons d'action de l'enquête */}
           <Box sx={{ mb: 4 }}>

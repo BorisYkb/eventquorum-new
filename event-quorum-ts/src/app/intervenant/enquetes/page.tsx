@@ -1,8 +1,9 @@
 //intervenant/enquetes/page.tsx
 import React from 'react';
 import { Metadata } from 'next';
-import MuiSurveyDashboard from './components/MuiSurveyDashboard';
+
 import { surveys } from './data/surveys';
+import MuiSurveyDashboard from './components/MuiSurveyDashboard';
 
 export const metadata: Metadata = {
   title: 'Gestion des Enquêtes - Liste des enquêtes',
@@ -10,8 +11,6 @@ export const metadata: Metadata = {
   keywords: 'enquêtes, gestion, statistiques, participants, résultats',
 };
 
-const SurveyManagementPage = () => {
-  return <MuiSurveyDashboard surveys={surveys} />;
-};
+const SurveyManagementPage = () => <MuiSurveyDashboard surveys={surveys} />;
 
 export default SurveyManagementPage;

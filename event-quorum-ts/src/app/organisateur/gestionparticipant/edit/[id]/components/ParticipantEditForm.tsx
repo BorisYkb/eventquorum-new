@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
 import { z as zod } from 'zod';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -20,10 +21,10 @@ import {
   Chip,
   OutlinedInput,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
@@ -103,9 +104,7 @@ export function ParticipantEditForm({ participant }: Props) {
     }
   });
 
-  const getActivityLabel = (value: string) => {
-    return ACTIVITY_OPTIONS.find(option => option.value === value)?.label || value;
-  };
+  const getActivityLabel = (value: string) => ACTIVITY_OPTIONS.find(option => option.value === value)?.label || value;
 
   return (
     <Card sx={{ p: 3 }}>

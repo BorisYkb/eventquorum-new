@@ -1,8 +1,17 @@
 //src/app/organisateur/gestionparticipant/demandes-inscription/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import {
+    ArrowBack as ArrowBackIcon,
+    Search as SearchIcon,
+    Check as CheckIcon,
+    Close as CloseIcon,
+    FilterList as FilterListIcon,
+} from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -31,18 +40,12 @@ import {
     FormControl,
     InputLabel,
 } from '@mui/material';
-import {
-    ArrowBack as ArrowBackIcon,
-    Search as SearchIcon,
-    Check as CheckIcon,
-    Close as CloseIcon,
-    FilterList as FilterListIcon,
-} from '@mui/icons-material';
+
+// Import du composant Label
+import { Label } from 'src/components/label';
 
 // Import du composant de statistiques
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
-// Import du composant Label
-import { Label } from 'src/components/label';
 
 // Interface pour les demandes d'inscription
 interface DemandeInscription {
@@ -259,22 +262,7 @@ const DemandesInscriptionPage = () => {
                             </Breadcrumbs>
                         </Box>
 
-                        <Button
-                            variant="contained"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={handleBack}
-                            sx={{
-                                backgroundColor: '#000',
-                                color: 'white',
-                                '&:hover': { backgroundColor: '#333' },
-                                borderRadius: 1,
-                                textTransform: 'none',
-                                fontWeight: 600,
-                                px: 3,
-                            }}
-                        >
-                            Retour
-                        </Button>
+                        
                     </Box>
                 </Box>
 

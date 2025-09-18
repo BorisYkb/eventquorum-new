@@ -2,8 +2,9 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import MuiSurveyDetail from '../components/MuiSurveyDetail';
+
 import { surveys, sampleQuestions } from '../data/surveys';
+import MuiSurveyDetail from '../components/MuiSurveyDetail';
 
 interface SurveyDetailPageProps {
   params: {
