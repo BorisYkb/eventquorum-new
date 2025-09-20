@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid2';
 
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { AppWelcome } from 'src/sections/overview/app/app-welcome';
+import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 

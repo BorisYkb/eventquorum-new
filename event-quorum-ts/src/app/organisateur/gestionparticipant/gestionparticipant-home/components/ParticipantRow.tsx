@@ -81,7 +81,7 @@ const ParticipantRow = ({
         }} 
       />
     </TableCell>
-    <TableCell>
+    {/* <TableCell>
       {participant.emargement ? (
         <Box 
           sx={{ 
@@ -111,7 +111,7 @@ const ParticipantRow = ({
           Non signé
         </Typography>
       )}
-    </TableCell>
+    </TableCell> */}
     <TableCell>
       <Stack direction="row" spacing={1}>
         <Tooltip title="Voir les détails" arrow>
