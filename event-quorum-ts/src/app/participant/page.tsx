@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid2';
 
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { AppWelcome } from 'src/sections/overview/app/app-welcome';
+import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { AccueilVideoSection2 } from 'src/app/participant/components/accueil-video-section-2';
@@ -26,8 +26,9 @@ export default function ParticipantPage() {
         <Grid size={12}>
           <AppWelcome
             title="Bienvenu(e) cher(e) participant(e)"
-            description="Le SARA 2023 se tiendra dans le tout nouveau Parc des Expositions d'Abidjan. En seulement cinq éditions, le SARA s'est imposé comme le salon de référence en matière d'agriculture, de ressources animales, halieutiques et forestières en Afrique subsaharienne."
-            img={<SeoIllustration hideBackground />}
+            description="En seulement cinq éditions, le SARA s'est imposé comme le salon de référence en 
+            matière d'agriculture, de ressources animales, halieutiques et forestières en Afrique subsaharienne."
+            img={<SeoIllustration />}
           />
         </Grid>
 

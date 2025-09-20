@@ -110,7 +110,7 @@ export default function ParticipantEnligneActivitesPage() {
         <DashboardContent>
             <Container sx={{ py: 1 }}>
                 <Typography variant="h4" align="center" sx={{ mb: 2 }}>
-                    Sélection des activités à suivre
+                    Sélection des activités
                 </Typography>
 
                 <Typography align="center" sx={{ color: 'text.secondary', mb: 5 }}>
@@ -192,14 +192,14 @@ export default function ParticipantEnligneActivitesPage() {
 
                 {/* Section 4 - Sponsors/Footer */}
 
-                <Grid size={12}>
+                {/* <Grid size={12}>
                     <Box sx={{ textAlign: 'center', py: 4 }}>
                         <IntervenantCarousel />
                     </Box>
-                </Grid>
+                </Grid> */}
 
                 <Grid size={12}>
-                    <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Box sx={{ textAlign: 'center', py: 4, mt: 5 }}>
                         <Footer />
                     </Box>
                 </Grid>

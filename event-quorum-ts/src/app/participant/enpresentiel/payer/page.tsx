@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid2';
 
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { AppWelcome } from 'src/sections/overview/app/app-welcome';
+import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { AccueilWelcomePayer } from './components/accueil-welcome-payer';
@@ -28,7 +28,7 @@ export default function ParticipantEnresentielPage() {
                     <AppWelcome
                         title="Bonjours cher(e) participant(e) Kouakou Evarist"
                         description="Vous etes connecté en tant que participant au SARA 2023."
-                        img={<SeoIllustration hideBackground />}
+                        img={<SeoIllustration />}
                     />
                 </Grid>
 

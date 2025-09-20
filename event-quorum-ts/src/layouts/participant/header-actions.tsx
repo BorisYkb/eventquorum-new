@@ -132,7 +132,7 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
                 <>
                     <Button
                         variant="outlined"
-                        onClick={badgeDialog.handleOpen} // 👈 Action d'ouverture du dialog badge
+                        onClick={badgeDialog.handleOpen} // Action d'ouverture du dialog badge
                         startIcon={<Iconify icon="solar:card-bold" />}
                         sx={{
                             fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' },

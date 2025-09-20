@@ -110,7 +110,7 @@ export default function ParticipantEnligneActivitesPage() {
     <DashboardContent>
       <Container sx={{ py: 1 }}>
         <Typography variant="h4" align="center" sx={{ mb: 2 }}>
-          Sélection des activités à suivre
+          Sélection des activitén
         </Typography>
 
         <Typography align="center" sx={{ color: 'text.secondary', mb: 5 }}>

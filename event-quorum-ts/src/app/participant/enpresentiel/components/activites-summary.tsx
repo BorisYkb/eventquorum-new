@@ -51,9 +51,9 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
             <Stack spacing={2.5}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Activités sélectionnées
+                        Activités sélectionnées <Label color="primary">{activitesSelectionnees.length}</Label>
                     </Typography>
-                    <Label color="primary">{activitesSelectionnees.length}</Label>
+                    {/* <Label color="primary">{activitesSelectionnees.length}</Label> */}
                 </Box>
 
                 {/* Liste des activités sélectionnées */}

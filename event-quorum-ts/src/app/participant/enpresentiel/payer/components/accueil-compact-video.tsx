@@ -114,7 +114,7 @@ export function AccueilCompactVideo() {
                     color="text.secondary"
                     sx={{ fontSize: { xs: '0.75rem', sm: '0.825rem', md: '0.875rem' } }}
                   >
-                    Du 29 sept. au 08 oct. • Cliquez pour voir la vidéo
+                    Du 29 sept. au 08 oct. 2023 à Abidjan, Côte d'Ivoire
                   </Typography>
                 </Box>
               </Box>

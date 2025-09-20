@@ -1,106 +1,33 @@
 // src/app/participant/components/accueil-programme-section-2.tsx
 'use client';
 
+import { useState } from 'react';
+
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Accordion from '@mui/material/Accordion';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import { CONFIG } from 'src/global-config';
 
 import { usePopover } from 'minimal-shared/hooks';
 
 import { Iconify } from 'src/components/iconify';
+import { CustomTabs } from 'src/components/custom-tabs';
 import { CustomPopover } from 'src/components/custom-popover';
 
-// ----------------------------------------------------------------------
-
-/**
- * Données du programme pour les pages d'accueil
- */
-const programmeData = [
-    {
-        id: '1',
-        time: '08H00 - 9H00',
-        title: 'OUVERTURE DU SALON ET DU SARA MARKET AU PUBLIC',
-        description: 'Ouverture officielle du salon avec accueil des participants et découverte des espaces d\'exposition.',
-        type: 'Ouverture',
-        status: 'Terminé',
-        statusColor: 'success' as const,
-        hasDocument: true,
-        hasVideo: true,
-    },
-    {
-        id: '2',
-        time: '09H00 - 12H00',
-        title: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
-        description: 'SOUS LA PRÉSIDENCE DE S.E.M. ALASSANE OUATTARA, À LA SALLE PLÉNIÈRE DU SITE DU SARA. REMISE DE KITS AUX JEUNES ENTREPRENEURS ET AUX FILIÈRES PAR LE PRÉSIDENT DE LA RÉPUBLIQUE.',
-        type: 'Cérémonie',
-        status: 'En cours',
-        statusColor: 'warning' as const,
-        hasDocument: true,
-        hasVideo: true,
-    },
-    {
-        id: '3',
-        time: '09H00 - 12H00',
-        title: 'POINT DE PRESSE',
-        description: 'Conférence de presse avec les organisateurs et les personnalités présentes.',
-        type: 'Conférence',
-        status: 'Non démarré',
-        statusColor: 'default' as const,
-        hasDocument: true,
-        hasVideo: true,
-    },
-    {
-        id: '4',
-        time: '09H00 - 12H00',
-        title: 'PANEL DE HAUT NIVEAU (LES ASSISES DU SARA 2023)',
-        description: 'Table ronde avec les experts du secteur agricole sur les enjeux et perspectives.',
-        type: 'Panel',
-        status: 'En cours',
-        statusColor: 'warning' as const,
-        hasDocument: true,
-        hasVideo: true,
-    },
-    {
-        id: '5',
-        time: '19H00',
-        title: 'FERMETURE DU SALON ET DU SARA MARKET AU PUBLIC',
-        description: 'Fermeture des espaces d\'exposition au grand public.',
-        type: 'Fermeture',
-        status: 'Non démarré',
-        statusColor: 'default' as const,
-        hasDocument: true,
-        hasVideo: true,
-    },
-    {
-        id: '6',
-        time: '19H00 - 22H00',
-        title: 'NOCTURNES AU SARA VILLAGE (CONCERTS ET ANIMATIONS)',
-        description: 'Soirée culturelle avec concerts et animations dans l\'espace village.',
-        type: 'Animation',
-        status: 'En cours',
-        statusColor: 'warning' as const,
-        hasVideo: true,
-        hasDocument: true,
-    },
-];
+import { PROGRAMME_DAYS } from './programme/programme-data';
+import { ProgrammeActivityItem } from './programme/programme-activity-item';
 
 // ----------------------------------------------------------------------
 
 /**
- * Section programme pour les pages d'accueil - Version avec tailles de police responsives
+ * Section programme pour les pages d'accueil - Version avec navigation par jours
  */
 export default function AccueilProgrammeSection2() {
     const theme = useTheme();
@@ -108,29 +35,23 @@ export default function AccueilProgrammeSection2() {
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
     const infoPopover = usePopover();
 
+    // État pour gérer l'onglet actif
+    const [currentDay, setCurrentDay] = useState(PROGRAMME_DAYS[0].id);
+
     /**
      * Fonction pour calculer les tailles de police responsives
      */
     const getResponsiveFontSizes = () => {
         if (isMobile) {
             return {
-                // Titre principal
                 h5: { fontSize: '1rem', fontWeight: 600 },
-                // Titre d'accordéon
                 subtitle2: { fontSize: '0.75rem', fontWeight: 500 },
-                // Texte descriptif
                 body2: { fontSize: '0.7rem', fontWeight: 400 },
-                // Informations pratiques - titre
                 h6: { fontSize: '0.875rem', fontWeight: 600 },
-                // Informations pratiques - sous-titre
                 infoSubtitle: { fontSize: '0.75rem', fontWeight: 600 },
-                // Informations pratiques - corps
                 infoBody: { fontSize: '0.65rem', fontWeight: 400 },
-                // Boutons
                 button: { fontSize: '0.625rem' },
-                // Chips
                 chip: { fontSize: '0.625rem' },
-                // Icône du calendrier
                 iconSize: { width: 20, height: 20 }
             };
         }
@@ -165,6 +86,18 @@ export default function AccueilProgrammeSection2() {
 
     const fontSizes = getResponsiveFontSizes();
 
+    /**
+     * Gestionnaire de changement d'onglet
+     */
+    const handleDayChange = (event: React.SyntheticEvent, newValue: string) => {
+        setCurrentDay(newValue);
+    };
+
+    /**
+     * Récupération des données du jour actuel
+     */
+    const currentDayData = PROGRAMME_DAYS.find(day => day.id === currentDay) || PROGRAMME_DAYS[0];
+
     return (
         <Grid size={12}>
             <Card sx={{ borderRadius: { xs: 1, md: 2 }, overflow: 'hidden', height: 'fit-content' }}>
@@ -191,143 +124,65 @@ export default function AccueilProgrammeSection2() {
                         </Box>
                     </Box>
 
-                    {/* Liste des activités */}
+                    {/* Navigation par jours avec CustomTabs */}
+                    <Box sx={{ mb: 3 }}>
+                        <CustomTabs
+                            value={currentDay}
+                            onChange={handleDayChange}
+                            // variant={isMobile ? 'scrollable' : 'standard'}
+                            sx={{
+                                borderRadius: 1,
+                                width: {
+                                    md: '450px',  // à partir de "md" (tablette/desktop)
+                                    lg: '455px', // à partir de "lg" (grands écrans)
+                                },
+                                '& .MuiTab-root': {
+                                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                    fontWeight: 600,
+                                    textTransform: 'none',
+                                    minHeight: { xs: '36px', sm: '40px' },
+                                    px: { xs: 2, sm: 3 },
+                                }
+                                
+                                // minWidth: 'fit-content'
+                            }}
+                        >
+                            {PROGRAMME_DAYS.map((day) => (
+                                <Tab
+                                    key={day.id}
+                                    value={day.id}
+                                    label={
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                                {day.label}
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ fontSize: '0.7rem', opacity: 0.7 }}>
+                                                {day.date}
+                                            </Typography>
+                                        </Box>
+                                    }
+                                />
+                            ))}
+                        </CustomTabs>
+                    </Box>
+
+                    {/* Liste des activités du jour sélectionné */}
                     <Box>
-                        {programmeData.map((item) => (
-                            <Accordion
-                                key={item.id}
-                                sx={{
-                                    mb: 1,
-                                    borderRadius: '8px !important',
-                                }}
-                            >
-                                <AccordionSummary
-                                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                                    sx={{
-                                        px: { xs: 1.5, md: 2 },
-                                        py: 1,
-                                        minHeight: { xs: 48, md: 60 },
-                                        '& .MuiAccordionSummary-content': {
-                                            alignItems: 'center',
-                                        },
-                                    }}
-                                >
-                                    <Stack
-                                        direction={{ xs: 'column', sm: 'row' }}
-                                        alignItems={{ xs: 'flex-start', sm: 'center' }}
-                                        spacing={{ xs: 1, sm: 2 }}
-                                        sx={{ width: '100%' }}
-                                    >
-                                        <Chip
-                                            label={item.time}
-                                            size="small"
-                                            sx={{
-                                                minWidth: { xs: 50, md: 60 },
-                                                bgcolor: 'primary.main',
-                                                color: 'primary.contrastText',
-                                                ...fontSizes.chip,
-                                                fontWeight: 600
-                                            }}
-                                        />
-
-                                        <Typography
-                                            variant="subtitle2"
-                                            sx={{
-                                                flex: 1,
-                                                ...fontSizes.subtitle2
-                                            }}
-                                        >
-                                            {item.title}
-                                        </Typography>
-
-                                        <Chip
-                                            label={item.status}
-                                            size="small"
-                                            color={item.statusColor}
-                                            variant="soft"
-                                            sx={{
-                                                ...fontSizes.chip,
-                                                fontWeight: 500
-                                            }}
-                                        />
-                                    </Stack>
-                                </AccordionSummary>
-
-                                <AccordionDetails sx={{ px: { xs: 1.5, md: 2 }, pb: 2 }}>
-                                    <Stack spacing={1}>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                color: 'text.secondary',
-                                                ...fontSizes.body2
-                                            }}
-                                        >
-                                            Type d'activité: <strong>{item.type}</strong>
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                ...fontSizes.body2,
-                                                lineHeight: { xs: 1.4, md: 1.5 }
-                                            }}
-                                        >
-                                            {item.description}
-                                        </Typography>
-
-                                        {(item.hasDocument || item.hasVideo) && (
-                                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                                                {item.hasDocument && (
-                                                    <Button
-                                                        size="small"
-                                                        startIcon={
-                                                            <Box
-                                                                component="img"
-                                                                src={`${CONFIG.assetsDir}/assets/icons/files/ic-document.svg`}
-                                                                sx={{
-                                                                    width: 18,
-                                                                    height: 18,
-                                                                }}
-                                                            />
-                                                        }
-                                                        sx={{
-                                                            ...fontSizes.button,
-                                                            borderRadius: 1,
-                                                            border: 1.5,
-                                                            borderColor: 'divider'
-                                                        }}
-                                                    >
-                                                        Document
-                                                    </Button>
-                                                )}
-                                                {item.hasVideo && (
-                                                    <Button
-                                                        size="small"
-                                                        startIcon={
-                                                            <Box
-                                                                component="img"
-                                                                src={`${CONFIG.assetsDir}/assets/icons/files/ic-video.svg`}
-                                                                sx={{
-                                                                    width: 18,
-                                                                    height: 18,
-                                                                }}
-                                                            />
-                                                        }
-                                                        sx={{
-                                                            ...fontSizes.button,
-                                                            borderRadius: 1,
-                                                            border: 1.5,
-                                                            borderColor: 'divider'
-                                                        }}
-                                                    >
-                                                        Voir la vidéo
-                                                    </Button>
-                                                )}
-                                            </Stack>
-                                        )}
-                                    </Stack>
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
+                        {currentDayData.activities.length > 0 ? (
+                            currentDayData.activities.map((activity) => (
+                                <ProgrammeActivityItem
+                                    key={activity.id}
+                                    activity={activity}
+                                    fontSizes={fontSizes}
+                                />
+                            ))
+                        ) : (
+                            <Box sx={{ textAlign: 'center', py: 4 }}>
+                                <Typography variant="body1" color="text.secondary">
+                                    Aucune activité programmée pour ce jour
+                                </Typography>
+                            </Box>
+                        )}
                     </Box>
                 </CardContent>
 
