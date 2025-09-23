@@ -108,7 +108,7 @@ export function AccueilVideoSection2() {
                         >
                             <SpeedDialAction
                                 icon={<Iconify icon="solar:video-library-bold-duotone" sx={{ color: '#FF0000' }} />}
-                                tooltipTitle="Voir la vidéo d'illustration"
+                                
                                 sx={{
                                     bgcolor: 'background.paper',
                                     '&:hover': { bgcolor: 'action.hover' }
@@ -118,17 +118,6 @@ export function AccueilVideoSection2() {
                                 }}
                             />
 
-                            <SpeedDialAction
-                                icon={<Iconify icon="material-symbols:download-rounded" color="#4CAF50" width={24} /> }
-                                tooltipTitle="Télécharger"
-                                sx={{
-                                    bgcolor: 'background.paper',
-                                    '&:hover': { bgcolor: 'action.hover' }
-                                }}
-                                onClick={() => {
-                                    console.log('Download resources');
-                                }}
-                            />
                         </SpeedDial>
                     </Box>
                 </Container>

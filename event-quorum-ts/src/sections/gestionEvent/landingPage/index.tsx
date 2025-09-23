@@ -1,7 +1,7 @@
+import path, { normalize } from 'path';
 import { Controller } from 'react-hook-form';
+
 import LoadingButton from '@mui/lab/LoadingButton';
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 import { 
   Box, 
   Card, 
@@ -22,14 +22,18 @@ import {
   IconButton,
   Chip
 } from '@mui/material';
-import { Iconify } from 'src/components/iconify';
 
-import { Form, Field } from 'src/components/hook-form';
-import { useLandingPageController } from './controller';
-import { UploadBox } from 'src/components/upload';
-import { Label } from 'src/components/label';
-import path, { normalize } from 'path';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
 import { _activityList } from 'src/_mock/_activity';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { UploadBox } from 'src/components/upload';
+import { Form, Field } from 'src/components/hook-form';
+
+import { useLandingPageController } from './controller';
 
 const EVENT_TYPES = [
   { value: 'en_ligne', label: 'En ligne' },
@@ -83,6 +87,21 @@ const LandingPage = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+        variant="contained"
+        component={RouterLink}
+        href={paths.organisateur.gestionevent.newactivity}
+        startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />  }
+        onClick={handleAddAgenda}
+      //   sx={{ backgroundColor: '#1976d2' }}
+      >
+        Ajouter une activité
+      </Button>
+      </Box>
+      
+
       {/* Informations Générales */}
       <Card>
         <CardHeader
@@ -194,7 +213,7 @@ const LandingPage = () => {
       {/* Agenda */}
       <Card>
         <CardHeader
-          title="AGENDA"
+          title="ACTIVITES / AGENDA"
           action={
             <Button
               variant="contained"

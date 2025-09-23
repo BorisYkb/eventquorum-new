@@ -100,7 +100,7 @@ export function SuperviseurRevenueChart({ title, chart, sx, ...other }: Props) {
                     borderRadius: 2,
                     boxShadow: 'none',
                     color: 'primary.lighter',
-                    height: 400,
+                    height: 350,
                     bgcolor: 'primary.darker',
                 }),
                 ...(Array.isArray(sx) ? sx : [sx]),
@@ -117,7 +117,7 @@ export function SuperviseurRevenueChart({ title, chart, sx, ...other }: Props) {
                 {renderTrending()}
             </Box>
 
-            <Chart type="line" series={chart.series} options={chartOptions} sx={{ mt: 2, height: 120 }} />
+            <Chart type="line" series={chart.series} options={chartOptions} sx={{ mt: 1, height: 120 }} />
 
             <SvgColor
                 src={`${CONFIG.assetsDir}/assets/background/shape-square.svg`}

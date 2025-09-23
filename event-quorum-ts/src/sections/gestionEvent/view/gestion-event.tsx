@@ -12,10 +12,10 @@ import { DashboardContent } from 'src/layouts/organisateur';
 import { CustomTabs } from 'src/components/custom-tabs';
 
 import Inscription from '../inscription';
-import VisioConference from '../visioConference';
-import CharteGraphiqueView from '../charte-graphique-view';
 import LandingPage from '../landingPage';
 import InfoPaiement from '../infosPaiement';
+import VisioConference from '../visioConference';
+import CharteGraphiqueView from '../charte-graphique-view';
 
 const TABS = [
   {

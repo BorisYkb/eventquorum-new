@@ -110,7 +110,7 @@ export default function ActivityDetailPage() {
     {
       id: 1,
       participant: 'Chonou Oriane',
-      question: 'Comment gérer les états dans React ?',
+      question: 'Comment avez invitez la prochaine fois ?',
       time: '10:30',
       answered: true,
       response: "Pour gérer les états dans React, vous pouvez utiliser le hook useState pour les composants fonctionnels ou this.state pour les composants de classe. Le hook useState retourne un tableau avec la valeur actuelle de l'état et une fonction pour le mettre à jour."
@@ -530,10 +530,12 @@ export default function ActivityDetailPage() {
           </TableContainer>
         </TabPanel>
 
+        
+
         <TabPanel value={activeTab} index={2}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Liste des questions
+              Questions des participants
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Label
@@ -556,11 +558,16 @@ export default function ActivityDetailPage() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {questionsList.map((question) => (
               <Card key={question.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}>
+                {/* En-tête avec nom du participant */}
                 <Box sx={{ bgcolor: '#F8F9FA', p: 2, borderBottom: 1, borderColor: 'divider' }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Typography variant="body2" fontWeight="bold">****</Typography>
-                      <Typography variant="caption">Participant</Typography>
+                      <Typography variant="body2" fontWeight="bold" color="primary.main">
+                        {question.participant}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        • {question.time}
+                      </Typography>
                     </Box>
                     <Label
                       variant="soft"
@@ -571,37 +578,192 @@ export default function ActivityDetailPage() {
                     </Label>
                   </Box>
                 </Box>
-
-                <Box sx={{ p: 2 }}>
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Question :
-                  </Typography>
-                  <Card sx={{ p: 2, bgcolor: '#F8F9FA', mb: 2, borderRadius: 2 }}>
-                    <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                      {question.question}
+            
+                <Box sx={{ p: 3 }}>
+                  {/* Question du participant */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium', mb: 1, display: 'block' }}>
+                      Question :
                     </Typography>
-                  </Card>
+                    <Card sx={{ p: 2, bgcolor: '#F3F4F6', borderRadius: 2, border: '1px solid #E5E7EB' }}>
+                      <Typography variant="body2" sx={{ fontSize: '14px', lineHeight: 1.5 }}>
+                        {question.question}
+                      </Typography>
+                    </Card>
+                  </Box>
+            
+                  {/* Zone de réponse */}
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium', mb: 1, display: 'block' }}>
+                      Votre réponse :
+                    </Typography>
 
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Réponse :
-                  </Typography>
-                  <Card sx={{ p: 2, bgcolor: '#F8F9FA', minHeight: 60, borderRadius: 2 }}>
-                    {question.answered ? (
-                      <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                        {question.id === 1 && "Pour gérer les états dans React, vous pouvez utiliser le hook useState pour les composants fonctionnels ou this.state pour les composants de classe. Le hook useState retourne un tableau avec la valeur actuelle de l'état et une fonction pour le mettre à jour."}
-                        {question.id === 3 && "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."}
-                      </Typography>
+                    {editingResponse === question.id ? (
+                      // Mode édition
+                      <Box>
+                        <TextField
+                          multiline
+                          rows={4}
+                          value={editResponseText}
+                          onChange={(e) => setEditResponseText(e.target.value)}
+                          placeholder="Tapez votre réponse ici..."
+                          fullWidth
+                          sx={{ 
+                            mb: 2,
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 2
+                            }
+                          }}
+                        />
+                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              setEditingResponse(null);
+                              setEditResponseText('');
+                            }}
+                            sx={{ textTransform: 'none', color: 'text.secondary' }}
+                          >
+                            Annuler
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => handleSaveResponse(question.id)}
+                            disabled={!editResponseText.trim()}
+                            sx={{ 
+                              textTransform: 'none',
+                              bgcolor: 'success.main',
+                              '&:hover': { bgcolor: 'success.dark' },
+                              borderRadius: 1.5
+                            }}
+                          >
+                            Envoyer
+                          </Button>
+                        </Box>
+                      </Box>
                     ) : (
-                      <Typography variant="body2" color="text.disabled" fontStyle="italic" sx={{ fontSize: '14px' }}>
-                        En attente de réponse...
-                      </Typography>
+                      // Mode affichage
+                      <Box>
+                        <Card sx={{ 
+                          p: 2, 
+                          bgcolor: question.answered ? '#F0FDF4' : '#F9FAFB', 
+                          minHeight: 80, 
+                          borderRadius: 2,
+                          border: question.answered ? '1px solid #D1FAE5' : '1px solid #E5E7EB',
+                          mb: 2
+                        }}>
+                          {question.answered && question.response ? (
+                            <Typography variant="body2" sx={{ fontSize: '14px', lineHeight: 1.5, color: '#374151' }}>
+                              {question.response}
+                            </Typography>
+                          ) : (
+                            <Typography 
+                              variant="body2" 
+                              color="text.disabled" 
+                              fontStyle="italic" 
+                              sx={{ 
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                minHeight: 50
+                              }}
+                            >
+                              Cliquez sur "Répondre" pour saisir votre réponse...
+                            </Typography>
+                          )}
+                        </Card>
+                        
+                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                          {question.answered && question.response ? (
+                            <>
+                              <Tooltip title="Modifier la réponse">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleEditResponse(question.id, question.response)}
+                                  sx={{ 
+                                    bgcolor: 'primary.lighter',
+                                    color: 'primary.main',
+                                    '&:hover': { bgcolor: 'primary.light' }
+                                  }}
+                                >
+                                  <Iconify icon="eva:edit-2-fill" width={16} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Effacer la réponse">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleDeleteResponse(question.id)}
+                                  sx={{ 
+                                    bgcolor: 'error.lighter',
+                                    color: 'error.main',
+                                    '&:hover': { bgcolor: 'error.light' }
+                                  }}
+                                >
+                                  <Iconify icon="eva:trash-2-fill" width={16} />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          ) : (
+                            <Button
+                              size="small"
+                              variant="contained"
+                              startIcon={<Iconify icon="eva:message-circle-fill" width={16} />}
+                              onClick={() => handleEditResponse(question.id, '')}
+                              sx={{ 
+                                textTransform: 'none',
+                                bgcolor: 'primary.main',
+                                '&:hover': { bgcolor: 'primary.dark' },
+                                borderRadius: 1.5,
+                                px: 2
+                              }}
+                            >
+                              Répondre
+                            </Button>
+                          )}
+                        </Box>
+                      </Box>
                     )}
-                  </Card>
+                  </Box>
                 </Box>
               </Card>
             ))}
           </Box>
         </TabPanel>
+          
+        {/* Dialog de confirmation pour supprimer une réponse */}
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={cancelDelete}
+          PaperProps={{
+            sx: { borderRadius: 2, minWidth: 400 }
+          }}
+        >
+          <DialogTitle sx={{ pb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Iconify icon="eva:alert-triangle-fill" sx={{ color: 'warning.main' }} width={24} />
+              Confirmer la suppression
+            </Box>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ fontSize: '14px' }}>
+              Êtes-vous sûr de vouloir effacer cette réponse ? Cette action est irréversible et la question repassera en statut "En attente".
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ p: 3, pt: 1 }}>
+            <Button onClick={cancelDelete} sx={{ textTransform: 'none' }}>
+              Annuler
+            </Button>
+            <Button 
+              onClick={confirmDeleteResponse} 
+              variant="contained" 
+              color="error"
+              sx={{ textTransform: 'none' }}
+            >
+              Effacer
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
     </DashboardContent>
   );

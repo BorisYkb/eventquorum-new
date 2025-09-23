@@ -68,7 +68,7 @@ export function OverviewOrganisateurView() {
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12}}>
+        <Grid size={{ xs: 12 }}>
           <AppWelcome
             title={`Bienvenue 👋 \n ${user?.displayName}`}
             description="Vous etes connecté(e) sur votre espace organisateur"

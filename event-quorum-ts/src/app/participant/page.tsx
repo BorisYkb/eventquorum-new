@@ -23,9 +23,8 @@ export default function ParticipantPage() {
         {/* Section 1 - Welcome sans bouton */}
         <Grid size={12}>
           <AppWelcome
-            title="Bienvenu(e) cher(e) participant(e)"
-            description="En seulement cinq éditions, le SARA s'est imposé comme le salon de référence en 
-            matière d'agriculture, de ressources animales, halieutiques et forestières en Afrique subsaharienne."
+            title="Bienvenu(e) Chonou Oriane"
+            description="Vous ètes connecté sur l'espace Participant de l'évènement SARA."
             img={<SeoIllustration />}
           />
         </Grid>
