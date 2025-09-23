@@ -1,4 +1,5 @@
 // src/app/participant/enligne/payer/activites/components/activites-payees-list.tsx
+
 'use client';
 
 import Box from '@mui/material/Box';
@@ -10,8 +11,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
 import { useTheme, useMediaQuery } from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+
 import { CONFIG } from 'src/global-config';
 
 import type { ActivitePayee } from './activites-payees-data';

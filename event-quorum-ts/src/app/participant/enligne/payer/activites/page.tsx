@@ -1,4 +1,5 @@
 // src/app/participant/enligne/payer/activites/page.tsx
+
 'use client';
 
 import { useState } from 'react';
@@ -10,9 +11,9 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-
 import { ActivitesPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-payees-list';
 import { ActivitesNonPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-non-payees-list';
+
 import { ACTIVITES_PAYEES, ACTIVITES_NON_PAYEES } from './components/activites-payees-data';
 
 // ----------------------------------------------------------------------
@@ -45,11 +46,9 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                 {/* En-tête de la page */}
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                     <Typography variant="h4" sx={{ mb: 2, fontWeight: 600 }}>
-                        Activités
+                        Gérez Mes Activités
                     </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Gérez des activités payées et en attente de paiement
-                    </Typography>
+                    
                 </Box>
 
                 {/* Navigation par onglets */}
@@ -90,7 +89,7 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                                             bgcolor: 'success.main',
                                         }}
                                     />
-                                    Activités payées ({ACTIVITES_PAYEES.length})
+                                    Mes Activités ({ACTIVITES_PAYEES.length})
                                 </Box>
                             }
                         />

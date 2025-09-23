@@ -1,5 +1,8 @@
 // src/app/participant/enligne/components/activites-selection.tsx
+
 'use client';
+
+import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,10 +13,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import CardContent from '@mui/material/CardContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { useTheme, useMediaQuery } from '@mui/material';
-
-import { varAlpha } from 'minimal-shared/utils';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,7 @@ interface ActivitesSelectionProps {
     selectedActivites: SelectedActivite[];
     onActiviteToggle: (activiteId: string) => void;
     onStandingChange: (activiteId: string, standing: string) => void;
+    disabledActivities?: string[]; // Nouvelle prop pour les activités à griser
 }
 
 /**
@@ -66,6 +68,7 @@ export function ActivitesSelection({
     selectedActivites,
     onActiviteToggle,
     onStandingChange,
+    disabledActivities = []
 }: ActivitesSelectionProps) {
     // Hook pour la gestion responsive
     const theme = useTheme();
@@ -75,9 +78,7 @@ export function ActivitesSelection({
     /**
      * Vérifie si une activité est sélectionnée
      */
-    const isActiviteSelected = (activiteId: string): boolean => {
-        return selectedActivites.some(item => item.activityId === activiteId);
-    };
+    const isActiviteSelected = (activiteId: string): boolean => selectedActivites.some(item => item.activityId === activiteId);
 
     /**
      * Récupère le standing sélectionné pour une activité
@@ -86,6 +87,11 @@ export function ActivitesSelection({
         const found = selectedActivites.find(item => item.activityId === activiteId);
         return found?.selectedStanding || 'standard';
     };
+
+    /**
+     * Vérifie si une activité est désactivée
+     */
+    const isActiviteDisabled = (activiteId: string): boolean => disabledActivities.includes(activiteId);
 
     /**
      * Calcule les tailles de police selon l'écran
@@ -126,15 +132,13 @@ export function ActivitesSelection({
     /**
      * Calcule les espacements selon l'écran
      */
-    const getResponsiveSpacing = () => {
-        return {
+    const getResponsiveSpacing = () => ({
             cardSpacing: isMobile ? 1.5 : 2,
             contentPadding: isMobile ? 1.5 : 2,
             itemSpacing: isMobile ? 1.5 : 2,
             radioGroupGap: isMobile ? 1 : 2,
             marginBottom: isMobile ? 2 : 4
-        };
-    };
+        });
 
     const spacing = getResponsiveSpacing();
 
@@ -158,25 +162,37 @@ export function ActivitesSelection({
                 {activites.map((activite) => {
                     const isSelected = isActiviteSelected(activite.id);
                     const selectedStanding = getSelectedStanding(activite.id);
+                    const isDisabled = isActiviteDisabled(activite.id);
 
                     return (
                         <Card
                             key={activite.id}
                             sx={{
                                 borderRadius: 1,
-                                // Bordure dynamique selon la sélection
+                                position: 'relative',
+                                // Bordure dynamique selon la sélection et l'état
                                 border: (theme) => `1px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
-                                // Arrière-plan selon la sélection
-                                backgroundColor: isSelected ? 'grey.200' : 'background.paper',
+                                // Arrière-plan selon la sélection et l'état
+                                backgroundColor: isDisabled 
+                                    ? 'rgba(0, 0, 0, 0.05)' 
+                                    : isSelected 
+                                        ? 'grey.200' 
+                                        : 'background.paper',
+                                // Opacité pour les activités désactivées
+                                opacity: isDisabled ? 0.6 : 1,
+                                // Curseur selon l'état
+                                cursor: isDisabled ? 'not-allowed' : 'pointer',
                                 // Transition fluide pour les changements d'état
-                                transition: (theme) => theme.transitions.create(['border-color', 'background-color'], {
+                                transition: (theme) => theme.transitions.create(['border-color', 'background-color', 'opacity'], {
                                     easing: theme.transitions.easing.sharp,
                                     duration: theme.transitions.duration.shortest,
                                 }),
-                                // Ombre subtile sur survol
-                                '&:hover': {
-                                    boxShadow: (theme) => theme.shadows[2],
-                                },
+                                // Ombre subtile sur survol (seulement si pas désactivé)
+                                ...(!isDisabled && {
+                                    '&:hover': {
+                                        boxShadow: (theme) => theme.shadows[2],
+                                    },
+                                }),
                             }}
                         >
                             <CardContent sx={{ p: spacing.contentPadding }}>
@@ -190,9 +206,10 @@ export function ActivitesSelection({
                                         control={
                                             <Checkbox
                                                 checked={isSelected}
-                                                onChange={() => onActiviteToggle(activite.id)}
+                                                onChange={() => !isDisabled && onActiviteToggle(activite.id)}
                                                 color="primary"
                                                 size={isMobile ? "small" : "medium"}
+                                                disabled={isDisabled}
                                             />
                                         }
                                         label=""
@@ -220,7 +237,8 @@ export function ActivitesSelection({
                                                     sx={{
                                                         ...fontSizes.subtitle1,
                                                         mb: 0.5,
-                                                        wordBreak: 'break-word' // Évite le débordement sur mobile
+                                                        wordBreak: 'break-word', // Évite le débordement sur mobile
+                                                        color: isDisabled ? 'text.disabled' : 'text.primary'
                                                     }}
                                                 >
                                                     {activite.time} {activite.title}
@@ -229,7 +247,7 @@ export function ActivitesSelection({
                                                 {/* Description */}
                                                 <Typography
                                                     variant="body2"
-                                                    color="text.secondary"
+                                                    color={isDisabled ? 'text.disabled' : 'text.secondary'}
                                                     sx={{
                                                         ...fontSizes.body2,
                                                         mb: 1,
@@ -241,22 +259,40 @@ export function ActivitesSelection({
                                                 </Typography>
                                             </Box>
 
-                                            {/* Chip de statut */}
-                                            <Chip
-                                                label={activite.status}
-                                                size={isMobile ? "small" : "small"}
-                                                color={activite.statusColor}
-                                                variant="soft"
-                                                sx={{
-                                                    ...fontSizes.chipText,
-                                                    alignSelf: isMobile ? 'flex-start' : 'flex-start',
-                                                    flexShrink: 0
-                                                }}
-                                            />
+                                            {/* Chip de statut ou badge "Déjà sélectionnée" */}
+                                            {isDisabled ? (
+                                                <Box 
+                                                    sx={{
+                                                        bgcolor: 'success.main',
+                                                        color: 'white',
+                                                        px: 2,
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 'bold',
+                                                        alignSelf: isMobile ? 'flex-start' : 'flex-start',
+                                                        flexShrink: 0
+                                                    }}
+                                                >
+                                                    Déjà sélectionnée
+                                                </Box>
+                                            ) : (
+                                                <Chip
+                                                    label={activite.status}
+                                                    size={isMobile ? "small" : "small"}
+                                                    color={activite.statusColor}
+                                                    variant="soft"
+                                                    sx={{
+                                                        ...fontSizes.chipText,
+                                                        alignSelf: isMobile ? 'flex-start' : 'flex-start',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                            )}
                                         </Box>
 
-                                        {/* Options de standing si activité sélectionnée */}
-                                        {isSelected && (
+                                        {/* Options de standing si activité sélectionnée et non désactivée */}
+                                        {isSelected && !isDisabled && (
                                             <Box sx={{
                                                 mt: 2,
                                                 ml: isMobile ? 0 : 1,

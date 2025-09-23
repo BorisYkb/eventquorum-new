@@ -68,9 +68,8 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         status: 'Non démarré',
         statusColor: 'default',
         priceOptions: [
-            { id: 'standard', label: 'Standard', price: 0, currency: 'FCFA' },
-            { id: 'vip', label: 'VIP', price: 0, currency: 'FCFA' },
-            { id: 'vvip', label: 'VVIP', price: 0, currency: 'FCFA' },
+            { id: 'Standard', label: 'Gratuit', price: 0, currency: 'FCFA' },
+            
         ]
     },
     {

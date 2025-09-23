@@ -1,16 +1,17 @@
 // src/app/participant/components/accueil-video-section-2.tsx
+
 'use client';
 
+import { varAlpha } from 'minimal-shared/utils';
+
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
 import Container from '@mui/material/Container';
 import SpeedDial from '@mui/material/SpeedDial';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import Grid from '@mui/material/Grid2';
-import { useTheme } from '@mui/material/styles';
-
-import { varAlpha } from 'minimal-shared/utils';
 
 import { Iconify } from 'src/components/iconify';
 

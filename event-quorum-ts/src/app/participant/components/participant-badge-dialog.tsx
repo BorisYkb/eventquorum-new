@@ -1,4 +1,5 @@
 // src/components/dialogs/participant-badge-dialog.tsx
+
 'use client';
 
 import { useState } from 'react';
@@ -7,6 +8,7 @@ import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import PortraitIcon from '@mui/icons-material/Portrait';
 import { useTheme, useMediaQuery, Stack, Card } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
@@ -35,12 +37,12 @@ interface ParticipantBadgeDialogProps {
 const DEFAULT_PARTICIPANT_DATA: ParticipantData = {
   nom: 'Bouadou',
   prenom: 'Kouacou Evarist',
-  email: 'bouadoukouacou000@gmail.com',
+  email: 'bouadou@gmail.com',
   telephone: '0703895849',
   codeParticipant: 'UM8765',
   evenement: {
-    nom: 'SARA 2023',
-    dates: 'Du 29 sept. au 08 oct. 2023',
+    nom: 'SARA 2025',
+    dates: 'Du 29 sept. au 08 oct. 2025',
     lieu: 'Parc des Expositions d\'Abidjan',
   },
 };
@@ -135,37 +137,32 @@ export function ParticipantBadgeDialog({
             </Box>
 
             {/* Infos participant */}
-            <Box sx={{ mt: isMobile ? 2 : 0 }}>
-              <Typography variant="caption" sx={{ fontSize: '1.5rem', fontWeight: 700, display: 'block' }}>
-                Infos participant
-              </Typography>
-              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
-                Nom_Prénom
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
-              >
-                {participantData.prenom} {participantData.nom}
-              </Typography>
-              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
-                Email
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
-              >
-                {participantData.email}
-              </Typography>
-              <Typography variant="caption" sx={{ fontSize: '0.65rem', display: 'block' }}>
-                Téléphone
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ fontSize: '0.75rem', fontWeight: 700, display: 'block' }}
-              >
-                {participantData.telephone}
-              </Typography>
+            <Box sx={{ mt: isMobile ? 2 : 0, display: 'flex', alignItems: 'center', gap: 1 }}>
+              
+              <PortraitIcon sx={{fontSize: 70}}/>
+              
+              <Box>
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: '0.75rem', fontWeight: 200, display: 'block' }}
+                >
+                  {participantData.prenom} {participantData.nom}
+                </Typography>
+                
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: '0.75rem', fontWeight: 200, display: 'block' }}
+                >
+                  {participantData.email}
+                </Typography>
+                
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: '0.75rem', fontWeight: 200, display: 'block' }}
+                >
+                  {participantData.telephone}
+                </Typography>
+              </Box>
             </Box>
           </Stack>
 
@@ -173,14 +170,12 @@ export function ParticipantBadgeDialog({
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Box
               sx={{
-                width: isMobile ? 120 : 150,
-                height: isMobile ? 120 : 150,
+                width: isMobile ? 150 : 180,
+                height: isMobile ? 150 : 180,
                 mx: 'auto',
                 mb: 2,
                 backgroundColor: 'white',
-                border: '2px solid',
-                borderColor: 'text.primary',
-                borderRadius: 1,
+                
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -191,8 +186,8 @@ export function ParticipantBadgeDialog({
                 src="/assets/images/QR-code.png"
                 alt="QR Code"
                 sx={{
-                  width: isMobile ? 90 : 120,
-                  height: isMobile ? 90 : 120,
+                  width: isMobile ? 150 : 180,
+                  height: isMobile ? 150 : 180,
                   mx: 'auto',
                 }}
               />
@@ -206,7 +201,7 @@ export function ParticipantBadgeDialog({
                 mb: 0.5,
               }}
             >
-              CODE PARTICIPANT : {participantData.codeParticipant}
+              Code Participant : {participantData.codeParticipant}
             </Typography>
           </Box>
 
@@ -220,7 +215,7 @@ export function ParticipantBadgeDialog({
               color: 'text.secondary',
             }}
           >
-            Ce badge vous donne accès à vos activités. Veuillez le présenter lors de votre admission.
+            Ce badge vous donne accès à vos activités. <br /> Veuillez le présenter lors de votre admission.
           </Typography>
         </Card>
       </Box>

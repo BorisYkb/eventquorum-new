@@ -1,30 +1,30 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import type { TableHeadCellProps } from 'src/components/table';
 
+import React, { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { DashboardContent } from 'src/layouts/guichet';
 import { MotivationIllustration } from 'src/assets/illustrations';
-import { useMockedUser } from 'src/auth/hooks';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -38,9 +38,11 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
+import { useMockedUser } from 'src/auth/hooks';
+
 import { EcommerceWelcome } from '../ecommerce-welcome';
-import AddParticipantForm from '../../../../app/guichet/component/add-participant-form';
 import { shadows } from '../../../../theme/core/shadows';
+import AddParticipantForm from '../../../../app/guichet/component/add-participant-form';
 
 // ----------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 
 'use client';
 
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
 
 import { SeoIllustration } from 'src/assets/illustrations';
 

@@ -1,21 +1,21 @@
 // src/app/participant/components/accueil-programme-section-2.tsx
+
 'use client';
 
 import { useState } from 'react';
+import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Grid from '@mui/material/Grid2';
-import { useTheme } from '@mui/material/styles';
-
-import { usePopover } from 'minimal-shared/hooks';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomTabs } from 'src/components/custom-tabs';

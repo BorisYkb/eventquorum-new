@@ -5,15 +5,12 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 
-import { SeoIllustration } from 'src/assets/illustrations';
-
-import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { DashboardContent } from 'src/layouts/dashboard';
-
+import { SeoIllustration } from 'src/assets/illustrations';
+import { Footer } from 'src/app/participant/components/footer';
+import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { AccueilVideoSection2 } from 'src/app/participant/components/accueil-video-section-2';
 import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
-import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
-import { Footer } from 'src/app/participant/components/footer';
 
 // ----------------------------------------------------------------------
 
@@ -38,11 +35,7 @@ export default function ParticipantEnresentielPage() {
                 <AccueilProgrammeSection2 />
 
                 {/* Section 4 - Sponsors/Footer */}
-                <Grid size={12}>
-                    <Box sx={{ textAlign: 'center', py: 4 }}>
-                        <IntervenantCarousel />
-                    </Box>
-                </Grid>
+                
 
                 <Grid size={12}>
                     <Box sx={{ textAlign: 'center', py: 4 }}>

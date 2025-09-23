@@ -1,5 +1,8 @@
 // src/app/participant/enligne/components/activites-selection.tsx
+
 'use client';
+
+import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,13 +13,14 @@ import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import CardContent from '@mui/material/CardContent';
+import { useTheme, useMediaQuery } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
-import { varAlpha } from 'minimal-shared/utils';
 
 // ----------------------------------------------------------------------
 
-// Types pour les activités
+/**
+ * Interface pour les options de prix/standing d'une activité
+ */
 export interface PriceOption {
     id: string;
     label: string;
@@ -24,6 +28,9 @@ export interface PriceOption {
     currency: string;
 }
 
+/**
+ * Interface pour une activité événementielle
+ */
 export interface Activite {
     id: string;
     time: string;
@@ -34,6 +41,9 @@ export interface Activite {
     priceOptions: PriceOption[];
 }
 
+/**
+ * Interface pour une activité sélectionnée par l'utilisateur
+ */
 export interface SelectedActivite {
     activityId: string;
     selectedStanding: string;
@@ -46,109 +56,300 @@ interface ActivitesSelectionProps {
     selectedActivites: SelectedActivite[];
     onActiviteToggle: (activiteId: string) => void;
     onStandingChange: (activiteId: string, standing: string) => void;
+    disabledActivities?: string[]; // Nouvelle prop pour les activités à griser
 }
 
+/**
+ * Composant pour la sélection d'activités avec gestion responsive
+ * et tailles de police dynamiques selon l'écran
+ */
 export function ActivitesSelection({
     activites,
     selectedActivites,
     onActiviteToggle,
     onStandingChange,
+    disabledActivities = []
 }: ActivitesSelectionProps) {
-    const isActiviteSelected = (activiteId: string) => {
-        return selectedActivites.some(item => item.activityId === activiteId);
-    };
+    // Hook pour la gestion responsive
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-    const getSelectedStanding = (activiteId: string) => {
+    /**
+     * Vérifie si une activité est sélectionnée
+     */
+    const isActiviteSelected = (activiteId: string): boolean => selectedActivites.some(item => item.activityId === activiteId);
+
+    /**
+     * Récupère le standing sélectionné pour une activité
+     */
+    const getSelectedStanding = (activiteId: string): string => {
         const found = selectedActivites.find(item => item.activityId === activiteId);
         return found?.selectedStanding || 'standard';
     };
 
+    /**
+     * Vérifie si une activité est désactivée
+     */
+    const isActiviteDisabled = (activiteId: string): boolean => disabledActivities.includes(activiteId);
+
+    /**
+     * Calcule les tailles de police selon l'écran
+     */
+    const getResponsiveFontSizes = () => {
+        if (isMobile) {
+            return {
+                subtitle2: { fontSize: '0.75rem', fontWeight: 500 }, // Taille réduite sur mobile
+                subtitle1: { fontSize: '0.875rem', fontWeight: 600 },
+                body2: { fontSize: '0.75rem', fontWeight: 400 },
+                caption: { fontSize: '0.6875rem', fontWeight: 400 },
+                chipText: { fontSize: '0.6875rem', fontWeight: 500 }
+            };
+        }
+
+        if (isTablet) {
+            return {
+                subtitle2: { fontSize: '0.8125rem', fontWeight: 500 },
+                subtitle1: { fontSize: '0.9375rem', fontWeight: 600 },
+                body2: { fontSize: '0.8125rem', fontWeight: 400 },
+                caption: { fontSize: '0.75rem', fontWeight: 400 },
+                chipText: { fontSize: '0.75rem', fontWeight: 500 }
+            };
+        }
+
+        // Desktop - tailles par défaut
+        return {
+            subtitle2: { fontSize: '0.875rem', fontWeight: 500 },
+            subtitle1: { fontSize: '1rem', fontWeight: 600 },
+            body2: { fontSize: '0.875rem', fontWeight: 400 },
+            caption: { fontSize: '0.75rem', fontWeight: 400 },
+            chipText: { fontSize: '0.75rem', fontWeight: 500 }
+        };
+    };
+
+    const fontSizes = getResponsiveFontSizes();
+
+    /**
+     * Calcule les espacements selon l'écran
+     */
+    const getResponsiveSpacing = () => ({
+            cardSpacing: isMobile ? 1.5 : 2,
+            contentPadding: isMobile ? 1.5 : 2,
+            itemSpacing: isMobile ? 1.5 : 2,
+            radioGroupGap: isMobile ? 1 : 2,
+            marginBottom: isMobile ? 2 : 4
+        });
+
+    const spacing = getResponsiveSpacing();
+
     return (
         <Box>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 4 }}>
+            {/* Titre de la section */}
+            <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                sx={{
+                    mb: spacing.marginBottom,
+                    ...fontSizes.subtitle2,
+                    textAlign: isMobile ? 'center' : 'left'
+                }}
+            >
                 La liste des activités au programme
             </Typography>
 
-            <Stack spacing={2}>
+            {/* Liste des activités */}
+            <Stack spacing={spacing.cardSpacing}>
                 {activites.map((activite) => {
                     const isSelected = isActiviteSelected(activite.id);
                     const selectedStanding = getSelectedStanding(activite.id);
+                    const isDisabled = isActiviteDisabled(activite.id);
 
                     return (
                         <Card
                             key={activite.id}
                             sx={{
                                 borderRadius: 1,
+                                position: 'relative',
+                                // Bordure dynamique selon la sélection et l'état
                                 border: (theme) => `1px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
-                                backgroundColor: isSelected ? 'grey.200' : 'background.paper',
-                                transition: (theme) => theme.transitions.create(['border-color', 'background-color'], {
+                                // Arrière-plan selon la sélection et l'état
+                                backgroundColor: isDisabled 
+                                    ? 'rgba(0, 0, 0, 0.05)' 
+                                    : isSelected 
+                                        ? 'grey.200' 
+                                        : 'background.paper',
+                                // Opacité pour les activités désactivées
+                                opacity: isDisabled ? 0.6 : 1,
+                                // Curseur selon l'état
+                                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                                // Transition fluide pour les changements d'état
+                                transition: (theme) => theme.transitions.create(['border-color', 'background-color', 'opacity'], {
                                     easing: theme.transitions.easing.sharp,
                                     duration: theme.transitions.duration.shortest,
                                 }),
+                                // Ombre subtile sur survol (seulement si pas désactivé)
+                                ...(!isDisabled && {
+                                    '&:hover': {
+                                        boxShadow: (theme) => theme.shadows[2],
+                                    },
+                                }),
                             }}
                         >
-                            <CardContent sx={{ p: 2 }}>
-                                <Stack direction="row" spacing={2} alignItems="flex-start">
+                            <CardContent sx={{ p: spacing.contentPadding }}>
+                                <Stack
+                                    direction={isMobile ? "column" : "row"}
+                                    spacing={spacing.itemSpacing}
+                                    alignItems={isMobile ? "stretch" : "flex-start"}
+                                >
                                     {/* Checkbox de sélection */}
                                     <FormControlLabel
                                         control={
                                             <Checkbox
                                                 checked={isSelected}
-                                                onChange={() => onActiviteToggle(activite.id)}
+                                                onChange={() => !isDisabled && onActiviteToggle(activite.id)}
                                                 color="primary"
+                                                size={isMobile ? "small" : "medium"}
+                                                disabled={isDisabled}
                                             />
                                         }
                                         label=""
-                                        sx={{ m: 0 }}
+                                        sx={{
+                                            m: 0,
+                                            ...(isMobile && { alignSelf: 'flex-start' })
+                                        }}
                                     />
 
                                     {/* Contenu de l'activité */}
-                                    <Box sx={{ flex: 1 }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                                            <Box>
-                                                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                    <Box sx={{ flex: 1, width: '100%' }}>
+                                        {/* En-tête de l'activité */}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: isMobile ? 'stretch' : 'flex-start',
+                                            flexDirection: isMobile ? 'column' : 'row',
+                                            gap: isMobile ? 1 : 0,
+                                            mb: 1
+                                        }}>
+                                            <Box sx={{ flex: 1 }}>
+                                                {/* Titre avec heure */}
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        ...fontSizes.subtitle1,
+                                                        mb: 0.5,
+                                                        wordBreak: 'break-word', // Évite le débordement sur mobile
+                                                        color: isDisabled ? 'text.disabled' : 'text.primary'
+                                                    }}
+                                                >
                                                     {activite.time} {activite.title}
                                                 </Typography>
 
-                                                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                                                {/* Description */}
+                                                <Typography
+                                                    variant="body2"
+                                                    color={isDisabled ? 'text.disabled' : 'text.secondary'}
+                                                    sx={{
+                                                        ...fontSizes.body2,
+                                                        mb: 1,
+                                                        lineHeight: 1.4,
+                                                        wordBreak: 'break-word'
+                                                    }}
+                                                >
                                                     {activite.description}
                                                 </Typography>
                                             </Box>
 
-                                            <Chip
-                                                label={activite.status}
-                                                size="small"
-                                                color={activite.statusColor}
-                                                variant="soft"
-                                                sx={{ fontWeight: 500, fontSize: '0.75rem' }}
-                                            />
+                                            {/* Chip de statut ou badge "Déjà sélectionnée" */}
+                                            {isDisabled ? (
+                                                <Box 
+                                                    sx={{
+                                                        bgcolor: 'success.main',
+                                                        color: 'white',
+                                                        px: 2,
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 'bold',
+                                                        alignSelf: isMobile ? 'flex-start' : 'flex-start',
+                                                        flexShrink: 0
+                                                    }}
+                                                >
+                                                    Déjà sélectionnée
+                                                </Box>
+                                            ) : (
+                                                <Chip
+                                                    label={activite.status}
+                                                    size={isMobile ? "small" : "small"}
+                                                    color={activite.statusColor}
+                                                    variant="soft"
+                                                    sx={{
+                                                        ...fontSizes.chipText,
+                                                        alignSelf: isMobile ? 'flex-start' : 'flex-start',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                            )}
                                         </Box>
 
-                                        {/* Options de standing si activité sélectionnée */}
-                                        {isSelected && (
-                                            <Box sx={{ mt: 2, ml: 1 }}>
-                                                <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                                        {/* Options de standing si activité sélectionnée et non désactivée */}
+                                        {isSelected && !isDisabled && (
+                                            <Box sx={{
+                                                mt: 2,
+                                                ml: isMobile ? 0 : 1,
+                                                p: isMobile ? 1 : 0,
+                                                backgroundColor: isMobile ? 'grey.50' : 'transparent',
+                                                borderRadius: isMobile ? 1 : 0
+                                            }}>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{
+                                                        ...fontSizes.body2,
+                                                        fontWeight: 600,
+                                                        mb: 1
+                                                    }}
+                                                >
                                                     Type de place:
                                                 </Typography>
 
                                                 <RadioGroup
                                                     value={selectedStanding}
                                                     onChange={(e) => onStandingChange(activite.id, e.target.value)}
-                                                    row
-                                                    sx={{ gap: 2 }}
+                                                    row={!isMobile} // Vertical sur mobile, horizontal sur desktop
+                                                    sx={{
+                                                        gap: spacing.radioGroupGap,
+                                                        flexDirection: isMobile ? 'column' : 'row'
+                                                    }}
                                                 >
                                                     {activite.priceOptions.map((option) => (
                                                         <FormControlLabel
                                                             key={option.id}
                                                             value={option.id}
-                                                            control={<Radio size="small" />}
+                                                            control={
+                                                                <Radio
+                                                                    size={isMobile ? "small" : "small"}
+                                                                />
+                                                            }
                                                             label={
-                                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                                                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    alignItems: 'flex-start'
+                                                                }}>
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{
+                                                                            ...fontSizes.body2,
+                                                                            fontWeight: 500
+                                                                        }}
+                                                                    >
                                                                         {option.label}
                                                                     </Typography>
-                                                                    <Typography variant="caption" color="text.secondary">
-                                                                        {option.price.toLocaleString()} {option.currency }
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="text.secondary"
+                                                                        sx={fontSizes.caption}
+                                                                    >
+                                                                        {option.price.toLocaleString()} {option.currency}
                                                                     </Typography>
                                                                 </Box>
                                                             }
@@ -156,10 +357,13 @@ export function ActivitesSelection({
                                                                 border: '1px solid',
                                                                 borderColor: 'divider',
                                                                 borderRadius: 1,
-                                                                px: 1,
-                                                                py: 0.5,
+                                                                px: isMobile ? 1.5 : 1,
+                                                                py: isMobile ? 1 : 0.5,
                                                                 m: 0,
+                                                                width: isMobile ? '100%' : 'auto',
+                                                                // Effet hover
                                                                 '&:hover': { borderColor: 'primary.main' },
+                                                                // Style quand sélectionné
                                                                 ...(selectedStanding === option.id && {
                                                                     borderColor: 'primary.main',
                                                                     bgcolor: (theme) => varAlpha(theme.vars.palette.primary.mainChannel, 0.08)

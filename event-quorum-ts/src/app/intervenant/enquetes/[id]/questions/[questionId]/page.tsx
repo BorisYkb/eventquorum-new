@@ -1,7 +1,9 @@
 'use client'
+
 import { useParams } from 'next/navigation';
-import MuiQuestionDetail from '../../../components/MuiQuestionDetail';
+
 import { Question } from '../../../types/survey';
+import MuiQuestionDetail from '../../../components/MuiQuestionDetail';
 
 // Données d'exemple - remplacez par vos vraies données
 const mockQuestions: Question[] = [

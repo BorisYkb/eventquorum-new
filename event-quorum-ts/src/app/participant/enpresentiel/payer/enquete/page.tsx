@@ -1,4 +1,5 @@
 //src/app/participant/enquete/page.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,16 +7,16 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Checkbox from '@mui/material/Checkbox';
-import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
+import Radio from '@mui/material/Radio';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
@@ -125,7 +126,7 @@ export default function EnquetePage() {
       
       // Afficher un message de succès et rediriger
       alert('Merci pour votre participation ! Vos réponses ont été enregistrées.');
-      router.push('/participant/enpresentiel/payer');
+      router.push('/participant/enpresentiel/payer/mesinteractions');
     } catch (error) {
       console.error('Erreur lors de l\'envoi:', error);
       alert('Erreur lors de l\'envoi. Veuillez réessayer.');
@@ -144,12 +145,10 @@ export default function EnquetePage() {
   /**
    * Vérifier si toutes les questions ont une réponse
    */
-  const isFormComplete = () => {
-    return surveyData.questions.every(question => {
+  const isFormComplete = () => surveyData.questions.every(question => {
       const answer = answers[question.id];
       return answer && (Array.isArray(answer) ? answer.length > 0 : answer.trim() !== '');
     });
-  };
 
   if (!surveyCode) {
     return null; // Ou un loading spinner
@@ -163,7 +162,7 @@ export default function EnquetePage() {
         <Box sx={{ mb: 3, textAlign: 'right' }}>
           <Button
             variant="contained"
-            color="warning"
+            color="primary"
             onClick={handleRetour}
             sx={{
               textTransform: 'none',

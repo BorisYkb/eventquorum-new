@@ -1,21 +1,22 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
 import { z as zod } from 'zod';
-import { useForm, useFormContext } from 'react-hook-form';
+import React, { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { DashboardContent } from 'src/layouts/guichet';
-import { Form, Field } from 'src/components/hook-form';
+
 import { Iconify } from 'src/components/iconify';
+import { Form, Field } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -283,9 +284,7 @@ function StepTwo() {
     setValue('stepTwo.activites', updatedActivities, { shouldValidate: true });
   };
 
-  const isActivitySelected = (activityId: number) => {
-    return watchedActivities.some(a => a.activityId === activityId);
-  };
+  const isActivitySelected = (activityId: number) => watchedActivities.some(a => a.activityId === activityId);
 
   const getSelectedTypePlace = (activityId: number) => {
     const activity = watchedActivities.find(a => a.activityId === activityId);

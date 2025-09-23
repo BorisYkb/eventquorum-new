@@ -1,6 +1,6 @@
+import Card from '@mui/material/Card';
 //src/app/participant/components/footer.tsx
 import Grid from '@mui/material/Grid2';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 

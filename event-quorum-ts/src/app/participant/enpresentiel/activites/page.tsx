@@ -1,9 +1,14 @@
 // src/app/participant/enligne/activites/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useBoolean } from 'minimal-shared/hooks';
 
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Container from '@mui/material/Container';
@@ -11,22 +16,17 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
-
-import { useBoolean } from 'minimal-shared/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { Footer } from 'src/app/participant/components/footer';
+import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 
-import { ActivitesSelection } from '../components/activites-selection';
-import { ActivitesSummary } from '../components/activites-summary';
 import { PaymentMethods } from '../components/payment-methods';
+import { ActivitesSummary } from '../components/activites-summary';
 import { ACTIVITES_DISPONIBLES } from '../components/activites-data';
+import { ActivitesSelection } from '../components/activites-selection';
 
 import type { SelectedActivite } from '../components/activites-selection';
-import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
-import { Footer } from 'src/app/participant/components/footer';
-import Box from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
 
@@ -110,7 +110,7 @@ export default function ParticipantEnligneActivitesPage() {
         <DashboardContent>
             <Container sx={{ py: 1 }}>
                 <Typography variant="h4" align="center" sx={{ mb: 2 }}>
-                    Sélection des activités
+                    Sélection des Activités
                 </Typography>
 
                 <Typography align="center" sx={{ color: 'text.secondary', mb: 5 }}>
