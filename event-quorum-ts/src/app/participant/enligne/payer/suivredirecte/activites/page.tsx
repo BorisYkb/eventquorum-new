@@ -14,12 +14,12 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { ActivitesPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-payees-list';
+import { ActivitesPayeesList } from 'src/app/participant/enligne/payer/suivredirecte/activites/components/activites-payees-list';
 import { ActivitesNonPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-non-payees-list';
 
 import { Iconify } from 'src/components/iconify';
 
-import { ACTIVITES_PAYEES, ACTIVITES_NON_PAYEES } from './components/activites-payees-data';
+import { ACTIVITES_PAYEES} from './components/activites-payees-data';
 
 // ----------------------------------------------------------------------
 
@@ -39,16 +39,16 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
     };
 
 
-    const renderTabContent = () => {
-        switch (currentTab) {
-            case 'payees':
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-            case 'non-payees':
-                return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
-            default:
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-        }
-    };
+    // const renderTabContent = () => {
+    //     switch (currentTab) {
+    //         case 'payees':
+    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
+    //         case 'non-payees':
+    //             return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
+    //         default:
+    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
+    //     }
+    // };
 
     const handleAddActivite = () => {
         // Rediriger vers la page de sélection des activités
@@ -151,7 +151,7 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
 
                 {/* Contenu des onglets */}
                 <Box sx={{ minHeight: 400 }}>
-                    {renderTabContent()}
+                   <ActivitesPayeesList activites={ACTIVITES_PAYEES} />
                 </Box>
             </Container>
         </DashboardContent>

@@ -148,30 +148,6 @@ export default function AjouterActivitesPage() {
                     <Box sx={{ width: 100 }} /> {/* Spacer pour centrer le titre */}
                 </Box>
 
-                <Typography align="center" sx={{ color: 'text.secondary', mb: 3 }}>
-                    Sélectionnez de nouvelles activités à ajouter à votre liste
-                </Typography>
-
-                {/* Indicateur des activités déjà sélectionnées */}
-                {alreadySelectedIds.length > 0 && (
-                    <Box sx={{ mb: 3, textAlign: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                            Activités déjà dans votre liste :
-                        </Typography>
-                        <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" gap={1}>
-                            {ACTIVITES_PAYEES.map((activite) => (
-                                <Chip 
-                                    key={activite.id}
-                                    label={`${activite.time} ${activite.title}`}
-                                    size="small"
-                                    color="success"
-                                    variant="outlined"
-                                />
-                            ))}
-                        </Stack>
-                    </Box>
-                )}
-
                 <Grid container spacing={4}>
                     {/* Section 1 - Sélection des nouvelles activités (60% largeur) */}
                     <Grid size={{ xs: 12, lg: 7 }}>
@@ -191,7 +167,6 @@ export default function AjouterActivitesPage() {
                             <ActivitesSummary
                                 activites={ACTIVITES_DISPONIBLES}
                                 selectedActivites={newSelectedActivites}
-                                title="Nouvelles Activités Sélectionnées"
                             />
 
                             {/* Méthodes de paiement pour les nouvelles activités */}
@@ -214,15 +189,6 @@ export default function AjouterActivitesPage() {
                                     disabled={newSelectedActivites.length === 0}
                                 >
                                     Ajouter les Activités Sélectionnées
-                                </Button>
-
-                                <Button
-                                    fullWidth
-                                    size="large"
-                                    variant="outlined"
-                                    onClick={handleGoBack}
-                                >
-                                    Retourner sans Ajouter
                                 </Button>
                             </Stack>
                         </Stack>

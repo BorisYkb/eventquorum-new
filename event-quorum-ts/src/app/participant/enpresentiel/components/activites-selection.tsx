@@ -1,4 +1,4 @@
-// src/app/participant/enligne/components/activites-selection.tsx
+// src/app/participant/enpresentiel/components/activites-selection.tsx
 
 'use client';
 
@@ -93,6 +93,17 @@ export function ActivitesSelection({
      */
     const isActiviteDisabled = (activiteId: string): boolean => disabledActivities.includes(activiteId);
 
+    // Une activité est gratuite si toutes les options ont un prix = 0 (ou pas d'options)
+    const isFreeActivity = (a: Activite) =>
+        !a.priceOptions || a.priceOptions.length === 0 || a.priceOptions.every(o => o.price === 0);
+
+    // Construit la liste d’options à afficher (s’il est gratuit, on force une seule option “Gratuit”)
+    const buildRenderedOptions = (a: Activite) =>
+        isFreeActivity(a)
+            ? [{ id: 'gratuit', label: 'Gratuit', price: 0, currency: 'FCFA' }]
+            : a.priceOptions;
+
+
     /**
      * Calcule les tailles de police selon l'écran
      */
@@ -133,12 +144,12 @@ export function ActivitesSelection({
      * Calcule les espacements selon l'écran
      */
     const getResponsiveSpacing = () => ({
-            cardSpacing: isMobile ? 1.5 : 2,
-            contentPadding: isMobile ? 1.5 : 2,
-            itemSpacing: isMobile ? 1.5 : 2,
-            radioGroupGap: isMobile ? 1 : 2,
-            marginBottom: isMobile ? 2 : 4
-        });
+        cardSpacing: isMobile ? 1.5 : 2,
+        contentPadding: isMobile ? 1.5 : 2,
+        itemSpacing: isMobile ? 1.5 : 2,
+        radioGroupGap: isMobile ? 1 : 2,
+        marginBottom: isMobile ? 2 : 4
+    });
 
     const spacing = getResponsiveSpacing();
 
@@ -163,6 +174,8 @@ export function ActivitesSelection({
                     const isSelected = isActiviteSelected(activite.id);
                     const selectedStanding = getSelectedStanding(activite.id);
                     const isDisabled = isActiviteDisabled(activite.id);
+                    const renderedOptions = buildRenderedOptions(activite);
+
 
                     return (
                         <Card
@@ -173,10 +186,10 @@ export function ActivitesSelection({
                                 // Bordure dynamique selon la sélection et l'état
                                 border: (theme) => `1px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
                                 // Arrière-plan selon la sélection et l'état
-                                backgroundColor: isDisabled 
-                                    ? 'rgba(0, 0, 0, 0.05)' 
-                                    : isSelected 
-                                        ? 'grey.200' 
+                                backgroundColor: isDisabled
+                                    ? 'rgba(0, 0, 0, 0.05)'
+                                    : isSelected
+                                        ? 'grey.200'
                                         : 'background.paper',
                                 // Opacité pour les activités désactivées
                                 opacity: isDisabled ? 0.6 : 1,
@@ -261,7 +274,7 @@ export function ActivitesSelection({
 
                                             {/* Chip de statut ou badge "Déjà sélectionnée" */}
                                             {isDisabled ? (
-                                                <Box 
+                                                <Box
                                                     sx={{
                                                         bgcolor: 'success.main',
                                                         color: 'white',
@@ -320,7 +333,7 @@ export function ActivitesSelection({
                                                         flexDirection: isMobile ? 'column' : 'row'
                                                     }}
                                                 >
-                                                    {activite.priceOptions.map((option) => (
+                                                    {renderedOptions.map((option) => (
                                                         <FormControlLabel
                                                             key={option.id}
                                                             value={option.id}

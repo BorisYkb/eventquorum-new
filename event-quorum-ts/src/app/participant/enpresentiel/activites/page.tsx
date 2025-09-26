@@ -1,8 +1,7 @@
-// src/app/participant/enligne/activites/page.tsx
-
+// src/app/participant/enpresentiel/activites/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBoolean } from 'minimal-shared/hooks';
 
@@ -19,19 +18,18 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { Footer } from 'src/app/participant/components/footer';
-import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 
-import { PaymentMethods } from '../components/payment-methods';
 import { ActivitesSummary } from '../components/activites-summary';
 import { ACTIVITES_DISPONIBLES } from '../components/activites-data';
-import { ActivitesSelection } from '../components/activites-selection';
+import { PaymentMethods } from '../../enpresentiel/components/payment-methods';
+import { ActivitesSelection } from '../../enpresentiel/components/activites-selection';
 
 import type { SelectedActivite } from '../components/activites-selection';
 
 // ----------------------------------------------------------------------
 
 /**
- * Page principale /participant/enpresentiel/activites
+ * Page principale /participant/enligne/activites
  */
 export default function ParticipantEnligneActivitesPage() {
     const router = useRouter();
@@ -46,39 +44,70 @@ export default function ParticipantEnligneActivitesPage() {
     // Modal pour guichet
     const guichetDialog = useBoolean();
 
+    // Helpers: extraire le prix d'une activité selon standing
+    const getPriceForSelection = (selection: SelectedActivite): number => {
+        const act = ACTIVITES_DISPONIBLES.find((a) => a.id === selection.activityId);
+        if (!act) return 0;
+        if (selection.selectedStanding === 'gratuit') return 0;
+
+        const opt = act.priceOptions?.find((p) => p.id === selection.selectedStanding);
+        return opt ? opt.price : 0;
+    };
+
+    const totalAmount = useMemo(
+        () => selectedActivites.reduce((sum, s) => sum + getPriceForSelection(s), 0),
+        [selectedActivites]
+    );
+
+    const isAllFree = totalAmount === 0 && selectedActivites.length > 0;
+
     // Gestionnaire pour basculer la sélection d'une activité
     const handleActiviteToggle = (activiteId: string) => {
-        setSelectedActivites(prev => {
-            const existingIndex = prev.findIndex(item => item.activityId === activiteId);
+        // Retrouver l'activité pour savoir si elle est gratuite
+        const activite = ACTIVITES_DISPONIBLES.find((a) => a.id === activiteId);
+
+        const isFree =
+            !activite ||
+            !activite.priceOptions ||
+            activite.priceOptions.length === 0 ||
+            activite.priceOptions.every((opt) => opt.price === 0);
+
+        setSelectedActivites((prev) => {
+            const existingIndex = prev.findIndex((item) => item.activityId === activiteId);
 
             if (existingIndex >= 0) {
                 // Désélectionner l'activité
-                return prev.filter(item => item.activityId !== activiteId);
+                return prev.filter((item) => item.activityId !== activiteId);
             } else {
-                // Sélectionner l'activité avec l'option standard par défaut
-                return [...prev, {
-                    activityId: activiteId,
-                    selectedStanding: 'standard'
-                }];
+                // Sélectionner l'activité (par défaut 'gratuit' si activité gratuite, sinon 'standard')
+                return [
+                    ...prev,
+                    {
+                        activityId: activiteId,
+                        selectedStanding: isFree ? 'gratuit' : 'standard',
+                    },
+                ];
             }
         });
     };
 
     // Gestionnaire pour changer le standing d'une activité
     const handleStandingChange = (activiteId: string, standing: string) => {
-        setSelectedActivites(prev =>
-            prev.map(item =>
-                item.activityId === activiteId
-                    ? { ...item, selectedStanding: standing }
-                    : item
-            )
+        setSelectedActivites((prev) =>
+            prev.map((item) => (item.activityId === activiteId ? { ...item, selectedStanding: standing } : item))
         );
     };
 
-    // Gestionnaire pour valider le paiement
+    // Gestionnaire pour valider
     const handleValidatePayment = () => {
         if (selectedActivites.length === 0) {
             alert('Veuillez sélectionner au moins une activité');
+            return;
+        }
+
+        // Si tout est gratuit : pas de paiement requis, on confirme directement
+        if (isAllFree) {
+            router.push('/participant/enpresentiel'); // ou une page de confirmation dédiée
             return;
         }
 
@@ -132,10 +161,7 @@ export default function ParticipantEnligneActivitesPage() {
                     <Grid size={{ xs: 12, lg: 5 }}>
                         <Stack spacing={3}>
                             {/* Résumé */}
-                            <ActivitesSummary
-                                activites={ACTIVITES_DISPONIBLES}
-                                selectedActivites={selectedActivites}
-                            />
+                            <ActivitesSummary activites={ACTIVITES_DISPONIBLES} selectedActivites={selectedActivites} />
 
                             {/* Méthodes de paiement */}
                             <PaymentMethods
@@ -143,6 +169,7 @@ export default function ParticipantEnligneActivitesPage() {
                                 mobileMoneyNetwork={mobileMoneyNetwork}
                                 onPaymentMethodChange={setPaymentMethod}
                                 onMobileMoneyNetworkChange={setMobileMoneyNetwork}
+                                totalAmount={totalAmount} // <- INFLUENCE : masque/désactive si total = 0
                             />
 
                             {/* Bouton validation */}
@@ -154,27 +181,18 @@ export default function ParticipantEnligneActivitesPage() {
                                 disabled={selectedActivites.length === 0}
                                 sx={{ mt: 2 }}
                             >
-                                Valider la sélection
+                                {isAllFree ? "Valider l'inscription" : 'Valider la sélection'}
                             </Button>
                         </Stack>
                     </Grid>
                 </Grid>
 
                 {/* Modal pour paiement guichet */}
-                <Dialog
-                    open={guichetDialog.value}
-                    onClose={guichetDialog.onFalse}
-                    maxWidth="sm"
-                    fullWidth
-                >
-                    <DialogTitle sx={{ textAlign: 'center' }}>
-                        Instructions de paiement
-                    </DialogTitle>
+                <Dialog open={guichetDialog.value} onClose={guichetDialog.onFalse} maxWidth="sm" fullWidth>
+                    <DialogTitle sx={{ textAlign: 'center' }}>Instructions de paiement</DialogTitle>
 
                     <DialogContent sx={{ textAlign: 'center', py: 3 }}>
-                        <Typography variant="body1">
-                            Parfait, rapprochez-vous d'une hôtesse qui
-                        </Typography>
+                        <Typography variant="body1">Parfait, rapprochez-vous d'une hôtesse qui</Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>
                             vous guidera vers le guichet de paiement.
                         </Typography>
@@ -191,15 +209,8 @@ export default function ParticipantEnligneActivitesPage() {
                 </Dialog>
 
                 {/* Section 4 - Sponsors/Footer */}
-
-                {/* <Grid size={12}>
-                    <Box sx={{ textAlign: 'center', py: 4 }}>
-                        <IntervenantCarousel />
-                    </Box>
-                </Grid> */}
-
                 <Grid size={12}>
-                    <Box sx={{ textAlign: 'center', py: 4, mt: 5 }}>
+                    <Box sx={{ textAlign: 'center', py: 4 }}>
                         <Footer />
                     </Box>
                 </Grid>

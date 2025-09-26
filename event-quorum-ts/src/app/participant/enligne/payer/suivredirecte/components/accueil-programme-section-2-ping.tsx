@@ -1,4 +1,4 @@
-// src/app/participant/components/accueil-programme-section-2.tsx
+// src/app/participant/enligne/payer/suivredirecte/components/accueil-programme-section-2-ping.tsx
 
 'use client';
 
@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -21,15 +22,22 @@ import { Iconify } from 'src/components/iconify';
 import { CustomTabs } from 'src/components/custom-tabs';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { PROGRAMME_DAYS } from './programme/programme-data';
-import { ProgrammeActivityItem } from './programme/programme-activity-item';
+import { PROGRAMME_DAYS } from 'src/app/participant/components/programme/programme-data';
+import { ProgrammeActivityItemWithPin } from './programme/programme-activity-item-with-pin';
+
+import type { ProgrammeActivity } from 'src/app/participant/components/programme/programme-data';
 
 // ----------------------------------------------------------------------
 
+interface AccueilProgrammeSection2Props {
+    pinnedActivity: ProgrammeActivity | null;
+    onPinActivity: (activity: ProgrammeActivity | null) => void;
+}
+
 /**
- * Section programme pour les pages d'accueil - Version avec navigation par jours
+ * Section programme pour les pages d'accueil - Version avec navigation par jours et système d'épinglage
  */
-export default function AccueilProgrammeSection2() {
+export default function AccueilProgrammeSection2({ pinnedActivity, onPinActivity }: AccueilProgrammeSection2Props) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -44,12 +52,12 @@ export default function AccueilProgrammeSection2() {
     const getResponsiveFontSizes = () => {
         if (isMobile) {
             return {
-                h5: { fontSize: '0.9rem', fontWeight: 600 },
+                h5: { fontSize: '1rem', fontWeight: 600 },
                 subtitle2: { fontSize: '0.7rem', fontWeight: 500 },
                 body2: { fontSize: '0.7rem', fontWeight: 400 },
                 h6: { fontSize: '0.8rem', fontWeight: 600 },
                 infoSubtitle: { fontSize: '0.7rem', fontWeight: 600 },
-                infoBody: { fontSize: '0.6rem', fontWeight: 400 },
+                infoBody: { fontSize: '0.62rem', fontWeight: 400 },
                 button: { fontSize: '0.6rem' },
                 chip: { fontSize: '0.6rem' },
                 iconSize: { width: 20, height: 20 }
@@ -94,6 +102,18 @@ export default function AccueilProgrammeSection2() {
     };
 
     /**
+     * Gestionnaire d'épinglage d'une activité
+     */
+    const handlePinActivity = (activity: ProgrammeActivity) => {
+        // Si l'activité est déjà épinglée, la désépingler
+        if (pinnedActivity?.id === activity.id) {
+            onPinActivity(null);
+        } else {
+            onPinActivity(activity);
+        }
+    };
+
+    /**
      * Récupération des données du jour actuel
      */
     const currentDayData = PROGRAMME_DAYS.find(day => day.id === currentDay) || PROGRAMME_DAYS[0];
@@ -129,7 +149,6 @@ export default function AccueilProgrammeSection2() {
                         <CustomTabs
                             value={currentDay}
                             onChange={handleDayChange}
-                            // variant={isMobile ? 'scrollable' : 'standard'}
                             sx={{
                                 borderRadius: 1,
                                 width: {
@@ -140,11 +159,9 @@ export default function AccueilProgrammeSection2() {
                                     fontSize: { xs: '0.75rem', sm: '0.875rem' },
                                     fontWeight: 600,
                                     textTransform: 'none',
-                                    minHeight: { xs: '36px', sm: '40px' },
+                                    minHeight: { xs: '26px', sm: '31px' },
                                     px: { xs: 2, sm: 3 },
                                 }
-                                
-                                // minWidth: 'fit-content'
                             }}
                         >
                             {PROGRAMME_DAYS.map((day) => (
@@ -170,10 +187,12 @@ export default function AccueilProgrammeSection2() {
                     <Box>
                         {currentDayData.activities.length > 0 ? (
                             currentDayData.activities.map((activity) => (
-                                <ProgrammeActivityItem
+                                <ProgrammeActivityItemWithPin
                                     key={activity.id}
                                     activity={activity}
                                     fontSizes={fontSizes}
+                                    isPinned={pinnedActivity?.id === activity.id}
+                                    onPin={() => handlePinActivity(activity)}
                                 />
                             ))
                         ) : (

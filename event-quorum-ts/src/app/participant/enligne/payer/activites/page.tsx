@@ -14,7 +14,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { ActivitesPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-payees-list';
 import { ActivitesNonPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-non-payees-list';
 
-import { ACTIVITES_PAYEES, ACTIVITES_NON_PAYEES } from './components/activites-payees-data';
+import { ACTIVITES_PAYEES} from './components/activites-payees-data';
 
 // ----------------------------------------------------------------------
 
@@ -29,16 +29,16 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
         setCurrentTab(newValue);
     };
 
-    const renderTabContent = () => {
-        switch (currentTab) {
-            case 'payees':
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-            case 'non-payees':
-                return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
-            default:
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-        }
-    };
+    // const renderTabContent = () => {
+    //     switch (currentTab) {
+    //         case 'payees':
+    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
+    //         case 'non-payees':
+    //             return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
+    //         default:
+    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
+    //     }
+    // };
 
     return (
         <DashboardContent>
@@ -57,25 +57,6 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                         value={currentTab}
                         onChange={handleTabChange}
                         variant="standard"
-                    // sx={{
-                    //     borderRadius: 1,
-                    //     bgcolor: 'background.neutral',
-                    //     p: 0.5,
-                    //     '& .MuiTab-root': {
-                    //         borderRadius: 1,
-                    //         fontWeight: 600,
-                    //         textTransform: 'none',
-                    //         fontSize: '0.875rem',
-                    //         minHeight: 44,
-                    //         '&.Mui-selected': {
-                    //             bgcolor: 'background.paper',
-                    //             boxShadow: (theme) => theme.customShadows.z1,
-                    //         },
-                    //     },
-                    //     '& .MuiTabs-indicator': {
-                    //         display: 'none',
-                    //     },
-                    // }}
                     >
                         <Tab
                             value="payees"
@@ -93,7 +74,7 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                                 </Box>
                             }
                         />
-                        <Tab
+                        {/* <Tab
                             value="non-payees"
                             label={
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -108,13 +89,13 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                                     En attente ({ACTIVITES_NON_PAYEES.length})
                                 </Box>
                             }
-                        />
+                        /> */}
                     </Tabs>
                 </Box>
 
                 {/* Contenu des onglets */}
                 <Box sx={{ minHeight: 400 }}>
-                    {renderTabContent()}
+                    <ActivitesPayeesList activites={ACTIVITES_PAYEES} />
                 </Box>
             </Container>
         </DashboardContent>

@@ -18,8 +18,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { ActivitesPayeesList } from './components/activites-payees-list';
-import { ActivitesNonPayeesList } from './components/activites-non-payees-list';
-import { ACTIVITES_PAYEES, ACTIVITES_NON_PAYEES } from './components/activites-payees-data';
+import { ACTIVITES_PAYEES} from './components/activites-payees-data';
 
 // ----------------------------------------------------------------------
 
@@ -35,16 +34,7 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
         setCurrentTab(newValue);
     };
 
-    const renderTabContent = () => {
-        switch (currentTab) {
-            case 'payees':
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-            case 'non-payees':
-                return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
-            default:
-                return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-        }
-    };
+
 
     const handleAddActivite = () => {
         // Rediriger vers la page de sélection des activités
@@ -90,25 +80,6 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                         value={currentTab}
                         onChange={handleTabChange}
                         variant="standard"
-                    // sx={{
-                    //     borderRadius: 1,
-                    //     bgcolor: 'background.neutral',
-                    //     p: 0.5,
-                    //     '& .MuiTab-root': {
-                    //         borderRadius: 1,
-                    //         fontWeight: 600,
-                    //         textTransform: 'none',
-                    //         fontSize: '0.875rem',
-                    //         minHeight: 44,
-                    //         '&.Mui-selected': {
-                    //             bgcolor: 'background.paper',
-                    //             boxShadow: (theme) => theme.customShadows.z1,
-                    //         },
-                    //     },
-                    //     '& .MuiTabs-indicator': {
-                    //         display: 'none',
-                    //     },
-                    // }}
                     >
                         <Tab
                             value="payees"
@@ -126,22 +97,6 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                                 </Box>
                             }
                         />
-                        {/* <Tab
-                            value="non-payees"
-                            label={
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <Box
-                                        sx={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: '50%',
-                                            bgcolor: 'warning.main',
-                                        }}
-                                    />
-                                    En attente ({ACTIVITES_NON_PAYEES.length})
-                                </Box>
-                            }
-                        /> */}
                     </Tabs>
 
                     
@@ -149,7 +104,7 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
 
                 {/* Contenu des onglets */}
                 <Box sx={{ minHeight: 400 }}>
-                    {renderTabContent()}
+                    <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
                 </Box>
             </Container>
         </DashboardContent>

@@ -1,4 +1,4 @@
-// src/app/participant/components/programme/programme-activity-item.tsx
+// src/app/participant/enligne/payer/suivredirecte/components/programme/programme-activity-item-with-pin.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Accordion from '@mui/material/Accordion';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { CONFIG } from 'src/global-config';
-import Paper from '@mui/material/Paper';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -20,17 +21,22 @@ import type { ProgrammeActivity } from './programme-data';
 
 // ----------------------------------------------------------------------
 
-interface ProgrammeActivityItemProps {
+interface ProgrammeActivityItemWithPinProps {
     activity: ProgrammeActivity;
     fontSizes: any;
+    isPinned: boolean;
+    onPin: () => void;
 }
 
 /**
- * Composant pour afficher un item d'activité du programme
+ * Composant pour afficher un item d'activité du programme avec système d'épinglage
  */
-export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivityItemProps) {
+export function ProgrammeActivityItemWithPin({ activity, fontSizes, isPinned, onPin }: ProgrammeActivityItemWithPinProps) {
     const router = useRouter();
 
+    /**
+     * Détermine la couleur du Paper selon le statut
+     */
     const getStatusColor = () => {
         switch (activity.statusColor) {
             case 'success': return 'success.main';
@@ -40,31 +46,10 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
     };
 
     /**
-     * Gestion de la navigation vers le détail de l'activité
+     * Gestionnaire de navigation vers la page de détail
      */
-    const handleViewDetails = () => {
-        // Navigation vers la page de détail avec l'ID de l'activité
-        router.push(`/participant/enpresentiel/payer/activites/${activity.id}`);
-    };
-
-    /**
-     * Gestion du téléchargement de document
-     */
-    const handleDownloadDocument = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Empêche la propagation vers l'accordion
-        if (!activity.hasDocument) return;
-        console.log(`Download document for activity: ${activity.id}`);
-        // TODO: Implémenter la logique de téléchargement
-    };
-
-    /**
-     * Gestion de la lecture vidéo
-     */
-    const handleWatchVideo = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Empêche la propagation vers l'accordion
-        if (!activity.hasVideo) return;
-        console.log(`Watch video for activity: ${activity.id}`);
-        // TODO: Implémenter la logique de lecture vidéo
+    const handleViewDetail = () => {
+        router.push(`/participant/enligne/payer/suivredirecte/activites/${activity.id}`);
     };
 
     return (
@@ -72,6 +57,7 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
             sx={{
                 mb: 1,
                 borderRadius: '8px !important',
+                position: 'relative',
                 boxShadow: 'none',
                 border: 'none',
                 '&:before': { display: 'none' }
@@ -131,7 +117,7 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                         </Box>
 
                         {/* Section centrale : Titre + Intervenant */}
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Box sx={{ flex: 1 }}>
                             <Typography
                                 variant="subtitle1"
                                 sx={{
@@ -167,6 +153,34 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                         />
                     </Stack>
                 </AccordionSummary>
+
+                {/* Bouton d'épinglage */}
+                <IconButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onPin();
+                    }}
+                    sx={{
+                        position: 'absolute',
+                        bottom: 8,
+                        right: 8,
+                        width: 28,
+                        height: 28,
+                        bgcolor: isPinned ? 'primary.main' : 'grey.300',
+                        color: isPinned ? 'primary.contrastText' : 'grey.600',
+                        '&:hover': {
+                            bgcolor: isPinned ? 'primary.dark' : 'grey.400',
+                            transform: 'scale(1.1)'
+                        },
+                        transition: 'all 0.2s ease-in-out',
+                        zIndex: 1
+                    }}
+                >
+                    <Iconify
+                        icon={isPinned ? "solar:pin-bold" : "solar:pin-outline"}
+                        width={12}
+                    />
+                </IconButton>
             </Paper>
 
             <AccordionDetails sx={{ px: { xs: 1.5, md: 2 }, pb: 2, pt: 0 }}>
@@ -206,13 +220,11 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                             {activity.description}
                         </Typography>
 
-                        {/* Ressources disponibles */}
                         {(activity.hasDocument || activity.hasVideo) && (
                             <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                 {activity.hasDocument && (
                                     <Button
                                         size="small"
-                                        onClick={handleDownloadDocument}
                                         startIcon={
                                             <Box
                                                 component="img"
@@ -236,7 +248,6 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                                 {activity.hasVideo && (
                                     <Button
                                         size="small"
-                                        onClick={handleWatchVideo}
                                         startIcon={
                                             <Box
                                                 component="img"
@@ -259,15 +270,13 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                                 )}
                             </Stack>
                         )}
-
-                        {/* Bouton pour consulter le détail */}
                         <Button
                             size="small"
                             variant="contained"
-                            onClick={handleViewDetails}
                             startIcon={
                                 <Iconify icon="solar:eye-bold" width={18} />
                             }
+                            onClick={handleViewDetail}
                             sx={{
                                 ...fontSizes.button,
                                 borderRadius: 1,
@@ -278,7 +287,7 @@ export function ProgrammeActivityItem({ activity, fontSizes }: ProgrammeActivity
                                 }
                             }}
                         >
-                            Consulter le détail de l'activité
+                            Consulter le detail de l'activité
                         </Button>
                     </Stack>
                 </Box>

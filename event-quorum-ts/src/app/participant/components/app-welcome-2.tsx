@@ -38,6 +38,10 @@ export function AppWelcome({ title, description, action, img, sx, ...other }: Pr
       ]}
       {...other}
     >
+      
+      {/* Taille de l'image légèrement réduite : 260 → 20 */}
+      {img && <Box sx={{ maxWidth: 200 }}>{img}</Box>}
+      
       <Box
         sx={{
           display: 'flex',
@@ -57,8 +61,6 @@ export function AppWelcome({ title, description, action, img, sx, ...other }: Pr
         {action && action}
       </Box>
 
-      {/* Taille de l'image légèrement réduite : 260 → 20 */}
-      {img && <Box sx={{ maxWidth: 200 }}>{img}</Box>}
     </Box>
   );
 }

@@ -6,9 +6,8 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Divider from '@mui/material/Divider';
@@ -18,90 +17,20 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import CardContent from '@mui/material/CardContent';
 import { useTheme, useMediaQuery } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions
-} from '@mui/material';
 
 import { SurveyStatusAnalytic } from 'src/app/participant/components/survey-status-analytic';
 
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-// ----------------------------------------------------------------------
+import { getSurveyData, truncateResponse } from '../data/survey-data';
+import { SurveyDetailDialog } from '../components/survey-detail-dialog';
 
-/**
- * Données des questions pour l'enquête de satisfaction
- */
-const SURVEY_QUESTIONS = [
-    {
-        id: 1,
-        question: 'QUESTION 1',
-        description: 'Êtes-vous satisfait de l\'activité panel de haut niveau ?',
-        correctAnswer: 'réponse 2',
-        userResponse: 'Réponse 2',
-        responseColor: 'success.main',
-    },
-    {
-        id: 2,
-        question: 'QUESTION 2',
-        description: 'Êtes-vous satisfait de l\'activité panel de haut niveau ?',
-        correctAnswer: 'réponse 3',
-        userResponse: 'Réponse 1',
-        responseColor: 'error.main',
-    },
-    {
-        id: 3,
-        question: 'QUESTION 3',
-        description: 'Êtes-vous satisfait de l\'activité panel de haut niveau ?',
-        correctAnswer: '----------------',
-        userResponse: 'Réponse 4',
-        responseColor: 'warning.main',
-    },
-    {
-        id: 4,
-        question: 'QUESTION 4',
-        description: 'Êtes-vous satisfait de l\'activité panel de haut niveau ?',
-        correctAnswer: 'réponse 1',
-        userResponse: 'réponse 1',
-        responseColor: 'success.main',
-    },
-];
-
-/**
- * Données de l'enquête selon l'ID
- */
-const getSurveyData = (id: string) => ({
-    id,
-    title: 'Satisfaction',
-    description: 'Satisfaction sur l\'activité',
-    totalScore: '8/10',
-    status: 'En cours',
-    statusColor: 'success.main',
-    questions: SURVEY_QUESTIONS,
-});
+import type { SurveyQuestion } from '../data/survey-data';
 
 // ----------------------------------------------------------------------
-
-/**
- * Type pour une question d'enquête
- */
-type SurveyQuestion = {
-    id: number;
-    question: string;
-    description: string;
-    correctAnswer: string;
-    userResponse: string;
-    responseColor: string;
-    detailedExplanation?: string;
-    options?: string[];
-};
 
 /**
  * Page de détail d'une enquête - Vue simple en lecture seule
@@ -112,8 +41,8 @@ export default function SurveyDetailPage() {
     const theme = useTheme();
 
     // État pour la boîte de dialogue
-        const [selectedQuestion, setSelectedQuestion] = useState<SurveyQuestion | null>(null);
-        const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedQuestion, setSelectedQuestion] = useState<SurveyQuestion | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     // Récupération de l'ID depuis l'URL
     const surveyId = params.id as string;
@@ -129,7 +58,7 @@ export default function SurveyDetailPage() {
     const getResponsiveFontSizes = () => {
         if (isMobile) {
             return {
-                h4: { fontSize: '1.25rem', fontWeight: 700 },
+                h4: { fontSize: '1.1rem', fontWeight: 700 },
                 h6: { fontSize: '0.875rem', fontWeight: 600 },
                 subtitle1: { fontSize: '0.875rem', fontWeight: 500 },
                 body2: { fontSize: '0.75rem', fontWeight: 400 },
@@ -142,7 +71,7 @@ export default function SurveyDetailPage() {
 
         if (isTablet) {
             return {
-                h4: { fontSize: '1.5rem', fontWeight: 700 },
+                h4: { fontSize: '1.4rem', fontWeight: 700 },
                 h6: { fontSize: '1rem', fontWeight: 600 },
                 subtitle1: { fontSize: '1rem', fontWeight: 500 },
                 body2: { fontSize: '0.8125rem', fontWeight: 400 },
@@ -185,22 +114,6 @@ export default function SurveyDetailPage() {
     };
 
     /**
-     * Obtient la couleur de l'icône selon le résultat
-     */
-    const getResultIcon = (responseColor: string) => {
-        switch (responseColor) {
-            case 'success.main':
-                return { icon: 'solar:check-circle-bold', color: 'success.main' };
-            case 'error.main':
-                return { icon: 'solar:close-circle-bold', color: 'error.main' };
-            case 'warning.main':
-                return { icon: 'solar:info-circle-bold', color: 'warning.main' };
-            default:
-                return { icon: 'solar:question-circle-bold', color: 'grey.500' };
-        }
-    };
-
-    /**
      * Retour à la page des interactions
      */
     const handleGoBack = () => {
@@ -212,48 +125,45 @@ export default function SurveyDetailPage() {
      */
     const renderHeader = () => (
         <Box sx={{ mb: 3 }}>
-            {/* Bouton retour */}
-            
-
             {/* Navigation en chips - responsive */}
             <Stack
                 direction="column"
                 spacing={2}
                 sx={{ mb: 3 }}
             >
-                {/* Chips - passent en haut sur mobile */}
-                <Box 
-                  sx={{ 
-                    display: 'flex', 
-                    flexDirection: isMobile ? 'column' : 'row', 
-                    alignItems: isMobile ? 'flex-start' : 'center', 
-                    justifyContent: 'space-between',
-                    gap: 2, // petit espace entre titre et bouton sur mobile
-                  }}
+                {/* Titre et bouton retour */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: isMobile ? 'column' : 'row',
+                        alignItems: isMobile ? 'flex-start' : 'center',
+                        justifyContent: 'space-between',
+                        gap: 2, // petit espace entre titre et bouton sur mobile
+                    }}
                 >
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      ...fontSizes.h4,
-                      color: 'black',
-                    }}
-                  >
-                    Titre de l'enquête: {surveyData.description}
-                  </Typography>
-                
-                  {/* Bouton retour */}
-                  <Button
-                    variant="contained"
-                    onClick={handleGoBack}
-                    sx={{
-                      color: 'white',
-                      backgroundColor: 'black',
-                      textTransform: 'none',
-                      alignSelf: isMobile ? 'flex-end' : 'auto', // pour que le bouton soit à droite sur mobile
-                    }}
-                  >
-                    <Iconify icon="solar:arrow-left-linear" sx={fontSizes.iconSize} /> Retour
-                  </Button>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            ...fontSizes.h4,
+                            color: 'black',
+                        }}
+                    >
+                        Titre: {surveyData.description}
+                    </Typography>
+
+                    {/* Bouton retour */}
+                    <Button
+                        variant="contained"
+                        onClick={handleGoBack}
+                        sx={{
+                            color: 'white',
+                            backgroundColor: 'black',
+                            textTransform: 'none',
+                            alignSelf: isMobile ? 'flex-end' : 'auto', // pour que le bouton soit à droite sur mobile
+                        }}
+                    >
+                        <Iconify icon="solar:arrow-left-linear" sx={fontSizes.iconSize} /> Retour
+                    </Button>
                 </Box>
 
                 {/* Statistiques */}
@@ -285,8 +195,6 @@ export default function SurveyDetailPage() {
                     </Scrollbar>
                 </Card>
             </Stack>
-
-            
         </Box>
     );
 
@@ -327,7 +235,7 @@ export default function SurveyDetailPage() {
 
                                 <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
                                     <Typography variant="body2" sx={fontSizes.tableCell}>
-                                        {question.description}
+                                        {truncateResponse(question.description, 50)}
                                     </Typography>
                                 </TableCell>
 
@@ -339,7 +247,8 @@ export default function SurveyDetailPage() {
                                             color: question.correctAnswer === '----------------' ? 'text.disabled' : 'text.primary'
                                         }}
                                     >
-                                        {question.correctAnswer}
+                                        {truncateResponse(question.correctAnswer === '----------------' ? question.correctAnswer :
+                                            question.possibleAnswers.find(answer => answer.value === question.correctAnswer)?.text || question.correctAnswer, 50)}
                                     </Typography>
                                 </TableCell>
 
@@ -352,12 +261,12 @@ export default function SurveyDetailPage() {
                                             fontWeight: 500
                                         }}
                                     >
-                                        {question.userResponse}
+                                        {truncateResponse(question.userResponse, 50)}
                                     </Typography>
                                 </TableCell>
 
                                 <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-                                    <IconButton 
+                                    <IconButton
                                         onClick={() => handleViewDetails(question)}
                                         color="primary"
                                     >
@@ -372,164 +281,17 @@ export default function SurveyDetailPage() {
         </Card>
     );
 
-    /**
-         * Rendu de la boîte de dialogue des détails
-         */
-        const renderQuestionDialog = () => {
-            if (!selectedQuestion) return null;
-    
-            const resultIcon = getResultIcon(selectedQuestion.responseColor);
-    
-            return (
-                <Dialog 
-                    open={dialogOpen} 
-                    onClose={handleCloseDialog}
-                    maxWidth="sm"
-                    fullWidth
-                    fullScreen={isMobile}
-                >
-                    <DialogTitle>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <Iconify 
-                                icon={resultIcon.icon} 
-                                sx={{ 
-                                    color: resultIcon.color,
-                                    width: 32, 
-                                    height: 32 
-                                }} 
-                            />
-                            <Typography variant="h6">
-                                {selectedQuestion.question}
-                            </Typography>
-                        </Stack>
-                    </DialogTitle>
-    
-                    <DialogContent dividers>
-                        <Stack spacing={3}>
-                            {/* Description de la question */}
-                            <Box>
-                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                    Description
-                                </Typography>
-                                <Typography variant="body1">
-                                    {selectedQuestion.description}
-                                </Typography>
-                            </Box>
-    
-                            {/* Options disponibles */}
-                            {selectedQuestion.options && selectedQuestion.options.length > 1 && (
-                                <Box>
-                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                        Options disponibles
-                                    </Typography>
-                                    <Stack spacing={1}>
-                                        {selectedQuestion.options.map((option, index) => (
-                                            <Chip
-                                                key={index}
-                                                label={option}
-                                                variant={
-                                                    option.toLowerCase() === selectedQuestion.userResponse.toLowerCase()
-                                                        ? "filled"
-                                                        : option.toLowerCase() === selectedQuestion.correctAnswer.toLowerCase()
-                                                        ? "outlined"
-                                                        : "outlined"
-                                                }
-                                                color={
-                                                    option.toLowerCase() === selectedQuestion.userResponse.toLowerCase()
-                                                        ? selectedQuestion.responseColor === 'success.main' ? "success" : "error"
-                                                        : option.toLowerCase() === selectedQuestion.correctAnswer.toLowerCase()
-                                                        ? "success"
-                                                        : "default"
-                                                }
-                                                sx={{ alignSelf: 'flex-start' }}
-                                            />
-                                        ))}
-                                    </Stack>
-                                </Box>
-                            )}
-    
-                            {/* Comparaison réponses */}
-                            <Stack direction={isMobile ? "column" : "row"} spacing={3}>
-                                <Box flex={1}>
-                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                        Votre réponse
-                                    </Typography>
-                                    <Typography 
-                                        variant="body1" 
-                                        sx={{ 
-                                            color: selectedQuestion.responseColor,
-                                            fontWeight: 500,
-                                            p: 1.5,
-                                            bgcolor: 'action.hover',
-                                            borderRadius: 1
-                                        }}
-                                    >
-                                        {selectedQuestion.userResponse}
-                                    </Typography>
-                                </Box>
-    
-                                <Box flex={1}>
-                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                        Réponse attendue
-                                    </Typography>
-                                    <Typography 
-                                        variant="body1" 
-                                        sx={{ 
-                                            color: selectedQuestion.correctAnswer === '----------------' ? 'text.disabled' : 'success.main',
-                                            fontWeight: 500,
-                                            p: 1.5,
-                                            bgcolor: 'action.hover',
-                                            borderRadius: 1
-                                        }}
-                                    >
-                                        {selectedQuestion.correctAnswer}
-                                    </Typography>
-                                </Box>
-                            </Stack>
-    
-                            {/* Explication détaillée */}
-                            {selectedQuestion.detailedExplanation && (
-                                <Box>
-                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                        Explication
-                                    </Typography>
-                                    <Typography 
-                                        variant="body1" 
-                                        sx={{ 
-                                            p: 2,
-                                            bgcolor: 'primary.lighter',
-                                            borderRadius: 1,
-                                            borderLeft: 3,
-                                            borderColor: 'primary.main'
-                                        }}
-                                    >
-                                        {selectedQuestion.detailedExplanation}
-                                    </Typography>
-                                </Box>
-                            )}
-                        </Stack>
-                    </DialogContent>
-    
-                    <DialogActions>
-                        <Button 
-                            onClick={handleCloseDialog} 
-                            variant="contained"
-                            sx={{
-                                textTransform: 'none'
-                            }}
-                        >
-                            Fermer
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            );
-        };
-
     return (
         <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
             {renderHeader()}
             {renderQuestionsTable()}
-            {renderQuestionDialog()}
+
+            {/* Dialog séparé */}
+            <SurveyDetailDialog
+                open={dialogOpen}
+                question={selectedQuestion}
+                onClose={handleCloseDialog}
+            />
         </Box>
     );
 }

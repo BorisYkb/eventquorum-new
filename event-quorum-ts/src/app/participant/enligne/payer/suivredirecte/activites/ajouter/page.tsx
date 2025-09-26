@@ -150,28 +150,8 @@ export default function AjouterActivitesPage() {
                 </Box>
 
                 <Typography align="center" sx={{ color: 'text.secondary', mb: 3 }}>
-                    Sélectionnez de nouvelles activités à ajouter à votre liste
+                    Sélectionnez de nouvelles activités
                 </Typography>
-
-                {/* Indicateur des activités déjà sélectionnées */}
-                {alreadySelectedIds.length > 0 && (
-                    <Box sx={{ mb: 3, textAlign: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                            Activités déjà dans votre liste :
-                        </Typography>
-                        <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" gap={1}>
-                            {ACTIVITES_PAYEES.map((activite) => (
-                                <Chip 
-                                    key={activite.id}
-                                    label={`${activite.time} ${activite.title}`}
-                                    size="small"
-                                    color="success"
-                                    variant="outlined"
-                                />
-                            ))}
-                        </Stack>
-                    </Box>
-                )}
 
                 <Grid container spacing={4}>
                     {/* Section 1 - Sélection des nouvelles activités (60% largeur) */}
@@ -192,7 +172,6 @@ export default function AjouterActivitesPage() {
                             <ActivitesSummary
                                 activites={ACTIVITES_DISPONIBLES}
                                 selectedActivites={newSelectedActivites}
-                                title="Nouvelles Activités Sélectionnées"
                             />
 
                             {/* Méthodes de paiement pour les nouvelles activités */}
@@ -214,7 +193,7 @@ export default function AjouterActivitesPage() {
                                     onClick={handleValidatePayment}
                                     disabled={newSelectedActivites.length === 0}
                                 >
-                                    Ajouter les Activités Sélectionnées
+                                    Passer au Paiement
                                 </Button>
 
                                 <Button
@@ -223,7 +202,7 @@ export default function AjouterActivitesPage() {
                                     variant="outlined"
                                     onClick={handleGoBack}
                                 >
-                                    Retourner sans Ajouter
+                                    Retour
                                 </Button>
                             </Stack>
                         </Stack>

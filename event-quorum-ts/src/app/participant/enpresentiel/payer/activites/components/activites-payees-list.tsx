@@ -2,8 +2,11 @@
 
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
 import TableHead from '@mui/material/TableHead';
@@ -29,6 +32,8 @@ interface ActivitesPayeesListProps {
  * et tailles de police dynamiques selon l'écran
  */
 export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
+  const router = useRouter();
+
   // Hooks pour la gestion responsive
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -84,30 +89,10 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
   const fontSizes = getResponsiveFontSizes();
 
   /**
-   * Gestion du téléchargement de document
+   * Navigation vers la page de détail de l'activité
    */
-  const handleDownloadDocument = (activite: ActivitePayee) => {
-    if (!activite.hasDocument || !activite.documentUrl) return;
-    console.log(`Download document: ${activite.documentUrl}`);
-    // TODO: Implémenter téléchargement document
-  };
-
-  /**
-   * Gestion de la lecture vidéo
-   */
-  const handleWatchVideo = (activite: ActivitePayee) => {
-    if (!activite.hasVideo || !activite.videoUrl) return;
-    console.log(`Watch video: ${activite.videoUrl}`);
-    // TODO: Implémenter lecture vidéo
-  };
-
-  /**
-   * Détermine si une ressource est désactivée
-   */
-  const isResourceDisabled = (activite: ActivitePayee, resourceType: 'document' | 'video') => {
-    // Désactiver si activité non démarrée OU si la ressource n'existe pas
-    const hasResource = resourceType === 'document' ? activite.hasDocument : activite.hasVideo;
-    return activite.status === 'Non démarré' || !hasResource;
+  const handleViewActivityDetail = (activityId: string) => {
+    router.push(`/participant/enpresentiel/payer/activites/${activityId}`);
   };
 
   // État vide - aucune activité payée
@@ -160,34 +145,49 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
               Statut
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Place
+              Acces
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Prix payé
+              Prix payé (FCFA)
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
               Date paiement
             </TableCell>
-            <TableCell sx={{
+            {/* <TableCell sx={{
               ...fontSizes.tableHeader,
               textAlign: 'center'
             }}>
               Ressources
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
           {activites.map((activite) => (
             <TableRow key={activite.id} hover>
-              {/* Colonne Activité */}
+              {/* Colonne Activité avec lien cliquable */}
               <TableCell sx={{ minWidth: isMobile ? 200 : 'auto' }}>
                 <Box>
-                  <Typography
+                  <Link
+                    component="button"
                     variant="subtitle2"
-                    sx={fontSizes.subtitle2}
+                    onClick={() => handleViewActivityDetail(activite.id)}
+                    sx={{
+                      ...fontSizes.subtitle2,
+                      textAlign: 'left',
+                      textDecoration: 'none',
+                      color: 'primary.main',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                        color: 'primary.dark'
+                      },
+                      transition: theme.transitions.create(['color'], {
+                        duration: theme.transitions.duration.shorter,
+                      }),
+                    }}
                   >
                     {activite.title}
-                  </Typography>
+                  </Link>
                   <Typography
                     variant="body2"
                     color="text.secondary"
@@ -251,7 +251,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                     color: 'success.main'
                   }}
                 >
-                  {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()} FCFA`}
+                  {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()}`}
                 </Typography>
               </TableCell>
 
@@ -266,60 +266,6 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                 </Typography>
               </TableCell>
 
-              {/* Colonne Ressources */}
-              <TableCell>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
-                  {/* Bouton Document avec icône SVG */}
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDownloadDocument(activite)}
-                    disabled={isResourceDisabled(activite, 'document')}
-                    title={isResourceDisabled(activite, 'document') ? 'Document indisponible' : 'Télécharger le document'}
-                    sx={{
-                      color: isResourceDisabled(activite, 'document') ? 'text.disabled' : 'primary.main',
-                      '&:hover': {
-                        bgcolor: isResourceDisabled(activite, 'document') ? 'transparent' : 'primary.lighter'
-                      },
-                      // Transition fluide
-                      transition: theme.transitions.create(['color', 'background-color'], {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={`${CONFIG.assetsDir}/assets/icons/files/ic-document.svg`}
-                      sx={fontSizes.iconSize}
-                      alt="Document"
-                    />
-                  </IconButton>
-
-                  {/* Bouton Vidéo avec icône SVG */}
-                  <IconButton
-                    size="small"
-                    onClick={() => handleWatchVideo(activite)}
-                    disabled={isResourceDisabled(activite, 'video')}
-                    title={isResourceDisabled(activite, 'video') ? 'Vidéo indisponible' : 'Voir la vidéo'}
-                    sx={{
-                      color: isResourceDisabled(activite, 'video') ? 'text.disabled' : 'secondary.main',
-                      '&:hover': {
-                        bgcolor: isResourceDisabled(activite, 'video') ? 'transparent' : 'secondary.lighter'
-                      },
-                      // Transition fluide
-                      transition: theme.transitions.create(['color', 'background-color'], {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={`${CONFIG.assetsDir}/assets/icons/files/ic-video.svg`}
-                      sx={fontSizes.iconSize}
-                      alt="Vidéo"
-                    />
-                  </IconButton>
-                </Box>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>

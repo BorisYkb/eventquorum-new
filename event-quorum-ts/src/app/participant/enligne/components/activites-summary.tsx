@@ -1,5 +1,4 @@
 // src/app/participant/enligne/components/activites-summary.tsx
-
 'use client';
 
 import Box from '@mui/material/Box';
@@ -19,18 +18,27 @@ interface ActivitesSummaryProps {
 }
 
 export function ActivitesSummary({ activites, selectedActivites }: ActivitesSummaryProps) {
-    const activitesSelectionnees = selectedActivites.map(selection => {
-        const activite = activites.find(a => a.id === selection.activityId);
-        const standingOption = activite?.priceOptions.find(p => p.id === selection.selectedStanding);
+    const activitesSelectionnees = selectedActivites.map((selection) => {
+        const activite = activites.find((a) => a.id === selection.activityId);
 
-        if (!activite || !standingOption) return null;
+        // 1) Essayer de retrouver l’option dans la data
+        const standingOption = activite?.priceOptions?.find((p) => p.id === selection.selectedStanding);
+
+        // 2) Fallback : si selection == 'gratuit', on construit une option virtuelle
+        const resolvedOption =
+            standingOption ||
+            (selection.selectedStanding === 'gratuit'
+                ? { id: 'gratuit', label: 'Gratuit', price: 0, currency: 'FCFA' }
+                : undefined);
+
+        if (!activite || !resolvedOption) return null;
 
         return {
             id: activite.id,
             title: activite.title,
             time: activite.time,
-            selectedStanding: standingOption,
-            prix: standingOption.price
+            selectedStanding: resolvedOption,
+            prix: resolvedOption.price,
         };
     }).filter((item): item is NonNullable<typeof item> => item !== null);
 
@@ -42,7 +50,7 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
                 p: 3,
                 borderRadius: 2,
                 bgcolor: 'background.neutral',
-                height: 'fit-content'
+                height: 'fit-content',
             }}
         >
             <Typography variant="h6" sx={{ mb: 3 }}>
@@ -79,7 +87,7 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
                                 sx={{
                                     fontWeight: 600,
                                     color: activite.prix === 0 ? 'success.main' : 'text.primary',
-                                    ml: 1
+                                    ml: 1,
                                 }}
                             >
                                 {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()} FCFA`}

@@ -12,7 +12,7 @@ import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
 
-import { AccueilCompactVideo2 } from './components/accueil-compact-video-2';
+import { AccueilCompactVideo } from 'src/app/participant/components/accueil-compact-video';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ export default function ParticipantEnresentielPage() {
                 </Grid>
 
                 {/* Section 2 - Vidéo hero */}
-                <AccueilCompactVideo2 />
+                <AccueilCompactVideo />
 
                 {/* Section 3 - Programme */}
                 <AccueilProgrammeSection2 />
