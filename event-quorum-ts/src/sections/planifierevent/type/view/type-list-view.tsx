@@ -3,26 +3,31 @@
 
 import type { TableHeadCellProps } from 'src/components/table';
 
-
 import { useState, useCallback } from 'react';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
+import { Card } from '@mui/material';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { _eventTypes } from 'src/_mock';
+import { _eventTypesList } from 'src/_mock/_events';
+import { DashboardContent } from 'src/layouts/admin';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
     useTable,
     emptyRows,
@@ -34,18 +39,10 @@ import {
     TableSelectedAction,
     TablePaginationCustom,
 } from 'src/components/table';
-import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
-
-import { DashboardContent } from 'src/layouts/admin';
-
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Card } from '@mui/material';
-import { _eventTypesList } from 'src/_mock/_events';
 import { TypeTableRow } from '../type-table-row';
-import { EventTableFiltersResult } from '../../event/event-table-filters-result';
 import { TypeTableToolbar } from '../type-table-toolbar';
+import { EventTableFiltersResult } from '../../event/event-table-filters-result';
 
 
 // ----------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
+
 import { EventListView } from 'src/sections/planifierevent/event/view/event-list-view';
 
 // ----------------------------------------------------------------------

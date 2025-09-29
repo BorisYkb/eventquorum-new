@@ -3,6 +3,7 @@ import type { INewActivityItem, IEventSpeaker } from 'src/types/activity';
 import { z as zod } from 'zod';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -15,19 +16,18 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FormControl, MenuItem, Select, IconButton, Tooltip } from '@mui/material';
-import { Controller } from 'react-hook-form';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
 import { fIsAfter } from 'src/utils/format-time';
 
 import { _tourGuides } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { RouterLink } from 'src/routes/components';
 import { Iconify } from 'src/components/iconify';
+import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -271,13 +271,19 @@ export function ActivityNewEditForm({ currentActivity }: Props) {
           <Field.Text name="title" placeholder="Entrez le titre de l'activité" />
         </Stack>
 
+        {/* Capacité de l'activité */}
+        <Stack spacing={1.5}>
+          <Typography variant="subtitle2">Capacité d'activité</Typography>
+          <Field.Text name="" type='number' placeholder="Entrez la capacité de l'activité" />
+        </Stack>
+
         {/* Description */}
         <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Description</Typography>
-          <Field.Text
-            name="description"
-            multiline
-            rows={4}
+          <Typography variant="subtitle2">Description d'une Activité</Typography>
+          <Field.Editor
+            fullItem
+            name='description_activité'
+            sx={{ maxHeight: 400 }}
             placeholder="Décrivez l'activité..."
           />
         </Stack>

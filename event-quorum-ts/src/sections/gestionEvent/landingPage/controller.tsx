@@ -49,7 +49,7 @@ export const useLandingPageController = () => {
 
   // Valeurs par défaut pour les informations générales
   const defaultValues: LandingPageSchemaType = {
-    message_bienvenue: 'Bienvenu(e) cher(e) participant(e)',
+    message_bienvenue: 'Bienvenue à notre événement ! Nous sommes ravis de vous accueillir.',
     type_evenement: 'en_ligne',
     type_connexion: 'mdp',
     activer_selection_activites: true,

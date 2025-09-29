@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { z as zod } from 'zod';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
@@ -12,16 +12,20 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import CardContent from '@mui/material/CardContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
 import { fData } from 'src/utils/format-number';
+
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import CardContent from '@mui/material/CardContent';
+
 import { useMockedUser } from 'src/auth/hooks';
+
 import { IClientItem } from 'src/types/client';
 // import Divider from '@mui/material/Divider/Divider';
 
@@ -111,6 +115,7 @@ export function ClientNewEditForm({ item }: Props) {
         eventNumber: 0,
         creationDate: '',
         phoneNumber: '',
+        num_identification: '',
     };
 
     const methods = useForm({
@@ -223,7 +228,7 @@ export function ClientNewEditForm({ item }: Props) {
                                     />
                                     <Field.Text
                                         name="address"
-                                        label="Adresse"
+                                        label="Lieu d'habitation"
                                         // sx={{ gridColumn: { xs: 'span 2' } }}
                                     />
                                     <Field.Text
@@ -249,9 +254,10 @@ export function ClientNewEditForm({ item }: Props) {
                                     <Field.Text name="contact_name" label="Nom du correspondant" />
                                     <Field.Text name="contact_firstname" label="Prénoms du correspondant" />
                                     <Field.Text name="email" label="Email du correspondant" />
+                                    <Field.Text name="num_identification" label="Numéro d'identification de l'entreprise" />
                                     <Field.Phone
                                         name="phoneNumber"
-                                        label="Téléphone du correspondant"
+                                        label="Numéro de téléphone du correspondant"
                                         country="CI"
                                     />
                                 </>
@@ -272,8 +278,7 @@ export function ClientNewEditForm({ item }: Props) {
 // const img = '/assets/images/mock/user/utilisateur.png'
 const img = '/assets/images/mock/user/user.png'
 // const img = user?.photoURL;
-const ProfilePictureCard = ({ imageSrc = img, alt = "Profile Picture", size = 144 }) => {
-    return (
+const ProfilePictureCard = ({ imageSrc = img, alt = "Profile Picture", size = 144 }) => (
         <Card className="flex flex-col items-center pt-20  pb-5 px-3 shadow-none border-none h-[415px]">
 
             <div
@@ -284,14 +289,11 @@ const ProfilePictureCard = ({ imageSrc = img, alt = "Profile Picture", size = 14
                 }}
             >
                 {imageSrc ? (
-                    <>
-                        <img
-                            src={imageSrc}
-                            alt={alt}
-                            className="w-full h-full object-cover mx-auto"
-                        />
-
-                    </>
+                    <img
+                        src={imageSrc}
+                        alt={alt}
+                        className="w-full h-full object-cover mx-auto"
+                    />
                 ) : (
                     <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                         <svg
@@ -316,7 +318,6 @@ const ProfilePictureCard = ({ imageSrc = img, alt = "Profile Picture", size = 14
             </p>
         </Card>
     );
-};
 
 
 

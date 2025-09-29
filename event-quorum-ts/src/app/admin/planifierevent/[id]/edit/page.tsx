@@ -3,15 +3,21 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { DashboardContent } from 'src/layouts/admin';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { paths } from 'src/routes/paths';
+
 import { Button } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { Iconify } from 'src/components/iconify';
-import { EventNewEditForm } from 'src/sections/planifierevent/event-new-edit-form';
-import { IEvent, INewEventItem } from 'src/types/event';
+
 import { _mockEvents } from 'src/_mock/_events';
+import { DashboardContent } from 'src/layouts/admin';
+
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { EventNewEditForm } from 'src/sections/planifierevent/event-new-edit-form';
+
+import { IEvent, INewEventItem } from 'src/types/event';
 
 export default function EventEditPage() {
   const params = useParams();

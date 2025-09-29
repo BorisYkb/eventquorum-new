@@ -1,8 +1,7 @@
 'use client';
 
-import type { TableHeadCellProps } from 'src/components/table';
-import { IOrganizerItem, IOrganizerTableFilters } from 'src/types/organizer';
 import type { IEventItem } from 'src/types/event';
+import type { TableHeadCellProps } from 'src/components/table';
 
 import { useState, useCallback } from 'react';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
@@ -20,9 +19,11 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { DashboardContent } from 'src/layouts/admin';
+
 import {  _roles, _userList } from 'src/_mock';
 import { _eventList } from 'src/_mock/_events';
+import { DashboardContent } from 'src/layouts/admin';
+import { _organizerList } from 'src/_mock/_organizer';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -41,12 +42,15 @@ import {
     TableSelectedAction,
     TablePaginationCustom,
 } from 'src/components/table';
-import { EventTableRow } from '../event-table-row';
+
 import { EventTableToolbar } from 'src/sections/planifierevent/event/event-table-toolbar';
-import { _organizerList } from 'src/_mock/_organizer';
+import { OrganizerTableRow } from 'src/sections/planifierevent/organisateur/organizer-table-row';
 import { EventTableFiltersResult } from 'src/sections/planifierevent/event/event-table-filters-result';
 import { OrganizerTableToolbar } from 'src/sections/planifierevent/organisateur/organizer_table-toolbar';
-import { OrganizerTableRow } from 'src/sections/planifierevent/organisateur/organizer-table-row';
+
+import { IOrganizerItem, IOrganizerTableFilters } from 'src/types/organizer';
+
+import { EventTableRow } from '../event-table-row';
 
 
 // ----------------------------------------------------------------------
@@ -59,16 +63,16 @@ const EVENT_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'date', label: 'Periode', width: 80 },
     { id: 'nomclient', label: 'Nom Client', width: 200 },
     { id: 'status', label: 'Statut', width: 70 },
-    { id: '', width: 88 },
+    { id: '', label: 'Action', width: 88 },
 ];
 
 const ORGANIZER_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'avatarUrl', label: '', width: 10 },
     { id: 'name', label: 'Nom & Prénoms', width: 100 },
     { id: 'email', label: 'Email', width: 120 },
-    { id: 'password', label: 'Mot de passe', width: 100 },
-    { id: 'status', label: '', width: 88 },
-    { id: '', width: 88 },
+    { id: 'phone', label: 'Téléphone', width: 100 },
+    { id: 'status', label: 'Statut', width: 88 },
+    { id: '', label: 'Action', width: 88 },
 ];
 
 export const EVENT_STATUS_OPTIONS = [

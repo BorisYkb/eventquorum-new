@@ -1,14 +1,18 @@
 import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
+
 import Autoplay from 'embla-carousel-autoplay';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
+import { fDate } from 'src/utils/format-time';
+
 import { Image } from 'src/components/image';
 import { Carousel, useCarousel, CarouselDotButtons } from 'src/components/carousel';
-import { fDate } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 // Définition du type EventStatus

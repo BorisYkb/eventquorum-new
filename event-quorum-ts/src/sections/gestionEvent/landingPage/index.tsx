@@ -1,5 +1,7 @@
 import path, { normalize } from 'path';
 import { Controller } from 'react-hook-form';
+import { useState, useCallback } from 'react';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { 
@@ -20,7 +22,8 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Chip
+  Chip,
+  Stack
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -32,6 +35,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { UploadBox } from 'src/components/upload';
 import { Form, Field } from 'src/components/hook-form';
+import { Upload, UploadAvatar } from 'src/components/upload';
 
 import { useLandingPageController } from './controller';
 
@@ -53,11 +57,38 @@ const LandingPage = () => {
     control, 
     isSubmitting,
     agendaItems,
+    
     handleAddAgenda,
     handleEditAgenda,
     handleDeleteAgenda,
     handleViewAgenda
   } = useLandingPageController();
+
+  const showPreview = useBoolean();
+  
+  const [files, setFiles] = useState<(File | string)[]>([]);
+  const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
+
+  const handleDropAvatar = useCallback((acceptedFiles: File[]) => {
+    const newFile = acceptedFiles[0];
+    setAvatarUrl(newFile);
+  }, []);
+
+  const handleDropMultiFile = useCallback(
+      (acceptedFiles: File[]) => {
+        setFiles([...files, ...acceptedFiles]);
+      },
+      [files]
+    );
+  
+    const handleRemoveFile = (inputFile: File | string) => {
+      const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
+      setFiles(filesFiltered);
+    };
+  
+    const handleRemoveAllFiles = () => {
+      setFiles([]);
+    };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -111,21 +142,40 @@ const LandingPage = () => {
         <CardContent>
           <Form methods={methods} onSubmit={onSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              {/* Message de bienvenue */}
-              <Controller
-                name="message_bienvenue"
-                control={control}
-                render={({ field }) => (
-                  <Field.Text
-                    {...field}
-                    label="Message de bienvenue"
-                    placeholder="Bienvenu(e) cher(e) participant(e)"
-                    multiline
-                    rows={4}
-                    fullWidth
-                  />
-                )}
-              />
+              {/* Short description */}
+          
+              
+              
+
+              <Stack>
+                <Typography variant="subtitle2">Short Description de l'évènement</Typography>
+                <Field.Editor
+                  fullItem
+                  name='short_description'
+                  placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
+                  sx={{ maxHeight: 400 }}
+                  
+                />
+              </Stack>
+
+              <Stack spacing={1.5}>
+                <Typography variant="subtitle2">Image bannière de l'évènement (Login)</Typography>
+                
+                <Upload
+                  multiple
+                  thumbnail={showPreview.value}
+                  value={files}
+                  onDrop={handleDropMultiFile}
+                  onRemove={handleRemoveFile}
+                  onRemoveAll={handleRemoveAllFiles}
+                  onUpload={() => console.info('ON UPLOAD')}
+                />
+
+              </Stack>
+
+              
+
+
 
               {/* Type d'événement et Type de connexion */}
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -171,16 +221,7 @@ const LandingPage = () => {
                   )}
                 />
 
-                <Controller
-                  name="activer_confirmation_presence"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={<Switch {...field} checked={field.value} />}
-                      label="Activer la confirmation de présence"
-                    />
-                  )}
-                />
+                
 
                 <Controller
                   name="importer_video_evenement"
@@ -192,6 +233,111 @@ const LandingPage = () => {
                     />
                   )}
                 />
+
+                
+              </Box>
+
+              
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                  <Field.UploadLogo
+                      name="logo"
+                      maxSize={314572}
+                      helperText={
+                          <Typography
+                            variant="caption"
+                            sx={{
+                                mt: 3,
+                                mx: 'auto',
+                                display: 'block',
+                                textAlign: 'center',
+                                color: 'text.disabled',
+                            }}
+                          >
+                            {/* Formats autorisés *.jpeg, *.jpg, *.png, *.gif */}
+                            Logo des sponsors
+
+                          </Typography>
+                      }
+                  />
+
+                  <Field.UploadLogo
+                    name="logo"
+                    maxSize={314572}
+                    helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                              mt: 3,
+                              mx: 'auto',
+                              display: 'block',
+                              textAlign: 'center',
+                              color: 'text.disabled',
+                          }}
+                        >
+                          {/* Formats autorisés *.jpeg, *.jpg, *.png, *.gif */}
+                          Logo de l'événement
+                        </Typography>
+                    }
+                  />
+                  <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+
+                    <UploadAvatar
+                      value={avatarUrl}
+                      onDrop={handleDropAvatar}
+                      validator={(fileData) => {
+                        if (fileData.size > 1000000) {
+                          return { code: 'file-too-large', message: '' };
+                        }
+                        return null;
+                      }}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+
+                          }}
+                        >
+                          Image background (Carré)
+                        </Typography>
+                      }
+                    />
+                  </Box>
+
+                  <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+
+                    <UploadAvatar
+                      value={avatarUrl}
+                      onDrop={handleDropAvatar}
+                      validator={(fileData) => {
+                        if (fileData.size > 1000000) {
+                          return { code: 'file-too-large', message: '' };
+                        }
+                        return null;
+                      }}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 3,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.disabled',
+                            
+                          }}
+                        >
+                          Image background (Rectangle)
+                        </Typography>
+                      }
+                    />
+                  </Box>
+                  
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

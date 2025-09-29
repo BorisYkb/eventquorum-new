@@ -6,6 +6,7 @@ import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,11 +17,12 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components/router-link';
+
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
-import Button from '@mui/material/Button';
-import { RouterLink } from 'src/routes/components/router-link';
-import { paths } from 'src/routes/paths';
+
 import { IEventTableFilters } from 'src/types/event';
 import { IOrganizerTableFilters } from 'src/types/organizer';
 

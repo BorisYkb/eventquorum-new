@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { render } from 'nprogress';
 import { useTabs } from 'minimal-shared/hooks';
 
 import TabPanel from '@mui/lab/TabPanel';
@@ -11,11 +12,15 @@ import { DashboardContent } from 'src/layouts/organisateur';
 
 import { CustomTabs } from 'src/components/custom-tabs';
 
+import Faqs from '../faqs';
+import EventPasse from '../eventpasse';
 import Inscription from '../inscription';
 import LandingPage from '../landingPage';
 import InfoPaiement from '../infosPaiement';
 import VisioConference from '../visioConference';
 import CharteGraphiqueView from '../charte-graphique-view';
+
+// ----------------------------------------------------------------------
 
 const TABS = [
   {
@@ -27,6 +32,8 @@ const TABS = [
   { value: 'visioconference', label: 'Visioconférence', render: () => <VisioConference /> },
   { value: 'landingPage', label: 'LandingPage', render: () => <LandingPage /> },
   { value: 'infosPaiement', label: 'Infos paiement', render: () => <InfoPaiement/> },
+  { value: 'faqs', label: "FAQ's", render: () => <Faqs /> },
+  { value: 'eventpasse', label: "Evènement passé", render: () => <EventPasse /> },
   { value: 'phototheque', label: 'Photothèque', render: () => <div>Photothèque</div> },
 ];
 

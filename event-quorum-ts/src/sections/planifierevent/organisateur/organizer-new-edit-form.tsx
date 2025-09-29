@@ -1,6 +1,5 @@
-import { IOrganizerItem } from 'src/types/organizer';
-
 import { z as zod } from 'zod';
+import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
@@ -11,20 +10,23 @@ import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
+import { InputAdornment } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { InputAdornment } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
 import { fData } from 'src/utils/format-number';
+
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { useBoolean } from 'minimal-shared/hooks';
 import { Iconify } from 'src/components/iconify';
+import { Form, Field, schemaHelper } from 'src/components/hook-form';
+
+import { IOrganizerItem } from 'src/types/organizer';
 
 export const NewUserSchema = zod.object({
     avatarUrl: schemaHelper.file({ message: 'La photo de profil est requise!' }),
@@ -132,7 +134,7 @@ export function OrganizerNewEditForm({ currentUser }: Props) {
                                 label="Numéro de téléphone"
                                 country={!currentUser ? 'CI' : undefined}
                             />
-                            <Field.Text name="address" label="Adresse"  />
+                            <Field.Text name="address" label="Lieu d'habitation"  />
 
 
                         </Box>

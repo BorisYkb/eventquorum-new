@@ -1,6 +1,8 @@
-import { Controller } from 'react-hook-form';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import { Controller } from 'react-hook-form';
+
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
     Box,
     Card,
@@ -28,12 +30,13 @@ import {
     Grid2 as Grid,
     Divider
 } from '@mui/material';
-import { Icon } from '@iconify/react';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { Form, Field } from 'src/components/hook-form';
+
 import { useInfoPaiementController } from './controller';
-import { RouterLink } from 'src/routes/components';
-import { paths } from 'src/routes/paths';
 
 const PAYMENT_METHODS = [
     { value: 'orange_ci', label: 'ORANGE CI' },
@@ -211,7 +214,7 @@ const InfoPaiement = () => {
                                         )}
                                     />
                                 </Grid>
-                                {watchTarificationMode !== 'gratuit' && (
+                                {watchTarificationMode !== 'gratuit' && watchTarificationMode !== 'montant_unique' && (
                                     <Grid size={{ xs: 12, md: 4 }}>
                                         <Controller
                                             name="activite"
@@ -224,7 +227,10 @@ const InfoPaiement = () => {
                                                 </Field.Select>
                                             )}
                                         />
-                                    </Grid>)}
+                                    </Grid>)
+                                }
+                                
+                                
                             </Grid>
 
                             {watchTarificationMode !== 'gratuit' && (

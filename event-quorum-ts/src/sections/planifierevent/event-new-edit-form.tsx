@@ -3,6 +3,7 @@ import type { IEvent, IEventOrganizer, INewEventItem } from 'src/types/event';
 import { z as zod } from 'zod';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
@@ -17,21 +18,21 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { FormControl, RadioGroup, Radio, SvgIconProps, MenuItem, Select, IconButton, Tooltip } from '@mui/material';
-import { Controller } from 'react-hook-form';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
 import { fIsAfter } from 'src/utils/format-time';
 
 import { _tags, _tourGuides } from 'src/_mock';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from 'src/assets/icons/social-icons';
 
 import { toast } from 'src/components/snackbar';
-import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from 'src/assets/icons/social-icons';
-import { SocialMediaForm } from './event-social-media-form';
-import { RouterLink } from 'src/routes/components';
 import { Iconify } from 'src/components/iconify';
+import { Form, Field, schemaHelper } from 'src/components/hook-form';
+
+import { SocialMediaForm } from './event-social-media-form';
 
 // ----------------------------------------------------------------------
 
@@ -355,23 +356,9 @@ export function EventNewEditForm({ currentEvent }: Props) {
           </Box>
         </Stack>
 
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Description</Typography>
-          <Field.Editor
-            fullItem
-            name="description"
-            sx={{ maxHeight: 480 }}
-            placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases." />
-        </Stack>
+        
 
-        <Stack spacing={1.5}>
-          <Typography variant="subtitle2">Image banniere évènement</Typography>
-          <Field.Upload
-            name="logo"
-            maxSize={3145728}
-            onDelete={() => setValue('logo', '', { shouldValidate: true })}
-          />
-        </Stack>
+        
         <Stack spacing={1.5}>
           <Typography variant="subtitle2">Types de domaines</Typography>
           <FormControl component="fieldset">
