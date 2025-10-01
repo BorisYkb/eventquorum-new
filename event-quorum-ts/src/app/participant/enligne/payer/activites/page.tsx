@@ -3,18 +3,22 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { ActivitesPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-payees-list';
-import { ActivitesNonPayeesList } from 'src/app/participant/enpresentiel/payer/activites/components/activites-non-payees-list';
 
-import { ACTIVITES_PAYEES} from './components/activites-payees-data';
+import { Iconify } from 'src/components/iconify';
+
+import { ActivitesPayeesList } from './components/activites-payees-list';
+import { ACTIVITES_PAYEES } from './components/activites-payees-data';
 
 // ----------------------------------------------------------------------
 
@@ -24,31 +28,50 @@ import { ACTIVITES_PAYEES} from './components/activites-payees-data';
  */
 export default function ParticipantEnpresentieiPayerActivitesPage() {
     const [currentTab, setCurrentTab] = useState('payees');
+    const router = useRouter();
 
     const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
         setCurrentTab(newValue);
     };
 
-    // const renderTabContent = () => {
-    //     switch (currentTab) {
-    //         case 'payees':
-    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-    //         case 'non-payees':
-    //             return <ActivitesNonPayeesList activites={ACTIVITES_NON_PAYEES} />;
-    //         default:
-    //             return <ActivitesPayeesList activites={ACTIVITES_PAYEES} />;
-    //     }
-    // };
+
+
+    const handleAddActivite = () => {
+        // Rediriger vers la page de sélection des activités
+        router.push('/participant/enligne/payer/activites/ajouter');
+    }
 
     return (
         <DashboardContent>
             <Container sx={{ py: 1 }}>
                 {/* En-tête de la page */}
-                <Box sx={{ mb: 4, textAlign: 'center' }}>
+                <Box sx={{ mb: 4, textAlign: 'center', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="h4" sx={{ mb: 2, fontWeight: 600 }}>
                         Gérez Mes Activités
                     </Typography>
-                    
+
+                    {/* Bouton Ajouter une activité */}
+                    <Tooltip title="Modifier ma sélection d'activité" arrow>
+                        <Button
+                            variant="outlined"
+                            startIcon={<Iconify icon="eva:plus-fill" />}
+                            size="small"
+                            onClick={handleAddActivite}
+                            sx={{
+                                textTransform: 'none',
+                                borderColor: 'grey.300',
+                                color: 'white',
+                                bgcolor: 'black',
+                                '&:hover': {
+                                    borderColor: 'grey.400',
+                                    bgcolor: 'black',
+                                    boxShadow: 'shadows[1]'
+                                }
+                            }}
+                        >
+                            Modifier ma sélection
+                        </Button>
+                    </Tooltip>
                 </Box>
 
                 {/* Navigation par onglets */}
@@ -74,23 +97,9 @@ export default function ParticipantEnpresentieiPayerActivitesPage() {
                                 </Box>
                             }
                         />
-                        {/* <Tab
-                            value="non-payees"
-                            label={
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <Box
-                                        sx={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: '50%',
-                                            bgcolor: 'warning.main',
-                                        }}
-                                    />
-                                    En attente ({ACTIVITES_NON_PAYEES.length})
-                                </Box>
-                            }
-                        /> */}
                     </Tabs>
+
+
                 </Box>
 
                 {/* Contenu des onglets */}

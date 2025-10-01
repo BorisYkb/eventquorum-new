@@ -117,7 +117,7 @@ export function ActivitesNonPayeesList({ activites }: ActivitesNonPayeesListProp
                     color: activite.prix === 0 ? 'success.main' : 'warning.main' 
                   }}
                 >
-                  {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()} FCFA`}
+                  {(activite.prix ?? 0) === 0 ? 'Gratuit' : `${(activite.prix ?? 0).toLocaleString()} FCFA`}
                 </Typography>
               </TableCell>
 

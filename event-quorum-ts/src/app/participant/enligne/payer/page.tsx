@@ -10,7 +10,7 @@ import { SeoIllustration } from 'src/assets/illustrations';
 import { Footer } from 'src/app/participant/components/footer';
 import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
-import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
+import AccueilProgrammeSection2 from './components/programme/accueil-programme-section-2';
 
 import { AccueilCompactVideo } from 'src/app/participant/components/accueil-compact-video';
 
@@ -26,8 +26,7 @@ export default function ParticipantEnresentielPage() {
                     <AppWelcome
                         title="Bonjours(e) cher(e) participant(e) Kouakou Evarist"
                         description="Vous etes connecté en tant que participant au SARA 2023. 
-                        Cliquez sur le bouton 'Suivre en directe' pour confirmer votre présence 
-                        en ligne participer à l'evenement en ligne."
+                        Cliquez sur le bouton 'Suivre en directe' pour vous inscrire sur la liste de présence et participer à l'evenement en ligne."
                         img={<SeoIllustration />}
                     />
                 </Grid>

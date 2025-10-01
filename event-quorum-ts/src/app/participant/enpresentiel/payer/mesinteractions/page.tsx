@@ -490,7 +490,7 @@ export default function MesInteractionsPage() {
           color="text.secondary"
           sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
         >
-          Gérez vos enquêtes et consultez vos résultats
+          Consultez vos résultats et donnez vos avis
         </Typography>
       </Box>
 
@@ -509,7 +509,7 @@ export default function MesInteractionsPage() {
               minHeight: { xs: '40px', sm: '48px' },
               px: { xs: 2, sm: 3 },
             },
-            width: { xs: '100%', sm: 450 },
+            width: { xs: '100%', sm: 380 },
           }}
         >
           {TABS_CONFIG.map((tab) => (

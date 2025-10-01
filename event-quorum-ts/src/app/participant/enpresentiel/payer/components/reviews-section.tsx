@@ -281,7 +281,7 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
               fontWeight: 500,
             }}
           >
-            Vous voulez donner vos avis sur ?
+            Donnez vos avis sur :
           </Typography>
 
           <FormControl component="fieldset">

@@ -2,7 +2,6 @@
 
 'use client';
 
-import { useEffect } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
@@ -39,7 +38,7 @@ export interface Activite {
     description: string;
     status: string;
     statusColor: 'default' | 'warning' | 'success' | 'error' | 'info';
-    priceOptions: PriceOption[];
+    priceOptions: PriceOption[] | null; // null = accès déjà inclus dans le paiement global
 }
 
 /**
@@ -95,49 +94,26 @@ export function ActivitesSelection({
     const isActiviteDisabled = (activiteId: string): boolean => disabledActivities.includes(activiteId);
 
     /**
-     * Vérifie si toutes les options de prix d'une activité sont gratuites
+     * Construit la liste d'options à afficher pour une activité
+     * - Si priceOptions === null = accès déjà inclus → retourne []
+     * - Si tous les prix sont à 0 = gratuit → retourne option "Gratuit"
+     * - Sinon = options normales
      */
-    const isActiviteFree = (activite: Activite): boolean => {
-        return activite.priceOptions.every(option => option.price === 0);
-    };
-
-    /**
-     * Auto-sélectionne l'option gratuite pour les activités gratuites sélectionnées
-     */
-    useEffect(() => {
-        selectedActivites.forEach((selectedActivity) => {
-            const activite = activites.find(act => act.id === selectedActivity.activityId);
-            if (activite && isActiviteFree(activite)) {
-                // Trouver l'option gratuite
-                const freeOption = activite.priceOptions.find(option => option.price === 0);
-                if (freeOption && selectedActivity.selectedStanding !== freeOption.id) {
-                    onStandingChange(selectedActivity.activityId, freeOption.id);
-                }
-            }
-        });
-    }, [selectedActivites, activites, onStandingChange]);
-
-    /**
-     * Gestionnaire de toggle d'activité modifié pour auto-sélectionner les options gratuites
-     */
-    const handleActiviteToggle = (activiteId: string) => {
-        const activite = activites.find(act => act.id === activiteId);
-        const wasSelected = isActiviteSelected(activiteId);
-        
-        // Appel du toggle original
-        onActiviteToggle(activiteId);
-        
-        // Si l'activité vient d'être sélectionnée et qu'elle est gratuite, auto-sélectionner l'option gratuite
-        if (!wasSelected && activite && isActiviteFree(activite)) {
-            const freeOption = activite.priceOptions.find(option => option.price === 0);
-            if (freeOption) {
-                // Utiliser setTimeout pour s'assurer que le toggle s'est bien exécuté
-                setTimeout(() => {
-                    onStandingChange(activiteId, freeOption.id);
-                }, 0);
-            }
+    const buildRenderedOptions = (a: Activite) => {
+        // Cas 1: priceOptions === null = accès déjà inclus dans le paiement global
+        if (a.priceOptions === null) {
+            return [];
         }
+
+        // Cas 2: Toutes les options ont un prix = 0 = activité gratuite
+        if (a.priceOptions.every(o => o.price === 0)) {
+            return [{ id: 'gratuit', label: 'Gratuit', price: 0, currency: 'FCFA' }];
+        }
+
+        // Cas 3: Options normales avec prix
+        return a.priceOptions;
     };
+
 
     /**
      * Calcule les tailles de police selon l'écran
@@ -190,26 +166,14 @@ export function ActivitesSelection({
 
     return (
         <Box>
-            {/* Titre de la section */}
-            <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                sx={{
-                    mb: spacing.marginBottom,
-                    ...fontSizes.subtitle2,
-                    textAlign: isMobile ? 'center' : 'left'
-                }}
-            >
-                La liste des activités au programme
-            </Typography>
-
             {/* Liste des activités */}
             <Stack spacing={spacing.cardSpacing}>
                 {activites.map((activite) => {
                     const isSelected = isActiviteSelected(activite.id);
                     const selectedStanding = getSelectedStanding(activite.id);
                     const isDisabled = isActiviteDisabled(activite.id);
-                    const isFree = isActiviteFree(activite);
+                    const renderedOptions = buildRenderedOptions(activite);
+
 
                     return (
                         <Card
@@ -253,7 +217,7 @@ export function ActivitesSelection({
                                         control={
                                             <Checkbox
                                                 checked={isSelected}
-                                                onChange={() => !isDisabled && handleActiviteToggle(activite.id)}
+                                                onChange={() => !isDisabled && onActiviteToggle(activite.id)}
                                                 color="primary"
                                                 size={isMobile ? "small" : "medium"}
                                                 disabled={isDisabled}
@@ -288,7 +252,7 @@ export function ActivitesSelection({
                                                         color: isDisabled ? 'text.disabled' : 'text.primary'
                                                     }}
                                                 >
-                                                    {activite.time} {activite.title}
+                                                    {activite.title}
                                                 </Typography>
 
                                                 {/* Description */}
@@ -302,7 +266,7 @@ export function ActivitesSelection({
                                                         wordBreak: 'break-word'
                                                     }}
                                                 >
-                                                    {activite.description}
+                                                    {activite.time}
                                                 </Typography>
                                             </Box>
 
@@ -321,7 +285,7 @@ export function ActivitesSelection({
                                                         flexShrink: 0
                                                     }}
                                                 >
-                                                    Payée
+                                                    Déjà sélectionnée
                                                 </Box>
                                             ) : (
                                                 <Chip
@@ -339,7 +303,8 @@ export function ActivitesSelection({
                                         </Box>
 
                                         {/* Options de standing si activité sélectionnée et non désactivée */}
-                                        {isSelected && !isDisabled && (
+                                        {/* IMPORTANT : Ne pas afficher si l'activité n'a pas de priceOptions (accès déjà inclus) */}
+                                        {isSelected && !isDisabled && renderedOptions.length > 0 && (
                                             <Box sx={{
                                                 mt: 2,
                                                 ml: isMobile ? 0 : 1,
@@ -355,89 +320,70 @@ export function ActivitesSelection({
                                                         mb: 1
                                                     }}
                                                 >
-                                                    Type de place:
+                                                    Type d'accès:
                                                 </Typography>
 
-                                                {/* Si l'activité est gratuite, afficher seulement "Gratuit" en vert */}
-                                                {isFree ? (
-                                                    <Box
-                                                        sx={{
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            bgcolor: 'success.main',
-                                                            color: 'white',
-                                                            px: 2,
-                                                            py: 1,
-                                                            borderRadius: 1,
-                                                            fontSize: '0.875rem',
-                                                            fontWeight: 600,
-                                                        }}
-                                                    >
-                                                        ✓ Gratuit
-                                                    </Box>
-                                                ) : (
-                                                    <RadioGroup
-                                                        value={selectedStanding}
-                                                        onChange={(e) => onStandingChange(activite.id, e.target.value)}
-                                                        row={!isMobile} // Vertical sur mobile, horizontal sur desktop
-                                                        sx={{
-                                                            gap: spacing.radioGroupGap,
-                                                            flexDirection: isMobile ? 'column' : 'row'
-                                                        }}
-                                                    >
-                                                        {activite.priceOptions.map((option) => (
-                                                            <FormControlLabel
-                                                                key={option.id}
-                                                                value={option.id}
-                                                                control={
-                                                                    <Radio
-                                                                        size={isMobile ? "small" : "small"}
-                                                                    />
-                                                                }
-                                                                label={
-                                                                    <Box sx={{
-                                                                        display: 'flex',
-                                                                        flexDirection: 'column',
-                                                                        alignItems: 'flex-start'
-                                                                    }}>
-                                                                        <Typography
-                                                                            variant="body2"
-                                                                            sx={{
-                                                                                ...fontSizes.body2,
-                                                                                fontWeight: 500
-                                                                            }}
-                                                                        >
-                                                                            {option.label}
-                                                                        </Typography>
-                                                                        <Typography
-                                                                            variant="caption"
-                                                                            color="text.secondary"
-                                                                            sx={fontSizes.caption}
-                                                                        >
-                                                                            {option.price.toLocaleString()} {option.currency}
-                                                                        </Typography>
-                                                                    </Box>
-                                                                }
-                                                                sx={{
-                                                                    border: '1px solid',
-                                                                    borderColor: 'divider',
-                                                                    borderRadius: 1,
-                                                                    px: isMobile ? 1.5 : 1,
-                                                                    py: isMobile ? 1 : 0.5,
-                                                                    m: 0,
-                                                                    width: isMobile ? '100%' : 'auto',
-                                                                    // Effet hover
-                                                                    '&:hover': { borderColor: 'primary.main' },
-                                                                    // Style quand sélectionné
-                                                                    ...(selectedStanding === option.id && {
-                                                                        borderColor: 'primary.main',
-                                                                        bgcolor: (theme) => varAlpha(theme.vars.palette.primary.mainChannel, 0.08)
-                                                                    })
-                                                                }}
-                                                            />
-                                                        ))}
-                                                    </RadioGroup>
-                                                )}
+                                                <RadioGroup
+                                                    value={selectedStanding}
+                                                    onChange={(e) => onStandingChange(activite.id, e.target.value)}
+                                                    row={!isMobile} // Vertical sur mobile, horizontal sur desktop
+                                                    sx={{
+                                                        gap: spacing.radioGroupGap,
+                                                        flexDirection: isMobile ? 'column' : 'row'
+                                                    }}
+                                                >
+                                                    {renderedOptions.map((option) => (
+                                                        <FormControlLabel
+                                                            key={option.id}
+                                                            value={option.id}
+                                                            control={
+                                                                <Radio
+                                                                    size={isMobile ? "small" : "small"}
+                                                                />
+                                                            }
+                                                            label={
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    alignItems: 'flex-start'
+                                                                }}>
+                                                                    <Typography
+                                                                        variant="body2"
+                                                                        sx={{
+                                                                            ...fontSizes.body2,
+                                                                            fontWeight: 500
+                                                                        }}
+                                                                    >
+                                                                        {option.label}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        variant="caption"
+                                                                        color="text.secondary"
+                                                                        sx={fontSizes.caption}
+                                                                    >
+                                                                        {option.price.toLocaleString()} {option.currency}
+                                                                    </Typography>
+                                                                </Box>
+                                                            }
+                                                            sx={{
+                                                                border: '1px solid',
+                                                                borderColor: 'divider',
+                                                                borderRadius: 1,
+                                                                px: isMobile ? 1.5 : 1,
+                                                                py: isMobile ? 1 : 0.5,
+                                                                m: 0,
+                                                                width: isMobile ? '100%' : 'auto',
+                                                                // Effet hover
+                                                                '&:hover': { borderColor: 'primary.main' },
+                                                                // Style quand sélectionné
+                                                                ...(selectedStanding === option.id && {
+                                                                    borderColor: 'primary.main',
+                                                                    bgcolor: (theme) => varAlpha(theme.vars.palette.primary.mainChannel, 0.08)
+                                                                })
+                                                            }}
+                                                        />
+                                                    ))}
+                                                </RadioGroup>
                                             </Box>
                                         )}
                                     </Box>

@@ -1,6 +1,7 @@
-// src/app/participant/enligne/payer/suivredirecte/components/accueil-compact-video.tsx
+// src/app/participant/enligne/payer/suivredirecte/components/accueil-compact-video-ping.tsx
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
@@ -12,7 +13,7 @@ import Grid from '@mui/material/Grid2';
 import { CONFIG } from 'src/global-config';
 import { Iconify } from 'src/components/iconify';
 
-import type { ProgrammeActivity } from 'src/app/participant/components/programme/programme-data';
+import type { ProgrammeActivity } from './programme/programme-data';
 
 // ----------------------------------------------------------------------
 
@@ -24,12 +25,58 @@ interface AccueilCompactVideoProps {
 /**
  * Section activité épinglée compacte pour les pages /payer/ (accueil3)
  * Affiche l'activité épinglée du programme avec le style AppWelcome
+ * Intègre un player vidéo YouTube qui se lit automatiquement
  */
 export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilCompactVideoProps) {
+    // Référence pour le conteneur iframe YouTube
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+
+    /**
+     * Effect pour recharger la vidéo quand l'activité épinglée change
+     * Ceci permet de redémarrer la vidéo automatiquement
+     */
+    useEffect(() => {
+        if (pinnedActivity && iframeRef.current) {
+            // Recharger l'iframe pour forcer le redémarrage de la vidéo
+            const iframe = iframeRef.current;
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = currentSrc;
+            }, 10);
+        }
+    }, [pinnedActivity?.id]); // Se déclenche quand l'ID de l'activité épinglée change
 
     if (!pinnedActivity) {
         return null;
     }
+
+    /**
+     * Détermine si la vidéo doit être lue automatiquement
+     * - "En cours" : oui (direct)
+     * - "Terminé" : oui (replay)
+     * - "Non démarré" : non
+     */
+    const shouldAutoplay = pinnedActivity.status === 'En cours' || pinnedActivity.status === 'Terminé';
+
+    /**
+     * Construit l'URL d'embed YouTube avec les paramètres appropriés
+     */
+    const getYoutubeEmbedUrl = () => {
+        if (!pinnedActivity.youtubeVideoId) return '';
+
+        const baseUrl = `https://www.youtube.com/embed/${pinnedActivity.youtubeVideoId}`;
+        const params = new URLSearchParams({
+            autoplay: shouldAutoplay ? '1' : '0',
+            mute: '1', // Désactivé par défaut pour éviter les problèmes d'autoplay
+            controls: '1',
+            rel: '0', // Ne pas afficher les vidéos suggérées
+            modestbranding: '1', // Logo YouTube plus discret
+            enablejsapi: '1' // Activer l'API JavaScript
+        });
+
+        return `${baseUrl}?${params.toString()}`;
+    };
 
     const handleWatchLive = () => {
         if (onWatchLive) {
@@ -57,7 +104,7 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                         display: 'flex',
                         position: 'relative',
                         pl: { xs: 3, md: 5 },
-                        alignItems: 'center',
+                        alignItems: 'flex-start',
                         color: 'common.white',
                         textAlign: { xs: 'center', md: 'left' },
                         flexDirection: { xs: 'column', md: 'row' },
@@ -95,7 +142,7 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                         sx={{
                             whiteSpace: 'pre-line',
                             mb: 1,
-                            fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
+                            fontSize: { xs: '1.05rem', sm: '1.15rem', md: '1.4rem' },
                             fontWeight: 600,
                             lineHeight: 1.3
                         }}
@@ -135,7 +182,7 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                     </Box>
 
                     {/* Description courte */}
-                    <Typography
+                    {/* <Typography
                         variant="body2"
                         sx={{
                             opacity: 0.7,
@@ -149,10 +196,72 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                             ? `${pinnedActivity.description.slice(0, 200)}...`
                             : pinnedActivity.description
                         }
-                    </Typography>
+                    </Typography> */}
+
+                    {/* Player vidéo YouTube ou Message selon le statut */}
+                    {pinnedActivity.status === 'Non démarré' ? (
+                        /* Message si pas de vidéo disponible pour "Non démarré" */
+                        <Box
+                            sx={{
+                                width: { xs: '100%', sm: 670, lg: 800 },
+                                height: { xs: '100%', sm: 370 },
+                                maxWidth: '100%',
+                                mt: 2,
+                                mx: 'auto',
+                                p: 3,
+                                borderRadius: 2,
+                                bgcolor: 'grey.800',
+                                textAlign: 'center',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Box>
+                                <Iconify
+                                    icon="solar:videocamera-record-outline"
+                                    width={48}
+                                    sx={{ color: 'grey.500', mb: 1 }}
+                                />
+                                <Typography variant="body2" sx={{ color: 'grey.400' }}>
+                                    La diffusion démarrera prochainement
+                                </Typography>
+                            </Box>
+                        </Box>
+                    ) : pinnedActivity.youtubeVideoId && (
+                        /* Player vidéo YouTube pour "En cours" et "Terminé" */
+                        <Box
+                            sx={{
+                                width: { xs: '100%', sm: 670, lg: 800 },
+                                height: { xs: '100%', sm: 370 },
+                                maxWidth: '100%',
+                                mt: 2,
+                                mx: 'auto',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                boxShadow: 3,
+                                bgcolor: 'grey.900'
+                            }}
+                        >
+                            <iframe
+                                ref={iframeRef}
+                                width="100%"
+                                height="100%"
+                                src={getYoutubeEmbedUrl()}
+                                title={`Vidéo: ${pinnedActivity.title}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                style={{
+                                    display: 'block',
+                                    border: 'none'
+                                }}
+                            />
+                        </Box>
+                    )}
                 </Box>
 
-                {/* Section droite : Bouton Live */}
+                {/* Section droite : Bouton Live - Conservé mais maintenant la vidéo joue automatiquement
                 {pinnedActivity.status === 'En cours' && (
                     <Box sx={{
                         display: 'flex',
@@ -197,21 +306,8 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                         >
                             <Iconify icon="solar:play-circle-bold" width={28} />
                         </IconButton>
-
-                        {/* <Typography
-                            variant="caption"
-                            sx={{
-                                color: 'error.light',
-                                fontSize: { xs: '0.525rem', md: '0.65rem' },
-                                fontWeight: 600,
-                                textTransform: 'uppercase',
-                                letterSpacing: 0.5
-                            }}
-                        >
-                            EN DIRECT
-                        </Typography> */}
                     </Box>
-                )}
+                )} */}
             </Box>
         </Grid>
     );

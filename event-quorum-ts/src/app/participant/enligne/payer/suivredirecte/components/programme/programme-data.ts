@@ -16,6 +16,9 @@ export interface ProgrammeActivity {
     documentUrl?: string;
     videoUrl?: string;
 
+    // Nouveau champ pour l'ID de la vidéo YouTube
+    youtubeVideoId?: string; // ID de la vidéo YouTube (ex: "dQw4w9WgXcQ")
+
     // Champs conservés du programme
     type: string;
     location: string;
@@ -50,6 +53,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-1',
                 videoUrl: '#video-prog-1',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Ouverture',
                 location: 'Hall Principal - Parc des Expositions',
             },
@@ -69,6 +73,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-2',
                 videoUrl: '#video-prog-2',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Cérémonie',
                 location: 'Salle Plénière',
             },
@@ -88,6 +93,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-3',
                 videoUrl: '#video-prog-3',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Conférence',
                 location: 'Salle de Conférence',
             },
@@ -114,6 +120,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-4',
                 videoUrl: '#video-prog-4',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Panel',
                 location: 'Amphithéâtre A',
             },
@@ -132,6 +139,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasDocument: true,
                 hasVideo: false,
                 documentUrl: '#doc-prog-5',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Atelier',
                 location: 'Espaces Ateliers B & C',
             },
@@ -150,6 +158,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-6',
                 videoUrl: '#video-prog-6',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Fermeture',
                 location: 'Hall Principal',
             },
@@ -176,6 +185,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-7',
                 videoUrl: '#video-prog-7',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Animation',
                 location: 'SARA Village - Espace Culturel',
             },
@@ -195,6 +205,7 @@ export const PROGRAMME_DAYS: ProgrammeDay[] = [
                 hasVideo: true,
                 documentUrl: '#doc-prog-8',
                 videoUrl: '#video-prog-8',
+                youtubeVideoId: 'dQw4w9WgXcQ', // Remplacer par votre ID vidéo YouTube
                 type: 'Forum',
                 location: 'Pavillon Jeunesse',
             },

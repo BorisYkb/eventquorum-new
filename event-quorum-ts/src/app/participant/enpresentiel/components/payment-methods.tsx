@@ -48,24 +48,10 @@ export function PaymentMethods({
 
     return (
         <Box>
-            {/* <Typography variant="h6" sx={{ mb: 3 }}>
-                {isAllFree ? 'Aucun paiement requis' : 'Comment voulez-vous payer?'}
-            </Typography> */}
 
             {isAllFree ? (
                 <Box
-                    // sx={{
-                    //     p: 2,
-                    //     borderRadius: 1,
-                    //     border: (theme) => `solid 1px ${varAlpha(theme.vars.palette.success.mainChannel, 0.32)}`,
-                    //     bgcolor: (theme) => varAlpha(theme.vars.palette.success.mainChannel, 0.08),
-
-                    // }}
                 >
-                    {/* <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Iconify width={18} icon="solar:check-circle-bold" />
-                        Toutes les activités sélectionnées sont gratuites. Vous pouvez valider sans choisir de moyen de paiement.
-                    </Typography> */}
                 </Box>
             ) : (
                 <Stack spacing={2}>

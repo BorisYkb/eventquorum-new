@@ -21,7 +21,21 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
     const activitesSelectionnees = selectedActivites.map((selection) => {
         const activite = activites.find((a) => a.id === selection.activityId);
 
-        // 1) Essayer de retrouver l’option dans la data
+        // Vérifier si l'activité n'a pas de priceOptions (accès déjà inclus)
+        const hasNoPriceOptions = !activite?.priceOptions || activite.priceOptions.length === 0;
+
+        if (hasNoPriceOptions) {
+            // Activité sans prix - accès déjà inclus dans le paiement global
+            return {
+                id: activite!.id,
+                title: activite!.title,
+                time: activite!.time,
+                selectedStanding: null, // Pas de standing pour ce type d'activité
+                prix: null, // Prix null - ne sera pas compté dans le total
+            };
+        }
+
+        // 1) Essayer de retrouver l'option dans la data
         const standingOption = activite?.priceOptions?.find((p) => p.id === selection.selectedStanding);
 
         // 2) Fallback : si selection == 'gratuit', on construit une option virtuelle
@@ -42,7 +56,14 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
         };
     }).filter((item): item is NonNullable<typeof item> => item !== null);
 
-    const totalPrix = activitesSelectionnees.reduce((sum, activite) => sum + activite.prix, 0);
+    // Calculer le total en excluant les activités avec prix null
+    const totalPrix = activitesSelectionnees.reduce((sum, activite) => {
+        // Ne compter que les activités avec un prix défini (pas null)
+        if (activite.prix !== null) {
+            return sum + activite.prix;
+        }
+        return sum;
+    }, 0);
 
     return (
         <Box
@@ -75,22 +96,31 @@ export function ActivitesSummary({ activites, selectedActivites }: ActivitesSumm
                                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                     {activite.title}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                    {activite.time}
-                                </Typography>
-                                <Typography variant="caption" color="primary.main" sx={{ display: 'block' }}>
-                                    {activite.selectedStanding.label}
-                                </Typography>
+                                {/* Afficher le standing seulement s'il existe */}
+                                {activite.selectedStanding && activite.prix !== null && activite.prix !== 0 && (
+                                    <Typography variant="caption" color="primary.main" sx={{ display: 'block' }}>
+                                        {activite.selectedStanding.label}
+                                    </Typography>
+                                )}
                             </Box>
                             <Typography
                                 variant="body2"
                                 sx={{
                                     fontWeight: 600,
-                                    color: activite.prix === 0 ? 'success.main' : 'text.primary',
+                                    color: activite.prix === null
+                                        ? 'text.secondary'
+                                        : activite.prix === 0
+                                            ? 'success.main'
+                                            : 'text.primary',
                                     ml: 1,
                                 }}
                             >
-                                {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()} FCFA`}
+                                {/* Afficher "-" si prix null, "Gratuit" si 0, sinon le prix */}
+                                {activite.prix === null
+                                    ? '-'
+                                    : activite.prix === 0
+                                        ? 'Gratuit'
+                                        : `${activite.prix.toLocaleString()} FCFA`}
                             </Typography>
                         </Box>
                     ))}

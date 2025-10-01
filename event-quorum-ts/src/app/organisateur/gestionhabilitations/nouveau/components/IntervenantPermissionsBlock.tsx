@@ -132,7 +132,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                 </Typography>
                 <Upload
                   multiple
-                  thumbnail={showPreview.value}
+                  thumbnail={showPreview}
                   value={files}
                   onDrop={handleDropMultiFile}
                   onRemove={handleRemoveFile}

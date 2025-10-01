@@ -39,6 +39,10 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
+  const formatPrix = (prix: number | null) =>
+    prix === null ? '-' : prix === 0 ? '0' : `${prix.toLocaleString()}`;
+
+
   /**
    * Calcule les tailles de police responsives
    */
@@ -95,33 +99,6 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
     router.push(`/participant/enligne/payer/activites/${activityId}`);
   };
 
-  /**
-   * Gestion du téléchargement de document
-   */
-  const handleDownloadDocument = (activite: ActivitePayee) => {
-    if (!activite.hasDocument || !activite.documentUrl) return;
-    console.log(`Download document: ${activite.documentUrl}`);
-    // TODO: Implémenter téléchargement document
-  };
-
-  /**
-   * Gestion de la lecture vidéo
-   */
-  const handleWatchVideo = (activite: ActivitePayee) => {
-    if (!activite.hasVideo || !activite.videoUrl) return;
-    console.log(`Watch video: ${activite.videoUrl}`);
-    // TODO: Implémenter lecture vidéo
-  };
-
-  /**
-   * Détermine si une ressource est désactivée
-   */
-  const isResourceDisabled = (activite: ActivitePayee, resourceType: 'document' | 'video') => {
-    // Désactiver si activité non démarrée OU si la ressource n'existe pas
-    const hasResource = resourceType === 'document' ? activite.hasDocument : activite.hasVideo;
-    return activite.status === 'Non démarré' || !hasResource;
-  };
-
   // État vide - aucune activité payée
   if (activites.length === 0) {
     return (
@@ -172,10 +149,10 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
               Statut
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Accès
+              Type d'acces
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Prix payé (FCFA)
+              Montant (FCFA)
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
               Date paiement
@@ -202,11 +179,11 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                       ...fontSizes.subtitle2,
                       textAlign: 'left',
                       textDecoration: 'none',
-                      color: 'primary.main',
+                      color: 'text.primary',
                       cursor: 'pointer',
                       '&:hover': {
                         textDecoration: 'underline',
-                        color: 'primary.dark'
+                        color: 'text.primary',
                       },
                       transition: theme.transitions.create(['color'], {
                         duration: theme.transitions.duration.shorter,
@@ -215,7 +192,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                   >
                     {activite.title}
                   </Link>
-                  <Typography
+                  {/* <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{
@@ -224,7 +201,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                     }}
                   >
                     {activite.description}
-                  </Typography>
+                  </Typography> */}
                 </Box>
               </TableCell>
 
@@ -234,10 +211,14 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                   label={activite.time}
                   size="small"
                   sx={{
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
+                    bgcolor: 'transparent',
+                    color: 'text.primary',
                     ...fontSizes.chip,
-                    fontWeight: 600
+                    fontWeight: 600,
+                    '&:hover': {
+                      backgroundColor: 'inherit', // garde la même couleur au survol
+                      cursor: 'default'
+                    }
                   }}
                 />
               </TableCell>
@@ -256,18 +237,25 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                 />
               </TableCell>
 
-              {/* Colonne Place */}
+              {/* Colonne Type d'accès */}
               <TableCell>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    ...fontSizes.body2,
-                    fontWeight: 500
-                  }}
-                >
-                  {activite.standing}
-                </Typography>
+                {activite.prix === 0 ? (
+                  <Typography
+                    variant="body2"
+                    sx={{ ...fontSizes.body2, fontWeight: 700, color: 'success.main' }}
+                  >
+                    Gratuit
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{ ...fontSizes.body2, fontWeight: 500 }}
+                  >
+                    {activite.standing}
+                  </Typography>
+                )}
               </TableCell>
+
 
               {/* Colonne Prix */}
               <TableCell>
@@ -278,7 +266,8 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                     color: 'success.main'
                   }}
                 >
-                  {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()}`}
+                  {formatPrix(activite.prix)}
+
                 </Typography>
               </TableCell>
 
@@ -293,58 +282,6 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                 </Typography>
               </TableCell>
 
-              {/* Colonne Ressources */}
-              {/* <TableCell>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDownloadDocument(activite)}
-                    disabled={isResourceDisabled(activite, 'document')}
-                    title={isResourceDisabled(activite, 'document') ? 'Document indisponible' : 'Télécharger le document'}
-                    sx={{
-                      color: isResourceDisabled(activite, 'document') ? 'text.disabled' : 'primary.main',
-                      '&:hover': {
-                        bgcolor: isResourceDisabled(activite, 'document') ? 'transparent' : 'primary.lighter'
-                      },
-                      // Transition fluide
-                      transition: theme.transitions.create(['color', 'background-color'], {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={`${CONFIG.assetsDir}/assets/icons/files/ic-document.svg`}
-                      sx={fontSizes.iconSize}
-                      alt="Document"
-                    />
-                  </IconButton>
-
-                  <IconButton
-                    size="small"
-                    onClick={() => handleWatchVideo(activite)}
-                    disabled={isResourceDisabled(activite, 'video')}
-                    title={isResourceDisabled(activite, 'video') ? 'Vidéo indisponible' : 'Voir la vidéo'}
-                    sx={{
-                      color: isResourceDisabled(activite, 'video') ? 'text.disabled' : 'secondary.main',
-                      '&:hover': {
-                        bgcolor: isResourceDisabled(activite, 'video') ? 'transparent' : 'secondary.lighter'
-                      },
-                      // Transition fluide
-                      transition: theme.transitions.create(['color', 'background-color'], {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={`${CONFIG.assetsDir}/assets/icons/files/ic-video.svg`}
-                      sx={fontSizes.iconSize}
-                      alt="Vidéo"
-                    />
-                  </IconButton>
-                </Box>
-              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>

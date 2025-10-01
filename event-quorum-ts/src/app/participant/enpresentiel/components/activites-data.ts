@@ -1,4 +1,4 @@
-// src/app/participant/enpresentiel/components/activites-data.ts
+// src/app/participant/enligne/components/activites-data.ts
 
 import type { Activite } from './activites-selection';
 
@@ -14,7 +14,7 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         title: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
         description: 'Cérémonie officielle présidée par S.E.M. ALASSANE OUATTARA',
         status: 'Non démarré',
-        statusColor: 'default',
+        statusColor: 'error',
         priceOptions: [
             { id: 'standard', label: 'Standard', price: 5000, currency: 'FCFA' },
             { id: 'vip', label: 'VIP', price: 20000, currency: 'FCFA' },
@@ -27,7 +27,7 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         title: 'POINT DE PRESSE',
         description: 'Conférence de presse avec les organisateurs',
         status: 'Non démarré',
-        statusColor: 'default',
+        statusColor: 'error',
         priceOptions: [
             { id: 'standard', label: 'Standard', price: 5000, currency: 'FCFA' },
             { id: 'vip', label: 'VIP', price: 10000, currency: 'FCFA' },
@@ -41,11 +41,8 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         description: 'Table ronde avec les experts du secteur',
         status: 'En cours',
         statusColor: 'warning',
-        priceOptions: [
-            { id: 'standard', label: 'Standard', price: 10000, currency: 'FCFA' },
-            { id: 'vip', label: 'VIP', price: 20000, currency: 'FCFA' },
-            { id: 'vvip', label: 'VVIP', price: 30000, currency: 'FCFA' },
-        ]
+        // Activité sans prix - accès déjà inclus dans le paiement global
+        priceOptions: null
     },
     {
         id: '4',
@@ -53,7 +50,7 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         title: 'PAUSE CAFE',
         description: 'Pause networking avec les participants',
         status: 'Non démarré',
-        statusColor: 'default',
+        statusColor: 'error',
         priceOptions: [
             { id: 'standard', label: 'Standard', price: 5000, currency: 'FCFA' },
             { id: 'vip', label: 'VIP', price: 20000, currency: 'FCFA' },
@@ -66,7 +63,7 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         title: 'COOLING BREAK',
         description: 'Moment de détente et échanges informels',
         status: 'Non démarré',
-        statusColor: 'default',
+        statusColor: 'error',
         priceOptions: [
             { id: 'standard', label: 'Standard', price: 0, currency: 'FCFA' },
             { id: 'vip', label: 'VIP', price: 0, currency: 'FCFA' },
@@ -79,7 +76,7 @@ export const ACTIVITES_DISPONIBLES: Activite[] = [
         title: 'WORKSHOP',
         description: 'Atelier pratique sur les innovations agricoles',
         status: 'Non démarré',
-        statusColor: 'default',
+        statusColor: 'error',
         priceOptions: [
             { id: 'standard', label: 'Standard', price: 15000, currency: 'FCFA' },
             { id: 'vip', label: 'VIP', price: 25000, currency: 'FCFA' },

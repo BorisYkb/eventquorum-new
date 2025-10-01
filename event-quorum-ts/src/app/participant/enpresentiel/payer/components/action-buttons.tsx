@@ -40,7 +40,7 @@ export function ActionButtons() {
      * Navigue vers la page de partage d'avis
      */
     const handlePartagerAvis = () => {
-        router.push('/participant/enligne/payer/suivredirecte/mesinteractions');
+        router.push('/participant/enpresentiel/payer/mesinteractions');
     };
 
     /**
@@ -49,7 +49,7 @@ export function ActionButtons() {
     const handleConfirmEnquete = () => {
         if (codeEnquete.trim()) {
             // Redirection avec le code d'enquête
-            router.push(`/participant/enligne/payer/suivredirecte/enquete?code=${codeEnquete}`);
+            router.push(`/participant/enpresentiel/payer/enquete?code=${codeEnquete}`);
             setEnqueteModalOpen(false);
             setCodeEnquete('');
         }
@@ -111,21 +111,6 @@ export function ActionButtons() {
                                 }}
                             >
                                 Partager un avis
-                            </Button>
-
-                            <Button
-                                variant="contained"
-                                color="inherit"
-                                startIcon={<Iconify icon="mdi:help-circle-outline" />}
-                                onClick={() => router.push('/participant/enligne/payer/suivredirecte/question')}
-                                sx={{
-                                    fontSize: { xs: '0.75rem', md: '0.875rem' },
-                                    px: { xs: 1.5, md: 2 },
-                                    py: { xs: 0.75, md: 1 },
-                                    minWidth: 'auto'
-                                }}
-                            >
-                                Poser une question
                             </Button>
                         </Box>
                     </CardContent>

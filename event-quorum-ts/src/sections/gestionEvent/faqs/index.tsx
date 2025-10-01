@@ -9,9 +9,16 @@ export default function Faqs() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   
+  // Type pour une FAQ
+  type Faq = {
+    id: number;
+    question: string;
+    answer: string;
+  };
+
   // États pour les FAQs
-  const [tempFaqs, setTempFaqs] = useState([]);
-  const [savedFaqs, setSavedFaqs] = useState([]);
+  const [tempFaqs, setTempFaqs] = useState<Faq[]>([]);
+  const [savedFaqs, setSavedFaqs] = useState<Faq[]>([]);
 
   // Fonction pour ajouter une FAQ temporaire
   const handleAddFaq = () => {
@@ -28,7 +35,7 @@ export default function Faqs() {
   };
 
   // Fonction pour supprimer une FAQ temporaire
-  const handleDeleteTemp = (id) => {
+  const handleDeleteTemp = (id: number) => {
     setTempFaqs(tempFaqs.filter((faq) => faq.id !== id));
   };
 
@@ -50,7 +57,7 @@ export default function Faqs() {
   };
 
   // Fonction pour supprimer une FAQ enregistrée
-  const handleDeleteSaved = (id) => {
+  const handleDeleteSaved = (id: number) => {
     setSavedFaqs(savedFaqs.filter((faq) => faq.id !== id));
   };
 
