@@ -12,6 +12,7 @@ import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import { AccueilVideoSection2 } from 'src/app/participant/components/accueil-video-section-2';
 import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
+import AccueilProgrammeSectionInit from './components/accueil-programme-section-init';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,7 @@ export default function ParticipantPage() {
         <AccueilVideoSection2 />
 
         {/* Section 3 - Programme */}
-        <AccueilProgrammeSection2 />
+        <AccueilProgrammeSectionInit />
 
         {/* Section 4 - Sponsors/Footer */}
         <Grid size={12}>

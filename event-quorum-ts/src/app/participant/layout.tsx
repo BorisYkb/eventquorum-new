@@ -17,8 +17,8 @@ export default function Layout({ children }: Props) {
   }
 
   return (
-    <AuthGuard>
+    // <AuthGuard>
       <ParticipantLayout>{children}</ParticipantLayout>
-    </AuthGuard>
+    // </AuthGuard>
   );
 }

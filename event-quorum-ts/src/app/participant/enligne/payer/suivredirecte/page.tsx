@@ -14,12 +14,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { AccueilCompactVideo } from './components/accueil-compact-video-ping';
 import { ActionButtons } from './components/action-buttons';
-import AccueilProgrammeSection2 from 'src/app/participant/enligne/payer/suivredirecte/components/accueil-programme-section-2-ping';
+import AccueilProgrammeSection2Ping from 'src/app/participant/enligne/payer/suivredirecte/components/accueil-programme-section-2-ping';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import { Footer } from 'src/app/participant/components/footer';
-import { PROGRAMME_DAYS } from 'src/app/participant/components/programme/programme-data';
+import { PROGRAMME_DAYS, ProgrammeActivity } from 'src/app/participant/enligne/payer/suivredirecte/components/programme/programme-data';
 
-import type { ProgrammeActivity } from 'src/app/participant/components/programme/programme-data';
 
 // ----------------------------------------------------------------------
 
@@ -28,34 +27,51 @@ export default function ParticipantEnresentielPage() {
     const [pinnedActivity, setPinnedActivity] = useState<ProgrammeActivity | null>(null);
 
     /**
-     * Initialise l'activité épinglée par défaut au chargement de la page
-     * Sélectionne automatiquement la première activité "En cours" trouvée
+     * Fonction pour trouver la première activité "En cours" ou par défaut
+     * Utilisée pour l'épinglage initial et le ré-épinglage automatique
      */
-    useEffect(() => {
+    const findDefaultActivity = (): ProgrammeActivity | null => {
         // Cherche une activité "En cours" dans tous les jours du programme
-        let defaultActivity: ProgrammeActivity | null = null;
-        
         for (const day of PROGRAMME_DAYS) {
             const currentActivity = day.activities.find(activity => activity.status === 'En cours');
             if (currentActivity) {
-                defaultActivity = currentActivity;
-                break;
+                return currentActivity;
             }
         }
 
         // Si aucune activité "En cours", prendre la première activité du premier jour
-        if (!defaultActivity && PROGRAMME_DAYS.length > 0 && PROGRAMME_DAYS[0].activities.length > 0) {
-            defaultActivity = PROGRAMME_DAYS[0].activities[0];
+        if (PROGRAMME_DAYS.length > 0 && PROGRAMME_DAYS[0].activities.length > 0) {
+            return PROGRAMME_DAYS[0].activities[0];
         }
 
+        return null;
+    };
+
+    /**
+     * Initialise l'activité épinglée par défaut au chargement de la page
+     * Sélectionne automatiquement la première activité "En cours" trouvée
+     */
+    useEffect(() => {
+        const defaultActivity = findDefaultActivity();
         setPinnedActivity(defaultActivity);
     }, []);
 
     /**
      * Gestionnaire pour épingler/désépingler une activité
+     * IMPORTANT: Maintenant avec ré-épinglage automatique
+     * - Si on désépingle l'activité courante, on réépingle automatiquement la première activité "En cours"
+     * - Il y a toujours une activité épinglée
      */
     const handlePinActivity = (activity: ProgrammeActivity | null) => {
-        setPinnedActivity(activity);
+        // Si on essaie de désépingler l'activité actuelle (en cliquant sur l'épingle de l'activité déjà épinglée)
+        if (pinnedActivity && activity && pinnedActivity.id === activity.id) {
+            // Au lieu de désépingler complètement, on réépingle la première activité "En cours"
+            const defaultActivity = findDefaultActivity();
+            setPinnedActivity(defaultActivity);
+        } else {
+            // Sinon, on épingle normalement la nouvelle activité
+            setPinnedActivity(activity);
+        }
     };
 
     /**
@@ -80,8 +96,8 @@ export default function ParticipantEnresentielPage() {
                     />
                 </Grid>
 
-                {/* Section 2 - Activité épinglée (remplace l'ancienne vidéo hero) */}
-                <AccueilCompactVideo 
+                {/* Section 2 - Activité épinglée avec vidéo (remplace l'ancienne vidéo hero) */}
+                <AccueilCompactVideo
                     pinnedActivity={pinnedActivity}
                     onWatchLive={handleWatchLive}
                 />
@@ -90,7 +106,7 @@ export default function ParticipantEnresentielPage() {
                 <ActionButtons />
 
                 {/* Section 3 - Programme avec système d'épinglage */}
-                <AccueilProgrammeSection2 
+                <AccueilProgrammeSection2Ping
                     pinnedActivity={pinnedActivity}
                     onPinActivity={handlePinActivity}
                 />
@@ -112,69 +128,3 @@ export default function ParticipantEnresentielPage() {
         </DashboardContent>
     );
 }
-
-
-
-
-
-
-
-
-
-
-// //src/app/participant/enligne/payer/suivredirecte/page.tsx
-
-// 'use client';
-
-// import Box from '@mui/material/Box';
-// import Grid from '@mui/material/Grid2';
-
-// import { SeoIllustration } from 'src/assets/illustrations';
-
-// import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
-// import { DashboardContent } from 'src/layouts/dashboard';
-
-
-// import { AccueilCompactVideo } from './components/accueil-compact-video';
-// import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
-// import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
-// import { Footer } from 'src/app/participant/components/footer';
-
-// // ----------------------------------------------------------------------
-
-
-// export default function ParticipantEnresentielPage() {
-//     return (
-//         <DashboardContent>
-//             <Grid container spacing={3}>
-//                 {/* Section 1 - Welcome sans bouton */}
-//                 <Grid size={12}>
-//                     <AppWelcome
-//                         title="Bonjours cher(e) participant(e) Kouakou Evarist"
-//                         description="Vous etes connecté en tant que participant au SARA 2023."
-//                         img={<SeoIllustration hideBackground />}
-//                     />
-//                 </Grid>
-
-//                 {/* Section 2 - Vidéo hero */}
-//                 <AccueilCompactVideo />
-
-//                 {/* Section 3 - Programme */}
-//                 <AccueilProgrammeSection2 />
-
-//                 {/* Section 4 - Sponsors/Footer */}
-//                 <Grid size={12}>
-//                     <Box sx={{ textAlign: 'center', py: 4 }}>
-//                         <IntervenantCarousel />
-//                     </Box>
-//                 </Grid>
-
-//                 <Grid size={12}>
-//                     <Box sx={{ textAlign: 'center', py: 4 }}>
-//                         <Footer />
-//                     </Box>
-//                 </Grid>
-//             </Grid>
-//         </DashboardContent>
-//     );
-// }

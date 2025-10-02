@@ -11,7 +11,7 @@ import { Footer } from 'src/app/participant/components/footer';
 import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
-
+import { ActionButtons } from './components/action-buttons';
 import { AccueilCompactVideo } from 'src/app/participant/components/accueil-compact-video';
 
 // ----------------------------------------------------------------------
@@ -32,6 +32,8 @@ export default function ParticipantEnresentielPage() {
 
                 {/* Section 2 - Vidéo hero */}
                 <AccueilCompactVideo />
+
+                <ActionButtons />
 
                 {/* Section 3 - Programme */}
                 <AccueilProgrammeSection2 />

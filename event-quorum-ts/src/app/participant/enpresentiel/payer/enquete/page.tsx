@@ -155,20 +155,20 @@ export default function EnquetePage() {
   }
 
   return (
-    <DashboardContent maxWidth="md">
+    <DashboardContent maxWidth="lg">
       <Box sx={{ py: { xs: 2, md: 3 } }}>
         
         {/* Bouton retour */}
         <Box sx={{ mb: 3, textAlign: 'right' }}>
           <Button
             variant="contained"
-            color="primary"
+            color="inherit"
             onClick={handleRetour}
             sx={{
               textTransform: 'none',
               fontWeight: 600,
-              px: 3,
-              py: 1,
+              px: 2,
+              py: 0.5,
               fontSize: { xs: '0.875rem', md: '1rem' },
               borderRadius: 1
             }}
@@ -291,8 +291,8 @@ export default function EnquetePage() {
               sx={{
                 textTransform: 'none',
                 fontWeight: 600,
-                px: 4,
-                py: 1.5,
+                px: 2.5,
+                py: 1,
                 fontSize: { xs: '0.875rem', md: '1rem' },
                 borderRadius: 1,
                 minWidth: 120
@@ -309,8 +309,8 @@ export default function EnquetePage() {
               sx={{
                 textTransform: 'none',
                 fontWeight: 600,
-                px: 4,
-                py: 1.5,
+                px: 2.5,
+                py: 1,
                 fontSize: { xs: '0.875rem', md: '1rem' },
                 borderRadius: 1,
                 minWidth: 120,

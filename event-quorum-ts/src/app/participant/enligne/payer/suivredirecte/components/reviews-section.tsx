@@ -9,7 +9,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -21,9 +22,13 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
 import { Iconify } from 'src/components/iconify';
@@ -77,7 +82,7 @@ const REVIEW_OPTIONS = [
  */
 const AVAILABLE_ACTIVITIES = [
   'Activité 1',
-  'Activité 2', 
+  'Activité 2',
   'Activité 3',
 ];
 
@@ -104,22 +109,38 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // État pour contrôler l'ouverture/fermeture de la modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   // États pour le formulaire d'avis
   const [selectedType, setSelectedType] = useState<'activity' | 'event' | ''>('');
   const [selectedActivity, setSelectedActivity] = useState<string>('');
   const [reviewText, setReviewText] = useState<string>('');
   const [rating, setRating] = useState<number>(0);
-  const [activityChecked, setActivityChecked] = useState<boolean>(false);
-  const [eventChecked, setEventChecked] = useState<boolean>(false);
 
   // État pour la liste des avis (simulation d'un état global)
   const [reviews, setReviews] = useState<ReviewData[]>(EXISTING_REVIEWS);
 
-  // Statut simulé (dans la vraie app ça viendra de l’API)
+  // Statut simulé (dans la vraie app ça viendra de l'API)
   const getStatus = (rating: number) => {
     if (rating >= 4) return { label: 'Terminé', color: 'success.main' };
     if (rating === 3) return { label: 'En cours', color: 'warning.main' };
     return { label: 'Non démarré', color: 'error.main' };
+  };
+
+  /**
+   * Gestionnaire d'ouverture de la modal
+   */
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Gestionnaire de fermeture de la modal
+   */
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    resetForm();
   };
 
   /**
@@ -131,15 +152,15 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
       return;
     }
 
-    if (activityChecked && !selectedActivity) {
+    if (selectedType === 'activity' && !selectedActivity) {
       return;
     }
 
     // Création du nouvel avis
     const newReview: ReviewData = {
       id: Date.now(),
-      type: activityChecked ? 'activity' : 'event',
-      title: activityChecked ? selectedActivity : 'Évènement',
+      type: selectedType as 'activity' | 'event',
+      title: selectedType === 'activity' ? selectedActivity : 'Évènement',
       rating,
       comment: reviewText,
       date: new Date().toLocaleDateString('fr-FR', {
@@ -154,8 +175,8 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
     // Ajout à la liste des avis
     setReviews(prev => [newReview, ...prev]);
 
-    // Réinitialisation du formulaire
-    resetForm();
+    // Fermeture de la modal et réinitialisation du formulaire
+    handleCloseModal();
   };
 
   /**
@@ -166,239 +187,297 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
     setSelectedActivity('');
     setReviewText('');
     setRating(0);
-    setActivityChecked(false);
-    setEventChecked(false);
   };
 
   /**
-   * Gestionnaire de changement des checkboxes
+   * Gestionnaire de changement des radio buttons
    */
-  const handleCheckboxChange = (type: 'activity' | 'event', checked: boolean) => {
-    if (type === 'activity') {
-      setActivityChecked(checked);
-      if (checked) {
-        setEventChecked(false);
-      }
-    } else {
-      setEventChecked(checked);
-      if (checked) {
-        setActivityChecked(false);
-      }
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedType(event.target.value as 'activity' | 'event');
+    // Réinitialiser l'activité sélectionnée si on change de type
+    if (event.target.value !== 'activity') {
+      setSelectedActivity('');
     }
   };
 
   /**
-   * Rendu du formulaire de création d'avis
+   * Rendu du bouton pour ouvrir la modal
    */
-  const renderReviewForm = () => (
-    <Card 
-      sx={{ 
-        p: { xs: 2, sm: 3, md: 4 },
-        mb: { xs: 3, sm: 4 },
-        borderRadius: 2,
-        boxShadow: theme.customShadows.z8,
-      }}
-    >
-      {/* En-tête du formulaire */}
-      <Typography 
-        variant="h6" 
-        sx={{ 
-          mb: 3,
-          fontSize: { xs: '1.1rem', sm: '1.25rem' },
+  const renderReviewButton = () => (
+    <Box sx={{ mb: { xs: 3, sm: 4 }, textAlign: 'start' }}>
+      <Button
+        variant="contained"
+        onClick={handleOpenModal}
+        // startIcon={<Iconify icon="solar:star-bold-duotone" />}
+        sx={{
+          textTransform: 'none',
           fontWeight: 600,
-          color: 'primary.main',
+          px: { xs: 1.5, sm: 2 },
+          py: { xs: 0.5, sm: 1 },
+          fontSize: { xs: '0.875rem', sm: '1rem' },
+          borderRadius: 1,
+          bgcolor: 'primary.main',
+          color: 'white',
+          '&:hover': {
+            bgcolor: 'primary.dark',
+          },
+          boxShadow: theme.customShadows?.z8 || 2,
         }}
       >
-        Vous voulez donner vos avis sur ?
-      </Typography>
+        Donnez un avis
+      </Button>
+    </Box>
+  );
 
-      {/* Section des checkboxes pour choisir le type d'avis */}
-      <Box sx={{ mb: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={activityChecked}
-                  onChange={(e) => handleCheckboxChange('activity', e.target.checked)}
-                  sx={{
-                    '& .MuiSvgIcon-root': {
-                      fontSize: { xs: 20, sm: 24 },
-                    },
-                  }}
-                />
-              }
-              label={
-                <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                  Activité
-                </Typography>
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={eventChecked}
-                  onChange={(e) => handleCheckboxChange('event', e.target.checked)}
-                  sx={{
-                    '& .MuiSvgIcon-root': {
-                      fontSize: { xs: 20, sm: 24 },
-                    },
-                  }}
-                />
-              }
-              label={
-                <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                  Évènement
-                </Typography>
-              }
-            />
-          </Grid>
-        </Grid>
-      </Box>
+  /**
+   * Rendu du formulaire de création d'avis dans la modal
+   */
+  const renderReviewModal = () => (
+    <Dialog
+      open={isModalOpen}
+      onClose={handleCloseModal}
+      maxWidth="sm"
+      fullWidth
+      fullScreen={isSmallMobile}
+      PaperProps={{
+        sx: {
+          borderRadius: isSmallMobile ? 0 : 2,
+          m: isSmallMobile ? 0 : 2,
+        }
+      }}
+    >
+      <DialogTitle sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        pb: 2,
+      }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: { xs: '1.1rem', sm: '1.25rem' },
+            fontWeight: 600,
+            color: 'primary.main',
+          }}
+        >
+          Donner un avis
+        </Typography>
+        <IconButton
+          onClick={handleCloseModal}
+          size="small"
+        >
+          <Iconify icon="solar:close-bold" />
+        </IconButton>
+      </DialogTitle>
 
-      {/* Sélecteur d'activité (affiché seulement si "Activité" est cochée) */}
-      {activityChecked && (
+      <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
+        {/* Section des radio buttons pour choisir le type d'avis */}
         <Box sx={{ mb: 3 }}>
-          <FormControl fullWidth size={isMobile ? 'small' : 'medium'}>
-            <InputLabel>Sélectionner une activité</InputLabel>
-            <Select
-              value={selectedActivity}
-              label="Sélectionner une activité"
-              onChange={(e) => setSelectedActivity(e.target.value)}
-              sx={{
-                '& .MuiSelect-select': {
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                },
-              }}
+          <Typography
+            variant="subtitle1"
+            sx={{
+              mb: 2,
+              fontSize: { xs: '1rem', sm: '1.1rem' },
+              fontWeight: 500,
+            }}
+          >
+            Donner votre avis sur :
+          </Typography>
+
+          <FormControl component="fieldset">
+            <RadioGroup
+              value={selectedType}
+              onChange={handleRadioChange}
+              row={!isSmallMobile}
             >
-              {AVAILABLE_ACTIVITIES.map((activity) => (
-                <MenuItem key={activity} value={activity}>
+              <FormControlLabel
+                value="activity"
+                control={
+                  <Radio
+                    sx={{
+                      '& .MuiSvgIcon-root': {
+                        fontSize: { xs: 20, sm: 24 },
+                      },
+                    }}
+                  />
+                }
+                label={
                   <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                    {activity}
+                    Activité
                   </Typography>
-                </MenuItem>
-              ))}
-            </Select>
+                }
+              />
+              <FormControlLabel
+                value="event"
+                control={
+                  <Radio
+                    sx={{
+                      '& .MuiSvgIcon-root': {
+                        fontSize: { xs: 20, sm: 24 },
+                      },
+                    }}
+                  />
+                }
+                label={
+                  <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                    Évènement
+                  </Typography>
+                }
+              />
+            </RadioGroup>
           </FormControl>
         </Box>
-      )}
 
-      {/* Section de notation et commentaire */}
-      {(activityChecked || eventChecked) && (
-        <>
-          {/* Question et système de notation par étoiles */}
-          <Box sx={{ mb: 3, textAlign: 'center' }}>
-            <Typography 
-              variant="subtitle1" 
-              sx={{ 
-                mb: 2,
-                fontSize: { xs: '0.875rem', sm: '1rem' },
-                fontWeight: 500,
-              }}
-            >
-              {activityChecked 
-                ? `Vos avis sur ${selectedActivity || 'activité'}`
-                : 'Vos avis sur événement'
-              }
-            </Typography>
-            
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-              sx={{ 
-                mb: 2,
-                fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              }}
-            >
-              Quelle note donneriez-vous à votre expérience ?
-            </Typography>
-
-            {/* Système de notation par étoiles */}
-            <Rating
-              name="rating"
-              value={rating}
-              onChange={(event, newValue) => {
-                setRating(newValue || 0);
-              }}
-              size={isMobile ? 'medium' : 'large'}
-              sx={{
-                fontSize: { xs: '2rem', sm: '2.5rem' },
-                '& .MuiRating-iconFilled': {
-                  color: '#ffc107',
-                },
-                '& .MuiRating-iconHover': {
-                  color: '#ffb400',
-                },
-              }}
-            />
-          </Box>
-
-          {/* Champ de commentaire */}
+        {/* Sélecteur d'activité (affiché seulement si "Activité" est sélectionnée) */}
+        {selectedType === 'activity' && (
           <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-              sx={{ 
-                mb: 1,
-                fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              }}
-            >
-              Laissez nous un commentaire
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={isMobile ? 3 : 4}
-              placeholder="Votre commentaire..."
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              variant="outlined"
-              size={isMobile ? 'small' : 'medium'}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 1,
-                  '& textarea': {
+            <FormControl fullWidth size={isMobile ? 'small' : 'medium'}>
+              <InputLabel>Sélectionner une activité</InputLabel>
+              <Select
+                value={selectedActivity}
+                label="Sélectionner une activité"
+                onChange={(e) => setSelectedActivity(e.target.value)}
+                sx={{
+                  '& .MuiSelect-select': {
                     fontSize: { xs: '0.875rem', sm: '1rem' },
                   },
-                },
-              }}
-            />
+                }}
+              >
+                {AVAILABLE_ACTIVITIES.map((activity) => (
+                  <MenuItem key={activity} value={activity}>
+                    <Typography sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                      {activity}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
+        )}
 
-          {/* Bouton d'envoi */}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              variant="contained"
-              onClick={handleSubmitReview}
-              disabled={
-                !rating ||
-                !reviewText.trim() ||
-                (activityChecked && !selectedActivity)
-              }
-              sx={{
-                textTransform: 'none',
-                fontWeight: 600,
-                px: { xs: 2, sm: 3 }, // ✅ réduit la largeur intérieure
-                py: { xs: 0.5, sm: 1 }, // ✅ réduit la hauteur intérieure
-                fontSize: { xs: '0.75rem', sm: '0.875rem' }, // ✅ texte plus petit
-                borderRadius: 1,
-                minWidth: { xs: '80px', sm: '100px' }, // ✅ bouton plus petit
-                bgcolor: 'black', // ✅ bouton noir
-                color: 'white', // ✅ texte blanc
-                '&:hover': {
-                  bgcolor: '#333', // ✅ hover gris foncé
-                },
-              }}
-            >
-              Envoyer
-            </Button>
-          </Box>
+        {/* Section de notation et commentaire */}
+        {selectedType && (
+          <>
+            {/* Question et système de notation par étoiles */}
+            <Box sx={{ mb: 3, textAlign: 'center' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  mb: 2,
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
+                  fontWeight: 500,
+                }}
+              >
+                {selectedType === 'activity'
+                  ? `Vos avis sur ${selectedActivity || 'activité'}`
+                  : 'Vos avis sur événement'
+                }
+              </Typography>
 
-        </>
-      )}
-    </Card>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mb: 2,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                }}
+              >
+                Quelle note donneriez-vous à votre expérience ?
+              </Typography>
+
+              {/* Système de notation par étoiles */}
+              <Rating
+                name="rating"
+                value={rating}
+                onChange={(event, newValue) => {
+                  setRating(newValue || 0);
+                }}
+                size={isMobile ? 'medium' : 'large'}
+                sx={{
+                  fontSize: { xs: '2rem', sm: '2.5rem' },
+                  '& .MuiRating-iconFilled': {
+                    color: '#ffc107',
+                  },
+                  '& .MuiRating-iconHover': {
+                    color: '#ffb400',
+                  },
+                }}
+              />
+            </Box>
+
+            {/* Champ de commentaire */}
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mb: 1,
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                }}
+              >
+                Laissez nous un commentaire
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={isMobile ? 3 : 4}
+                placeholder="Votre commentaire..."
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                variant="outlined"
+                size={isMobile ? 'small' : 'medium'}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 1,
+                    '& textarea': {
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
+                    },
+                  },
+                }}
+              />
+            </Box>
+          </>
+        )}
+      </DialogContent>
+
+      {/* Actions de la modal */}
+      <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
+        <Button
+          onClick={handleCloseModal}
+          sx={{
+            textTransform: 'none',
+            color: 'text.secondary',
+          }}
+        >
+          Annuler
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmitReview}
+          disabled={
+            !selectedType ||
+            !rating ||
+            !reviewText.trim() ||
+            (selectedType === 'activity' && !selectedActivity)
+          }
+          sx={{
+            textTransform: 'none',
+            fontWeight: 600,
+            px: { xs: 2, sm: 3 },
+            py: { xs: 0.5, sm: 1 },
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+            borderRadius: 1,
+            bgcolor: 'black',
+            color: 'white',
+            '&:hover': {
+              bgcolor: '#333',
+            },
+          }}
+        >
+          Envoyer
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 
   /**
@@ -407,14 +486,14 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
   const renderReviewsList = () => (
     <Card sx={{ overflow: 'hidden' }}>
       {/* En-tête de la liste */}
-      <Box sx={{ 
+      <Box sx={{
         p: { xs: 2, sm: 3 },
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}>
-        <Typography 
+        <Typography
           variant="h6"
-          sx={{ 
+          sx={{
             fontWeight: 600,
             fontSize: { xs: '1.1rem', sm: '1.25rem' },
           }}
@@ -428,14 +507,14 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
         <Table size={isMobile ? 'small' : 'medium'}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ 
+              <TableCell sx={{
                 fontWeight: 600,
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 py: { xs: 1, sm: 1.5 },
               }}>
                 Évènement/Activité
               </TableCell>
-              <TableCell sx={{ 
+              <TableCell sx={{
                 fontWeight: 600,
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 py: { xs: 1, sm: 1.5 },
@@ -443,7 +522,7 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
                 Note
               </TableCell>
               {!isSmallMobile && (
-                <TableCell sx={{ 
+                <TableCell sx={{
                   fontWeight: 600,
                   fontSize: { xs: '0.75rem', sm: '0.875rem' },
                   py: { xs: 1, sm: 1.5 },
@@ -451,7 +530,7 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
                   Commentaire
                 </TableCell>
               )}
-              <TableCell sx={{ 
+              <TableCell sx={{
                 fontWeight: 600,
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 py: { xs: 1, sm: 1.5 },
@@ -464,9 +543,9 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
             {reviews.map((review) => (
               <TableRow key={review.id} hover>
                 <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-                  <Typography 
+                  <Typography
                     variant="body2"
-                    sx={{ 
+                    sx={{
                       fontSize: { xs: '0.75rem', sm: '0.875rem' },
                       fontWeight: 500,
                     }}
@@ -477,15 +556,15 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
 
                 <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography 
+                    <Typography
                       variant="body2"
-                      sx={{ 
+                      sx={{
                         fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         fontWeight: 600,
                       }}
                     >
-                      {review.rating === 3 ? 'Moyen' : 
-                       review.rating >= 4 ? 'Très satisfait' : 'Insatisfait'}
+                      {review.rating === 3 ? 'Moyen' :
+                        review.rating >= 4 ? 'Très satisfait' : 'Insatisfait'}
                     </Typography>
                     <Rating
                       value={review.rating}
@@ -502,10 +581,10 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
 
                 {!isSmallMobile && (
                   <TableCell sx={{ py: { xs: 1, sm: 2 }, maxWidth: 300 }}>
-                    <Typography 
+                    <Typography
                       variant="body2"
                       color="text.secondary"
-                      sx={{ 
+                      sx={{
                         fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -520,7 +599,7 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
                 )}
 
                 <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
-                  <Typography 
+                  <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
@@ -537,24 +616,24 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
       {/* Message si aucun avis */}
       {reviews.length === 0 && (
         <Box sx={{ p: 4, textAlign: 'center' }}>
-          <Iconify 
-            icon="solar:star-bold-duotone" 
-            sx={{ 
+          <Iconify
+            icon="solar:star-bold-duotone"
+            sx={{
               width: { xs: 48, sm: 64 },
               height: { xs: 48, sm: 64 },
               color: 'text.disabled',
               mb: 2,
-            }} 
+            }}
           />
-          <Typography 
-            variant="h6" 
+          <Typography
+            variant="h6"
             color="text.secondary"
             sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
           >
             Aucun avis donné pour le moment
           </Typography>
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color="text.disabled"
             sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
           >
@@ -567,7 +646,8 @@ export function ReviewsSection({ sx }: ReviewsSectionProps) {
 
   return (
     <Box sx={sx}>
-      {renderReviewForm()}
+      {renderReviewButton()}
+      {renderReviewModal()}
       {renderReviewsList()}
     </Box>
   );

@@ -8,17 +8,16 @@ export interface ActivitePayee {
   status: 'Terminé' | 'En cours' | 'Non démarré';
   statusColor: 'success' | 'warning' | 'default' | 'error' | 'info';
   standing: string;
-  prix: number;
+  /** 0 = Gratuit, null = pas de prix individuel, >0 = montant */
+  prix: number | null;
   datePaiement: string;
   isPaid: boolean;
   hasDocument: boolean;
   hasVideo: boolean;
   documentUrl?: string;
   videoUrl?: string;
-
-  // Champs ajoutés pour parité avec le programme
   type: string;
-  location: string; // peut être '' si inconnu
+  location: string;
 }
 
 // Données des activités payées
@@ -31,7 +30,7 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     status: 'Terminé',
     statusColor: 'success',
     standing: 'VIP',
-    prix: 20000,
+    prix: null, // ---- pas de prix individuel
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,
@@ -49,7 +48,7 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     status: 'En cours',
     statusColor: 'warning',
     standing: 'Standard',
-    prix: 5000,
+    prix: 0, // Gratuit
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: false,
@@ -64,7 +63,7 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     title: 'COOLING BREAK',
     description: 'Moment de détente et échanges informels',
     status: 'Non démarré',
-    statusColor: 'default',
+    statusColor: 'error',
     standing: 'VIP',
     prix: 20000,
     datePaiement: '2024-01-15',
@@ -76,7 +75,7 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     location: '',
   },
 
-  // ----- Ajouts depuis PROGRAMME_DAYS (transformés) -----
+  // Ajouts (avec gratuit & sans prix)
   {
     id: '6',
     time: '08H00 - 9H00',
@@ -105,7 +104,7 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     status: 'En cours',
     statusColor: 'warning',
     standing: 'VIP',
-    prix: 25000,
+    prix: null, // ---- pas de prix individuel
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,
@@ -122,9 +121,9 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     description:
       'Conférence de presse avec les organisateurs et les personnalités présentes.',
     status: 'Non démarré',
-    statusColor: 'default',
+    statusColor: 'error',
     standing: 'Standard',
-    prix: 8000,
+    prix: 0, // Gratuit
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,
@@ -160,9 +159,9 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     description:
       "Sessions d'ateliers techniques sur les innovations agricoles et les nouvelles technologies.",
     status: 'Non démarré',
-    statusColor: 'default',
+    statusColor: 'error',
     standing: 'Standard',
-    prix: 12000,
+    prix: null, // ---- pas de prix individuel
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,
@@ -177,9 +176,9 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     title: 'FERMETURE DU SALON ET DU SARA MARKET AU PUBLIC',
     description: "Fermeture des espaces d'exposition au grand public.",
     status: 'Non démarré',
-    statusColor: 'default',
+    statusColor: 'error',
     standing: 'Standard',
-    prix: 7000,
+    prix: 0, // Gratuit
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,
@@ -215,9 +214,9 @@ export const ACTIVITES_PAYEES: ActivitePayee[] = [
     description:
       'Rencontres et échanges entre jeunes entrepreneurs du secteur agricole.',
     status: 'Non démarré',
-    statusColor: 'default',
+    statusColor: 'error',
     standing: 'Standard',
-    prix: 9000,
+    prix: 0, // Gratuit
     datePaiement: '2024-01-15',
     isPaid: true,
     hasDocument: true,

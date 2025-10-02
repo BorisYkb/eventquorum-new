@@ -39,6 +39,10 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
+  const formatPrix = (prix: number | null) =>
+    prix === null ? '-' : prix === 0 ? '0' : `${prix.toLocaleString()}`;
+
+
   /**
    * Calcule les tailles de police responsives
    */
@@ -145,10 +149,10 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
               Statut
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Acces
+              Type d'acces
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
-              Prix payé (FCFA)
+              Montant (FCFA)
             </TableCell>
             <TableCell sx={fontSizes.tableHeader}>
               Date paiement
@@ -175,11 +179,11 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                       ...fontSizes.subtitle2,
                       textAlign: 'left',
                       textDecoration: 'none',
-                      color: 'primary.main',
+                      color: 'text.primary',
                       cursor: 'pointer',
                       '&:hover': {
                         textDecoration: 'underline',
-                        color: 'primary.dark'
+                        color: 'text.primary',
                       },
                       transition: theme.transitions.create(['color'], {
                         duration: theme.transitions.duration.shorter,
@@ -188,7 +192,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                   >
                     {activite.title}
                   </Link>
-                  <Typography
+                  {/* <Typography
                     variant="body2"
                     color="text.secondary"
                     sx={{
@@ -197,7 +201,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                     }}
                   >
                     {activite.description}
-                  </Typography>
+                  </Typography> */}
                 </Box>
               </TableCell>
 
@@ -207,10 +211,14 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                   label={activite.time}
                   size="small"
                   sx={{
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
+                    bgcolor: 'transparent',
+                    color: 'text.primary',
                     ...fontSizes.chip,
-                    fontWeight: 600
+                    fontWeight: 600,
+                    '&:hover': {
+                      backgroundColor: 'inherit', // garde la même couleur au survol
+                      cursor: 'default'
+                    }
                   }}
                 />
               </TableCell>
@@ -229,18 +237,25 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                 />
               </TableCell>
 
-              {/* Colonne Place */}
+              {/* Colonne Type d'accès */}
               <TableCell>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    ...fontSizes.body2,
-                    fontWeight: 500
-                  }}
-                >
-                  {activite.standing}
-                </Typography>
+                {activite.prix === 0 ? (
+                  <Typography
+                    variant="body2"
+                    sx={{ ...fontSizes.body2, fontWeight: 700, color: 'success.main' }}
+                  >
+                    Gratuit
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{ ...fontSizes.body2, fontWeight: 500 }}
+                  >
+                    {activite.standing}
+                  </Typography>
+                )}
               </TableCell>
+
 
               {/* Colonne Prix */}
               <TableCell>
@@ -251,7 +266,8 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                     color: 'success.main'
                   }}
                 >
-                  {activite.prix === 0 ? 'Gratuit' : `${activite.prix.toLocaleString()}`}
+                  {formatPrix(activite.prix)}
+
                 </Typography>
               </TableCell>
 

@@ -51,7 +51,7 @@ export function AccueilVideoSection2({
 
     return (
         <>
-            <Grid size={12}>
+            <Grid size={12} sx={{ width: { md: "80%" }, mx: "auto" }}>
                 <Box
                     sx={{
                         ...theme.mixins.bgGradient({
@@ -60,7 +60,7 @@ export function AccueilVideoSection2({
                                 `url(${coverUrl})`,
                             ],
                         }),
-                        height: { xs: 300, md: 480 },
+                        height: { xs: 290, md: 350 },
                         overflow: 'hidden',
                         borderRadius: { xs: 1, md: 2 },
                         position: 'relative',
@@ -84,17 +84,31 @@ export function AccueilVideoSection2({
                                 textAlign: 'center',
                                 color: 'common.white',
                                 zIndex: 2,
-                                width: '100%',
+                                width: "100%",
                                 px: 2,
                             }}
                         >
+                            <Typography
+                                variant="subtitle1"
+                                sx={{
+                                    opacity: 0.9,
+                                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                                    fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1.15rem' },
+                                    maxWidth: 600,
+                                    mx: 'auto',
+                                    mb: 1,
+                                    fontWeight: 500,
+                                }}
+                            >
+                                Film de l'évènement
+                            </Typography>
                             <Typography
                                 variant="h3"
                                 sx={{
                                     fontWeight: 'bold',
                                     mb: 2,
                                     textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-                                    fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' },
+                                    fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2.5rem' },
                                     lineHeight: { xs: 1.2, md: 1.1 },
                                 }}
                             >

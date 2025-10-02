@@ -23,19 +23,51 @@ interface ParticipantHeaderActionsProps {
 
 export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsProps) {
     const router = useRouter();
-    
+
     // États pour les dialogs existants
     const [confirmPresenceOpen, setConfirmPresenceOpen] = useState(false);
     const [followLiveOpen, setFollowLiveOpen] = useState(false);
     const [participationType, setParticipationType] = useState<'enligne' | 'enpresentiel'>('enpresentiel');
-    
+
     // Hook pour le dialog badge
     const badgeDialog = useParticipantBadgeDialog();
+
+    /**
+     * Vérifie si le pathname correspond à la page d'accueil participant
+     * Gère : /participant, /participant/, /participant/[id], /participant/[id]/
+     */
+    const isParticipantHomePage = () => {
+        // Cas simples : /participant ou /participant/
+        if (pathname === '/participant' || pathname === '/participant/') {
+            return true;
+        }
+
+        // Cas avec ID dynamique : /participant/[id] ou /participant/[id]/
+        // Vérifie que le chemin commence par /participant/ 
+        // ET ne contient pas 'enligne' ou 'enpresentiel'
+        if (pathname.startsWith('/participant/')) {
+            const segments = pathname.split('/').filter(seg => seg !== '');
+
+            // segments[0] sera 'participant'
+            // segments[1] sera l'ID (ou 'enligne'/'enpresentiel')
+
+            // Si on a exactement 2 segments (participant + id) 
+            // ET que le 2e segment n'est ni 'enligne' ni 'enpresentiel'
+            if (segments.length === 2 &&
+                segments[1] !== 'enligne' &&
+                segments[1] !== 'enpresentiel') {
+                return true;
+            }
+        }
+
+        return false;
+    };
 
     // Actions selon le niveau de progression
     const renderActions = () => {
         // Niveau initial - Bouton "Confirmer ma présence"
-        if (pathname === '/participant' || pathname === '/participant/') {
+        // Gère : /participant, /participant/, /participant/[id], /participant/[id]/
+        if (isParticipantHomePage()) {
             return (
                 <>
                     <Button
@@ -47,7 +79,7 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
                             fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' }
                         }}
                     >
-                        Confirmer ma présence
+                        Participer à l'évènement
                     </Button>
 
                     {/* Dialog confirmation présence */}
@@ -132,7 +164,7 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
                 <>
                     <Button
                         variant="outlined"
-                        onClick={badgeDialog.handleOpen} // Action d'ouverture du dialog badge
+                        onClick={badgeDialog.handleOpen}
                         startIcon={<Iconify icon="solar:card-bold" />}
                         sx={{
                             fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' },

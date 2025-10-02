@@ -86,7 +86,7 @@ export function IntervenantCarousel({ data = CAROUSEL_DATA }: Props) {
   return (
     <Card sx={{ p: 3, textAlign: 'center' }}>
       <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
-        NOS SPONSORS ET PARTENAIRES
+        ORGANISATEURS ET SPONSORS
       </Typography>
       
       <Box sx={{ position: 'relative', width: '100%' }}>

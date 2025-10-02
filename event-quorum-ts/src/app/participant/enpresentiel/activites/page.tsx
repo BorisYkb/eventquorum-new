@@ -1,4 +1,4 @@
-// src/app/participant/enpresentiel/activites/page.tsx
+// src/app/participant/enligne/activites/page.tsx
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -48,7 +48,13 @@ export default function ParticipantEnligneActivitesPage() {
     const getPriceForSelection = (selection: SelectedActivite): number => {
         const act = ACTIVITES_DISPONIBLES.find((a) => a.id === selection.activityId);
         if (!act) return 0;
-        if (selection.selectedStanding === 'gratuit') return 0;
+
+        // Si priceOptions === null, le prix est non compté (accès déjà inclus)
+        if (act.priceOptions === null) {
+            return 0;
+        }
+
+        if (selection.selectedStanding === 'gratuit' || selection.selectedStanding === 'included') return 0;
 
         const opt = act.priceOptions?.find((p) => p.id === selection.selectedStanding);
         return opt ? opt.price : 0;
@@ -61,15 +67,19 @@ export default function ParticipantEnligneActivitesPage() {
 
     const isAllFree = totalAmount === 0 && selectedActivites.length > 0;
 
-    // Gestionnaire pour basculer la sélection d'une activité
+    /**
+     * Gestionnaire pour basculer la sélection d'une activité
+     * CORRIGÉ : Distinction entre activité sans prix (null) et activité gratuite (prix à 0)
+     */
     const handleActiviteToggle = (activiteId: string) => {
-        // Retrouver l'activité pour savoir si elle est gratuite
         const activite = ACTIVITES_DISPONIBLES.find((a) => a.id === activiteId);
 
-        const isFree =
-            !activite ||
-            !activite.priceOptions ||
-            activite.priceOptions.length === 0 ||
+        // Cas 1: Activité avec priceOptions === null = accès déjà inclus (pas de standing à sélectionner)
+        const hasNoPriceOptions = activite && activite.priceOptions === null;
+
+        // Cas 2: Activité gratuite = tous les prix sont à 0
+        const isFreeActivity = activite?.priceOptions &&
+            activite.priceOptions.length > 0 &&
             activite.priceOptions.every((opt) => opt.price === 0);
 
         setSelectedActivites((prev) => {
@@ -79,12 +89,22 @@ export default function ParticipantEnligneActivitesPage() {
                 // Désélectionner l'activité
                 return prev.filter((item) => item.activityId !== activiteId);
             } else {
-                // Sélectionner l'activité (par défaut 'gratuit' si activité gratuite, sinon 'standard')
+                // Sélectionner l'activité avec le bon standing par défaut
+                let defaultStanding = 'standard';
+
+                if (hasNoPriceOptions) {
+                    // Activité sans prix : on met 'included' comme standing (non utilisé visuellement)
+                    defaultStanding = 'included';
+                } else if (isFreeActivity) {
+                    // Activité gratuite : standing 'gratuit'
+                    defaultStanding = 'gratuit';
+                }
+
                 return [
                     ...prev,
                     {
                         activityId: activiteId,
-                        selectedStanding: isFree ? 'gratuit' : 'standard',
+                        selectedStanding: defaultStanding,
                     },
                 ];
             }
@@ -107,7 +127,7 @@ export default function ParticipantEnligneActivitesPage() {
 
         // Si tout est gratuit : pas de paiement requis, on confirme directement
         if (isAllFree) {
-            router.push('/participant/enpresentiel'); // ou une page de confirmation dédiée
+            router.push('/participant/enpresentiel/payer'); // ou une page de confirmation dédiée
             return;
         }
 
@@ -169,7 +189,7 @@ export default function ParticipantEnligneActivitesPage() {
                                 mobileMoneyNetwork={mobileMoneyNetwork}
                                 onPaymentMethodChange={setPaymentMethod}
                                 onMobileMoneyNetworkChange={setMobileMoneyNetwork}
-                                totalAmount={totalAmount} // <- INFLUENCE : masque/désactive si total = 0
+                                totalAmount={totalAmount}
                             />
 
                             {/* Bouton validation */}

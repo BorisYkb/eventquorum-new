@@ -1,12 +1,13 @@
 //src/app/participant/enpresentiel/payer/mesinteractions/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -15,19 +16,19 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+
+// Import du composant de statistiques 
+import { GuichetWidgetSummary } from 'src/app/participant/components/guichet-widget-summary-2';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { CustomTabs } from 'src/components/custom-tabs';
-
-// Import du composant de statistiques 
-import { GuichetWidgetSummary } from 'src/app/participant/components/guichet-widget-summary-2';
 
 // Import de la section Avis
 import { ReviewsSection } from '../components/reviews-section';
@@ -314,7 +315,7 @@ export default function MesInteractionsPage() {
    * Rendu d'une ligne du tableau avec les données d'enquête
    * @param survey - Données de l'enquête
    */
-  const renderTableRow = (survey: typeof SURVEY_DATA[0]) => (
+  const renderTableRow: any = (survey: typeof SURVEY_DATA[0]) => (
     <TableRow key={survey.id} hover>
       <TableCell sx={{ py: { xs: 1, sm: 2 } }}>
         <Box>
@@ -489,7 +490,7 @@ export default function MesInteractionsPage() {
           color="text.secondary"
           sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
         >
-          Gérez vos enquêtes et consultez vos résultats
+          Consultez vos résultats et donnez vos avis
         </Typography>
       </Box>
 
@@ -508,7 +509,7 @@ export default function MesInteractionsPage() {
               minHeight: { xs: '40px', sm: '48px' },
               px: { xs: 2, sm: 3 },
             },
-            width: { xs: '100%', sm: 450 },
+            width: { xs: '100%', sm: 380 },
           }}
         >
           {TABS_CONFIG.map((tab) => (

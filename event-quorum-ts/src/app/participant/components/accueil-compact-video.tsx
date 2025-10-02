@@ -68,7 +68,7 @@ export function AccueilCompactVideo({ onWatchLive }: AccueilCompactVideoProps) {
         }}>
           <Box
             sx={{
-              bgcolor: 'error.main',
+              bgcolor: 'warning.main',
               color: 'common.white',
               width: { xs: 26, md: 25 },
               height: { xs: 26, md: 25 },
@@ -86,7 +86,7 @@ export function AccueilCompactVideo({ onWatchLive }: AccueilCompactVideoProps) {
                 left: '-10%',
                 borderRadius: '50%',
                 border: '2px solid',
-                borderColor: 'error.main',
+                borderColor: 'warning.main',
                 animation: 'pulse 2s infinite',
               },
               '@keyframes pulse': {

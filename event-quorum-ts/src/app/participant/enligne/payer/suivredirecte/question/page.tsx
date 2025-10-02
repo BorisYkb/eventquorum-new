@@ -204,7 +204,7 @@ export default function QuestionChatPage() {
             setTimeout(() => {
                 const organizerResponse: ChatMessage = {
                     id: (Date.now() + 1).toString(),
-                    message: 'Merci pour votre question. Un organisateur vous répondra sous peu.',
+                    message: 'Merci pour votre question. Un intervenant vous répondra sous peu.',
                     timestamp: new Date().toLocaleString('fr-FR'),
                     senderId: ORGANIZER.id,
                     senderName: ORGANIZER.name,

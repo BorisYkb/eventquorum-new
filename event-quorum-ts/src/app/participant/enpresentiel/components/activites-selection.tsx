@@ -1,4 +1,4 @@
-// src/app/participant/enpresentiel/components/activites-selection.tsx
+// src/app/participant/enligne/components/activites-selection.tsx
 
 'use client';
 
@@ -38,7 +38,7 @@ export interface Activite {
     description: string;
     status: string;
     statusColor: 'default' | 'warning' | 'success' | 'error' | 'info';
-    priceOptions: PriceOption[];
+    priceOptions: PriceOption[] | null; // null = accès déjà inclus dans le paiement global
 }
 
 /**
@@ -93,15 +93,26 @@ export function ActivitesSelection({
      */
     const isActiviteDisabled = (activiteId: string): boolean => disabledActivities.includes(activiteId);
 
-    // Une activité est gratuite si toutes les options ont un prix = 0 (ou pas d'options)
-    const isFreeActivity = (a: Activite) =>
-        !a.priceOptions || a.priceOptions.length === 0 || a.priceOptions.every(o => o.price === 0);
+    /**
+     * Construit la liste d'options à afficher pour une activité
+     * - Si priceOptions === null = accès déjà inclus → retourne []
+     * - Si tous les prix sont à 0 = gratuit → retourne option "Gratuit"
+     * - Sinon = options normales
+     */
+    const buildRenderedOptions = (a: Activite) => {
+        // Cas 1: priceOptions === null = accès déjà inclus dans le paiement global
+        if (a.priceOptions === null) {
+            return [];
+        }
 
-    // Construit la liste d’options à afficher (s’il est gratuit, on force une seule option “Gratuit”)
-    const buildRenderedOptions = (a: Activite) =>
-        isFreeActivity(a)
-            ? [{ id: 'gratuit', label: 'Gratuit', price: 0, currency: 'FCFA' }]
-            : a.priceOptions;
+        // Cas 2: Toutes les options ont un prix = 0 = activité gratuite
+        if (a.priceOptions.every(o => o.price === 0)) {
+            return [{ id: 'gratuit', label: 'Gratuit', price: 0, currency: 'FCFA' }];
+        }
+
+        // Cas 3: Options normales avec prix
+        return a.priceOptions;
+    };
 
 
     /**
@@ -155,19 +166,6 @@ export function ActivitesSelection({
 
     return (
         <Box>
-            {/* Titre de la section */}
-            <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                sx={{
-                    mb: spacing.marginBottom,
-                    ...fontSizes.subtitle2,
-                    textAlign: isMobile ? 'center' : 'left'
-                }}
-            >
-                La liste des activités au programme
-            </Typography>
-
             {/* Liste des activités */}
             <Stack spacing={spacing.cardSpacing}>
                 {activites.map((activite) => {
@@ -254,7 +252,7 @@ export function ActivitesSelection({
                                                         color: isDisabled ? 'text.disabled' : 'text.primary'
                                                     }}
                                                 >
-                                                    {activite.time} {activite.title}
+                                                    {activite.title}
                                                 </Typography>
 
                                                 {/* Description */}
@@ -268,7 +266,7 @@ export function ActivitesSelection({
                                                         wordBreak: 'break-word'
                                                     }}
                                                 >
-                                                    {activite.description}
+                                                    {activite.time}
                                                 </Typography>
                                             </Box>
 
@@ -305,7 +303,8 @@ export function ActivitesSelection({
                                         </Box>
 
                                         {/* Options de standing si activité sélectionnée et non désactivée */}
-                                        {isSelected && !isDisabled && (
+                                        {/* IMPORTANT : Ne pas afficher si l'activité n'a pas de priceOptions (accès déjà inclus) */}
+                                        {isSelected && !isDisabled && renderedOptions.length > 0 && (
                                             <Box sx={{
                                                 mt: 2,
                                                 ml: isMobile ? 0 : 1,
@@ -321,7 +320,7 @@ export function ActivitesSelection({
                                                         mb: 1
                                                     }}
                                                 >
-                                                    Type de place:
+                                                    Type d'accès:
                                                 </Typography>
 
                                                 <RadioGroup

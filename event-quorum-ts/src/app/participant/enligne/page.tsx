@@ -1,4 +1,4 @@
-// src/app/participant/page.tsx
+// src/app/participant/enligne/page.tsx
 
 'use client';
 
@@ -9,9 +9,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 import { Footer } from 'src/app/participant/components/footer';
 import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
-import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
 import { AccueilVideoSection2 } from 'src/app/participant/components/accueil-video-section-2';
-import AccueilProgrammeSection2 from 'src/app/participant/components/accueil-programme-section-2';
+import AccueilProgrammeSectionInit from './activites/components/accueil-programme-section-init';
 
 // ----------------------------------------------------------------------
 
@@ -33,14 +32,10 @@ export default function ParticipantEnresentielPage() {
                 <AccueilVideoSection2 />
 
                 {/* Section 3 - Programme */}
-                <AccueilProgrammeSection2 />
+                <AccueilProgrammeSectionInit />
 
-                {/* Section 4 - Footer */}
-                <Grid size={12}>
-                  <Box sx={{ textAlign: 'center', py: 4 }}>
-                    <IntervenantCarousel />
-                  </Box>
-                </Grid>
+                {/* Section 4 - Sponsors/Footer */}
+
 
                 <Grid size={12}>
                     <Box sx={{ textAlign: 'center', py: 4 }}>
