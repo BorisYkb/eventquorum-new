@@ -146,7 +146,7 @@ const CreateAccessPage: React.FC = () => {
     'Opérateur de saisie',
     'Intervenant',
     'Superviseur',
-    'Organisateur',
+    
     'Guichetier' // Changé de "Tous accès" à "Guichetier"
   ];
 
@@ -158,8 +158,6 @@ const CreateAccessPage: React.FC = () => {
         return 'info';
       case 'Operateur de saisie':
         return 'secondary';
-      case 'Organisateur':
-        return 'success';
       case 'Guichetier':
         return 'warning';
       default:

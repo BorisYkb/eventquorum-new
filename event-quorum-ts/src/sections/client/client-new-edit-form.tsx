@@ -238,7 +238,7 @@ export function ClientNewEditForm({ item }: Props) {
                                     />
                                     <Field.Phone
                                         name="phoneNumber"
-                                        label="Numéro de téléphone"
+                                        label="Numéro de téléphone mobile"
                                         // sx={{ gridColumn: { xs: 'span 2' } }}
                                         country="CI"
                                     />
@@ -257,7 +257,7 @@ export function ClientNewEditForm({ item }: Props) {
                                     <Field.Text name="num_identification" label="Numéro d'identification de l'entreprise" />
                                     <Field.Phone
                                         name="phoneNumber"
-                                        label="Numéro de téléphone du correspondant"
+                                        label="Numéro de téléphone mobile du correspondant"
                                         country="CI"
                                     />
                                 </>

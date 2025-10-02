@@ -131,10 +131,11 @@ export function OrganizerNewEditForm({ currentUser }: Props) {
                             />
                             <Field.Phone
                                 name="phoneNumber"
-                                label="Numéro de téléphone"
+                                label="Numéro de téléphone mobile"
                                 country={!currentUser ? 'CI' : undefined}
                             />
                             <Field.Text name="address" label="Lieu d'habitation"  />
+                            <Field.Text name="status" label="Status" value="Actif" disabled />
 
 
                         </Box>

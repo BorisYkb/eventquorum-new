@@ -158,24 +158,27 @@ const LandingPage = () => {
                 />
               </Stack>
 
-              <Stack spacing={1.5}>
-                <Typography variant="subtitle2">Image bannière de l'évènement (Login)</Typography>
-                
-                <Upload
-                  multiple
-                  thumbnail={showPreview.value}
-                  value={files}
-                  onDrop={handleDropMultiFile}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.info('ON UPLOAD')}
+              <Stack>
+                <Typography variant="subtitle2">Description de l'évènement</Typography>
+                <Field.Editor
+                  fullItem
+                  name='short_description'
+                  placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
+                  sx={{ maxHeight: 400 }}
+                  
                 />
-
               </Stack>
 
-              
-
-
+              <Stack>
+                <Typography variant="subtitle2">A propos de l'oganisateur</Typography>
+                <Field.Editor
+                  fullItem
+                  name='short_description'
+                  placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
+                  sx={{ maxHeight: 400 }}
+                  
+                />
+              </Stack>
 
               {/* Type d'événement et Type de connexion */}
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -240,46 +243,9 @@ const LandingPage = () => {
               
 
               <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                  <Field.UploadLogo
-                      name="logo"
-                      maxSize={314572}
-                      helperText={
-                          <Typography
-                            variant="caption"
-                            sx={{
-                                mt: 3,
-                                mx: 'auto',
-                                display: 'block',
-                                textAlign: 'center',
-                                color: 'text.disabled',
-                            }}
-                          >
-                            {/* Formats autorisés *.jpeg, *.jpg, *.png, *.gif */}
-                            Logo des sponsors
+                  
 
-                          </Typography>
-                      }
-                  />
-
-                  <Field.UploadLogo
-                    name="logo"
-                    maxSize={314572}
-                    helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                              mt: 3,
-                              mx: 'auto',
-                              display: 'block',
-                              textAlign: 'center',
-                              color: 'text.disabled',
-                          }}
-                        >
-                          {/* Formats autorisés *.jpeg, *.jpg, *.png, *.gif */}
-                          Logo de l'événement
-                        </Typography>
-                    }
-                  />
+                  
                   <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
                     <UploadAvatar

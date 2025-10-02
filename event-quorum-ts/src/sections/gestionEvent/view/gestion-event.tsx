@@ -16,6 +16,7 @@ import Faqs from '../faqs';
 import EventPasse from '../eventpasse';
 import Inscription from '../inscription';
 import LandingPage from '../landingPage';
+import Phototheque from '../phototheque';
 import InfoPaiement from '../infosPaiement';
 import VisioConference from '../visioConference';
 import CharteGraphiqueView from '../charte-graphique-view';
@@ -34,7 +35,7 @@ const TABS = [
   { value: 'infosPaiement', label: 'Infos paiement', render: () => <InfoPaiement/> },
   { value: 'faqs', label: "FAQ's", render: () => <Faqs /> },
   { value: 'eventpasse', label: "Evènement passé", render: () => <EventPasse /> },
-  { value: 'phototheque', label: 'Photothèque', render: () => <div>Photothèque</div> },
+  { value: 'phototheque', label: 'Photothèque', render: () => <Phototheque/> },
 ];
 
 const GestionEventView = () => {

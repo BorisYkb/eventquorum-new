@@ -1,17 +1,23 @@
 import Box from "@mui/material/Box";
+import { Tab } from "@mui/material";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
-import { Iconify } from "src/components/iconify";
-import { DashboardContent } from "src/layouts/admin";
-import { ProfileCover } from "src/sections/user/profile-cover";
-import { IClientItem } from "src/types/client";
-import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from 'src/_mock';
-import { usePathname, useSearchParams } from 'src/routes/hooks';
+
 import { RouterLink } from 'src/routes/components';
-import { Tab } from "@mui/material";
+import { usePathname, useSearchParams } from 'src/routes/hooks';
+
+import { DashboardContent } from "src/layouts/admin";
+import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from 'src/_mock';
+
+import { Iconify } from "src/components/iconify";
+
+import { ProfileCover } from "src/sections/user/profile-cover";
+
+import { IClientItem } from "src/types/client";
+
 import { FicheClientHome } from "./tabs/ficheclient-home";
-import { EventData, FicheClientEvenement } from "./tabs/ficheclient-evenement";
 import { FicheClientOrganisateur } from "./tabs/ficheclient-organisateur";
+import { EventData, FicheClientEvenement } from "./tabs/ficheclient-evenement";
 
 
 // ----------------------------------------------------------------------

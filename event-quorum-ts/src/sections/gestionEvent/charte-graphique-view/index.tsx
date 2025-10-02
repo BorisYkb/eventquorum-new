@@ -72,7 +72,7 @@ const CharteGraphiqueView = () => {
                   </div>
 
                   <div className="flex flex-col text-center  ">
-                    <h4>Logo Partenaires</h4>
+                    <h4>Logo des Sponsors</h4>
                     <Field.Upload
                       multiple
                       name="logo_partenaire"
@@ -90,7 +90,7 @@ const CharteGraphiqueView = () => {
                     }}
                   >
                     <div className="flex flex-col text-center relative">
-                      <h4>Slides</h4>
+                      <h4>Images (page login)</h4>
                       <Field.Upload
                         multiple
                         thumbnail={true}

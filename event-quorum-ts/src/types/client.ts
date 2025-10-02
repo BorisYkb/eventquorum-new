@@ -18,5 +18,6 @@ export type IClientItem = {
     isMoralePerson: boolean,
     phoneNumber: string,
     eventNumber: number,
-    creationDate:string,
+    creationDate: string,
+    num_identification: string,
   };
