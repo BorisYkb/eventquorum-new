@@ -19,4 +19,5 @@ export type IClientItem = {
     phoneNumber: string,
     eventNumber: number,
     creationDate:string,
+    num_identification: string,
   };

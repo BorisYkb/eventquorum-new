@@ -90,7 +90,7 @@ export default function ParticipantEnresentielPage() {
                 {/* Section 1 - Welcome sans bouton */}
                 <Grid size={12}>
                     <AppWelcome
-                        title="Bonjours cher(e) Kouakou Evarist"
+                        title="Bonjours Kouakou Evarist"
                         description="Vous etes connecté en tant que participant au SARA 2023."
                         img={<SeoIllustration hideBackground />}
                     />

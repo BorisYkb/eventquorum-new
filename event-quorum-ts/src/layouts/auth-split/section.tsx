@@ -1,3 +1,4 @@
+//src/layouts/auth-split/section.tsx
 import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/material/styles';
 
@@ -38,6 +39,9 @@ export function AuthSplitSection({
   subtitle = 'Prêt à concevoir des choses extraodinaires.',
   ...other
 }: AuthSplitSectionProps) {
+
+
+  
   return (
     <Box
       sx={[

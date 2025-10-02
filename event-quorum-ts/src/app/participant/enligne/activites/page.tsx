@@ -69,7 +69,6 @@ export default function ParticipantEnligneActivitesPage() {
 
     /**
      * Gestionnaire pour basculer la sélection d'une activité
-     * CORRIGÉ : Distinction entre activité sans prix (null) et activité gratuite (prix à 0)
      */
     const handleActiviteToggle = (activiteId: string) => {
         const activite = ACTIVITES_DISPONIBLES.find((a) => a.id === activiteId);

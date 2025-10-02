@@ -127,7 +127,7 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
                             fontSize: { xs: '0.65rem', sm: '0.75rem', md: '0.875rem' }
                         }}
                     >
-                        Suivre en direct
+                        Voir le direct
                     </Button>
 
                     {/* Dialog suivi en direct */}
@@ -157,8 +157,9 @@ export function ParticipantHeaderActions({ pathname }: ParticipantHeaderActionsP
 
         // Niveau avec badge (présentiel payé OU en ligne avec suivi direct) - Bouton "Afficher mon badge"
         if (
-            pathname.startsWith('/participant/enpresentiel/payer') ||
-            pathname.startsWith('/participant/enligne/payer/suivredirecte')
+            pathname.startsWith('/participant/enpresentiel/payer') 
+            // ||
+            // pathname.startsWith('/participant/enligne/payer/suivredirecte')
         ) {
             return (
                 <>

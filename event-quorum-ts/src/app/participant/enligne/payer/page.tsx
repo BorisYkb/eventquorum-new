@@ -24,9 +24,8 @@ export default function ParticipantEnresentielPage() {
                 {/* Section 1 - Welcome sans bouton */}
                 <Grid size={12}>
                     <AppWelcome
-                        title="Bonjours(e) cher(e) participant(e) Kouakou Evarist"
-                        description="Vous etes connecté en tant que participant au SARA 2023. 
-                        Cliquez sur le bouton 'Suivre en directe' pour vous inscrire sur la liste de présence et participer à l'evenement en ligne."
+                        title="Bonjour Kouakou Evarist"
+                        description="Vous etes connecté en tant que participant au SARA 2023."
                         img={<SeoIllustration />}
                     />
                 </Grid>

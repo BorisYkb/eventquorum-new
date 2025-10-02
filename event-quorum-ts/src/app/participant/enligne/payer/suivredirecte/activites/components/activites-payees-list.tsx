@@ -154,9 +154,9 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
             <TableCell sx={fontSizes.tableHeader}>
               Montant (FCFA)
             </TableCell>
-            <TableCell sx={fontSizes.tableHeader}>
+            {/* <TableCell sx={fontSizes.tableHeader}>
               Date paiement
-            </TableCell>
+            </TableCell> */}
             {/* <TableCell sx={{
               ...fontSizes.tableHeader,
               textAlign: 'center'
@@ -272,7 +272,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
               </TableCell>
 
               {/* Colonne Date paiement */}
-              <TableCell>
+              {/* <TableCell>
                 <Typography
                   variant="body2"
                   color="text.secondary"
@@ -280,7 +280,7 @@ export function ActivitesPayeesList({ activites }: ActivitesPayeesListProps) {
                 >
                   {new Date(activite.datePaiement).toLocaleDateString('fr-FR')}
                 </Typography>
-              </TableCell>
+              </TableCell> */}
 
             </TableRow>
           ))}

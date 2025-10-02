@@ -375,30 +375,6 @@ export default function ActivityDetailPagePaid() {
                             >
                                 {intervenant.poste}
                             </Typography>
-
-                            <Chip
-                                label={intervenant.specialty}
-                                size="small"
-                                color="primary"
-                                variant="soft"
-                                sx={{
-                                    fontWeight: 600,
-                                    fontSize: { xs: '0.75rem', sm: '0.8125rem' }
-                                }}
-                            />
-
-                            <Typography
-                                variant="caption"
-                                color="primary.main"
-                                sx={{
-                                    display: 'block',
-                                    mt: 1.5,
-                                    fontWeight: 600,
-                                    fontSize: { xs: '0.75rem', sm: '0.8125rem' }
-                                }}
-                            >
-                                Cliquez pour voir le profil
-                            </Typography>
                         </Card>
                     ))}
                 </Box>
@@ -451,98 +427,91 @@ export default function ActivityDetailPagePaid() {
 
                         <DialogContent sx={{ py: 3 }}>
                             <Stack spacing={3}>
-                                {/* Spécialité */}
-                                <Box>
-                                    <Chip
-                                        label={selectedIntervenant.specialty}
-                                        color="primary"
-                                        variant="soft"
-                                        sx={{ fontWeight: 600 }}
-                                    />
-                                </Box>
-
                                 {/* Bio */}
                                 <Box>
-                                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                                        À propos
-                                    </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
                                         {selectedIntervenant.bio}
                                     </Typography>
                                 </Box>
 
-                                {/* Expérience */}
-                                <Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                        <Iconify icon="solar:case-round-bold" sx={{ color: 'info.main', width: 20, height: 20 }} />
-                                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                                            Expérience
-                                        </Typography>
-                                    </Box>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {selectedIntervenant.experience} d'expérience professionnelle
-                                    </Typography>
-                                </Box>
-
-                                {/* Domaines d'expertise */}
-                                <Box>
-                                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-                                        Domaines d'expertise
-                                    </Typography>
-                                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                                        {selectedIntervenant.domaines.map((domaine, idx) => (
-                                            <Chip
-                                                key={idx}
-                                                label={domaine}
-                                                size="small"
-                                                variant="outlined"
-                                                sx={{ mb: 1 }}
-                                            />
-                                        ))}
-                                    </Stack>
-                                </Box>
-
                                 <Divider />
 
-                                {/* Organisation */}
-                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-                                    <Iconify icon="solar:buildings-2-bold" sx={{ color: 'info.main', width: 22, height: 22, mt: 0.25 }} />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
-                                            Organisation
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            {selectedIntervenant.organisation}
-                                        </Typography>
-                                    </Box>
-                                </Box>
 
-                                {/* Email */}
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                    <Iconify icon="solar:letter-bold" sx={{ color: 'success.main', width: 22, height: 22 }} />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
-                                            Email
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            {selectedIntervenant.email}
-                                        </Typography>
-                                    </Box>
-                                </Box>
 
-                                {/* Téléphone */}
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                    <Iconify icon="solar:phone-bold" sx={{ color: 'warning.main', width: 22, height: 22 }} />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
-                                            Téléphone
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            {selectedIntervenant.phone}
-                                        </Typography>
+                                {/* Réseaux sociaux - LinkedIn et Facebook en ligne */}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        gap: { xs: 1, sm: 2 },
+                                        flexWrap: 'wrap'
+                                    }}
+                                >
+                                    {/* LinkedIn */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: { xs: '1 1 100%', sm: '1 1 auto' } }}>
+                                        <Iconify
+                                            icon="skill-icons:linkedin"
+                                            sx={{ width: 22, height: 22 }}
+                                        />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
+                                                LinkedIn
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                {selectedIntervenant.nom}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                    {/* Email */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                        <Iconify
+                                            icon="solar:letter-bold-duotone"
+                                            sx={{ color: 'success.main', width: 22, height: 22 }}
+                                        />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
+                                                Email
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                {selectedIntervenant.email}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    {/* Téléphone */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                        <Iconify
+                                            icon="solar:phone-calling-bold-duotone"
+                                            sx={{ color: 'warning.main', width: 22, height: 22 }}
+                                        />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
+                                                Téléphone
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                {selectedIntervenant.phone}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    {/* Facebook */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: { xs: '1 1 100%', sm: '1 1 auto' } }}>
+                                        <Iconify
+                                            icon="logos:facebook"
+                                            sx={{ width: 22, height: 22 }}
+                                        />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25 }}>
+                                                Facebook
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                {selectedIntervenant.nom}
+                                            </Typography>
+                                        </Box>
                                     </Box>
                                 </Box>
                             </Stack>
+                            {/* The following block was commented out but not properly closed, causing a syntax error. It has been removed for correct compilation. */}
                         </DialogContent>
 
                         <DialogActions sx={{ px: 3, pb: 2 }}>
@@ -591,7 +560,7 @@ export default function ActivityDetailPagePaid() {
                     alignItems: { xs: 'flex-start', sm: 'center' },
                     flexDirection: { xs: 'column-reverse', sm: 'row' },
                     gap: 2,
-                    mb: 3
+                    mb: 1
                 }}>
                     <Typography variant="h3" sx={{ ...fontSizes.h3, flex: 1 }}>
                         Activité :
@@ -609,11 +578,9 @@ export default function ActivityDetailPagePaid() {
                         Retour
                     </Button>
                 </Box>
-
-                {/* TITRE DE L'ACTIVITÉ */}
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
-                    spacing={3}
+                    spacing={2}
                     sx={{ mb: 1 }}
                     flexWrap="wrap"
                     alignItems={{ xs: 'flex-start', sm: 'center' }}
@@ -628,7 +595,7 @@ export default function ActivityDetailPagePaid() {
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={3}
-                    sx={{ mb: 4 }}
+                    sx={{ mb: 2 }}
                     flexWrap="wrap"
                     alignItems={{ xs: 'flex-start', sm: 'center' }}
                 >
@@ -641,11 +608,16 @@ export default function ActivityDetailPagePaid() {
                         <Iconify icon="solar:clock-circle-outline" sx={{ color: 'info.main', ...fontSizes.iconSize }} />
                         <Typography variant="body1" sx={fontSizes.body1}>{activity.time}</Typography>
                     </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Iconify icon="solar:tag-outline" sx={{ color: 'warning.main', ...fontSizes.iconSize }} />
+                        <Typography variant="body1" sx={fontSizes.body1}>Conférence</Typography>
+                    </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <Iconify icon="solar:map-point-outline" sx={{ color: 'error.main', ...fontSizes.iconSize }} />
-                        <Typography variant="body1" sx={fontSizes.body1}>{activity.location || 'Parc des Expositions d\'Abidjan'}</Typography>
+                        <Typography variant="body1" sx={fontSizes.body1}>{activity.location}</Typography>
                     </Box>
+
                 </Stack>
 
                 <Stack
@@ -674,10 +646,10 @@ export default function ActivityDetailPagePaid() {
                     <Grid size={{ xs: 12, lg: 8 }}>
                         <Stack spacing={4}>
                             {/* Description */}
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                 <Iconify icon="solar:tag-outline" sx={{ color: 'warning.main', ...fontSizes.iconSize }} />
                                 <Typography variant="body1" sx={fontSizes.body1}>Type de l'actiité: {activity.type}</Typography>
-                            </Box>
+                            </Box> */}
                             {/* <Box>
                                 <Typography
                                     variant="body1"

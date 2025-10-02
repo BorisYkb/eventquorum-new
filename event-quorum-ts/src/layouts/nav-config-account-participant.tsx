@@ -19,21 +19,21 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
 
   // Menu de base commun à tous les niveaux
   const baseItems: AccountDrawerProps['data'] = [
-    { 
-      label: 'Accueil', 
-      href: '/participant', 
-      icon: <Iconify icon="solar:home-angle-bold-duotone" /> 
-    },
+    // { 
+    //   label: 'Accueil', 
+    //   href: '/participant', 
+    //   icon: <Iconify icon="solar:home-angle-bold-duotone" /> 
+    // },
     {
       label: 'Mes informations personnelles',
       href: '#profile',
       icon: <Iconify icon="solar:user-bold-duotone" />,
     },
-    {
-      label: 'Modifier mon mot de passe',
-      href: '#password',
-      icon: <Iconify icon="solar:lock-password-bold-duotone" />,
-    },
+    // {
+    //   label: 'Modifier mon mot de passe',
+    //   href: '#password',
+    //   icon: <Iconify icon="solar:lock-password-bold-duotone" />,
+    // },
   ];
 
   // Actions dynamiques selon le niveau
@@ -43,7 +43,7 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
   if (pathname.startsWith('/participant/enligne/payer')) {
     dynamicItems.push({
       label: 'Passer en présentiel',
-      href: '#switch-presentiel',
+      href: '/participant/enpresentiel/payer',
       icon: <Iconify icon="solar:user-speak-bold-duotone" />,
     });
   }
@@ -52,18 +52,18 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
   if (pathname.startsWith('/participant/enpresentiel/payer')) {
     dynamicItems.push({
       label: 'Passer en ligne',
-      href: '#switch-enligne',
+      href: '/participant/enligne/payer/suivredirecte',
       icon: <Iconify icon="solar:monitor-bold-duotone" />,
     });
   }
 
   // Si participant a payé, peut voir ses résultats
   if (pathname.includes('/payer')) {
-    dynamicItems.push({
-      label: 'Voir mes résultats',
-      href: '#results',
-      icon: <Iconify icon="solar:chart-bold-duotone" />,
-    });
+    // dynamicItems.push({
+    //   label: 'Voir mes résultats',
+    //   href: '#results',
+    //   icon: <Iconify icon="solar:chart-bold-duotone" />,
+    // });
 
     dynamicItems.push({
       label: 'Reçu de paiement',
@@ -73,13 +73,13 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
   }
 
   // Déconnexion toujours en dernier
-  const logoutItem: AccountDrawerProps['data'] = [
-    {
-      label: 'Se déconnecter',
-      href: '#logout',
-      icon: <Iconify icon="solar:logout-2-bold-duotone" />,
-    },
-  ];
+  // const logoutItem: AccountDrawerProps['data'] = [
+  //   {
+  //     label: 'Se déconnecter',
+  //     href: '#logout',
+  //     icon: <Iconify icon="solar:logout-2-bold-duotone" />,
+  //   },
+  // ];
 
-  return [...baseItems, ...dynamicItems, ...logoutItem];
+  return [...baseItems, ...dynamicItems];
 }

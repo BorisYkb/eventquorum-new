@@ -244,11 +244,11 @@ export function ProgrammeActivityItemWithPin({ activity, fontSizes, isPinned, on
                                 onClick={handleWatchVideo}
                                 sx={{
                                     ...fontSizes.button,
-                                    borderRadius: 1,
+                                    // borderRadius: 0,
                                     py: 0.5,
                                     px: 1.5,
                                     minHeight: 'auto',
-                                    borderColor: 'error.main',
+                                    borderColor: 'transparent',
                                     color: 'error.main',
                                     '&:hover': {
                                         borderColor: 'error.dark',
@@ -272,7 +272,7 @@ export function ProgrammeActivityItemWithPin({ activity, fontSizes, isPinned, on
                                     py: 0.5,
                                     px: 1.5,
                                     minHeight: 'auto',
-                                    borderColor: 'info.main',
+                                    borderColor: 'transparent',
                                     color: 'info.main',
                                     '&:hover': {
                                         borderColor: 'info.dark',
