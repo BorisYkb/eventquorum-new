@@ -2,9 +2,28 @@
 
 import { useState } from 'react';
 
-import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useTheme } from '@mui/material/styles';
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {
+    Box,
+    Typography,
+    TableContainer,
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+    Paper,
+    Button,
+    TextField,
+    IconButton,
+} from '@mui/material';
 
 export default function Faqs() {
+  const theme = useTheme();
+
   // États pour le formulaire
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -62,181 +81,185 @@ export default function Faqs() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+    <Box sx={{ minHeight: '100vh',boxShadow: 3, borderRadius: 3, p: 4 }}>
+      <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1f2937', mb: 4 }}>
           Gestion des FAQs
-        </h1>
+        </Typography>
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 3 }}>
             Ajouter une nouvelle question
-          </h2>
+          </Typography>
           
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">
-                Question
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border-x-0 border-t-0 border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Entrez votre question..."
-              />
-            </div>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              fullWidth
+              label="Question"
+              variant="outlined"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Entrez votre question..."
+              size="small"
+            />
             
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">
-                Réponse
-              </label>
-              <textarea
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
-                rows={4}
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Entrez la réponse..."
-              />
-            </div>
+            <TextField
+              fullWidth
+              label="Réponse"
+              variant="outlined"
+              multiline
+              rows={4}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="Entrez la réponse..."
+            />
             
-            <button
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-              onClick={handleAddFaq}
-              disabled={!question.trim() || !answer.trim()}
-            >
-              
-              Ajouter la question
-            </button>
-          </div>
-        </div>
+            <Box>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleAddFaq}
+                disabled={!question.trim() || !answer.trim()}
+                sx={{ textTransform: 'none' }}
+              >
+                Ajouter la question
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
 
         {/* Liste temporaire des FAQs */}
         {tempFaqs.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 2 }}>
               Questions en cours d'édition ({tempFaqs.length})
-            </h2>
+            </Typography>
             
-            <div className="space-y-3 mb-6">
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
               {tempFaqs.map((faq) => (
-                <div 
-                  key={faq.id} 
-                  className="bg-blue-50 p-4 rounded-lg border border-blue-200"
+                <Paper 
+                  key={faq.id}
+                  variant="outlined"
+                  sx={{ 
+                    p: 2, 
+                    bgcolor: '#eff6ff',
+                    borderColor: '#bfdbfe'
+                  }}
                 >
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800 mb-2">
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography sx={{ fontWeight: 600, color: '#1f2937', mb: 1 }}>
                         Q: {faq.question}
-                      </p>
-                      <p className="text-gray-600">
+                      </Typography>
+                      <Typography sx={{ color: '#4b5563' }}>
                         R: {faq.answer}
-                      </p>
-                    </div>
-                    <button
-                      className="text-red-600 hover:text-red-800 p-2 hover:bg-red-100 rounded-lg transition-colors"
+                      </Typography>
+                    </Box>
+                    <IconButton
+                      size="small"
                       onClick={() => handleDeleteTemp(faq.id)}
+                      sx={{ 
+                        color: '#dc2626',
+                        '&:hover': { bgcolor: '#fee2e2' }
+                      }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Paper>
               ))}
-            </div>
+            </Box>
 
-            <div className="border-t pt-4 flex gap-3">
+            <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 2, display: 'flex', gap: 2 }}>
               <Button
                 variant="contained"
                 color="success"
-                className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                startIcon={<SaveIcon />}
                 onClick={handleSave}
+                sx={{ textTransform: 'none' }}
               >
-                
                 Enregistrer
               </Button>
               <Button
                 variant="outlined"
                 color="error"
-                className="flex items-center gap-2 bg-white text-red-600 border border-red-600 px-6 py-2 rounded-lg hover:bg-red-50 transition-colors"
+                startIcon={<CancelIcon />}
                 onClick={handleCancel}
+                sx={{ textTransform: 'none' }}
               >
-                
                 Annuler
               </Button>
-            </div>
-          </div>
+            </Box>
+          </Paper>
         )}
 
         {/* Tableau des FAQs enregistrées */}
         {savedFaqs.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <Paper elevation={2} sx={{ p: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 2 }}>
               FAQs Enregistrées ({savedFaqs.length})
-            </h2>
+            </Typography>
             
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-100 border-b-2 border-gray-300">
-                    <th className="text-left p-4 font-semibold text-gray-700">
+            <TableContainer>
+              <Table>
+                <TableBody>
+                  <TableRow sx={{ bgcolor: '#f3f4f6' }}>
+                    <TableCell sx={{ fontWeight: 600, color: '#374151', py: 2 }}>
                       Question
-                    </th>
-                    <th className="text-left p-4 font-semibold text-gray-700">
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: '#374151', py: 2 }}>
                       Réponse
-                    </th>
-                    <th className="text-center p-4 font-semibold text-gray-700 w-24">
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: 600, color: '#374151', width: 100, py: 2 }}>
                       Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </TableCell>
+                  </TableRow>
                   {savedFaqs.map((faq, index) => (
-                    <tr 
-                      key={faq.id} 
-                      className={`border-b hover:bg-gray-50 transition-colors ${
-                        index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                      }`}
+                    <TableRow 
+                      key={faq.id}
+                      sx={{ 
+                        '&:hover': { bgcolor: '#f9fafb' },
+                        bgcolor: index % 2 === 0 ? 'white' : '#f9fafb'
+                      }}
                     >
-                      <td className="p-4 font-medium text-gray-800">
+                      <TableCell sx={{ fontWeight: 500, color: '#1f2937', py: 2 }}>
                         {faq.question}
-                      </td>
-                      <td className="p-4 text-gray-600">
+                      </TableCell>
+                      <TableCell sx={{ color: '#4b5563', py: 2 }}>
                         {faq.answer}
-                      </td>
-                      <td className="p-4 text-center">
-                        <button
-                          className="text-red-600 hover:text-red-800 p-2 hover:bg-red-100 rounded-lg transition-colors inline-flex"
+                      </TableCell>
+                      <TableCell align="center" sx={{ py: 2 }}>
+                        <IconButton
+                          size="small"
                           onClick={() => handleDeleteSaved(faq.id)}
+                          sx={{ 
+                            color: '#dc2626',
+                            '&:hover': { bgcolor: '#fee2e2' }
+                          }}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         )}
 
         {savedFaqs.length === 0 && tempFaqs.length === 0 && (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          <Paper elevation={2} sx={{ p: 8, textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#6b7280', mb: 1 }}>
               Aucune FAQ enregistrée
-            </h3>
-            <p className="text-gray-500">
+            </Typography>
+            <Typography sx={{ color: '#9ca3af' }}>
               Commencez par ajouter des questions et réponses ci-dessus
-            </p>
-          </div>
+            </Typography>
+          </Paper>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

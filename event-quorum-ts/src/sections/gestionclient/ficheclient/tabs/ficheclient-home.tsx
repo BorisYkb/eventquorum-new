@@ -1,17 +1,23 @@
+import Grid from '@mui/material/Grid2';
 //src/sections/gestionclient/ficheclient/tabs/ficheclient-home.tsx
 import { Avatar, Box, Card, CardHeader, Stack, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { IClientItem } from 'src/types/client';
-import { FicheClientHomeWidget } from '../ficheclient-home-widget';
-import { CONFIG } from 'src/global-config';
+
 import { fFCFA } from 'src/utils/format-number';
+
+import { CONFIG } from 'src/global-config';
 import { _bookingsOverview } from 'src/_mock';
-import { BookingBooked } from 'src/sections/overview/booking/booking-booked';
-import { BookingTotalIncomes } from 'src/sections/overview/booking/booking-total-incomes';
-import FicheClientPaymentMethodsProgress from '../ficheclient-payment-methods-progress';
-import { FicheClientSolde } from '../ficheclient-solde-widget';
-import { AdminCurrentBalance } from 'src/sections/overview/admin/admin-current-balance';
+
 import { SvgColor } from 'src/components/svg-color';
+
+import { BookingBooked } from 'src/sections/overview/booking/booking-booked';
+import { AdminCurrentBalance } from 'src/sections/overview/admin/admin-current-balance';
+import { BookingTotalIncomes } from 'src/sections/overview/booking/booking-total-incomes';
+
+import { IClientItem } from 'src/types/client';
+
+import { FicheClientSolde } from '../ficheclient-solde-widget';
+import { FicheClientHomeWidget } from '../ficheclient-home-widget';
+import FicheClientPaymentMethodsProgress from '../ficheclient-payment-methods-progress';
 
 type Props = {
     client?: IClientItem;
@@ -132,6 +138,7 @@ export function FicheClientHome({ client }: Props) {
         </Grid>
     );
 
+    // On l'utilise pas pour l'instant
     const renderPayment = () => {
         const paymentData = [
             {
@@ -173,7 +180,7 @@ export function FicheClientHome({ client }: Props) {
 
 
         return (
-            <>
+            
                 <Box
                     sx={{
                         p: { md: 1 },
@@ -211,7 +218,7 @@ export function FicheClientHome({ client }: Props) {
                         sx={{ height: 300 }}
                     />
                 </Box>
-            </>
+            
         )
     };
 
@@ -235,7 +242,7 @@ export function FicheClientHome({ client }: Props) {
                 <Card sx={{ p: { xs: 2, sm: 3 } }}>
                     <CardHeader title={<Typography variant='h5'>Statistiques</Typography>} sx={{ pb: 2 }} />
                     {renderStats()}
-                    {renderPayment()}
+                    {/* {renderPayment()} */}
                 </Card>
             </Grid>
         </Grid>

@@ -1,5 +1,3 @@
-// File: src/app/organisateur/gestionhabilitations/nouveau/components/IntervenantPermissionsBlock.tsx
-
 'use client';
 
 import React from 'react';
@@ -17,6 +15,12 @@ import {
     TableCell,
     Paper,
     Switch,
+    Checkbox,
+    FormControlLabel,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
 } from '@mui/material';
 
 import { Upload } from 'src/components/upload';
@@ -41,6 +45,18 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
 
     const [files, setFiles] = useState<(File | string)[]>([]);
     const [showPreview, setShowPreview] = React.useState(true);
+    
+    // Nouveaux states pour les images
+    const [pourActivite, setPourActivite] = useState(false);
+    const [pourEvenement, setPourEvenement] = useState(false);
+    const [activiteSelectionnee, setActiviteSelectionnee] = useState('');
+
+    // Liste des activités (à adapter selon vos données)
+    const activites = [
+        { id: '1', nom: 'Activité 1' },
+        { id: '2', nom: 'Activité 2' },
+        { id: '3', nom: 'Activité 3' },
+    ];
 
     const handleDropMultiFile = (acceptedFiles: File[]) => {
         setFiles([...files, ...acceptedFiles]);
@@ -130,15 +146,69 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                     }} />
                     Images des intervenants
                 </Typography>
-                <Upload
-                  multiple
-                  thumbnail={showPreview}
-                  value={files}
-                  onDrop={handleDropMultiFile}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.info('ON UPLOAD')}
-                />
+
+                <Box sx={{ mb: 2 }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={pourActivite}
+                                onChange={(e) => {
+                                    setPourActivite(e.target.checked);
+                                    if (e.target.checked){
+                                        setPourEvenement(false);
+                                    }
+                                }}
+                                size="small"
+                            />
+                        }
+                        label="Pour une activité"
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={pourEvenement}
+                                onChange={(e) => {
+                                    setPourEvenement(e.target.checked);
+                                    if (e.target.checked){
+                                        setPourActivite(false);
+                                    }
+                                }}
+                                size="small"
+                            />
+                        }
+                        label="Pour l'évènement"
+                        sx={{ ml: 2 }}
+                    />
+                </Box>
+
+                {pourActivite && (
+                    <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                        <InputLabel>Sélectionner une activité</InputLabel>
+                        <Select
+                            value={activiteSelectionnee}
+                            onChange={(e) => setActiviteSelectionnee(e.target.value)}
+                            label="Sélectionner une activité"
+                        >
+                            {activites.map((activite) => (
+                                <MenuItem key={activite.id} value={activite.id}>
+                                    {activite.nom}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
+
+                {(pourActivite || pourEvenement) && (
+                    <Upload
+                        multiple
+                        thumbnail={showPreview.value}
+                        value={files}
+                        onDrop={handleDropMultiFile}
+                        onRemove={handleRemoveFile}
+                        onRemoveAll={handleRemoveAllFiles}
+                        onUpload={() => console.info('ON UPLOAD')}
+                    />
+                )}
             </Box>
         </>
     );

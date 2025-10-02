@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
 import { _clientList } from 'src/_mock/_client';
+
 import { ClientEditView } from 'src/sections/client/view/client-edit-view';
 
 

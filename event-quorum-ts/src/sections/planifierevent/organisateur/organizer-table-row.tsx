@@ -16,12 +16,15 @@ import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
 
+import { primary } from 'src/theme';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
+
 import { IOrganizerItem } from 'src/types/organizer';
-import { primary } from 'src/theme';
+
 import OrganizerQuickEditForm from './organizer-quick-edit-form';
 
 // import { UserQuickEditForm } from './user-quick-edit-form';
@@ -161,7 +164,7 @@ export function OrganizerTableRow({ row, selected, editHref, onSelectRow, onDele
 
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.email}</TableCell>
 
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>**********</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.phoneNumber}</TableCell>
                 {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.password}</TableCell> */}
 
                 <TableCell>

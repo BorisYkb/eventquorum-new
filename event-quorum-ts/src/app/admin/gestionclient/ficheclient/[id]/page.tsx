@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { _clientList } from 'src/_mock/_client';
 
 import { CONFIG } from 'src/global-config';
+import { _clientList } from 'src/_mock/_client';
+
 import { FicheClientView } from 'src/sections/gestionclient/ficheclient/view/ficheclient-view';
 
 
