@@ -19,7 +19,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau initial - seulement Accueil
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -35,7 +35,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau présentiel confirmé - Accueil + Activités
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -56,7 +56,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau en ligne confirmé - Accueil + Activités
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -77,7 +77,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau présentiel payé - Accueil + Activités + Mes interactions
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -103,7 +103,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau en ligne payé (avant suivi direct) - Accueil + Activités
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -124,7 +124,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
     // Niveau en ligne avec suivi direct - Accueil + Activités + Mes interactions
     return [
       {
-        subheader: 'Navigation',
+        // subheader: 'Navigation',
         items: [
           { 
             title: 'Accueil', 
@@ -149,7 +149,7 @@ export function useParticipantNavData(): NavSectionProps['data'] {
   // Configuration par défaut (fallback)
   return [
     {
-      subheader: 'Navigation',
+      // subheader: 'Navigation',
       items: [
         { 
           title: 'Accueil', 

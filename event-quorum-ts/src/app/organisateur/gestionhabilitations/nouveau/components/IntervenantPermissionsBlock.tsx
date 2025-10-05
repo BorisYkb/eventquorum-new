@@ -201,7 +201,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                 {(pourActivite || pourEvenement) && (
                     <Upload
                         multiple
-                        thumbnail={showPreview.value}
+                        thumbnail={showPreview}
                         value={files}
                         onDrop={handleDropMultiFile}
                         onRemove={handleRemoveFile}

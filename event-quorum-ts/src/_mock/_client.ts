@@ -19,6 +19,7 @@ export const _clientList = Array.from({ length: 11 }, (_, index) => ({
   phoneNumber: _mock.phoneNumber(index),
   eventNumber: _mock.number.clientEventNumber(index),
   creationDate:_mock.clientsCreationDate(index),
+  num_identification: `ID-${_mock.id(index)}`,
 }));
 
 
