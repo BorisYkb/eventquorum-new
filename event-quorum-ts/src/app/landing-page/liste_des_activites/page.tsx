@@ -1,10 +1,10 @@
 "use client"
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import ModernPagination from "../../components/elements/ModernPagination" // Nouveau composant de pagination
 import Link from "next/link"
 import React, { useState, useEffect } from "react"
-import RegistrationForm from '@/components/elements/RegistrationForm'
+import RegistrationForm from 'src/components/landing-page-components/elements/RegistrationForm'
 
 /**
  * Page des événements avec pagination moderne
@@ -15,16 +15,16 @@ export default function Event() {
 	const activities = [
 		{
 			id: 1,
-			img: "/assets/img/all-images/event/event-img4.png",
+			img: "/assets/landing-page/img/all-images/event/event-img4.png",
 			title: "Conférences plénières inspirantes",
 			speakers: [
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img1.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img1.png", 
 					name: "Alex Roberton", 
 					role: "UI/UX Designer" 
 				},
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img2.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img2.png", 
 					name: "Alexys Archer", 
 					role: "WP Developer" 
 				}
@@ -34,16 +34,16 @@ export default function Event() {
 		},
 		{
 			id: 2,
-			img: "/assets/img/all-images/event/event-img5.png",
+			img: "/assets/landing-page/img/all-images/event/event-img5.png",
 			title: "Ateliers pratiques et interactifs",
 			speakers: [
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img1.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img1.png", 
 					name: "Alex Roberton", 
 					role: "UI/UX Designer" 
 				},
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img2.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img2.png", 
 					name: "Alexys Archer", 
 					role: "WP Developer" 
 				}
@@ -53,16 +53,16 @@ export default function Event() {
 		},
 		{
 			id: 3,
-			img: "/assets/img/all-images/event/event-img6.png",
+			img: "/assets/landing-page/img/all-images/event/event-img6.png",
 			title: "Panel de discussion avec experts",
 			speakers: [
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img1.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img1.png", 
 					name: "Alex Roberton", 
 					role: "UI/UX Designer" 
 				},
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img2.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img2.png", 
 					name: "Alexys Archer", 
 					role: "WP Developer" 
 				}
@@ -72,16 +72,16 @@ export default function Event() {
 		},
 		{
 			id: 4,
-			img: "/assets/img/all-images/event/event-img4.png",
+			img: "/assets/landing-page/img/all-images/event/event-img4.png",
 			title: "Session de networking",
 			speakers: [
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img1.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img1.png", 
 					name: "Marie Kouassi", 
 					role: "Business Coach" 
 				},
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img2.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img2.png", 
 					name: "Jean-Claude Brou", 
 					role: "Entrepreneur" 
 				}
@@ -91,11 +91,11 @@ export default function Event() {
 		},
 		{
 			id: 5,
-			img: "/assets/img/all-images/event/event-img5.png",
+			img: "/assets/landing-page/img/all-images/event/event-img5.png",
 			title: "Cérémonie de clôture",
 			speakers: [
 				{ 
-					img: "/assets/img/all-images/testimonials/testimonial-img1.png", 
+					img: "/assets/landing-page/img/all-images/testimonials/testimonial-img1.png", 
 					name: "Dr. Aminata Traoré", 
 					role: "Directrice générale" 
 				}
@@ -144,7 +144,7 @@ export default function Event() {
 					{/* En-tête de la page avec image de fond */}
 					<div 
 						className="inner-page-header" 
-						style={{ backgroundImage: 'url(assets/img/bg/header-bg8.png)' }}
+						style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg8.png)' }}
 					>
 						<div className="container">
 							<div className="row">
@@ -224,7 +224,7 @@ export default function Event() {
 																		<li>
 																			<Link href="/#">
 																				<img 
-																					src="/assets/img/icons/clock1.svg" 
+																					src="/assets/landing-page/img/icons/clock1.svg" 
 																					alt="Horaire" 
 																				/>
 																				{activity.time}
@@ -234,7 +234,7 @@ export default function Event() {
 																		<li>
 																			<Link href="/#">
 																				<img 
-																					src="/assets/img/icons/location1.svg" 
+																					src="/assets/landing-page/img/icons/location1.svg" 
 																					alt="Localisation" 
 																				/>
 																				{activity.location}

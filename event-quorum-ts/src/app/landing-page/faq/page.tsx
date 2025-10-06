@@ -1,7 +1,7 @@
 'use client'
-import Countdown from '@/components/elements/Countdown'
-import Footer1 from '@/components/layout/footer/Footer1'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import { useState } from "react"
 export default function Faq() {
@@ -19,7 +19,7 @@ const handleAccordion = (key: any) => {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/img/bg/header-bg15.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg15.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-9 m-auto">
@@ -708,10 +708,10 @@ const handleAccordion = (key: any) => {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>

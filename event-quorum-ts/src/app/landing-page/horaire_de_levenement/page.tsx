@@ -1,7 +1,7 @@
 
-import Countdown from '@/components/elements/Countdown'
-import RegistrationForm from '@/components/elements/RegistrationForm'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import RegistrationForm from 'src/components/landing-page-components/elements/RegistrationForm'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function EventSchedule() {
 
@@ -10,7 +10,7 @@ export default function EventSchedule() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/img/bg/header-bg10.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg10.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-6 m-auto">

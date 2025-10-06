@@ -1,6 +1,6 @@
 
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function Memories() {
 
@@ -9,7 +9,7 @@ export default function Memories() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/img/bg/header-bg11.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg11.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-6 m-auto">
@@ -30,7 +30,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img4.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img4.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -45,7 +45,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img5.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img5.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -60,7 +60,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img6.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img6.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -75,7 +75,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img7.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img7.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -90,7 +90,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img8.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img8.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -105,7 +105,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img9.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img9.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -120,7 +120,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img10.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img10.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -135,7 +135,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img11.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img11.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -150,7 +150,7 @@ export default function Memories() {
 								<div className="col-lg-4 col-md-6">
 									<div className="memory3-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img12.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img12.png" alt="" />
 										</div>
 										<div className="content-area">
 											<p>Event 2024</p>
@@ -201,10 +201,10 @@ export default function Memories() {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>
@@ -227,10 +227,10 @@ export default function Memories() {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>

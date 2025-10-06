@@ -1,10 +1,10 @@
 "use client"
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import ContactCarousel from '../connexion/ContactCarousel' // Importer le composant carrousel
-import '/public/assets/css/ContactCarousel.css'; // Importer les styles CSS
-import Footer1 from '@/components/layout/footer/Footer1'
+import '/public/assets/landing-page/css/ContactCarousel.css'; // Importer les styles CSS
+import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
 
 export default function Contact() {
 
@@ -12,7 +12,7 @@ export default function Contact() {
         <>
             <Layout headerStyle={1} >
                 <div>
-                    <div className="inner-page-header" style={{ backgroundImage: 'url(/assets/img/bg/header-bg12.png)' }}>
+                    <div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg12.png)' }}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-6 m-auto">
@@ -96,7 +96,7 @@ export default function Contact() {
 			<div className="carousel-wrapper">
 				<div className="carousel-slide active">
 					<img
-						src="/assets/img/all-images/contact/contact-img4.png"
+						src="/assets/landing-page/img/all-images/contact/contact-img4.png"
 						alt="EventQuorum - Gestion d'événements"
 						className="loaded"
 					/>

@@ -71,7 +71,7 @@ export default function Section4activite_2() {
                             <Swiper {...swiperOptions} className="team-slider-area ">
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         <ul className='index4-ul'>
                                             <li>
                                                 <div className="text-area">
@@ -103,7 +103,7 @@ export default function Section4activite_2() {
                                 </SwiperSlide>
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         < ul className='index4-ul'>
                                             
 
@@ -136,7 +136,7 @@ export default function Section4activite_2() {
                                 </SwiperSlide>
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         <ul className='index4-ul'>
                                             
 
@@ -169,7 +169,7 @@ export default function Section4activite_2() {
                                 </SwiperSlide>
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         <ul className='index4-ul'>
                                             
 
@@ -202,7 +202,7 @@ export default function Section4activite_2() {
                                 </SwiperSlide>
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         <ul className='index4-ul'>
                                             
 
@@ -235,7 +235,7 @@ export default function Section4activite_2() {
                                 </SwiperSlide>
                                 <SwiperSlide className="team-widget-boxarea">
                                     <div className="img1 image-anime">
-                                        <img src="/assets/img/all-images/team/femme.jpg" alt="" />
+                                        <img src="/assets/landing-page/img/all-images/team/femme.jpg" alt="" />
                                         <ul className='index4-ul'>
                                             
 

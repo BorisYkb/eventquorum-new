@@ -1,7 +1,7 @@
 
-import Countdown from '@/components/elements/Countdown'
-import RegistrationForm from '@/components/elements/RegistrationForm'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import RegistrationForm from 'src/components/landing-page-components/elements/RegistrationForm'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function Speakers() {
 
@@ -10,14 +10,14 @@ export default function Speakers() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/img/bg/header-bg6.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg6.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-5 m-auto">
 									<div className="heading1 text-center">
 										<h1>Nos Intervenants</h1>
 										<div className="space20" />
-										<Link href="/landing-page/">Accueil <i className="fa-solid fa-angle-right" /> <span>Nos Intervenants</span></Link>
+										<Link href="/">Accueil <i className="fa-solid fa-angle-right" /> <span>Nos Intervenants</span></Link>
 									</div>
 								</div>
 							</div>
@@ -31,12 +31,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img12.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img12.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -65,12 +65,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img13.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img13.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -99,12 +99,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img14.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img14.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -133,12 +133,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img15.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img15.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -167,12 +167,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img16.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img16.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -201,12 +201,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img17.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img17.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -235,12 +235,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img18.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img18.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>
@@ -269,12 +269,12 @@ export default function Speakers() {
 								<div className="col-lg-3 col-md-6">
 									<div className="our-team-boxarea">
 										<div className="team-widget-area">
-											<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-											<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+											<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+											<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 											<div className="img1">
-												<img src="/assets/img/all-images/team/team-img19.png" alt="" className="team-img4" />
+												<img src="/assets/landing-page/img/all-images/team/team-img19.png" alt="" className="team-img4" />
 												<div className="share">
-													<Link href="/#"><img src="/assets/img/icons/share1.svg" alt="" /></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/share1.svg" alt="" /></Link>
 												</div>
 												<ul>
 													<li>

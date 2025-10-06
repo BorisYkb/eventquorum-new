@@ -1,6 +1,6 @@
 "use client"
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import ContactCarousel from './ContactCarousel' // Importer le composant carrousel
 
@@ -19,7 +19,7 @@ export default function ContactPage() {
 		<>
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/img/bg/header-bg12.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg12.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-6 m-auto">
@@ -76,7 +76,7 @@ export default function ContactPage() {
 											<div className='col-lg-12 mt-3 text-center heading2'>
 												<p>
 													Vous n'avez encore de code d'accès ? <br />
-													<Link href="/inscription">Inscrivez-vous</Link>
+													<Link href="/landing-page/inscription">Inscrivez-vous</Link>
 												</p>
 											</div>
 										</div>
@@ -102,7 +102,7 @@ export default function ContactPage() {
 			<div className="carousel-wrapper">
 				<div className="carousel-slide active">
 					<img
-						src="/assets/img/all-images/contact/contact-img4.png"
+						src="/assets/landing-page/img/all-images/contact/contact-img4.png"
 						alt="EventQuorum - Gestion d'événements"
 						className="loaded"
 					/>

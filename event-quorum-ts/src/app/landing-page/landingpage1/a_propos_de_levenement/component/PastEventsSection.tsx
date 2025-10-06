@@ -24,7 +24,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={600}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/event_img/R.jpeg" 
+										src="/assets/landing-page/img/event_img/R.jpeg" 
 										alt="Salon de l'Agriculture 2023" 
 										className="img-fluid"
 									/>
@@ -50,7 +50,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={800}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/past-events/forum-agro-abidjan-2022.png" 
+										src="/assets/landing-page/img/past-events/forum-agro-abidjan-2022.png" 
 										alt="Forum Agro Abidjan 2022" 
 										className="img-fluid"
 									/>
@@ -76,7 +76,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={1000}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/past-events/agritech-summit-2023.jpg" 
+										src="/assets/landing-page/img/past-events/agritech-summit-2023.jpg" 
 										alt="AgriTech Summit 2023" 
 										className="img-fluid"
 									/>
@@ -102,7 +102,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={600}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/past-events/expo-elevage-2022.png" 
+										src="/assets/landing-page/img/past-events/expo-elevage-2022.png" 
 										alt="Expo Élevage 2022" 
 										className="img-fluid"
 									/>
@@ -128,7 +128,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={800}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/past-events/forum-peche-2023.jpg" 
+										src="/assets/landing-page/img/past-events/forum-peche-2023.jpg" 
 										alt="Forum de la Pêche 2023" 
 										className="img-fluid"
 									/>
@@ -154,7 +154,7 @@ export default function PastEventsSection() {
 							<div className="past-event-card" data-aos="fade-up" data-aos-duration={1000}>
 								<div className="event-image-container">
 									<img 
-										src="/assets/img/past-events/conference-foret-2024.jpeg" 
+										src="/assets/landing-page/img/past-events/conference-foret-2024.jpeg" 
 										alt="Conférence Forêt 2024" 
 										className="img-fluid"
 									/>

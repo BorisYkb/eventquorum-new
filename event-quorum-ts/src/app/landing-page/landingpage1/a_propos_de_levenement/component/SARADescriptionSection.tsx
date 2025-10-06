@@ -5,15 +5,15 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Images de vos vraies images
 const images = [
-  { id: 1, src: '/assets/img/sara/sara1.jpg', alt: 'Conférence SARA - Présentation principale' },
-  { id: 2, src: '/assets/img/sara/sara2.jpeg', alt: 'Networking et échanges' },
-  { id: 3, src: '/assets/img/sara/sara3.jpeg', alt: 'Public attentif' },
-  { id: 4, src: '/assets/img/sara/sara4.jpeg', alt: 'Intervenant expert' },
-  { id: 5, src: '/assets/img/sara/sara5.jpg', alt: 'Atelier pratique' },
-  { id: 6, src: '/assets/img/sara/sara6.jpg', alt: 'Innovation technologique' },
-  { id: 7, src: '/assets/img/sara/sara7.jpg', alt: 'Collaboration entre participants' },
-  { id: 8, src: '/assets/img/sara/sara8.jpg', alt: 'Présentation startup' },
-  { id: 9, src: '/assets/img/sara/sara9.jpg', alt: 'Remise de prix' }
+  { id: 1, src: '/assets/landing-page/img/sara/sara1.jpg', alt: 'Conférence SARA - Présentation principale' },
+  { id: 2, src: '/assets/landing-page/img/sara/sara2.jpeg', alt: 'Networking et échanges' },
+  { id: 3, src: '/assets/landing-page/img/sara/sara3.jpeg', alt: 'Public attentif' },
+  { id: 4, src: '/assets/landing-page/img/sara/sara4.jpeg', alt: 'Intervenant expert' },
+  { id: 5, src: '/assets/landing-page/img/sara/sara5.jpg', alt: 'Atelier pratique' },
+  { id: 6, src: '/assets/landing-page/img/sara/sara6.jpg', alt: 'Innovation technologique' },
+  { id: 7, src: '/assets/landing-page/img/sara/sara7.jpg', alt: 'Collaboration entre participants' },
+  { id: 8, src: '/assets/landing-page/img/sara/sara8.jpg', alt: 'Présentation startup' },
+  { id: 9, src: '/assets/landing-page/img/sara/sara9.jpg', alt: 'Remise de prix' }
 ]
 
 // Images à afficher dans la grille (2 premières)
@@ -688,7 +688,7 @@ export default function SARADescriptionSection() {
         <div className="organizer-content">
           {/* Logo */}
           <div className="logo-container">
-            <img src="/assets/img/logo/etat.png" alt="Logo État de Côte d'Ivoire" className="logo-image" />
+            <img src="/assets/landing-page/img/logo/etat.png" alt="Logo État de Côte d'Ivoire" className="logo-image" />
           </div>
 
           {/* Texte */}

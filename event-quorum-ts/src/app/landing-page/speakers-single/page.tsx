@@ -1,6 +1,6 @@
 
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function SpeakersSingle() {
 
@@ -9,7 +9,7 @@ export default function SpeakersSingle() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/img/bg/header-bg7.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg7.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-6 m-auto">
@@ -33,10 +33,10 @@ export default function SpeakersSingle() {
 											<div className="col-lg-5">
 												<div className="our-team-boxarea">
 													<div className="team-widget-area">
-														<img src="/assets/img/elements/elements25.png" alt="" className="elements21" />
-														<img src="/assets/img/elements/elements26.png" alt="" className="elements22" />
+														<img src="/assets/landing-page/img/elements/elements25.png" alt="" className="elements21" />
+														<img src="/assets/landing-page/img/elements/elements26.png" alt="" className="elements22" />
 														<div className="img1">
-															<img src="/assets/img/all-images/team/team-img12.png" alt="" className="team-img4" />
+															<img src="/assets/landing-page/img/all-images/team/team-img12.png" alt="" className="team-img4" />
 														</div>
 													</div>
 													<div className="content-area">
@@ -118,7 +118,7 @@ export default function SpeakersSingle() {
 													<div className="row align-items-center">
 														<div className="col-lg-5">
 															<div className="img1">
-																<img src="/assets/img/all-images/event/event-img4.png" alt="" />
+																<img src="/assets/landing-page/img/all-images/event/event-img4.png" alt="" />
 															</div>
 														</div>
 														<div className="col-lg-1" />
@@ -126,10 +126,10 @@ export default function SpeakersSingle() {
 															<div className="content-area">
 																<ul>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
 																	</li>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
 																	</li>
 																</ul>
 																<div className="space20" />
@@ -138,7 +138,7 @@ export default function SpeakersSingle() {
 																<div className="author-area">
 																	<div className="autho-name-area">
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img1.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img1.png" alt="" />
 																		</div>
 																		<div className="text">
 																			<Link href="/landing-page/speakers-single">Alex Roberton</Link>
@@ -148,7 +148,7 @@ export default function SpeakersSingle() {
 																	</div>
 																	<div className="autho-name-area" style={{ padding: '0 0 0 12px', border: 'none' }}>
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img2.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img2.png" alt="" />
 																		</div>
 																		<div className="text">
 																			<Link href="/landing-page/speakers-single">Alexys Archer</Link>
@@ -177,32 +177,32 @@ export default function SpeakersSingle() {
 															<div className="content-area">
 																<ul>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
 																	</li>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/event-single" className="head">Elevate User Experience Expertise</Link>
+																<Link href="/landing-page/event-single" className="head">Elevate User Experience Expertise</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area">
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img1.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img1.png" alt="" />
 																		</div>
 																		<div className="text">
-																			<Link href="/speakers-single">Alex Roberton</Link>
+																			<Link href="/landing-page/speakers-single">Alex Roberton</Link>
 																			<div className="space8" />
 																			<p>UI/UX Designer</p>
 																		</div>
 																	</div>
 																	<div className="autho-name-area" style={{ padding: '0 0 0 12px', border: 'none' }}>
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img2.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img2.png" alt="" />
 																		</div>
 																		<div className="text">
-																			<Link href="/speakers-single">Alexys Archer</Link>
+																			<Link href="/landing-page/speakers-single">Alexys Archer</Link>
 																			<div className="space8" />
 																			<p>WP Developer</p>
 																		</div>
@@ -210,14 +210,14 @@ export default function SpeakersSingle() {
 																</div>
 																<div className="space24" />
 																<div className="btn-area1">
-																	<Link href="/plan_tarifaire" className="vl-btn1"><span className="demo">purchase ticket Now</span></Link>
+																	<Link href="/landing-page/plan_tarifaire" className="vl-btn1"><span className="demo">purchase ticket Now</span></Link>
 																</div>
 															</div>
 															<div className="space30 d-lg-none d-block" />
 														</div>
 														<div className="col-lg-5">
 															<div className="img1">
-																<img src="/assets/img/all-images/event/event-img5.png" alt="" />
+																<img src="/assets/landing-page/img/all-images/event/event-img5.png" alt="" />
 															</div>
 														</div>
 													</div>
@@ -232,7 +232,7 @@ export default function SpeakersSingle() {
 													<div className="row align-items-center">
 														<div className="col-lg-5">
 															<div className="img1">
-																<img src="/assets/img/all-images/event/event-img6.png" alt="" />
+																<img src="/assets/landing-page/img/all-images/event/event-img6.png" alt="" />
 															</div>
 														</div>
 														<div className="col-lg-1" />
@@ -240,19 +240,19 @@ export default function SpeakersSingle() {
 															<div className="content-area">
 																<ul>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/clock1.svg" alt="" />10.00 AM -12.00 PM <span> | </span></Link>
 																	</li>
 																	<li>
-																		<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
+																		<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />26/C Asana, New York </Link>
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/event-single" className="head">Elevate User Experience Expertise</Link>
+																<Link href="/landing-page/event-single" className="head">Elevate User Experience Expertise</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area">
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img1.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img1.png" alt="" />
 																		</div>
 																		<div className="text">
 																			<Link href="/landing-page/speakers-single">Alex Roberton</Link>
@@ -262,7 +262,7 @@ export default function SpeakersSingle() {
 																	</div>
 																	<div className="autho-name-area" style={{ padding: '0 0 0 12px', border: 'none' }}>
 																		<div className="img1">
-																			<img src="/assets/img/all-images/testimonials/testimonial-img2.png" alt="" />
+																			<img src="/assets/landing-page/img/all-images/testimonials/testimonial-img2.png" alt="" />
 																		</div>
 																		<div className="text">
 																			<Link href="/landing-page/speakers-single">Alexys Archer</Link>
@@ -296,15 +296,15 @@ export default function SpeakersSingle() {
 										<div className="timer-btn-area">
 										<Countdown />
 											<div className="btn-area1">
-												<Link href="/plan_tarifaire" className="vl-btn1">Buy Ticket</Link>
+												<Link href="/landing-page/plan_tarifaire" className="vl-btn1">Buy Ticket</Link>
 											</div>
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>
@@ -327,10 +327,10 @@ export default function SpeakersSingle() {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>

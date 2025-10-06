@@ -1,17 +1,17 @@
 import 'swiper/css';
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "/public/assets/css/vendor/aos.css"
-import "/public/assets/css/vendor/bootstrap.min.css"
-import "/public/assets/css/vendor/fontawesome.css"
-import "/public/assets/css/vendor/magnific-popup.css"
-import "/public/assets/css/vendor/mobile.css"
-// import "/public/assets/css/vendor/owlcarousel.min.css"
-import "/public/assets/css/vendor/sidebar.css"
-import "/public/assets/css/vendor/slick-slider.css"
-import "/public/assets/css/vendor/nice-select.css"
-import "/public/assets/css/vendor/odometer.css"
-import "/public/assets/css/main.css"
+import "/public/assets/landing-page/css/vendor/aos.css"
+import "/public/assets/landing-page/css/vendor/bootstrap.min.css"
+import "/public/assets/landing-page/css/vendor/fontawesome.css"
+import "/public/assets/landing-page/css/vendor/magnific-popup.css"
+import "/public/assets/landing-page/css/vendor/mobile.css"
+// import "/public/assets/landing-page/css/vendor/owlcarousel.min.css"
+import "/public/assets/landing-page/css/vendor/sidebar.css"
+import "/public/assets/landing-page/css/vendor/slick-slider.css"
+import "/public/assets/landing-page/css/vendor/nice-select.css"
+import "/public/assets/landing-page/css/vendor/odometer.css"
+import "/public/assets/landing-page/css/main.css"
 
 import type { Metadata } from "next"
 import { Figtree, Space_Grotesk } from "next/font/google"

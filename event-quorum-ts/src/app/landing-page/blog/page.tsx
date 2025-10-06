@@ -1,7 +1,7 @@
 
 
-import Countdown from '@/components/elements/Countdown'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function Blog() {
 
@@ -10,7 +10,7 @@ export default function Blog() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/img/bg/header-bg13.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg13.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-6 m-auto">
@@ -31,15 +31,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={800}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/blog/blog-img4.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/blog/blog-img4.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Beverly</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Beverly</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -55,15 +55,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1000}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/blog/blog-img5.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/blog/blog-img5.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Gisselle</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Gisselle</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -79,15 +79,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1200}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/blog/blog-img6.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/blog/blog-img6.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Mertie</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Mertie</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -103,15 +103,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={800}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img7.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img7.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Beverly</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Beverly</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -127,15 +127,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1000}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img8.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img8.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Gisselle</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Gisselle</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -151,15 +151,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1200}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img9.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img9.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Mertie</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Mertie</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -175,15 +175,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={800}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img4.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img4.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Beverly</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Beverly</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -199,15 +199,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1000}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img11.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img11.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Gisselle</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Gisselle</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -223,15 +223,15 @@ export default function Blog() {
 								<div className="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration={1200}>
 									<div className="blog4-boxarea">
 										<div className="img1">
-											<img src="/assets/img/all-images/memory/memory-img6.png" alt="" />
+											<img src="/assets/landing-page/img/all-images/memory/memory-img6.png" alt="" />
 										</div>
 										<div className="content-area">
 											<ul>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />26 Jan 2025 <span> | </span></Link>
 												</li>
 												<li>
-													<Link href="/#"><img src="/assets/img/icons/user1.svg" alt="" />Mertie</Link>
+													<Link href="/#"><img src="/assets/landing-page/img/icons/user1.svg" alt="" />Mertie</Link>
 												</li>
 											</ul>
 											<div className="space20" />
@@ -283,10 +283,10 @@ export default function Blog() {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>
@@ -309,10 +309,10 @@ export default function Blog() {
 										</div>
 										<ul>
 											<li>
-												<Link href="/#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</Link>
 											</li>
 											<li className="m-0">
-												<Link href="/#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
+												<Link href="/#"><img src="/assets/landing-page/img/icons/location1.svg" alt="" />Secret Location In The UK</Link>
 											</li>
 										</ul>
 									</div>

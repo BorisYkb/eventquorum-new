@@ -1,6 +1,6 @@
-import Countdown from '@/components/elements/Countdown'
-import RegistrationForm from '@/components/elements/RegistrationForm'
-import Layout from "@/components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
+import RegistrationForm from 'src/components/landing-page-components/elements/RegistrationForm'
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 export default function PricingPlan() {
 
@@ -9,7 +9,7 @@ export default function PricingPlan() {
 
 			<Layout headerStyle={1} footerStyle={1}>
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/img/bg/header-bg16.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg16.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-9 m-auto">
@@ -43,13 +43,13 @@ export default function PricingPlan() {
 										<h2>5000 FCFA<span>/Une Personne</span></h2>
 										<div className="space8" />
 										<ul>
-											<li className='font-bold'><img src="/assets/img/icons/check2.svg" alt="" />Conférences plénières inspirantes</li>
+											<li className='font-bold'><img src="/assets/landing-page/img/icons/check2.svg" alt="" />Conférences plénières inspirantes</li>
 											<li>Des intervenants de renommée partageront leurs parcours, leurs réussites et leurs leçons. Chaque conférence est conçue pour inspirer, éveiller de nouvelles idées et offrir une vision claire des tendances de demain.</li>
 											
 										</ul>
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="https://quorumevent.vercel.app/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/connexion" className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -60,13 +60,13 @@ export default function PricingPlan() {
 										<h2>2000 FCFA<span>/Une Personne</span></h2>
 										<div className="space8" />
 										<ul>
-											<li><img src="/assets/img/icons/check2.svg" alt="" />Ateliers pratiques et interactifs</li>
+											<li><img src="/assets/landing-page/img/icons/check2.svg" alt="" />Ateliers pratiques et interactifs</li>
 											<li>Des sessions en petits groupes où les participants pourront mettre en pratique des outils concrets : gestion de projet, innovation digitale, stratégies marketing ou encore leadership. L’objectif : repartir avec des compétences directement applicables.</li>
 											
 										</ul>
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="https://quorumevent.vercel.app/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/connexion" className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -77,13 +77,13 @@ export default function PricingPlan() {
 										<h2>1000 FCFA<span>/Une Personne</span></h2>
 										<div className="space8" />
 										<ul>
-											<li><img src="/assets/img/icons/check2.svg" alt="" />Panel de discussion avec experts</li>
+											<li><img src="/assets/landing-page/img/icons/check2.svg" alt="" />Panel de discussion avec experts</li>
 											<li>Un échange animé entre plusieurs spécialistes qui confronteront leurs points de vue sur les défis et opportunités de 2025. Les participants pourront poser leurs questions en direct et enrichir leur réflexion.</li>
 											
 										</ul>
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="https://quorumevent.vercel.app/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/connexion " className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>

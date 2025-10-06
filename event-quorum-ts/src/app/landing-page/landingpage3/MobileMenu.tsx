@@ -15,7 +15,7 @@ const handleAccordion = (key: any) => {
 					<div className="col-12">
 						<div className="mobile-header-elements">
 							<div className="mobile-logo">
-								<Link href="//"><img src="/assets/img/event_img/SARA-2025-LOGO-2.jpg" alt="" /></Link>
+								<Link href="//"><img src="/assets/landing-page/img/event_img/SARA-2025-LOGO-2.jpg" alt="" /></Link>
 							</div>
 							<div className="mobile-nav-icon dots-menu" onClick={handleMobileMenu}>
 								<i className="fa-solid fa-bars-staggered" />
@@ -27,7 +27,7 @@ const handleAccordion = (key: any) => {
 			<div className={`mobile-sidebar mobile-sidebar1 ${isMobileMenu ? 'mobile-menu-active' : ''}`}>
 				<div className="logosicon-area">
 					<div className="logos">
-						<img src="/assets/img/event_img/SARA-2025-LOGO-2.jpg" alt="" />
+						<img src="/assets/landing-page/img/event_img/SARA-2025-LOGO-2.jpg" alt="" />
 					</div>
 					<div className="menu-close" onClick={handleMobileMenu}>
 						<i className="fa-solid fa-xmark" />
@@ -39,8 +39,8 @@ const handleAccordion = (key: any) => {
 							<Link href="/#" className="hash-nav">Accueil </Link>
 							
 						</li>
-						<li className="hash-has-sub"><Link href="/a_propos_de_levenement" className="hash-nav">A propos de l'événement</Link></li>
-						<li className="hash-has-sub"><Link href="/faq" className="hash-nav">FAQ,s</Link></li>
+						<li className="hash-has-sub"><Link href="/landing-page/a_propos_de_levenement" className="hash-nav">A propos de l'événement</Link></li>
+						<li className="hash-has-sub"><Link href="/landing-page/faq" className="hash-nav">FAQ,s</Link></li>
 						
 						<li>
 							<Link href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="event-btn4">
@@ -48,7 +48,7 @@ const handleAccordion = (key: any) => {
 							</Link>
 						</li>
 						<li>
-							<Link href="/inscription" className="event-btn1">
+							<Link href="/landing-page/inscription" className="event-btn1">
 								<span>Inscription</span>
 							</Link>
 						</li>

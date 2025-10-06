@@ -15,7 +15,7 @@ export default function Header1_6({ scroll, isMobileMenu, handleMobileMenu, isSe
 							<div className="col-lg-12">
 								<div className="header-elements">
 									<div className="site-logo">
-										<Link href="/landingpage6"><img src="/assets/img/logo/logo6.png" alt="" /></Link>
+										<Link href="/landing-page/landingpage6"><img src="/assets/landing-page/img/logo/logo6.png" alt="" /></Link>
 									</div>
 									<div className='space12' />
 									<div className="main-menu">
@@ -24,9 +24,9 @@ export default function Header1_6({ scroll, isMobileMenu, handleMobileMenu, isSe
 											
 											
 											
-											<li><Link href="/landingpage6">Accueil </Link></li>
-											<li><Link href="/a_propos_de_levenement6">A propos de l'événement </Link></li>
-											<li><Link href="/faq6">FAQ,s</Link></li>
+											<li><Link href="/landing-page/landingpage6">Accueil </Link></li>
+											<li><Link href="/landing-page/landingpage6/a_propos_de_levenement6">A propos de l'événement </Link></li>
+											<li><Link href="/landing-page/landingpage6/faq6">FAQ,s</Link></li>
 											
 											
 											
@@ -39,7 +39,7 @@ export default function Header1_6({ scroll, isMobileMenu, handleMobileMenu, isSe
 										</Link>
 									</li>
 									<li>
-										<Link href="/inscription" className="event-btn1">
+										<Link href="/landing-page/inscription" className="event-btn1">
 											<span>Inscription</span>
 										</Link>
 									</li>

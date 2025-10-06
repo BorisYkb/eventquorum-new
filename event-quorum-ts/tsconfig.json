@@ -16,11 +16,11 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "paths": {
-      "@/*": [
-        "src/app/landing-page/*"
-      ]
-    },
+    // "paths": {
+    //   "@/*": [
+    //     "src/components/landing-page-components/*"
+    //   ]
+    // },
 
     /* Linting */
     "strict": true,

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import '/public/assets/css/ContactCarousel.css'; // Importer le fichier CSS
+import '/public/assets/landing-page/css/ContactCarousel.css'; // Importer le fichier CSS
 
 export default function ContactCarousel() {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,25 +14,25 @@ export default function ContactCarousel() {
     {
       id: "2",
       title: "Soirée de gala",
-      coverUrl: "/landing-page/event10.jpg",
+      coverUrl: "/event10.jpg",
       description: "Créez des soirées de gala mémorables"
     },
     {
       id: "3",
       title: "Concert",
-      coverUrl: "/landing-page/event9.jpg",
+      coverUrl: "/event9.jpg",
       description: "Organisez des concerts inoubliables"
     },
     {
       id: "4",
       title: "Événement networking",
-      coverUrl: "/landing-page/event8.jpg",
+      coverUrl: "/event8.jpg",
       description: "Créez des moments de networking"
     },
     {
       id: "5",
       title: "Lancement de produit",
-      coverUrl: "/landing-page/produit1.png",
+      coverUrl: "/produit1.png",
       description: "Organisez vos lancements de produits"
     }
   ];
@@ -145,7 +145,7 @@ export function SimpleContactCarousel() {
         <div className="carousel-wrapper">
           <div className="carousel-slide active">
             <img
-              src="/assets/img/all-images/contact/contact-img4.png"
+              src="/assets/landing-page/img/all-images/contact/contact-img4.png"
               alt="Événement EventQuorum"
               className="loaded"
             />

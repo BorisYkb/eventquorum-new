@@ -15,14 +15,14 @@ export default function Header1_4({ scroll, isMobileMenu4, handleMobileMenu4, is
 							<div className="col-lg-12">
 								<div className="header-elements">
 									<div className="site-logo">
-										<Link href="/landingpage4"><img src="/assets/img/logo/logo6.png" alt="" /></Link>
+										<Link href="/landing-page/landingpage3"><img src="/assets/landing-page/img/logo/logo6.png" alt="" /></Link>
 									</div>
 									<div className='space12' />
 									<div className="main-menu">
 										<ul>
-											<li><Link href="/landingpage4">Accueil </Link></li>
-											<li><Link href="/a_propos_de_levenement4">A propos de l'événement </Link></li>
-											<li><Link href="/faq4">FAQ,s</Link></li>
+											<li><Link href="/landing-page/landingpage3">Accueil </Link></li>
+											<li><Link href="/landing-page/landingpage4/a_propos_de_levenement4">A propos de l'événement </Link></li>
+											<li><Link href="/landing-page/landingpage4/faq4">FAQ,s</Link></li>
 											
 										</ul>
 									</div>
@@ -33,7 +33,7 @@ export default function Header1_4({ scroll, isMobileMenu4, handleMobileMenu4, is
 										</Link>
 									</li>
 									<li>
-										<Link href="/inscription4" className="event-btn2">
+										<Link href="/landing-page/landingpage4/inscription4" className="event-btn2">
 											<span>Inscription</span>
 										</Link>
 									</li>

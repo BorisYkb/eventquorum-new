@@ -1,17 +1,17 @@
 
-import Layout from "@/components/layout/Layout"
-import Section1 from '@/components/sections/home4/section1'
-import Section10 from '@/components/sections/home4/section10'
-import Section2 from '@/components/sections/home4/section2'
-import Section3 from '@/components/sections/home4/section3'
-import Section3_4 from "@/components/sections/home4/section3_4"
-import Section4 from '@/components/sections/home4/section4'
-import Section5 from '@/components/sections/home4/section5'
-import Section6 from '@/components/sections/home4/section6'
-import Section7 from '@/components/sections/home4/section7'
-import Section8 from '@/components/sections/home4/section8'
-import Section9 from '@/components/sections/home4/section9'
-import Tarif4 from "@/components/sections/home4/tarif4"
+import Layout from "src/components/landing-page-components/layout/Layout"
+import Section1 from 'src/components/landing-page-components/sections/home4/section1'
+import Section10 from 'src/components/landing-page-components/sections/home4/section10'
+import Section2 from 'src/components/landing-page-components/sections/home4/section2'
+import Section3 from 'src/components/landing-page-components/sections/home4/section3'
+import Section3_4 from "src/components/landing-page-components/sections/home4/section3_4"
+import Section4 from 'src/components/landing-page-components/sections/home4/section4'
+import Section5 from 'src/components/landing-page-components/sections/home4/section5'
+import Section6 from 'src/components/landing-page-components/sections/home4/section6'
+import Section7 from 'src/components/landing-page-components/sections/home4/section7'
+import Section8 from 'src/components/landing-page-components/sections/home4/section8'
+import Section9 from 'src/components/landing-page-components/sections/home4/section9'
+import Tarif4 from "src/components/landing-page-components/sections/home4/tarif4"
 export default function Home4() {
 
 	return (
