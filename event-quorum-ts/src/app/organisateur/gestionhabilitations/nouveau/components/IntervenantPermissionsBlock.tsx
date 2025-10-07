@@ -86,7 +86,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
 
     return (
         <>
-            <Box sx={{ mb: 3 }}>
+            {/* <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" sx={{
                     fontWeight: 600,
                     mb: 2,
@@ -127,7 +127,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Box>
+            </Box> */}
 
             <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" sx={{

@@ -201,7 +201,7 @@ const ParticipantManagementPage = () => {
   // Configuration des onglets
   const TABS = [
     { value: 'invites', label: 'Liste des invités' },
-    { value: 'participants', label: 'Liste des participants' }
+    // { value: 'participants', label: 'Liste des participants' }
   ];
 
   return (
@@ -212,9 +212,6 @@ const ParticipantManagementPage = () => {
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
             Gestion des Participants
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Gérez les invités et participants de votre événement
-          </Typography>
         </Box>
 
         {/* Navigation par onglets */}
@@ -223,7 +220,9 @@ const ParticipantManagementPage = () => {
             value={tabs.value}
             onChange={tabs.onChange}
             sx={{ 
-              borderRadius: 1 //,
+              borderRadius: 1,
+              backgroundColor: "white",
+              boxShadow: 'none'
               // bgcolor: 'background.paper',
               // boxShadow: '0 1px 3px rgba(0,0,0,0.12)'
             }}
@@ -236,7 +235,8 @@ const ParticipantManagementPage = () => {
                 sx={{
                   textTransform: 'none',
                   fontWeight: 600,
-                  fontSize: '0.9rem'
+                  fontSize: '1.5rem',
+                  boxShadow : 'none'
                 }}
               />
             ))}
@@ -260,12 +260,12 @@ const ParticipantManagementPage = () => {
           />
         )}
 
-        {tabs.value === 'participants' && (
+        {/* {tabs.value === 'participants' && (
           <ParticipantsTable
             participants={participants}
             setSnackbar={setSnackbar}
           />
-        )}
+        )} */}
 
         {/* Footer de la page */}
         <Box sx={{

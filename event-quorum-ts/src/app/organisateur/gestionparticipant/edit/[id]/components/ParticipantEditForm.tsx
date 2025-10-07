@@ -137,12 +137,12 @@ export function ParticipantEditForm({ participant }: Props) {
           }}
         >
           <Field.Text name="email" label="Email" />
-          <Field.Text 
+          {/* <Field.Text 
             name="motDePasse" 
             label="Mot de passe" 
             type="password"
             placeholder="••••••••"
-          />
+          /> */}
         </Box>
 
         <Divider sx={{ my: 3 }} />

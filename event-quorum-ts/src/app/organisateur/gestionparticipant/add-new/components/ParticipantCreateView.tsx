@@ -1,15 +1,16 @@
 'use client';
 
+import { Button } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/admin';
 
+import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { ParticipantNewEditForm } from './ParticipantNewEditForm';
-import { Button } from '@mui/material';
-import { RouterLink } from 'src/routes/components';
-import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -17,10 +18,10 @@ export function ParticipantCreateView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Ajouter un nouveau participant"
+        heading="Ajouter un nouvel invité"
         links={[
           { name: 'Gestion participants', href: paths.organisateur.gestionparticipant.root },
-          { name: 'Nouveau participant' },
+          { name: 'Nouveau Invité' },
         ]}
         action={
           <Button

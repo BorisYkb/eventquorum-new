@@ -1,4 +1,5 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/ParticipantRowSimple.tsx
+
 'use client';
 
 import {

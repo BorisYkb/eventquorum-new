@@ -28,10 +28,10 @@ import {
 import { Label } from 'src/components/label';
 
 // Import des composants de permissions
-import BasePermissionsBlock from './components/BasePermissionsBlock';
-import OperatorPermissionsBlock from './components/OperatorPermissionsBlock';
-import SupervisorPermissionsBlock from './components/SupervisorPermissionsBlock';
-import GuichetierPermissionsBlock from './components/GuichetierPermissionsBlock';
+// import BasePermissionsBlock from './components/BasePermissionsBlock';
+// import OperatorPermissionsBlock from './components/OperatorPermissionsBlock';
+// import SupervisorPermissionsBlock from './components/SupervisorPermissionsBlock';
+// import GuichetierPermissionsBlock from './components/GuichetierPermissionsBlock';
 import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
 
 interface CreateAccessForm {
@@ -50,7 +50,7 @@ interface CreateAccessForm {
     // Permissions spécifiques Superviseur
     autoriserExport: boolean;
     
-    // Permissions spécifiques Opérateur de saisie
+    // Permissions spécifiques Agent d'admission
     preciserEnregistrements: boolean;
     typeEntree: string;
     admissionActivite: string;
@@ -72,7 +72,7 @@ const CreateAccessPage: React.FC = () => {
     prenom: '',
     email: '',
     telephone: '',
-    role: 'Opérateur de saisie',
+    role: "Agent d'admission",
     mdp: '',
     permissions: {
       // Permissions de base
@@ -143,7 +143,7 @@ const CreateAccessPage: React.FC = () => {
   };
 
   const roles = [
-    'Opérateur de saisie',
+    "Agent d'admission",
     'Intervenant',
     'Superviseur',
     
@@ -156,7 +156,7 @@ const CreateAccessPage: React.FC = () => {
         return 'primary';
       case 'Intervenant':
         return 'info';
-      case 'Operateur de saisie':
+      case "Agent d'admission":
         return 'secondary';
       case 'Guichetier':
         return 'warning';
@@ -366,17 +366,17 @@ const CreateAccessPage: React.FC = () => {
                 borderBottom: '1px solid #e0e0e0'
               }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Permissions et Accès
+                  Accès
                 </Typography>
               </Box>
               <Box sx={{ p: 3 }}>
                 {/* Permissions de base (pour tous les rôles) */}
-                <BasePermissionsBlock
+                {/* <BasePermissionsBlock
                   lecture={formData.permissions.lecture}
                   ecriture={formData.permissions.ecriture}
                   modification={formData.permissions.modification}
                   onPermissionChange={handlePermissionChange}
-                />
+                /> */}
 
                 {/* Permissions spécifiques selon le rôle */}
                 {renderRoleSpecificPermissions()}

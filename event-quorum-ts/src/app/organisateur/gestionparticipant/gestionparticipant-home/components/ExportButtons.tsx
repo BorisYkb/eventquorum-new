@@ -131,9 +131,9 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({ currentTab }) => {
       sx={{ mb: 2 }}
     >
       {/* Titre à gauche - Dynamique */}
-      <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+      {/* <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
         {getTitle()}
-      </Typography>
+      </Typography> */}
 
       {/* Boutons à droite - Adaptatifs selon l'onglet */}
       <Stack direction="row" spacing={2}>

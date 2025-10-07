@@ -1,8 +1,16 @@
 //src/app/organisateur/gestionparticipant/consultation/page.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import {
+    ArrowBack as ArrowBackIcon,
+    Search as SearchIcon,
+    Download as DownloadIcon,
+    Person as PersonIcon,
+} from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -30,12 +38,6 @@ import {
     Breadcrumbs,
     Link,
 } from '@mui/material';
-import {
-    ArrowBack as ArrowBackIcon,
-    Search as SearchIcon,
-    Download as DownloadIcon,
-    Person as PersonIcon,
-} from '@mui/icons-material';
 
 // Interface pour les participants
 interface Participant {

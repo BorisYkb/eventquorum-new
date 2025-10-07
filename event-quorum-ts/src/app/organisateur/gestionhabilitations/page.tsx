@@ -38,7 +38,7 @@ const sampleAuthorizations: Authorization[] = [
     lastName: "Kouassi",
     phone: "01 23 45 67 89",
     email: "pierre.kouassi@example.com",
-    role: "Opérateur de saisie",
+    role: "Agent d'admission",
     status: "Inactif",
     createdAt: "2024-01-20"
   },
@@ -61,17 +61,8 @@ const sampleAuthorizations: Authorization[] = [
     role: "Intervenant",
     status: "Actif",
     createdAt: "2024-02-28"
-  },
-  {
-    id: 6,
-    firstName: "Oriane",
-    lastName: "Chonou",
-    phone: "01 00 00 00 00",
-    email: "admin@system.com",
-    role: "Tous accès",
-    status: "Actif",
-    createdAt: "2024-01-01"
   }
+  
 ];
 
 export default function Page() {

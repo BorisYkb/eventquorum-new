@@ -30,6 +30,8 @@ import {
     Link,
     Alert,
     Divider,
+    Autocomplete,  // ✅ Ajouter ceci
+    Chip,    
 } from '@mui/material';
 
 import { Editor } from 'src/components/editor';
@@ -62,6 +64,18 @@ const PlanifierEnvoiPage = () => {
         individuel: false,
     });
     const [checked, setChecked] = useState(false); // Pour fullItem si nécessaire
+
+    // Ajouter ceci au début du composant, après les autres états
+        
+    const [selectedParticipants, setSelectedParticipants] = useState<any[]>([]);
+    // Données simulées des participants
+    const participantsOptions = [
+        { id: '1', name: 'Jean Dupont', contact: '+225 07 12 34 56 78' },
+        { id: '2', name: 'Marie Kouassi', contact: 'marie.kouassi@email.com' },
+        { id: '3', name: 'Yao Koffi', contact: '+225 07 98 76 54 32' },
+        { id: '4', name: 'Aya Bamba', contact: 'aya.bamba@email.com' },
+        { id: '5', name: 'Kouame N\'guessan', contact: '+225 05 11 22 33 44' },
+    ];
 
     /**
      * Retour à la page de gestion des messages
@@ -145,7 +159,11 @@ const PlanifierEnvoiPage = () => {
 
         alert('Message planifié avec succès !');
         handleBackToMessages();
+
+
+        
     };
+
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -256,12 +274,12 @@ const PlanifierEnvoiPage = () => {
                                             <FormControlLabel
                                                 value="programmé"
                                                 control={<Radio />}
-                                                label="Programmé"
+                                                label="Planifié"
                                             />
                                             <FormControlLabel
                                                 value="automatique"
                                                 control={<Radio />}
-                                                label="Automatique"
+                                                label="Instantané"
                                             />
                                         </RadioGroup>
                                     </FormControl>
@@ -315,7 +333,7 @@ const PlanifierEnvoiPage = () => {
                                     value={contenuMessage}
                                     onChange={(value) => setContenuMessage(value)}
                                     sx={{
-                                        height: 1000,        // Hauteur fixe de 500px
+                                        height: 250,        // Hauteur fixe de 500px
                                         maxHeight: 720,     // Hauteur maximale conservée
                                         border: 1,
                                         borderColor: 'divider',
@@ -407,9 +425,10 @@ const PlanifierEnvoiPage = () => {
                                                 Sélectionner les groupes :
                                             </Typography>
                                             <FormGroup>
-                                                <FormControlLabel control={<Checkbox size="small" />} label="Groupe 1" />
-                                                <FormControlLabel control={<Checkbox size="small" />} label="Groupe 2" />
-                                                <FormControlLabel control={<Checkbox size="small" />} label="Groupe 3" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités en ligne" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités en présentiel" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Demandeur d'inscription" />
                                             </FormGroup>
                                         </Paper>
                                     )}
@@ -425,18 +444,50 @@ const PlanifierEnvoiPage = () => {
                                     />
 
                                     {/* Zone de sélection individuelle si activée */}
+
                                     {destinataires.individuel && (
-                                        <Paper variant="outlined" sx={{ p: 2, ml: 4, mt: 1, maxWidth: 300 }}>
+                                        <Paper variant="outlined" sx={{ p: 2, ml: 4, mt: 1, maxWidth: 400 }}>
                                             <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
                                                 Coordonnées du participant :
                                             </Typography>
-                                            <TextField
-                                                fullWidth
-                                                multiline
-                                                rows={3}
-                                                placeholder="Mail / SMS / Whatsapp"
-                                                variant="outlined"
-                                                size="small"
+
+                                            <Autocomplete
+                                                multiple
+                                                options={participantsOptions}
+                                                value={selectedParticipants}
+                                                onChange={(event, newValue) => setSelectedParticipants(newValue)}
+                                                getOptionLabel={(option) => `${option.name} - ${option.contact}`}
+                                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        placeholder="Téléphone / Email"
+                                                        size="small"
+                                                    />
+                                                )}
+                                                renderOption={(props, participant) => (
+                                                    <li {...props} key={participant.id}>
+                                                        <Box>
+                                                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                                {participant.name}
+                                                            </Typography>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                {participant.contact}
+                                                            </Typography>
+                                                        </Box>
+                                                    </li>
+                                                )}
+                                                renderTags={(selected, getTagProps) =>
+                                                    selected.map((participant, index) => (
+                                                        <Chip
+                                                            {...getTagProps({ index })}
+                                                            key={participant.id}
+                                                            size="small"
+                                                            label={participant.name}
+                                                        />
+                                                    ))
+                                                }
+                                                sx={{ mt: 1 }}
                                             />
                                         </Paper>
                                     )}

@@ -1,8 +1,18 @@
-//src/app/organisateur/gestionparticipant/gestion-messages/detail/[id]/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+
+import {
+    ArrowBack as ArrowBackIcon,
+    Edit as EditIcon,
+    Send as SendIcon,
+    CalendarToday as CalendarIcon,
+    Search as SearchIcon,
+    WhatsApp as WhatsAppIcon,
+    Phone as PhoneIcon,
+    Email as EmailIcon,
+} from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -25,17 +35,24 @@ import {
     Grid2 as Grid,
     Chip,
     Divider,
+    Tabs,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TablePagination,
+    InputAdornment,
+    Select,
+    MenuItem,
 } from '@mui/material';
-import {
-    ArrowBack as ArrowBackIcon,
-    Edit as EditIcon,
-    Send as SendIcon,
-    CalendarToday as CalendarIcon,
-} from '@mui/icons-material';
+
+import { WidgetSummary } from 'src/app/organisateur/gestionenquete/components/WidgetSummary';
 
 // Import du composant de statistiques
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
-import { WidgetSummary } from 'src/app/organisateur/gestionenquete/components/WidgetSummary';
 
 // Interface pour un message
 interface MessageDetail {
@@ -66,6 +83,15 @@ interface MessageDetail {
     dateEnvoi?: string;
 }
 
+// Interface pour un destinataire
+interface Destinataire {
+    id: number;
+    nom: string;
+    prenom: string;
+    modeEnvoi: 'WhatsApp' | 'Téléphone' | 'Email';
+    statut: 'Envoyé' | 'Échec';
+}
+
 /**
  * Page de détail d'un message
  * Affiche toutes les informations d'un message spécifique
@@ -79,6 +105,17 @@ const DetailMessagePage = () => {
     // État pour les données du message
     const [message, setMessage] = useState<MessageDetail | null>(null);
     const [loading, setLoading] = useState(true);
+    
+    // États pour les onglets
+    const [currentTab, setCurrentTab] = useState(0);
+    
+    // États pour le tableau des destinataires
+    const [destinataires, setDestinataires] = useState<Destinataire[]>([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statutFilter, setStatutFilter] = useState('tous');
+    const [selectedDestinataires, setSelectedDestinataires] = useState<number[]>([]);
 
     // Simulation de chargement des données
     useEffect(() => {
@@ -108,14 +145,24 @@ const DetailMessagePage = () => {
                 },
                 statistiques: {
                     envoyes: 100,
-                    recus: 95,
+                    
                     echecs: 5,
                 },
                 dateCreation: '2024-01-04T10:00',
                 dateEnvoi: '2024-01-05T14:30',
             };
 
+            // Données simulées des destinataires
+            const destinatairesData: Destinataire[] = Array.from({ length: 100 }, (_, i) => ({
+                id: i + 1,
+                nom: `Nom${i + 1}`,
+                prenom: `Prénom${i + 1}`,
+                modeEnvoi: ['WhatsApp', 'Téléphone', 'Email'][Math.floor(Math.random() * 3)] as 'WhatsApp' | 'Téléphone' | 'Email',
+                statut: Math.random() > 0.05 ? 'Envoyé' : 'Échec',
+            }));
+
             setMessage(messageData);
+            setDestinataires(destinatairesData);
             setLoading(false);
         };
 
@@ -178,6 +225,73 @@ const DetailMessagePage = () => {
             hour: '2-digit',
             minute: '2-digit',
         });
+    };
+
+    /**
+     * Changement d'onglet
+     */
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setCurrentTab(newValue);
+    };
+
+    /**
+     * Changement de page du tableau
+     */
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    /**
+     * Changement du nombre de lignes par page
+     */
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    /**
+     * Filtrage des destinataires
+     */
+    const filteredDestinataires = destinataires.filter((dest) => {
+        const matchSearch = `${dest.nom} ${dest.prenom}`.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchStatut = statutFilter === 'tous' || dest.statut === statutFilter;
+        return matchSearch && matchStatut;
+    });
+
+    /**
+     * Sélection d'un destinataire
+     */
+    const handleSelectDestinataire = (id: number) => {
+        setSelectedDestinataires((prev) =>
+            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+        );
+    };
+
+    /**
+     * Sélection de tous les destinataires
+     */
+    const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            setSelectedDestinataires(filteredDestinataires.map((dest) => dest.id));
+        } else {
+            setSelectedDestinataires([]);
+        }
+    };
+
+    /**
+     * Rendu de l'icône du mode d'envoi
+     */
+    const renderModeEnvoiIcon = (mode: string) => {
+        switch (mode) {
+            case 'WhatsApp':
+                return <WhatsAppIcon sx={{ color: '#25D366', fontSize: 20 }} />;
+            case 'Téléphone':
+                return <PhoneIcon sx={{ color: '#2196F3', fontSize: 20 }} />;
+            case 'Email':
+                return <EmailIcon sx={{ color: '#FF5722', fontSize: 20 }} />;
+            default:
+                return null;
+        }
     };
 
     if (loading) {
@@ -257,13 +371,6 @@ const DetailMessagePage = () => {
                 <Grid container spacing={3}>
                     <Grid size={{ xs: 12, md: 4 }}>
                         <WidgetSummary
-                            title="Nombre destinataires"
-                            total={message.destinataires.nombre}
-                            color="info"
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 4 }}>
-                        <WidgetSummary
                             title="Statut"
                             total="Envoyé"
                             color="success"
@@ -271,236 +378,375 @@ const DetailMessagePage = () => {
                             subtitle="✓ Transmis avec succès"
                         />
                     </Grid>
+                    <Grid size={{ xs: 12, md: 4 }}>
+                        <WidgetSummary
+                            title="Nombre destinataires"
+                            total={message.destinataires.nombre}
+                            color="info"
+                        />
+                    </Grid>
                 </Grid>
 
-                {/* Détails du message */}
+                {/* Onglets */}
                 <Card sx={{
                     borderRadius: 2,
                     boxShadow: 'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px'
                 }}>
-                    <Box sx={{ p: 4 }}>
-                        <Stack spacing={4}>
-                            {/* Titre du message */}
-                            <Box>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                    Titre du message
-                                </Typography>
-                                <TextField
-                                    fullWidth
-                                    value={message.titre}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    variant="outlined"
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
+                    <Tabs
+                        value={currentTab}
+                        onChange={handleTabChange}
+                        sx={{
+                            px: 3,
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                        }}
+                    >
+                        <Tab label="Informations générales" sx={{ textTransform: 'none', fontWeight: 600 }} />
+                        <Tab label="Destinataires" sx={{ textTransform: 'none', fontWeight: 600 }} />
+                    </Tabs>
+
+                    {/* Contenu de l'onglet Informations générales */}
+                    {currentTab === 0 && (
+                        <Box sx={{ p: 4 }}>
+                            <Stack spacing={4}>
+                                {/* Titre du message */}
+                                <Box>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                        Titre du message
+                                    </Typography>
+                                    <TextField
+                                        fullWidth
+                                        value={message.titre}
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        variant="outlined"
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                borderRadius: 1,
+                                                backgroundColor: 'grey.50',
+                                            }
+                                        }}
+                                    />
+                                </Box>
+
+                                {/* Type de message et Mode d'envoi */}
+                                <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                                    {/* Type de message */}
+                                    <Box sx={{ flex: 1, minWidth: 250 }}>
+                                        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                            Type de message
+                                        </Typography>
+                                        <FormControl component="fieldset">
+                                            <RadioGroup value={message.type.toLowerCase()}>
+                                                <FormControlLabel
+                                                    value="programmé"
+                                                    control={<Radio />}
+                                                    label="Programmé"
+                                                    disabled
+                                                />
+                                                <FormControlLabel
+                                                    value="automatique"
+                                                    control={<Radio />}
+                                                    label="Automatique"
+                                                    disabled
+                                                />
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Box>
+
+                                    {/* Mode d'envoi */}
+                                    <Box sx={{ flex: 1, minWidth: 250 }}>
+                                        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                            Mode d'envoi
+                                        </Typography>
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={message.modeEnvoi.whatsapp}
+                                                        disabled
+                                                    />
+                                                }
+                                                label="WhatsApp"
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={message.modeEnvoi.telephone}
+                                                        disabled
+                                                    />
+                                                }
+                                                label="Téléphone"
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={message.modeEnvoi.email}
+                                                        disabled
+                                                    />
+                                                }
+                                                label="Email"
+                                            />
+                                        </FormGroup>
+                                    </Box>
+                                </Box>
+
+                                {/* Contenu du message */}
+                                <Box>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                        Contenu du message
+                                    </Typography>
+                                    <Paper
+                                        variant="outlined"
+                                        sx={{
+                                            p: 3,
                                             borderRadius: 1,
                                             backgroundColor: 'grey.50',
-                                        }
-                                    }}
-                                />
-                            </Box>
-
-                            {/* Type de message et Mode d'envoi */}
-                            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                                {/* Type de message */}
-                                <Box sx={{ flex: 1, minWidth: 250 }}>
-                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                        Type de message
-                                    </Typography>
-                                    <FormControl component="fieldset">
-                                        <RadioGroup value={message.type.toLowerCase()}>
-                                            <FormControlLabel
-                                                value="programmé"
-                                                control={<Radio />}
-                                                label="Programmé"
-                                                disabled
-                                            />
-                                            <FormControlLabel
-                                                value="automatique"
-                                                control={<Radio />}
-                                                label="Automatique"
-                                                disabled
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
+                                            minHeight: 200,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="body1"
+                                            sx={{ lineHeight: 1.6 }}
+                                            dangerouslySetInnerHTML={{ __html: message.contenu }}
+                                        />
+                                    </Paper>
                                 </Box>
 
-                                {/* Mode d'envoi */}
-                                <Box sx={{ flex: 1, minWidth: 250 }}>
+                                <Divider />
+
+                                {/* Programmation de l'envoi */}
+                                <Box>
                                     <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                        Mode d'envoi
+                                        Programmation de l'envoi du message
                                     </Typography>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={message.modeEnvoi.whatsapp}
-                                                    disabled
-                                                />
-                                            }
-                                            label="WhatsApp"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={message.modeEnvoi.telephone}
-                                                    disabled
-                                                />
-                                            }
-                                            label="Téléphone"
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={message.modeEnvoi.email}
-                                                    disabled
-                                                />
-                                            }
-                                            label="Email"
-                                        />
-                                    </FormGroup>
-                                </Box>
-                            </Box>
 
-                            {/* Contenu du message */}
-                            <Box>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                    Contenu du message
-                                </Typography>
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: 3,
-                                        borderRadius: 1,
-                                        backgroundColor: 'grey.50',
-                                        minHeight: 200,
-                                    }}
-                                >
-                                    <Typography
-                                        variant="body1"
-                                        sx={{ lineHeight: 1.6 }}
-                                        dangerouslySetInnerHTML={{ __html: message.contenu }}
-                                    />
-                                </Paper>
-                            </Box>
+                                    <Paper variant="outlined" sx={{ p: 3, borderRadius: 1, backgroundColor: 'grey.50' }}>
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={message.programmation.type === 'planifie'}
+                                                        disabled
+                                                    />
+                                                }
+                                                label="Envoi planifié"
+                                            />
+                                        </FormGroup>
 
-                            <Divider />
-
-                            {/* Programmation de l'envoi */}
-                            <Box>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                    Programmation de l'envoi du message
-                                </Typography>
-
-                                <Paper variant="outlined" sx={{ p: 3, borderRadius: 1, backgroundColor: 'grey.50' }}>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={message.programmation.type === 'planifie'}
-                                                    disabled
-                                                />
-                                            }
-                                            label="Envoi planifié"
-                                        />
-                                    </FormGroup>
-
-                                    {message.programmation.type === 'planifie' && message.programmation.dateHeure && (
-                                        <Box sx={{ mt: 2, ml: 4 }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <CalendarIcon sx={{ color: 'text.secondary' }} />
-                                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                                    Date/Heure :
-                                                </Typography>
-                                                <Typography variant="body2">
-                                                    {formatDate(message.programmation.dateHeure)}
-                                                </Typography>
+                                        {message.programmation.type === 'planifie' && message.programmation.dateHeure && (
+                                            <Box sx={{ mt: 2, ml: 4 }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <CalendarIcon sx={{ color: 'text.secondary' }} />
+                                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                        Date/Heure :
+                                                    </Typography>
+                                                    <Typography variant="body2">
+                                                        {formatDate(message.programmation.dateHeure)}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
+                                        )}
+                                    </Paper>
+                                </Box>
+
+                                {/* Destinataires */}
+                                <Box>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                        Destinataire
+                                    </Typography>
+
+                                    <Paper variant="outlined" sx={{ p: 3, borderRadius: 1, backgroundColor: 'grey.50' }}>
+                                        <FormGroup>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={message.destinataires.type === 'tous'}
+                                                        disabled
+                                                    />
+                                                }
+                                                label="Tous les participants"
+                                            />
+                                        </FormGroup>
+
+                                        <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Nombre de destinataires :
+                                            </Typography>
+                                            <Chip
+                                                label={message.destinataires.nombre}
+                                                color="primary"
+                                                size="small"
+                                            />
                                         </Box>
-                                    )}
-                                </Paper>
-                            </Box>
+                                    </Paper>
+                                </Box>
 
-                            {/* Destinataires */}
-                            <Box>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                    Destinataire
-                                </Typography>
+                                {/* Informations supplémentaires */}
+                                <Box>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                                        Informations
+                                    </Typography>
 
-                                <Paper variant="outlined" sx={{ p: 3, borderRadius: 1, backgroundColor: 'grey.50' }}>
-                                    <FormGroup>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={message.destinataires.type === 'tous'}
-                                                    disabled
-                                                />
-                                            }
-                                            label="Tous les participants"
-                                        />
-                                    </FormGroup>
-
-                                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Nombre de destinataires :
-                                        </Typography>
-                                        <Chip
-                                            label={message.destinataires.nombre}
-                                            color="primary"
-                                            size="small"
-                                        />
-                                    </Box>
-                                </Paper>
-                            </Box>
-
-                            {/* Informations supplémentaires */}
-                            <Box>
-                                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                                    Informations
-                                </Typography>
-
-                                <Stack spacing={2}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Date de création :
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            {formatDate(message.dateCreation)}
-                                        </Typography>
-                                    </Box>
-
-                                    {message.dateEnvoi && (
+                                    <Stack spacing={2}>
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <Typography variant="body2" color="text.secondary">
-                                                Date d'envoi :
+                                                Date de création :
                                             </Typography>
                                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                                {formatDate(message.dateEnvoi)}
+                                                {formatDate(message.dateCreation)}
                                             </Typography>
                                         </Box>
-                                    )}
 
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Modes d'envoi actifs :
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', gap: 1 }}>
-                                            {getModesEnvoi().map((mode) => (
-                                                <Chip
-                                                    key={mode}
-                                                    label={mode}
-                                                    size="small"
-                                                    variant="outlined"
-                                                    color="primary"
-                                                />
-                                            ))}
+                                        {message.dateEnvoi && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Date d'envoi :
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                    {formatDate(message.dateEnvoi)}
+                                                </Typography>
+                                            </Box>
+                                        )}
+
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Modes d'envoi actifs :
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                                {getModesEnvoi().map((mode) => (
+                                                    <Chip
+                                                        key={mode}
+                                                        label={mode}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        color="primary"
+                                                    />
+                                                ))}
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Stack>
+                                    </Stack>
+                                </Box>
+                            </Stack>
+                        </Box>
+                    )}
+
+                    {/* Contenu de l'onglet Destinataires */}
+                    {currentTab === 1 && (
+                        <Box sx={{ p: 3 }}>
+                            {/* Barre de recherche et filtres */}
+                            <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+                                <TextField
+                                    size="small"
+                                    placeholder="Rechercher..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    sx={{ flex: 1, maxWidth: 400 }}
+                                />
+                                <FormControl size="small" sx={{ minWidth: 200 }}>
+                                    <Select
+                                        value={statutFilter}
+                                        onChange={(e) => setStatutFilter(e.target.value)}
+                                        displayEmpty
+                                    >
+                                        <MenuItem value="tous">Tous les statuts</MenuItem>
+                                        <MenuItem value="Envoyé">Envoyé</MenuItem>
+                                        <MenuItem value="Échec">Échec</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Box>
-                        </Stack>
-                    </Box>
+
+                            {/* Tableau */}
+                            <TableContainer component={Paper} variant="outlined">
+                                <Table>
+                                    <TableHead>
+                                        <TableRow sx={{ bgcolor: '#f5f5f5' }}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    checked={
+                                                        filteredDestinataires.length > 0 &&
+                                                        selectedDestinataires.length === filteredDestinataires.length
+                                                    }
+                                                    indeterminate={
+                                                        selectedDestinataires.length > 0 &&
+                                                        selectedDestinataires.length < filteredDestinataires.length
+                                                    }
+                                                    onChange={handleSelectAll}
+                                                />
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: 600, color: '#637381' }}>
+                                                Nom & Prénom
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: 600, color: '#637381' }}>
+                                                Mode d'envoi
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: 600, color: '#637381' }}>
+                                                Statut
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {filteredDestinataires
+                                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            .map((dest) => (
+                                                <TableRow
+                                                    key={dest.id}
+                                                    hover
+                                                    sx={{ '&:hover': { bgcolor: '#f9fafb' } }}
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            checked={selectedDestinataires.includes(dest.id)}
+                                                            onChange={() => handleSelectDestinataire(dest.id)}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontWeight: 500 }}>
+                                                        {dest.nom} {dest.prenom}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                            {renderModeEnvoiIcon(dest.modeEnvoi)}
+                                                            <Typography variant="body2">{dest.modeEnvoi}</Typography>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Chip
+                                                            label={dest.statut}
+                                                            size="small"
+                                                            sx={{
+                                                                bgcolor: dest.statut === 'Envoyé' ? '#d1fae5' : '#fee2e2',
+                                                                color: dest.statut === 'Envoyé' ? '#065f46' : '#991b1b',
+                                                                fontWeight: 600,
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
+                            {/* Pagination */}
+                            <TablePagination
+                                component="div"
+                                count={filteredDestinataires.length}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                rowsPerPage={rowsPerPage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                rowsPerPageOptions={[5, 10, 25, 50]}
+                                labelRowsPerPage="Lignes par page:"
+                            />
+                        </Box>
+                    )}
                 </Card>
 
                 {/* Footer */}

@@ -307,20 +307,13 @@ const GestionMessagesPage = () => {
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
             <SuperviseurWidgetSummary
-              title="Messages/Mail reçus"
+              title="Messages ou Mail reçus"
               total={190}
               color="info"
               sx={{ height: 180 }}
             />
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <SuperviseurWidgetSummary
-              title="Demandes d'inscription"
-              total={128}
-              color="secondary"
-              sx={{ height: 180 }}
-            />
-          </Grid>
+          
         </Grid>
 
         {/* Carte principale */}

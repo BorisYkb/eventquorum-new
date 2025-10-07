@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -27,19 +28,12 @@ export default function Faqs() {
   // États pour le formulaire
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [editingId, setEditingId] = useState(null);
   
-  // Type pour une FAQ
-  type Faq = {
-    id: number;
-    question: string;
-    answer: string;
-  };
+  // État pour les FAQs
+  const [savedFaqs, setSavedFaqs] = useState([]);
 
-  // États pour les FAQs
-  const [tempFaqs, setTempFaqs] = useState<Faq[]>([]);
-  const [savedFaqs, setSavedFaqs] = useState<Faq[]>([]);
-
-  // Fonction pour ajouter une FAQ temporaire
+  // Fonction pour ajouter une FAQ directement
   const handleAddFaq = () => {
     if (question.trim() && answer.trim()) {
       const newFaq = {
@@ -47,41 +41,47 @@ export default function Faqs() {
         question: question.trim(),
         answer: answer.trim()
       };
-      setTempFaqs([...tempFaqs, newFaq]);
+      setSavedFaqs([...savedFaqs, newFaq]);
       setQuestion('');
       setAnswer('');
     }
   };
 
-  // Fonction pour supprimer une FAQ temporaire
-  const handleDeleteTemp = (id: number) => {
-    setTempFaqs(tempFaqs.filter((faq) => faq.id !== id));
+  // Fonction pour supprimer une FAQ
+  const handleDeleteSaved = (id) => {
+    setSavedFaqs(savedFaqs.filter((faq) => faq.id !== id));
   };
 
-  // Fonction pour enregistrer toutes les FAQs temporaires
-  const handleSave = () => {
-    if (tempFaqs.length > 0) {
-      setSavedFaqs([...savedFaqs, ...tempFaqs]);
-      setTempFaqs([]);
+  // Fonction pour commencer la modification
+  const handleEdit = (faq) => {
+    setEditingId(faq.id);
+    setQuestion(faq.question);
+    setAnswer(faq.answer);
+  };
+
+  // Fonction pour enregistrer la modification
+  const handleSaveEdit = () => {
+    if (question.trim() && answer.trim()) {
+      setSavedFaqs(savedFaqs.map(faq => 
+        faq.id === editingId 
+          ? { ...faq, question: question.trim(), answer: answer.trim() }
+          : faq
+      ));
+      setEditingId(null);
       setQuestion('');
       setAnswer('');
     }
   };
 
-  // Fonction pour annuler toutes les FAQs temporaires
-  const handleCancel = () => {
-    setTempFaqs([]);
+  // Fonction pour annuler la modification
+  const handleCancelEdit = () => {
+    setEditingId(null);
     setQuestion('');
     setAnswer('');
   };
 
-  // Fonction pour supprimer une FAQ enregistrée
-  const handleDeleteSaved = (id: number) => {
-    setSavedFaqs(savedFaqs.filter((faq) => faq.id !== id));
-  };
-
   return (
-    <Box sx={{ minHeight: '100vh',boxShadow: 3, borderRadius: 3, p: 4 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f9fafb', p: 4 }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         <Typography variant="h4" sx={{ fontWeight: 700, color: '#1f2937', mb: 4 }}>
           Gestion des FAQs
@@ -90,7 +90,7 @@ export default function Faqs() {
         {/* Formulaire d'ajout */}
         <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 3 }}>
-            Ajouter une nouvelle question
+            {editingId ? 'Modifier la question' : 'Ajouter une nouvelle question'}
           </Typography>
           
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -115,84 +115,41 @@ export default function Faqs() {
               placeholder="Entrez la réponse..."
             />
             
-            <Box>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddFaq}
-                disabled={!question.trim() || !answer.trim()}
-                sx={{ textTransform: 'none' }}
-              >
-                Ajouter la question
-              </Button>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              {editingId ? (
+                <>
+                  <Button
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                    onClick={handleSaveEdit}
+                    disabled={!question.trim() || !answer.trim()}
+                    sx={{ textTransform: 'none' }}
+                  >
+                    Enregistrer
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<CancelIcon />}
+                    onClick={handleCancelEdit}
+                    sx={{ textTransform: 'none' }}
+                  >
+                    Annuler
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={handleAddFaq}
+                  disabled={!question.trim() || !answer.trim()}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Ajouter la question
+                </Button>
+              )}
             </Box>
           </Box>
         </Paper>
-
-        {/* Liste temporaire des FAQs */}
-        {tempFaqs.length > 0 && (
-          <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 2 }}>
-              Questions en cours d'édition ({tempFaqs.length})
-            </Typography>
-            
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-              {tempFaqs.map((faq) => (
-                <Paper 
-                  key={faq.id}
-                  variant="outlined"
-                  sx={{ 
-                    p: 2, 
-                    bgcolor: '#eff6ff',
-                    borderColor: '#bfdbfe'
-                  }}
-                >
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography sx={{ fontWeight: 600, color: '#1f2937', mb: 1 }}>
-                        Q: {faq.question}
-                      </Typography>
-                      <Typography sx={{ color: '#4b5563' }}>
-                        R: {faq.answer}
-                      </Typography>
-                    </Box>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDeleteTemp(faq.id)}
-                      sx={{ 
-                        color: '#dc2626',
-                        '&:hover': { bgcolor: '#fee2e2' }
-                      }}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </Paper>
-              ))}
-            </Box>
-
-            <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 2, display: 'flex', gap: 2 }}>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<SaveIcon />}
-                onClick={handleSave}
-                sx={{ textTransform: 'none' }}
-              >
-                Enregistrer
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<CancelIcon />}
-                onClick={handleCancel}
-                sx={{ textTransform: 'none' }}
-              >
-                Annuler
-              </Button>
-            </Box>
-          </Paper>
-        )}
 
         {/* Tableau des FAQs enregistrées */}
         {savedFaqs.length > 0 && (
@@ -211,8 +168,8 @@ export default function Faqs() {
                     <TableCell sx={{ fontWeight: 600, color: '#374151', py: 2 }}>
                       Réponse
                     </TableCell>
-                    <TableCell align="center" sx={{ fontWeight: 600, color: '#374151', width: 100, py: 2 }}>
-                      Action
+                    <TableCell align="center" sx={{ fontWeight: 600, color: '#374151', width: 150, py: 2 }}>
+                      Actions
                     </TableCell>
                   </TableRow>
                   {savedFaqs.map((faq, index) => (
@@ -232,6 +189,17 @@ export default function Faqs() {
                       <TableCell align="center" sx={{ py: 2 }}>
                         <IconButton
                           size="small"
+                          onClick={() => handleEdit(faq)}
+                          sx={{ 
+                            color: '#2563eb',
+                            '&:hover': { bgcolor: '#dbeafe' },
+                            mr: 1
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
                           onClick={() => handleDeleteSaved(faq.id)}
                           sx={{ 
                             color: '#dc2626',
@@ -249,7 +217,7 @@ export default function Faqs() {
           </Paper>
         )}
 
-        {savedFaqs.length === 0 && tempFaqs.length === 0 && (
+        {savedFaqs.length === 0 && (
           <Paper elevation={2} sx={{ p: 8, textAlign: 'center' }}>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#6b7280', mb: 1 }}>
               Aucune FAQ enregistrée

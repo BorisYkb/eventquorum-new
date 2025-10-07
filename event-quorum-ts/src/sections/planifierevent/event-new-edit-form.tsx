@@ -233,7 +233,7 @@ export function EventNewEditForm({ currentEvent }: Props) {
 
           <Field.Autocomplete
             name="client"
-            placeholder="Client"
+            placeholder="Sélectionnez le client"
             disableCloseOnSelect
             options={_tourGuides}
             // _tourGuides est le jeu de données fourni par le template

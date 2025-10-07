@@ -1,5 +1,14 @@
 'use client';
 
+import { Icon } from '@iconify/react';
+import { useRouter } from 'next/navigation';
+
+import {
+  Edit as EditIcon,
+  Visibility as ViewIcon,
+  Delete as DeleteIcon,
+  Circle as CircleIcon,
+} from '@mui/icons-material';
 import {
   TableRow,
   TableCell,
@@ -11,15 +20,8 @@ import {
   Tooltip,
   Box,
 } from '@mui/material';
-import {
-  Edit as EditIcon,
-  Visibility as ViewIcon,
-  Delete as DeleteIcon,
-  Circle as CircleIcon,
-} from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+
 import { paths } from 'src/routes/paths';
-import { Icon } from '@iconify/react';
 
 // Types
 type Participant = {
@@ -81,7 +83,7 @@ const ParticipantRow = ({
         }} 
       />
     </TableCell>
-    {/* <TableCell>
+    <TableCell>
       {participant.emargement ? (
         <Box 
           sx={{ 
@@ -111,7 +113,7 @@ const ParticipantRow = ({
           Non signé
         </Typography>
       )}
-    </TableCell> */}
+    </TableCell>
     <TableCell>
       <Stack direction="row" spacing={1}>
         <Tooltip title="Voir les détails" arrow>

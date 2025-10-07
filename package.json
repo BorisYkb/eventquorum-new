@@ -4,6 +4,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "aos": "^2.3.4",
     "lucide-react": "^0.511.0"
   }
 }

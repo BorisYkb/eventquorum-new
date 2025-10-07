@@ -1,7 +1,10 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/ParticipantsTable.tsx
+
 'use client';
 
 import { useState } from 'react';
+
+import { Search as SearchIcon } from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -20,14 +23,12 @@ import {
     Stack,
     Divider,
 } from '@mui/material';
-import { Search as SearchIcon } from '@mui/icons-material';
-
-// Import des composants
-import ParticipantRowSimple from './ParticipantRowSimple';
-import PaginationControls from './PaginationControls';
 
 // Import des types
 import { Participant } from './types';
+import PaginationControls from './PaginationControls';
+// Import des composants
+import ParticipantRowSimple from './ParticipantRowSimple';
 
 interface ParticipantsTableProps {
     participants: Participant[];

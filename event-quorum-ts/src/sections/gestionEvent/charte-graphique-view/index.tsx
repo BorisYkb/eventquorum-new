@@ -106,7 +106,7 @@ const CharteGraphiqueView = () => {
                 </div>
               </Box>
 
-              <div className="flex flex-col text-center pb-5 mb-5" style={{ borderBottom: 'dashed 1px #cccdcf' }}>
+              <div className="flex flex-col text-center pb-5 mb-5">
                 <h4>Modèle LandingPage</h4>
                 <Select
                     value={selectedTemplate}

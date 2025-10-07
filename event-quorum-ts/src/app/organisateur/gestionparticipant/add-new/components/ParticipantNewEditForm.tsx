@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import React, { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -21,13 +22,13 @@ import {
   InputLabel,
   MenuItem,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { Upload } from 'src/components/upload';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
-import { Upload } from 'src/components/upload';
 
 import { IParticipantItem } from './types';
 import { ACTIVITY_OPTIONS } from './constants';
@@ -216,7 +217,7 @@ export function ParticipantNewEditForm({ item }: Props) {
             <Field.Phone name="telephone" label="Numéro de téléphone" country="CI" />
             <Field.Text 
               name="adresse" 
-              label="Adresse" 
+              label="Lieu d'habitation" 
               sx={{ gridColumn: { xs: 'span 1', sm: 'span 2' } }}
             />
           </Box>
@@ -306,35 +307,40 @@ export function ParticipantNewEditForm({ item }: Props) {
           Choisir l'activité puis télécharger le fichier correspondant
         </Typography>
 
-        <FormControl sx={{ mb: 3, maxWidth: 300 }}>
-          <InputLabel>Choisir l'activité</InputLabel>
-          <Select
-            value={selectedActivity}
-            onChange={(e) => setSelectedActivity(e.target.value)}
-            label="Choisir l'activité"
-          >
-            <MenuItem value="">
-              <em>Sélectionner une activité</em>
-            </MenuItem>
-            {ACTIVITY_OPTIONS.map((activity) => (
-              <MenuItem key={activity.value} value={activity.value}>
-                {activity.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box sx={{mb: 3, display: 'flex', justifyContent: 'space-between'}}>
+          <FormControl >
+            <InputLabel>Choisir l'activité</InputLabel>
+            <Select
+              fullWidth
 
-        <FormControlLabel
-          label="Afficher les miniatures"
-          control={
-            <Switch
-              checked={showPreview2}
-              onChange={(e) => setShowPreview2(e.target.checked)}
-              inputProps={{ id: 'show-thumbnails-switch-2' }}
-            />
-          }
-          sx={{ mb: 3, width: 1, justifyContent: 'flex-end' }}
-        />
+              value={selectedActivity}
+              onChange={(e) => setSelectedActivity(e.target.value)}
+              label="Choisir l'activité"
+              
+            >
+              <MenuItem value="">
+                <em>Sélectionner une activité</em>
+              </MenuItem>
+              {ACTIVITY_OPTIONS.map((activity) => (
+                <MenuItem key={activity.value} value={activity.value}>
+                  {activity.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControlLabel
+            label="Afficher les miniatures"
+            control={
+              <Switch
+                checked={showPreview2}
+                onChange={(e) => setShowPreview2(e.target.checked)}
+                inputProps={{ id: 'show-thumbnails-switch-2' }}
+              />
+            }
+            sx={{ mb: 3, width: 1, justifyContent: 'flex-end' }}
+          />
+        </Box>
         
         <Upload
           multiple
@@ -364,7 +370,7 @@ export function ParticipantNewEditForm({ item }: Props) {
         </Stack>
       </Card>
 
-      {/* Bouton retour global */}
+      {/* Bouton retour global
       <Stack direction="row" justifyContent="center" sx={{ pt: 2 }}>
         <Button 
           variant="outlined" 
@@ -373,7 +379,7 @@ export function ParticipantNewEditForm({ item }: Props) {
         >
           Retour à la liste
         </Button>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 }
