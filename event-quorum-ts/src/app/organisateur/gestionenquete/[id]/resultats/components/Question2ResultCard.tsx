@@ -101,9 +101,9 @@ const Question2ResultCard: React.FC<Question2ResultCardProps> = ({
 
     return (
         <Card sx={{
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            border: '1px solid #f0f0f0',
+            // borderRadius: '8px',
+            // boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            // border: '1px solid #f0f0f0',
             mb: 3,
             ...sx
         }} {...other}>
@@ -126,7 +126,7 @@ const Question2ResultCard: React.FC<Question2ResultCardProps> = ({
                     </Typography>
 
                     {/* Bouton "Voir détail" à droite */}
-                    <Button
+                    {/* <Button
                         variant="outlined"
                         onClick={() => {
                             setModalOpen(true);
@@ -150,7 +150,7 @@ const Question2ResultCard: React.FC<Question2ResultCardProps> = ({
                         }}
                     >
                         Voir détail
-                    </Button>
+                    </Button> */}
 
                 </Box>
 

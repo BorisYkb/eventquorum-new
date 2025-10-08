@@ -159,14 +159,6 @@ const EnqueteDetailPage: React.FC = () => {
     router.push(`/organisateur/gestionenquete/${enqueteId}/modifier`);
   };
 
-  /**
-   * Redirection vers les résultats de l'enquête
-   */
-  const handleViewResults = () => {
-    console.log('Consultation des résultats pour l\'enquête:', enqueteId);
-    router.push(`/organisateur/gestionenquete/${enqueteId}/resultats`);
-  };
-
   // ===========================================
   // GESTIONNAIRES D'ÉVÉNEMENTS - ACTIONS ENQUÊTE
   // ===========================================
@@ -473,7 +465,6 @@ const EnqueteDetailPage: React.FC = () => {
           onStartSurvey={handleStartSurvey}
           onSuspendSurvey={handleSuspendSurvey}
           onEndSurvey={handleEndSurvey}
-          onViewResults={handleViewResults}
         />
 
         {/* ✅ Section Ajouter une question */}
@@ -488,7 +479,6 @@ const EnqueteDetailPage: React.FC = () => {
           onViewQuestion={handleViewQuestion}
           onEditQuestion={handleEditQuestion}
           onDeleteQuestion={handleDeleteQuestion}
-          onViewResults={handleViewResults}
         />
       </Card>
 

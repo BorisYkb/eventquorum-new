@@ -81,7 +81,7 @@ const QuestionChartResultCard: React.FC<QuestionChartResultCardProps> = ({
                         Question {questionNumber}
                     </Typography>
 
-                    <Button
+                    {/* <Button
                         variant="outlined"
                         onClick={onViewDetail}
                         startIcon={<Iconify icon="eva:eye-fill" width={16} />}
@@ -102,7 +102,7 @@ const QuestionChartResultCard: React.FC<QuestionChartResultCardProps> = ({
                         }}
                     >
                         Voir détail
-                    </Button>
+                    </Button> */}
                 </Box>
 
 

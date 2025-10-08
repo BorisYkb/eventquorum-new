@@ -129,9 +129,9 @@ const Question1ResultCard: React.FC<Question1ResultCardProps> = ({
 
   return (
     <Card sx={{
-      borderRadius: '8px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-      border: '1px solid #f0f0f0',
+      // borderRadius: '8px',
+      // boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+      // border: '1px solid #f0f0f0',
       mb: 3,
       ...sx
     }} {...other}>
@@ -152,7 +152,7 @@ const Question1ResultCard: React.FC<Question1ResultCardProps> = ({
             Question {data.questionNumber}
           </Typography>
           
-          <Button
+          {/* <Button
             variant="outlined"
             onClick={onViewDetail}
             startIcon={<Iconify icon="eva:eye-fill" width={16} />}
@@ -173,7 +173,7 @@ const Question1ResultCard: React.FC<Question1ResultCardProps> = ({
             }}
           >
             Voir détail
-          </Button>
+          </Button> */}
 
         </Box>
 

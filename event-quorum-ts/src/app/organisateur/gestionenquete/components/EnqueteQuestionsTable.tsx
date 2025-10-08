@@ -32,7 +32,6 @@ interface EnqueteQuestionsTableProps {
   onViewQuestion: (questionId: number) => void;
   onEditQuestion: (questionId: number) => void;
   onDeleteQuestion: (questionId: number) => void;
-  onViewResults: () => void;
 }
 
 /**
@@ -43,15 +42,14 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
   questions,
   onViewQuestion,
   onEditQuestion,
-  onDeleteQuestion,
-  onViewResults
+  onDeleteQuestion
 }) => {
   // États pour la gestion du tableau
   const [selected, setSelected] = useState<number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dense, setDense] = useState(false);
-  
+
   // États pour la modal de suppression
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
@@ -153,45 +151,20 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
   return (
     <Box>
       {/* En-tête de la section */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         mb: 3,
         flexWrap: 'wrap',
         gap: 2
       }}>
-        <Typography variant="h6" sx={{ 
-          fontWeight: 600, 
-          color: '#333' 
+        <Typography variant="h6" sx={{
+          fontWeight: 600,
+          color: '#333'
         }}>
           Liste des questions ({questions.length})
         </Typography>
-        
-        <Tooltip title="Consulter les résultats de l'enquête" placement="top" arrow>
-          <Button
-            variant="contained"
-            onClick={onViewResults}
-            startIcon={<Iconify icon="solar:chart-bold" />}
-            sx={{
-              backgroundColor: '#1976d2',
-              color: 'white',
-              px: 3,
-              py: 1,
-              borderRadius: '8px',
-              textTransform: 'none',
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: '#1565c0',
-                transform: 'translateY(-1px)',
-                boxShadow: '0 4px 12px rgba(25,118,210,0.3)'
-              },
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Consulter les résultats
-          </Button>
-        </Tooltip>
       </Box>
 
       {/* Tableau des questions */}
@@ -215,24 +188,24 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
-                <TableCell sx={{ 
-                  fontWeight: 600, 
-                  color: '#555', 
-                  width: '60px', 
-                  textAlign: 'center' 
+                <TableCell sx={{
+                  fontWeight: 600,
+                  color: '#555',
+                  width: '60px',
+                  textAlign: 'center'
                 }}>
                   N°
                 </TableCell>
-                <TableCell sx={{ 
-                  fontWeight: 600, 
-                  color: '#555' 
+                <TableCell sx={{
+                  fontWeight: 600,
+                  color: '#555'
                 }}>
                   Question
                 </TableCell>
-                <TableCell align="center" sx={{ 
-                  fontWeight: 600, 
-                  color: '#555', 
-                  width: '140px' 
+                <TableCell align="center" sx={{
+                  fontWeight: 600,
+                  color: '#555',
+                  width: '140px'
                 }}>
                   Actions
                 </TableCell>
@@ -255,7 +228,7 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                       role="checkbox"
                       aria-checked={isItemSelected}
                       selected={isItemSelected}
-                      sx={{ 
+                      sx={{
                         cursor: 'pointer',
                         '&:hover': {
                           backgroundColor: 'rgba(0, 0, 0, 0.04)'
@@ -272,9 +245,9 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
 
                       {/* Numéro de la question */}
                       <TableCell align="center">
-                        <Typography variant="body2" sx={{ 
-                          fontWeight: 600, 
-                          color: '#666' 
+                        <Typography variant="body2" sx={{
+                          fontWeight: 600,
+                          color: '#666'
                         }}>
                           {actualIndex + 1}
                         </Typography>
@@ -290,7 +263,7 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                         }}>
                           {question.question}
                         </Typography>
-                        <Typography variant="caption" sx={{ 
+                        <Typography variant="caption" sx={{
                           color: '#666',
                           fontSize: '0.75rem'
                         }}>
@@ -302,11 +275,11 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
 
                       {/* Boutons d'actions */}
                       <TableCell align="center">
-                        <Box sx={{ 
-                          display: 'flex', 
-                          gap: 0.5, 
-                          justifyContent: 'center', 
-                          alignItems: 'center' 
+                        <Box sx={{
+                          display: 'flex',
+                          gap: 0.5,
+                          justifyContent: 'center',
+                          alignItems: 'center'
                         }}>
                           {/* Bouton Voir détails */}
                           <Tooltip title="Voir détails" placement="top" arrow>
@@ -320,8 +293,8 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                               sx={{
                                 width: 32,
                                 height: 32,
-                                '&:hover': { 
-                                  bgcolor: 'rgba(33, 150, 243, 0.08)' 
+                                '&:hover': {
+                                  bgcolor: 'rgba(33, 150, 243, 0.08)'
                                 }
                               }}
                             >
@@ -341,8 +314,8 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                               sx={{
                                 width: 32,
                                 height: 32,
-                                '&:hover': { 
-                                  bgcolor: 'rgba(255, 152, 0, 0.08)' 
+                                '&:hover': {
+                                  bgcolor: 'rgba(255, 152, 0, 0.08)'
                                 }
                               }}
                             >
@@ -362,8 +335,8 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
                               sx={{
                                 width: 32,
                                 height: 32,
-                                '&:hover': { 
-                                  bgcolor: 'rgba(244, 67, 54, 0.08)' 
+                                '&:hover': {
+                                  bgcolor: 'rgba(244, 67, 54, 0.08)'
                                 }
                               }}
                             >
@@ -418,7 +391,7 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelRowsPerPage="Lignes par page:"
-            labelDisplayedRows={({ from, to, count }) => 
+            labelDisplayedRows={({ from, to, count }) =>
               `${from}-${to} sur ${count !== -1 ? count : `plus de ${to}`}`
             }
             sx={{
@@ -453,7 +426,7 @@ const EnqueteQuestionsTable: React.FC<EnqueteQuestionsTableProps> = ({
         title="Êtes-vous sûr de supprimer la question ?"
         message="Vous ne pourrez pas annuler cette action !"
       />
-      
+
     </Box>
   );
 };

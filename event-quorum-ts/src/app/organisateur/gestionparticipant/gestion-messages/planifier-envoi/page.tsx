@@ -259,7 +259,7 @@ const PlanifierEnvoiPage = () => {
                             {/* Type de message et Mode d'envoi */}
                             <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
                                 {/* Type de message */}
-                                <Box sx={{ flex: 1, minWidth: 250 }}>
+                                {/* <Box sx={{ flex: 1, minWidth: 250 }}>
                                     <FormControl component="fieldset">
                                         <FormLabel
                                             component="legend"
@@ -283,7 +283,7 @@ const PlanifierEnvoiPage = () => {
                                             />
                                         </RadioGroup>
                                     </FormControl>
-                                </Box>
+                                </Box> */}
 
                                 {/* Mode d'envoi */}
                                 <Box sx={{ flex: 1, minWidth: 250 }}>

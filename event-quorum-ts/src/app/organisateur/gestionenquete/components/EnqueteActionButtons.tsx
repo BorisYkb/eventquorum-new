@@ -8,7 +8,6 @@ interface EnqueteActionButtonsProps {
   onStartSurvey: () => void;
   onSuspendSurvey: () => void;
   onEndSurvey: () => void;
-  onViewResults: () => void;
 }
 
 /**
@@ -18,24 +17,23 @@ interface EnqueteActionButtonsProps {
 const EnqueteActionButtons: React.FC<EnqueteActionButtonsProps> = ({
   onStartSurvey,
   onSuspendSurvey,
-  onEndSurvey,
-  onViewResults
+  onEndSurvey
 }) => {
   return (
     <Box sx={{ mb: 4 }}>
       {/* Titre de la section */}
-      <Typography variant="h6" sx={{ 
-        fontWeight: 600, 
-        mb: 3, 
-        color: '#333' 
+      <Typography variant="h6" sx={{
+        fontWeight: 600,
+        mb: 3,
+        color: '#333'
       }}>
         Actions sur l'enquête
       </Typography>
 
       {/* Boutons d'action en ligne */}
-      <Stack 
-        direction={{ xs: 'column', sm: 'row' }} 
-        spacing={2} 
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
         justifyContent="center"
         sx={{
           '& .MuiButton-root': {

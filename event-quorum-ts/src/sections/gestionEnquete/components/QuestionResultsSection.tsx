@@ -114,7 +114,7 @@ const QuestionResultsSection: React.FC<QuestionResultsSectionProps> = ({
                 expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                 sx={{
                     bgcolor: '#fafafa',
-                    borderRadius: '12px',
+                    borderRadius: 1,
                     '&.Mui-expanded': {
                         borderBottomLeftRadius: 0,
                         borderBottomRightRadius: 0

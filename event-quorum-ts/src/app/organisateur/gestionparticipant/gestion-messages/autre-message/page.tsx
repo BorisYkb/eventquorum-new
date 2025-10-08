@@ -17,6 +17,11 @@ import {
     AccordionSummary,
     AccordionDetails,
     Paper,
+    FormControl,
+    FormLabel,
+    Radio,
+    FormControlLabel,
+    RadioGroup,
 } from '@mui/material';
 import {
     ArrowBack as ArrowBackIcon,
@@ -52,6 +57,7 @@ const AutreMessagePage = () => {
         message4: '',
         messageInscription: 'Inscrivez-vous dès maintenant pour accéder à votre espace',
     });
+    const [typeMessage, setTypeMessage] = useState('programmé');
 
     // Messages prédéfinis
     const messagesPredefinis: MessagePredefini[] = [
@@ -254,6 +260,31 @@ const AutreMessagePage = () => {
                                     <AccordionDetails sx={{ p: 3, backgroundColor: 'grey.50' }}>
                                         <Stack spacing={3}>
                                             {/* Description du message */}
+                                            <Box sx={{ flex: 1, minWidth: 250 }}>
+                                                <FormControl component="fieldset">
+                                                    <FormLabel
+                                                        component="legend"
+                                                        sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}
+                                                    >
+                                                        Type de message
+                                                    </FormLabel>
+                                                    <RadioGroup
+                                                        value={typeMessage}
+                                                        onChange={(e) => setTypeMessage(e.target.value)}
+                                                    >
+                                                        <FormControlLabel
+                                                            value="programmé"
+                                                            control={<Radio />}
+                                                            label="Rogrammé"
+                                                        />
+                                                        <FormControlLabel
+                                                            value="automatique"
+                                                            control={<Radio />}
+                                                            label="Automatique"
+                                                        />
+                                                    </RadioGroup>
+                                                </FormControl>
+                                            </Box>
                                             {message.description && (
                                                 <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
                                                     {message.description}

@@ -47,9 +47,9 @@ const QuestionListResultCard: React.FC<QuestionListResultCardProps> = ({
 
   return (
     <Card sx={{
-      borderRadius: '12px',
-      boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #f0f0f0',
+      // borderRadius: '12px',
+      // boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+      // border: '1px solid #f0f0f0',
       mb: 3,
       overflow: 'hidden',
       transition: 'all 0.3s ease',
@@ -75,7 +75,7 @@ const QuestionListResultCard: React.FC<QuestionListResultCardProps> = ({
             Question {questionNumber}
           </Typography>
 
-          <Button
+          {/* <Button
             variant="outlined"
             onClick={handleViewDetail}
             startIcon={<Iconify icon="eva:eye-fill" width={16} />}
@@ -96,7 +96,7 @@ const QuestionListResultCard: React.FC<QuestionListResultCardProps> = ({
             }}
           >
             Voir détail
-          </Button>
+          </Button> */}
         </Box>
 
 
