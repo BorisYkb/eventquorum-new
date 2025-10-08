@@ -290,7 +290,7 @@ const PlanifierEnvoiPage = () => {
                                     <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                                         Mode d'envoi
                                     </Typography>
-                                    <FormGroup>
+                                    <FormGroup row>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox

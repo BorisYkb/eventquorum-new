@@ -261,21 +261,28 @@ const AutreMessagePage = () => {
                                         <Stack spacing={3}>
                                             {/* Description du message */}
                                             <Box sx={{ flex: 1, minWidth: 250 }}>
-                                                <FormControl component="fieldset">
+                                                <FormControl component="fieldset" fullWidth>
                                                     <FormLabel
                                                         component="legend"
                                                         sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}
                                                     >
                                                         Type de message
                                                     </FormLabel>
+
                                                     <RadioGroup
+                                                        row // <== rend horizontal par défaut
                                                         value={typeMessage}
                                                         onChange={(e) => setTypeMessage(e.target.value)}
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: { xs: 'column', sm: 'row' }, // colonne sur mobile, ligne sur tablette+
+                                                            gap: 2, // espace entre les éléments
+                                                        }}
                                                     >
                                                         <FormControlLabel
                                                             value="programmé"
                                                             control={<Radio />}
-                                                            label="Rogrammé"
+                                                            label="Programmé"
                                                         />
                                                         <FormControlLabel
                                                             value="automatique"

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
   Button,
   Typography,
   TextField,
@@ -12,8 +11,12 @@ import {
   FormControl,
   FormControlLabel,
   Switch,
-  Grid
+  Grid,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { CurrentQuestion, Enquete, Question, QUESTION_TYPES } from '../types';
 
 // Import des composants pour chaque type de question
@@ -30,7 +33,7 @@ interface AddQuestionFormProps {
 
 /**
  * Composant pour ajouter des questions aux enquêtes
- * Partie 2 de la page de création
+ * Partie 2 de la page de création - Version Accordion
  */
 const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
   enquetes,
@@ -50,6 +53,9 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
     labelMin: '',
     labelMax: ''
   });
+
+  // État pour contrôler l'expansion de l'accordéon
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   /**
    * Gestionnaire de changement des propriétés de la question
@@ -197,191 +203,217 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
   };
 
   return (
-    <Card sx={{
-      p: 4,
-      mb: 4,
-      borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-      border: '1px solid #f0f0f0'
-    }}>
-      {/* Titre de la section */}
-      <Typography variant="h6" sx={{
+    <Accordion
+      expanded={expanded}
+      onChange={(e, isExpanded) => setExpanded(isExpanded)}
+      sx={{
         mb: 4,
-        fontWeight: 600,
-        color: '#333',
-        fontSize: '1.2rem'
-      }}>
-        Ajouter une question
-      </Typography>
+        borderRadius: '12px !important',
+        // boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        border: '2px solid #f0f0f0',
+        '&:before': {
+          display: 'none',
+        },
+        '&.Mui-expanded': {
+          margin: '0 0 32px 0',
+        }
+      }}
+    >
+      {/* En-tête de l'accordéon */}
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{
+          backgroundColor: '#fafafa',
+          borderRadius: '12px',
+          '&.Mui-expanded': {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+          '& .MuiAccordionSummary-content': {
+            margin: '16px 0',
+          }
+        }}
+      >
+        <Typography variant="h6" sx={{
+          fontWeight: 600,
+          color: '#333',
+          fontSize: '1.2rem'
+        }}>
+          Ajouter une question
+        </Typography>
+      </AccordionSummary>
 
-      <Grid container spacing={4}>
-        {/* Colonne gauche - Question et réponses */}
-        <Grid item xs={12} md={6}>
-          {/* Champ Question */}
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{
-              mb: 1.5,
-              fontWeight: 600,
-              color: '#555'
-            }}>
-              Question *
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              placeholder="Saisissez votre question..."
-              value={currentQuestion.question}
-              onChange={(e) => handleQuestionChange('question', e.target.value)}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  backgroundColor: '#fafafa'
-                }
-              }}
-            />
-          </Box>
-
-          {/* Composant dynamique selon le type de question */}
-          {renderQuestionTypeComponent()}
-        </Grid>
-
-        {/* Colonne droite - Paramètres */}
-        <Grid item xs={12} md={6}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Type de question */}
-            <Box>
+      {/* Contenu de l'accordéon */}
+      <AccordionDetails sx={{ p: 4 }}>
+        <Grid container spacing={4}>
+          {/* Colonne gauche - Question et réponses */}
+          <Grid item xs={12} md={6}>
+            {/* Champ Question */}
+            <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" sx={{
                 mb: 1.5,
                 fontWeight: 600,
                 color: '#555'
               }}>
-                Type de question *
+                Question *
               </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={currentQuestion.type}
-                  onChange={(e) => handleQuestionChange('type', e.target.value)}
-                  sx={{
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                placeholder="Saisissez votre question..."
+                value={currentQuestion.question}
+                onChange={(e) => handleQuestionChange('question', e.target.value)}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
                     borderRadius: '8px',
                     backgroundColor: '#fafafa'
-                  }}
-                >
-                  {QUESTION_TYPES.map((type) => (
-                    <MenuItem key={type.value} value={type.value}>
-                      {type.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  }
+                }}
+              />
             </Box>
 
-            {/* Sélection d'enquête */}
-            <Box>
-              <Typography variant="subtitle2" sx={{
-                mb: 1.5,
-                fontWeight: 600,
-                color: '#555'
-              }}>
-                Sélectionner l'enquête concernée *
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  value={currentQuestion.enqueteId}
-                  onChange={(e) => handleQuestionChange('enqueteId', e.target.value)}
-                  displayEmpty
-                  sx={{
-                    borderRadius: '8px',
-                    backgroundColor: '#fafafa'
-                  }}
-                >
-                  <MenuItem value={0}>
-                    <em>Sélectionner une enquête</em>
-                  </MenuItem>
-                  {enquetes.map((enquete) => (
-                    <MenuItem key={enquete.id} value={enquete.id}>
-                      {enquete.titre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+            {/* Composant dynamique selon le type de question */}
+            {renderQuestionTypeComponent()}
+          </Grid>
 
-            {/* Nombre de points - Masqué pour question libre et échelle linéaire */}
-            {!['question_libre', 'echelle_lineaire'].includes(currentQuestion.type) && (
+          {/* Colonne droite - Paramètres */}
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {/* Type de question */}
               <Box>
                 <Typography variant="subtitle2" sx={{
                   mb: 1.5,
                   fontWeight: 600,
                   color: '#555'
                 }}>
-                  Entrer le nombre de points
+                  Type de question *
                 </Typography>
-                <TextField
-                  fullWidth
-                  type="number"
-                  placeholder="0"
-                  value={currentQuestion.nombrePoints}
-                  onChange={(e) => handleQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
+                <FormControl fullWidth>
+                  <Select
+                    value={currentQuestion.type}
+                    onChange={(e) => handleQuestionChange('type', e.target.value)}
+                    sx={{
                       borderRadius: '8px',
                       backgroundColor: '#fafafa'
-                    }
-                  }}
-                />
+                    }}
+                  >
+                    {QUESTION_TYPES.map((type) => (
+                      <MenuItem key={type.value} value={type.value}>
+                        {type.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
-            )}
 
-            {/* Question obligatoire */}
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={currentQuestion.required}
-                  onChange={(e) => handleQuestionChange('required', e.target.checked)}
-                />
-              }
-              label="Question obligatoire"
-              sx={{
-                '& .MuiFormControlLabel-label': {
-                  fontWeight: 500,
+              {/* Sélection d'enquête */}
+              <Box>
+                <Typography variant="subtitle2" sx={{
+                  mb: 1.5,
+                  fontWeight: 600,
                   color: '#555'
-                }
-              }}
-            />
-          </Box>
-        </Grid>
-      </Grid>
+                }}>
+                  Sélectionner l'enquête concernée *
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    value={currentQuestion.enqueteId}
+                    onChange={(e) => handleQuestionChange('enqueteId', e.target.value)}
+                    displayEmpty
+                    sx={{
+                      borderRadius: '8px',
+                      backgroundColor: '#fafafa'
+                    }}
+                  >
+                    <MenuItem value={0}>
+                      <em>Sélectionner une enquête</em>
+                    </MenuItem>
+                    {enquetes.map((enquete) => (
+                      <MenuItem key={enquete.id} value={enquete.id}>
+                        {enquete.titre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
 
-      {/* Bouton d'ajout */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
-        <Button
-          variant="contained"
-          onClick={handleAddQuestion}
-          disabled={!currentQuestion.question.trim() || !currentQuestion.enqueteId}
-          sx={{
-            bgcolor: '#2e7d32',
-            px: 3,
-            py: 1,
-            borderRadius: '8px',
-            textTransform: 'none',
-            fontWeight: 600,
-            '&:hover': {
-              bgcolor: '#1b5e20',
-              transform: 'translateY(-1px)',
-              boxShadow: '0 4px 12px rgba(46,125,50,0.3)'
-            },
-            '&:disabled': {
-              bgcolor: '#ccc',
-              color: '#999'
-            },
-            transition: 'all 0.2s ease'
-          }}
-        >
-          Valider
-        </Button>
-      </Box>
-    </Card>
+              {/* Nombre de points - Masqué pour question libre et échelle linéaire */}
+              {!['question_libre', 'echelle_lineaire'].includes(currentQuestion.type) && (
+                <Box>
+                  <Typography variant="subtitle2" sx={{
+                    mb: 1.5,
+                    fontWeight: 600,
+                    color: '#555'
+                  }}>
+                    Entrer le nombre de points
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    placeholder="0"
+                    value={currentQuestion.nombrePoints}
+                    onChange={(e) => handleQuestionChange('nombrePoints', parseInt(e.target.value) || 0)}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '8px',
+                        backgroundColor: '#fafafa'
+                      }
+                    }}
+                  />
+                </Box>
+              )}
+
+              {/* Question obligatoire */}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={currentQuestion.required}
+                    onChange={(e) => handleQuestionChange('required', e.target.checked)}
+                  />
+                }
+                label="Question obligatoire"
+                sx={{
+                  '& .MuiFormControlLabel-label': {
+                    fontWeight: 500,
+                    color: '#555'
+                  }
+                }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* Bouton d'ajout */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+          <Button
+            variant="contained"
+            onClick={handleAddQuestion}
+            disabled={!currentQuestion.question.trim() || !currentQuestion.enqueteId}
+            sx={{
+              bgcolor: '#2e7d32',
+              px: 3,
+              py: 1,
+              borderRadius: '8px',
+              textTransform: 'none',
+              fontWeight: 600,
+              '&:hover': {
+                bgcolor: '#1b5e20',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(46,125,50,0.3)'
+              },
+              '&:disabled': {
+                bgcolor: '#ccc',
+                color: '#999'
+              },
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Valider
+          </Button>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
