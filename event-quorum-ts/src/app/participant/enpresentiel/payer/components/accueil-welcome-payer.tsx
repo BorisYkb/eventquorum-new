@@ -1,4 +1,5 @@
 // src/app/participant/enpresentiel/payer/components/accueil-welcome-payer.tsx
+
 'use client';
 
 import Grid from '@mui/material/Grid2';
@@ -17,7 +18,7 @@ export function AccueilWelcomePayer() {
   return (
     <Grid size={12}>
       <AppWelcome
-        title="Bonjour(e) cher(e) participant(e) Kouakou Evarist"
+        title="Bonjour cher(e) participant(e) Kouakou Evarist"
         description="Vous êtes connecté en tant que participant au SARA 2023. Sur ce espace, vous avez accès à vos activités payées et à vos interactions."
         img={<SeoIllustration hideBackground />}
       />

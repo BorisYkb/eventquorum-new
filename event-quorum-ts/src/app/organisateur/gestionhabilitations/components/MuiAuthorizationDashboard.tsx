@@ -1,37 +1,39 @@
 // src/app/organisateur/gestionhabilitations/components/MuiAuthorizationDashboard.tsx
 'use client'
-import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import Snackbar from '@mui/material/Snackbar';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import { useTheme } from '@mui/material/styles';
+import FormControl from '@mui/material/FormControl';
+import TableContainer from '@mui/material/TableContainer';
+import InputAdornment from '@mui/material/InputAdornment';
+import TablePagination from '@mui/material/TablePagination';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { Iconify } from 'src/components/iconify';
-import { Label } from 'src/components/label';
 import DeleteConfirmationModal from 'src/app/organisateur/gestionenquete/components/DeleteConfirmationModal';
-import { Icon } from '@iconify/react/dist/iconify.js';
+
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 
 interface Authorization {
   id: number;
@@ -463,45 +465,51 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({
                                 <Iconify icon="solar:eye-bold" width={17} height={17} />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Modifier" placement="top" arrow>
-                              <IconButton
-                                color="warning"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleEditAuthorization(auth.id);
-                                }}
-                                size="small"
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  color: '#00B8D9',
-                                  '&:hover': { 
-                                    bgcolor: 'rgba(0, 184, 217, 0.08)' 
-                                  }
-                                }}
-                              >
-                                <Icon icon="solar:pen-new-square-linear" width={15} height={15} />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Supprimer" placement="top" arrow>
-                              <IconButton
-                                color="error"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteClick(auth);
-                                }}
-                                size="small"
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  '&:hover': { 
-                                    bgcolor: 'rgba(244, 67, 54, 0.08)' 
-                                  }
-                                }}
-                              >
-                                <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-                              </IconButton>
-                            </Tooltip>
+                              
+                            {/* Afficher Modifier et Supprimer uniquement si le rôle n'est pas "Organisateur" */}
+                            {auth.role !== 'Organisateur' && (
+                              <>
+                                <Tooltip title="Modifier" placement="top" arrow>
+                                  <IconButton
+                                    color="warning"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleEditAuthorization(auth.id);
+                                    }}
+                                    size="small"
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      color: '#00B8D9',
+                                      '&:hover': { 
+                                        bgcolor: 'rgba(0, 184, 217, 0.08)' 
+                                      }
+                                    }}
+                                  >
+                                    <Icon icon="solar:pen-new-square-linear" width={15} height={15} />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Supprimer" placement="top" arrow>
+                                  <IconButton
+                                    color="error"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteClick(auth);
+                                    }}
+                                    size="small"
+                                    sx={{
+                                      width: 32,
+                                      height: 32,
+                                      '&:hover': { 
+                                        bgcolor: 'rgba(244, 67, 54, 0.08)' 
+                                      }
+                                    }}
+                                  >
+                                    <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                                  </IconButton>
+                                </Tooltip>
+                              </>
+                            )}
                           </Box>
                         </TableCell>
                       </TableRow>

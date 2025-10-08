@@ -115,7 +115,7 @@ const CreateAccessPage: React.FC = () => {
             </IconButton>
             <Box>
               <Typography variant="h5" sx={{ fontWeight: 600, color: '#333' }}>
-                Créer un Nouvel Accès
+                Créer un Nouvel Accès utilisateur
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Configurez les informations pour le nouvel utilisateur
@@ -224,6 +224,18 @@ const CreateAccessPage: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Mot de passe"
+                        type="password"
+                        value={formData.mdp}
+                        onChange={handleInputChange('mdp')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
                       <FormControl fullWidth size="small" required>
                         <InputLabel>Rôle</InputLabel>
                         <Select
@@ -240,17 +252,7 @@ const CreateAccessPage: React.FC = () => {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Mot de passe"
-                        type="password"
-                        value={formData.mdp}
-                        onChange={handleInputChange('mdp')}
-                        required
-                        size="small"
-                      />
-                    </Grid>
+                    
                   </Grid>
                 </form>
               </Box>
@@ -298,7 +300,7 @@ const CreateAccessPage: React.FC = () => {
             onClick={handleSubmit}
             sx={{ px: 4 }}
           >
-            Enregistrer l&apos;Accès
+            Enregistrer l&apos;utilisateur
           </Button>
         </Box>
       </Box>

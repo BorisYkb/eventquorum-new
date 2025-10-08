@@ -183,7 +183,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                 }} />
                 Information supplémentaire de l'intervenant
             </Typography>
-            
+
             <FormControl fullWidth size="small" sx={{ mb: 2 }}>
                 <InputLabel>Sélectionner une ou plusieurs activités</InputLabel>
                 <Select
@@ -199,7 +199,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                     ))}
                 </Select>
             </FormControl>
-                
+
             <Stack>
                 {/* Formulaire d'ajout/édition d'intervenant */}
                 <Card variant="outlined" sx={{ p: 3, mb: 3, backgroundColor: '#f9f9f9' }}>
@@ -238,7 +238,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                 }
                             />
                         </Box>
-                            
+
                         {/* Description et réseaux sociaux à droite */}
                         <Box sx={{ flex: 1 }}>
                             <Editor
@@ -253,7 +253,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                 placeholder="Décrivez l'intervenant (nom, fonction, biographie...)"
                                 sx={{ maxHeight: 300, mb: 2 }}
                             />
-    
+
                             {/* Section réseaux sociaux */}
                             <Box sx={{ mb: 2 }}>
                                 <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -283,7 +283,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                         Ajouter
                                     </Button>
                                 </Box>
-                            
+
                                 {/* Liste des réseaux sociaux ajoutés */}
                                 {currentIntervenant.reseauxSociaux.length > 0 && (
                                     <Stack spacing={1}>
@@ -337,13 +337,13 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                     onClick={handleAddIntervenant}
                                     disabled={!currentIntervenant.image || !currentIntervenant.description}
                                 >
-                                    {currentIntervenant.index !== null ? 'Mettre à jour' : 'Ajouter'}
+                                    {currentIntervenant.index !== null ? 'Mettre à jour' : 'Enregistrer'}
                                 </Button>
                             </Box>
                         </Box>
                     </Box>
                 </Card>
-                                
+
                 {/* Liste des intervenants ajoutés */}
                 {intervenants.length > 0 && (
                     <Box sx={{ mt: 2 }}>

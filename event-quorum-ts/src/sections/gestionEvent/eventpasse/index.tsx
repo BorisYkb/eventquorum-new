@@ -262,7 +262,7 @@ export default function EventPasse() {
               type="submit"
               variant="contained"
             >
-              {editingIndex !== null ? 'Mettre à jour' : 'Enregistrer'}
+              {editingIndex !== null ? 'Mettre à jour' : 'Ajouter'}
             </Button>
           </Box>
 

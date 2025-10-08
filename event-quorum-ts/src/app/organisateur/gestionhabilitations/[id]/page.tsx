@@ -145,7 +145,7 @@ const DetailAccessPage: React.FC = () => {
             </IconButton>
             <Box>
               <Typography variant="h5" sx={{ fontWeight: 600, color: '#333' }}>
-                Détail de l'Accès
+                Détail de l'Accès utisalisateur
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Informations de l'utilisateur
@@ -295,7 +295,7 @@ const DetailAccessPage: React.FC = () => {
           </Grid>
 
           {/* Informations supplémentaires Intervenant - Conditionnel */}
-          {userData.role === 'Intervenant' && (
+          {/* {userData.role === 'Intervenant' && (
             <Grid item xs={12}>
               <Card>
                 <Box sx={{
@@ -308,14 +308,12 @@ const DetailAccessPage: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>
-                  <IntervenantPermissionsDisplay
-                    consulterTelEmail={true}
-                    repondreQuestions={true}
+                  <IntervenantPermissionsDisplay consulterTelEmail={false} repondreQuestions={false}                    
                   />
                 </Box>
               </Card>
             </Grid>
-          )}
+          )} */}
         </Grid>
       </Box>
     </Box>

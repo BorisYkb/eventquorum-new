@@ -208,7 +208,7 @@ const ParticipantDetailPage = () => {
                   <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>
-                        Nom
+                        Nom :
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 500 }}>
                         {participant.nom}
@@ -220,7 +220,7 @@ const ParticipantDetailPage = () => {
                   <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>
-                        Prénom
+                        Prénom :
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 500 }}>
                         {participant.prenom}
@@ -229,11 +229,11 @@ const ParticipantDetailPage = () => {
                   </Grid>
 
                   {/* Email */}
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <EmailIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
                       <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>
-                        Email
+                        Email :
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 500, color: 'primary.main' }}>
                         {participant.email}
@@ -242,11 +242,11 @@ const ParticipantDetailPage = () => {
                   </Grid>
 
                   {/* Téléphone */}
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={6}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <PhoneIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
                       <Typography variant="body2" color="text.secondary" sx={{ minWidth: 80 }}>
-                        Téléphone
+                        Téléphone :
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 500 }}>
                         {participant.telephone}
