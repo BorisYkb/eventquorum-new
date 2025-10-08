@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { RouterLink } from 'src/routes/components';
 
 import { CONFIG } from 'src/global-config';
+import { CarouselSection } from './CarouselSection';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ export function AuthSplitSection({
 }: AuthSplitSectionProps) {
 
 
-  
+
   return (
     <Box
       sx={[
@@ -83,12 +84,8 @@ export function AuthSplitSection({
         )}
       </div>
 
-      <Box
-        component="img"
-        alt="Dashboard illustration"
-        src={imgUrl}
-        sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover' }}
-      />
+      {/* Composant Carrousel */}
+      <CarouselSection />
 
       {/* {!!methods?.length && method && (
         <Box component="ul" sx={{ gap: 2, display: 'flex' }}>
