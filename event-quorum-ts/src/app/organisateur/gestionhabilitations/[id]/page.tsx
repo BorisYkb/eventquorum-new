@@ -1,7 +1,15 @@
-// File: src/app/organisateur/gestionhabilitations/[id]/page.tsx
+// File 2: src/app/organisateur/gestionhabilitations/[id]/page.tsx
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
 'use client'
+
 import React, { useState, useEffect } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter, useParams } from 'next/navigation';
+
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import { ArrowBack } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -11,20 +19,12 @@ import {
   Stack,
   Chip,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { ArrowBack, Edit } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import { Label } from 'src/components/label';
+
 import Loading from 'src/app/loading';
 
-// Import des composants de permissions en lecture seule
-import BasePermissionsDisplay from './components/BasePermissionsDisplay';
-import SupervisorPermissionsDisplay from './components/SupervisorPermissionsDisplay';
-import OperatorPermissionsDisplay from './components/OperatorPermissionsDisplay';
+import { Label } from 'src/components/label';
+
 import IntervenantPermissionsDisplay from './components/IntervenantPermissionsDisplay';
-import GuichetierPermissionsDisplay from './components/GuichetierPermissionsDisplay';
-import { Iconify } from 'src/components/iconify';
-import { Icon } from '@iconify/react/dist/iconify.js';
 
 interface UserAccess {
   id: number;
@@ -35,27 +35,6 @@ interface UserAccess {
   role: string;
   createdAt: string;
   status: string;
-  permissions: {
-    // Permissions de base pour tous les rôles
-    lecture: boolean;
-    ecriture: boolean;
-    modification: boolean;
-    
-    // Permissions spécifiques Superviseur
-    autoriserExport: boolean;
-    
-    // Permissions spécifiques Opérateur de saisie
-    preciserEnregistrements: boolean;
-    typeEntree: string;
-    admissionActivite: string;
-    
-    // Permissions spécifiques Intervenant
-    consulterTelEmail: boolean;
-    repondreQuestions: boolean;
-    
-    // Permissions spécifiques Guichetier
-    ajouterParticipants: boolean;
-  };
 }
 
 const DetailAccessPage: React.FC = () => {
@@ -67,66 +46,23 @@ const DetailAccessPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<UserAccess | null>(null);
 
-  // Simulation des données - à remplacer par un appel API
   const mockUserData: UserAccess = {
     id: 1,
     nom: 'Dupont',
     prenom: 'Jean',
     email: 'jean.dupont@example.com',
     telephone: '0123456789',
-    role: 'Superviseur',
+    role: 'Intervenant',
     createdAt: '2024-01-15',
     status: 'Actif',
-    permissions: {
-      lecture: true,
-      ecriture: true,
-      modification: false,
-      autoriserExport: true,
-      preciserEnregistrements: false,
-      typeEntree: '',
-      admissionActivite: '',
-      consulterTelEmail: false,
-      repondreQuestions: false,
-      ajouterParticipants: false,
-    }
-
-    // id: 1,
-    // nom: 'Dupont',
-    // prenom: 'Jean',
-    // email: 'jean.dupont@example.com',
-    // telephone: '0123456789',
-    // role: 'Opérateur de saisie',
-    // createdAt: '2024-01-15',
-    // status: 'Actif',
-    // permissions: {
-    //   lecture: true,
-    //   ecriture: true,
-    //   modification: true,
-    //   autoriserExport: false,
-    //   preciserEnregistrements: true,
-    //   typeEntree: 'Admission à une activité',
-    //   admissionActivite: 'Activité A',
-    //   consulterTelEmail: false,
-    //   repondreQuestions: false,
-    //   ajouterParticipants: false,
-    // }
   };
 
-  // Chargement des données
   useEffect(() => {
     const loadUserData = async () => {
       try {
         setLoading(true);
-        
-        // TODO: Remplacer par l'appel API réel
-        // const response = await fetch(`/api/authorizations/${authId}`);
-        // const data = await response.json();
-        
-        // Simulation d'un délai de chargement
         await new Promise(resolve => setTimeout(resolve, 800));
-        
         setUserData(mockUserData);
-        
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       } finally {
@@ -153,10 +89,8 @@ const DetailAccessPage: React.FC = () => {
         return 'primary';
       case 'Intervenant':
         return 'info';
-      case 'Operateur de saisie':
+      case "Agent d'admission":
         return 'secondary';
-      case 'Organisateur':
-        return 'success';
       case 'Guichetier':
         return 'warning';
       default:
@@ -177,63 +111,16 @@ const DetailAccessPage: React.FC = () => {
     }
   };
 
-  // Fonction pour rendre les permissions spécifiques selon le rôle
-  const renderRoleSpecificPermissions = () => {
-    if (!userData) return null;
-
-    switch (userData.role) {
-      case 'Superviseur':
-        return (
-          <SupervisorPermissionsDisplay
-            autoriserExport={userData.permissions.autoriserExport}
-          />
-        );
-      
-      case 'Operateur de saisie':
-        return (
-          <OperatorPermissionsDisplay
-            preciserEnregistrements={userData.permissions.preciserEnregistrements}
-            typeEntree={userData.permissions.typeEntree}
-            admissionActivite={userData.permissions.admissionActivite}
-          />
-        );
-        
-      case 'Intervenant':
-        return (
-          <IntervenantPermissionsDisplay
-            consulterTelEmail={userData.permissions.consulterTelEmail}
-            repondreQuestions={userData.permissions.repondreQuestions}
-          />
-        );
-        
-      case 'Guichetier':
-        return (
-          <GuichetierPermissionsDisplay
-            ajouterParticipants={userData.permissions.ajouterParticipants}
-          />
-        );
-        
-      case 'Organisateur':
-      default:
-        return null;
-    }
-  };
-
-  // Affichage du loader pendant le chargement
   if (loading) {
     return <Loading />;
   }
 
-  // Gestion du cas où les données ne sont pas trouvées
   if (!userData) {
     return (
       <Box sx={{ p: 3, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
         <Card sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="h6" color="error">
             Utilisateur introuvable
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            L'accès demandé n'existe pas ou a été supprimé.
           </Typography>
         </Card>
       </Box>
@@ -261,7 +148,7 @@ const DetailAccessPage: React.FC = () => {
                 Détail de l'Accès
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Informations et permissions de l'utilisateur
+                Informations de l'utilisateur
               </Typography>
             </Box>
           </Box>
@@ -293,9 +180,9 @@ const DetailAccessPage: React.FC = () => {
       {/* Contenu principal */}
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={3}>
-          {/* Informations utilisateur */}
-          <Grid item xs={12} md={5}>
-            <Card sx={{ height: 'fit-content' }}>
+          {/* Informations utilisateur - Full Width */}
+          <Grid item xs={12}>
+            <Card>
               <Box sx={{
                 p: 2,
                 backgroundColor: '#fafafa',
@@ -306,7 +193,6 @@ const DetailAccessPage: React.FC = () => {
                 </Typography>
               </Box>
               <Box sx={{ p: 3 }}>
-                {/* Avatar et informations principales */}
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                   <Box sx={{
                     width: 60,
@@ -333,100 +219,103 @@ const DetailAccessPage: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Champs en lecture seule */}
-                <Stack spacing={3}>
-                  <TextField
-                    fullWidth
-                    label="Nom de famille"
-                    value={userData.nom}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Nom de famille"
+                      value={userData.nom}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Prénom"
-                    value={userData.prenom}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Prénom"
+                      value={userData.prenom}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    value={userData.email}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      value={userData.email}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Téléphone"
-                    value={userData.telephone}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Téléphone"
+                      value={userData.telephone}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Rôle"
-                    value={userData.role}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Rôle"
+                      value={userData.role}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Date de création"
-                    value={new Date(userData.createdAt).toLocaleDateString('fr-FR')}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Date de création"
+                      value={new Date(userData.createdAt).toLocaleDateString('fr-FR')}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
 
-                  <TextField
-                    fullWidth
-                    label="Statut"
-                    value={userData.status}
-                    size="small"
-                    InputProps={{ readOnly: true }}
-                    variant="outlined"
-                  />
-                </Stack>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Statut"
+                      value={userData.status}
+                      size="small"
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
             </Card>
           </Grid>
 
-          {/* Permissions en lecture seule */}
-          <Grid item xs={12} md={7}>
-            <Card>
-              <Box sx={{
-                p: 2,
-                backgroundColor: '#fafafa',
-                borderBottom: '1px solid #e0e0e0'
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Permissions et Accès
-                </Typography>
-              </Box>
-              <Box sx={{ p: 3 }}>
-                {/* Permissions de base (pour tous les rôles) */}
-                <BasePermissionsDisplay
-                  lecture={userData.permissions.lecture}
-                  ecriture={userData.permissions.ecriture}
-                  modification={userData.permissions.modification}
-                />
-
-                {/* Permissions spécifiques selon le rôle */}
-                {renderRoleSpecificPermissions()}
-              </Box>
-            </Card>
-          </Grid>
+          {/* Informations supplémentaires Intervenant - Conditionnel */}
+          {userData.role === 'Intervenant' && (
+            <Grid item xs={12}>
+              <Card>
+                <Box sx={{
+                  p: 2,
+                  backgroundColor: '#fafafa',
+                  borderBottom: '1px solid #e0e0e0'
+                }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Informations Supplémentaires - Intervenant
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 3 }}>
+                  <IntervenantPermissionsDisplay
+                    consulterTelEmail={true}
+                    repondreQuestions={true}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Box>
@@ -434,59 +323,3 @@ const DetailAccessPage: React.FC = () => {
 };
 
 export default DetailAccessPage;
-
-
-//'use client'
-// import { useState, useEffect } from 'react';
-// import { useRouter, useParams } from 'next/navigation';
-// import Loading from 'src/app/loading';
-
-// export default function DetailAccessPage() {
-//   const router = useRouter();
-//   const params = useParams();
-//   const authId = params.id as string;
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const loadUserAndRedirect = async () => {
-//       try {
-//         // TODO: Appel API pour récupérer le rôle
-//         // const response = await fetch(`/api/authorizations/${authId}`);
-//         // const userData = await response.json();
-        
-//         // Simulation
-//         await new Promise(resolve => setTimeout(resolve, 500));
-//         const mockRole = 'Operateur de saisie'; // Remplacer par userData.role
-        
-//         // Redirection selon le rôle
-//         switch(mockRole) {
-//           case 'Superviseur':
-//             router.replace(`/organisateur/gestionhabilitations/${authId}/superviseur`);
-//             break;
-//           case 'Operateur de saisie':
-//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/operateur`);
-//             break;
-//           case 'Intervenant':
-//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/intervenant`);
-//             break;
-//           case 'Organisateur':
-//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/organisateur`);
-//             break;
-//           case 'Guichetier':
-//             router.replace(`/organisateur/gestionhabilitations/${authId}/detail/guichetier`);
-//             break;
-//           default:
-//             router.push('/organisateur/gestionhabilitations');
-//         }
-//       } catch (error) {
-//         router.push('/organisateur/gestionhabilitations');
-//       }
-//     };
-
-//     if (authId) {
-//       loadUserAndRedirect();
-//     }
-//   }, [authId, router]);
-
-//   return <Loading />;
-// }

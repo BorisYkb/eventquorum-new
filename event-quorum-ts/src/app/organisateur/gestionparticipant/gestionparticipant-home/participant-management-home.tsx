@@ -2,39 +2,28 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTabs } from 'minimal-shared/hooks';
 
 import {
   Box,
-  Card,
   Container,
   Stack,
   Typography,
-  Tab,
   Snackbar,
   Alert,
 } from '@mui/material';
 
-import { CustomTabs } from 'src/components/custom-tabs';
-
 // Import des types
 import { Participant } from './components/types';
 import InvitesTable from './components/InvitesTable';
-// Import des composants
 import ExportButtons from './components/ExportButtons';
-import ParticipantsTable from './components/ParticipantsTable';
 // Import du modal de suppression uniquement
 import ParticipantDeleteModal from '../components/ParticipantDeleteModal';
 
 /**
- * Composant principal de gestion des participants
- * Intègre la navigation par onglets entre Invités et Participants
+ * Composant principal de gestion des invités
  */
 const ParticipantManagementPage = () => {
   const router = useRouter();
-  
-  // Gestion des onglets
-  const tabs = useTabs('invites');
 
   // États pour les modals
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -191,12 +180,6 @@ const ParticipantManagementPage = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
-  // Configuration des onglets
-  const TABS = [
-    { value: 'invites', label: 'Liste des invités' },
-    // { value: 'participants', label: 'Liste des participants' }
-  ];
-
   return (
     <Container maxWidth="xl" sx={{ py: 2 }}>
       <Stack spacing={4}>
@@ -207,86 +190,20 @@ const ParticipantManagementPage = () => {
           </Typography>
         </Box>
 
-        {/* Navigation par onglets */}
-        <Box sx={{ mb: 2, width: 350 }}>
-          <CustomTabs
-            value={tabs.value}
-            onChange={tabs.onChange}
-            sx={{ 
-              borderRadius: 1,
-              backgroundColor: "white",
-              boxShadow: 'none'
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab 
-                key={tab.value} 
-                value={tab.value} 
-                label={tab.label}
-                sx={{
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  fontSize: '1.5rem',
-                  boxShadow : 'none'
-                }}
-              />
-            ))}
-          </CustomTabs>
-        </Box>
+        {/* Boutons d'exportation et consultation */}
+        <ExportButtons currentTab="invites" />
 
-        {/* Boutons d'exportation - Adaptatifs selon l'onglet */}
-        <ExportButtons currentTab={tabs.value} />
-
-        {/* Contenu des onglets */}
-        {tabs.value === 'invites' && (
-          <InvitesTable
-            participants={participants}
-            onAdd={handleAdd}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDeleteSingle}
-            isDeleting={isDeleting}
-            setParticipants={setParticipants}
-            setSnackbar={setSnackbar}
-          />
-        )}
-
-        {/* Footer de la page */}
-        <Box sx={{
-          mt: 4,
-          py: 3,
-          borderTop: 1,
-          borderColor: 'divider',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 2,
-        }}>
-          <Typography variant="body2" color="text.secondary">
-            © 2024 EVENTQUORUM EVENTS. Powered by FX_LABS SARL.
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="body2" color="text.secondary" component="button" sx={{ 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              '&:hover': { color: 'primary.main' }
-            }}>
-              Confidentialité
-            </Typography>
-            <Typography variant="body2" color="text.secondary" component="button" sx={{ 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              '&:hover': { color: 'primary.main' }
-            }}>
-              Aide
-            </Typography>
-          </Stack>
-        </Box>
+        {/* Tableau des invités */}
+        <InvitesTable
+          participants={participants}
+          onAdd={handleAdd}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDeleteSingle}
+          isDeleting={isDeleting}
+          setParticipants={setParticipants}
+          setSnackbar={setSnackbar}
+        />
       </Stack>
 
       {/* Modal de confirmation de suppression */}

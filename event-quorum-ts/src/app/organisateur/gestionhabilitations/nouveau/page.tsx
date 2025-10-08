@@ -1,4 +1,4 @@
-// File: src/app/organisateur/gestionhabilitations/nouveau/page.tsx
+// File 1: src/app/organisateur/gestionhabilitations/nouveau/page.tsx
 
 'use client'
 
@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Grid from '@mui/material/Grid';
-import Switch from '@mui/material/Switch';
 import { ArrowBack } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -27,11 +26,6 @@ import {
 
 import { Label } from 'src/components/label';
 
-// Import des composants de permissions
-// import BasePermissionsBlock from './components/BasePermissionsBlock';
-// import OperatorPermissionsBlock from './components/OperatorPermissionsBlock';
-// import SupervisorPermissionsBlock from './components/SupervisorPermissionsBlock';
-// import GuichetierPermissionsBlock from './components/GuichetierPermissionsBlock';
 import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
 
 interface CreateAccessForm {
@@ -41,27 +35,6 @@ interface CreateAccessForm {
   telephone: string;
   role: string;
   mdp: string;
-  permissions: {
-    // Permissions de base pour tous les rôles
-    lecture: boolean;
-    ecriture: boolean;
-    modification: boolean;
-    
-    // Permissions spécifiques Superviseur
-    autoriserExport: boolean;
-    
-    // Permissions spécifiques Agent d'admission
-    preciserEnregistrements: boolean;
-    typeEntree: string;
-    admissionActivite: string;
-    
-    // Permissions spécifiques Intervenant
-    consulterTelEmail: boolean;
-    repondreQuestions: boolean;
-    
-    // Permissions spécifiques Guichetier
-    ajouterParticipants: boolean;
-  };
 }
 
 const CreateAccessPage: React.FC = () => {
@@ -74,24 +47,9 @@ const CreateAccessPage: React.FC = () => {
     telephone: '',
     role: "Agent d'admission",
     mdp: '',
-    permissions: {
-      // Permissions de base
-      lecture: false,
-      ecriture: false,
-      modification: false,
-      
-      // Permissions spécifiques
-      autoriserExport: false,
-      preciserEnregistrements: false,
-      typeEntree: '',
-      admissionActivite: '',
-      consulterTelEmail: false,
-      repondreQuestions: false,
-      ajouterParticipants: false,
-    }
   });
 
-  const handleInputChange = (field: keyof Omit<CreateAccessForm, 'permissions'>) => (
+  const handleInputChange = (field: keyof CreateAccessForm) => (
     event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
   ) => {
     setFormData(prev => ({
@@ -101,36 +59,11 @@ const CreateAccessPage: React.FC = () => {
   };
 
   const handleRoleChange = (event: SelectChangeEvent<string>) => {
-    const newRole = event.target.value;
     setFormData(prev => ({
       ...prev,
       role: event.target.value,
-      // Réinitialiser les permissions lors du changement de rôle
-      permissions: {
-        lecture: false,
-        ecriture: false,
-        modification: false,
-        autoriserExport: false,
-        preciserEnregistrements: false,
-        typeEntree: '',
-        admissionActivite: '',
-        consulterTelEmail: false,
-        repondreQuestions: false,
-        ajouterParticipants: false,
-      }
     }));
   };
-
-  const handlePermissionChange = (permission: string) =>
-    (value: boolean | string) => {
-      setFormData(prev => ({
-        ...prev,
-        permissions: {
-          ...prev.permissions,
-          [permission]: value
-        }
-      }));
-    };
 
   const handleCancel = () => {
     router.push('/organisateur/gestionhabilitations');
@@ -146,8 +79,7 @@ const CreateAccessPage: React.FC = () => {
     "Agent d'admission",
     'Intervenant',
     'Superviseur',
-    
-    'Guichetier' // Changé de "Tous accès" à "Guichetier"
+    'Guichetier'
   ];
 
   const getRoleColor = (role: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
@@ -162,53 +94,6 @@ const CreateAccessPage: React.FC = () => {
         return 'warning';
       default:
         return 'default';
-    }
-  };
-
-  // Fonction pour rendre les permissions spécifiques selon le rôle
-  const renderRoleSpecificPermissions = () => {
-    switch (formData.role) {
-      case 'Superviseur':
-        // return (
-        //   <SupervisorPermissionsBlock
-        //     autoriserExport={formData.permissions.autoriserExport}
-        //     onPermissionChange={handlePermissionChange}
-        //   />
-        // );
-        return null;
-      
-      case 'Operateur de saisie':
-        // return (
-        //   <OperatorPermissionsBlock
-        //     preciserEnregistrements={formData.permissions.preciserEnregistrements}
-        //     typeEntree={formData.permissions.typeEntree}
-        //     admissionActivite={formData.permissions.admissionActivite}
-        //     onPermissionChange={handlePermissionChange}
-        //   />
-        // );
-        return null;
-        
-      case 'Intervenant':
-        return (
-          <IntervenantPermissionsBlock
-            consulterTelEmail={formData.permissions.consulterTelEmail}
-            repondreQuestions={formData.permissions.repondreQuestions}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
-        
-      case 'Guichetier':
-        // return (
-        //   <GuichetierPermissionsBlock
-        //     ajouterParticipants={formData.permissions.ajouterParticipants}
-        //     onPermissionChange={handlePermissionChange}
-        //   />
-        // );
-        return null;
-        
-      case 'Organisateur':
-      default:
-        return null; // Pas de permissions spécifiques
     }
   };
 
@@ -233,7 +118,7 @@ const CreateAccessPage: React.FC = () => {
                 Créer un Nouvel Accès
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Configurez les informations et permissions pour le nouvel utilisateur
+                Configurez les informations pour le nouvel utilisateur
               </Typography>
             </Box>
           </Box>
@@ -251,9 +136,9 @@ const CreateAccessPage: React.FC = () => {
       {/* Contenu principal */}
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={2}>
-          {/* Informations utilisateur */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ height: 'fit-content' }}>
+          {/* Informations utilisateur - Full Width */}
+          <Grid item xs={12}>
+            <Card>
               <Box sx={{
                 p: 2,
                 backgroundColor: '#fafafa',
@@ -292,100 +177,109 @@ const CreateAccessPage: React.FC = () => {
                 </Box>
 
                 <form onSubmit={handleSubmit}>
-                  <Stack spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Nom"
-                      value={formData.nom}
-                      onChange={handleInputChange('nom')}
-                      required
-                      size="small"
-                    />
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Nom"
+                        value={formData.nom}
+                        onChange={handleInputChange('nom')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
 
-                    <TextField
-                      fullWidth
-                      label="Prénom"
-                      value={formData.prenom}
-                      onChange={handleInputChange('prenom')}
-                      required
-                      size="small"
-                    />
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Prénom"
+                        value={formData.prenom}
+                        onChange={handleInputChange('prenom')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
 
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange('email')}
-                      required
-                      size="small"
-                    />
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange('email')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
 
-                    <TextField
-                      fullWidth
-                      label="Téléphone"
-                      value={formData.telephone}
-                      onChange={handleInputChange('telephone')}
-                      required
-                      size="small"
-                    />
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Téléphone"
+                        value={formData.telephone}
+                        onChange={handleInputChange('telephone')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
 
-                    <FormControl fullWidth size="small" required>
-                      <InputLabel>Rôle</InputLabel>
-                      <Select
-                        value={formData.role}
-                        onChange={handleRoleChange}
-                        label="Rôle"
-                      >
-                        {roles.map((role) => (
-                          <MenuItem key={role} value={role}>
-                            {role}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth size="small" required>
+                        <InputLabel>Rôle</InputLabel>
+                        <Select
+                          value={formData.role}
+                          onChange={handleRoleChange}
+                          label="Rôle"
+                        >
+                          {roles.map((role) => (
+                            <MenuItem key={role} value={role}>
+                              {role}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
 
-                    <TextField
-                      fullWidth
-                      label="Mot de passe"
-                      type="password"
-                      value={formData.mdp}
-                      onChange={handleInputChange('mdp')}
-                      required
-                      size="small"
-                    />
-                  </Stack>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        label="Mot de passe"
+                        type="password"
+                        value={formData.mdp}
+                        onChange={handleInputChange('mdp')}
+                        required
+                        size="small"
+                      />
+                    </Grid>
+                  </Grid>
                 </form>
               </Box>
             </Card>
           </Grid>
 
-          {/* Permissions dynamiques */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <Box sx={{
-                p: 2,
-                backgroundColor: '#fafafa',
-                borderBottom: '1px solid #e0e0e0'
-              }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Accès
-                </Typography>
-              </Box>
-              <Box sx={{ p: 3 }}>
-                {/* Permissions de base (pour tous les rôles) */}
-                {/* <BasePermissionsBlock
-                  lecture={formData.permissions.lecture}
-                  ecriture={formData.permissions.ecriture}
-                  modification={formData.permissions.modification}
-                  onPermissionChange={handlePermissionChange}
-                /> */}
-
-                {/* Permissions spécifiques selon le rôle */}
-                {renderRoleSpecificPermissions()}
-              </Box>
-            </Card>
-          </Grid>
+          {/* Informations supplémentaires Intervenant - Conditionnel */}
+          {formData.role === 'Intervenant' && (
+            <Grid item xs={12}>
+              <Card>
+                <Box sx={{
+                  p: 2,
+                  backgroundColor: '#fafafa',
+                  borderBottom: '1px solid #e0e0e0'
+                }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Informations Supplémentaires - Intervenant
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 3 }}>
+                  <IntervenantPermissionsBlock
+                    consulterTelEmail={false}
+                    repondreQuestions={false}
+                    onPermissionChange={() => {}}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )}
         </Grid>
 
         {/* Actions */}
@@ -413,3 +307,5 @@ const CreateAccessPage: React.FC = () => {
 };
 
 export default CreateAccessPage;
+
+// ============================================

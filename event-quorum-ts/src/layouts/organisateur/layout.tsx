@@ -7,6 +7,7 @@ import { merge } from 'es-toolkit';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { iconButtonClasses } from '@mui/material/IconButton';
 
@@ -17,20 +18,19 @@ import { NavMobile } from './nav-mobile';
 import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { layoutClasses } from '../core/classes';
-import { _account, _accountAdmin } from '../nav-config-account';
 import { MainSection } from '../core/main-section';
 import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
-import { organisateurNavData as dashboardNavData } from '../nav-config-organisateur';
+import { AccountDrawer } from '../components/account-drawer';
+import { _account, _accountAdmin } from '../nav-config-account';
 import { dashboardLayoutVars, dashboardNavColorVars } from './css-vars';
+import { AdminAccountDrawer } from '../components/admin/admin-account-drawer';
+import { organisateurNavData as dashboardNavData } from '../nav-config-organisateur';
 
 import type { MainSectionProps } from '../core/main-section';
 import type { HeaderSectionProps } from '../core/header-section';
 import type { LayoutSectionProps } from '../core/layout-section';
-import { Typography } from '@mui/material';
-import { AccountDrawer } from '../components/account-drawer';
-import { AdminAccountDrawer } from '../components/admin/admin-account-drawer';
 
 // ----------------------------------------------------------------------
 

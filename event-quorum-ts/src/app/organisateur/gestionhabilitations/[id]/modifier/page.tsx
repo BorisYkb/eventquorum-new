@@ -254,22 +254,24 @@ const EditAccessPage: React.FC = () => {
   const renderRoleSpecificPermissions = () => {
     switch (formData.role) {
       case 'Superviseur':
-        return (
-          <SupervisorPermissionsBlock
-            autoriserExport={formData.permissions.autoriserExport}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <SupervisorPermissionsBlock
+        //     autoriserExport={formData.permissions.autoriserExport}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
 
       case 'Operateur de saisie':
-        return (
-          <OperatorPermissionsBlock
-            preciserEnregistrements={formData.permissions.preciserEnregistrements}
-            typeEntree={formData.permissions.typeEntree}
-            admissionActivite={formData.permissions.admissionActivite}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <OperatorPermissionsBlock
+        //     preciserEnregistrements={formData.permissions.preciserEnregistrements}
+        //     typeEntree={formData.permissions.typeEntree}
+        //     admissionActivite={formData.permissions.admissionActivite}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
 
       case 'Intervenant':
         return (
@@ -281,12 +283,13 @@ const EditAccessPage: React.FC = () => {
         );
 
       case 'Guichetier':
-        return (
-          <GuichetierPermissionsBlock
-            ajouterParticipants={formData.permissions.ajouterParticipants}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <GuichetierPermissionsBlock
+        //     ajouterParticipants={formData.permissions.ajouterParticipants}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
 
       case 'Organisateur':
       default:
@@ -460,13 +463,7 @@ const EditAccessPage: React.FC = () => {
                 </Typography>
               </Box>
               <Box sx={{ p: 3 }}>
-                {/* Permissions de base (pour tous les rôles) */}
-                <BasePermissionsBlock
-                  lecture={formData.permissions.lecture}
-                  ecriture={formData.permissions.ecriture}
-                  modification={formData.permissions.modification}
-                  onPermissionChange={handlePermissionChange}
-                />
+                
 
                 {/* Permissions spécifiques selon le rôle */}
                 {renderRoleSpecificPermissions()}
