@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -16,25 +17,47 @@ const ConferenceSchema = z.object({
   }),
   service_visio: z.string().min(1, 'Veuillez sélectionner un service de visioconférence.'),
   mot_de_passe_reunion: z.string().optional(),
+  autoriser_acces_participants: z.enum(['oui', 'non']),
+  autoriser_retransmission: z.enum(['oui', 'non']),
   isYoutube: z.boolean(),
   isFacebook: z.boolean(),
-  lien_stream: z.string().url('Lien de stream invalide').optional(),
+  isTiktok: z.boolean(),
+  lien_stream: z.string().optional(),
   diffusion_key: z.string().optional(),
-});
+}).refine(
+  (data) => {
+    // Si retransmission activée et au moins une plateforme cochée, le lien est requis
+    if (data.autoriser_retransmission === 'oui' && 
+        (data.isYoutube || data.isFacebook || data.isTiktok)) {
+      return data.lien_stream && data.lien_stream.length > 0;
+    }
+    return true;
+  },
+  {
+    message: 'Le lien de stream est requis lorsque la retransmission est activée',
+    path: ['lien_stream'],
+  }
+);
 
 export type ConferenceSchemaType = z.infer<typeof ConferenceSchema>;
 
 export const useVisioConferenceController = () => {
+  const [conferences, setConferences] = useState<ConferenceSchemaType[]>([]);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
   // Valeurs par défaut pour les champs
-  const defaultValues = {
+  const defaultValues: ConferenceSchemaType = {
     activite: '',
     isActivedSessionVisio: false,
     intitule_conference: '',
     date_conference: today(),
     service_visio: '',
     mot_de_passe_reunion: '',
+    autoriser_acces_participants: 'non',
+    autoriser_retransmission: 'non',
     isYoutube: false,
     isFacebook: false,
+    isTiktok: false,
     lien_stream: '',
     diffusion_key: '',
   };
@@ -47,22 +70,65 @@ export const useVisioConferenceController = () => {
   const {
     handleSubmit,
     control,
+    watch,
+    reset,
     formState: { isSubmitting },
   } = methods;
 
+  // Surveiller la valeur du champ retransmission
+  const watchRetransmission = watch('autoriser_retransmission');
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // actions à effectuer avec les données du formulaire
-      console.log(data);
+      console.log('Données soumises:', data);
+      
+      if (editingIndex !== null) {
+        // Mode édition : mettre à jour la conférence existante
+        const updatedConferences = [...conferences];
+        updatedConferences[editingIndex] = data;
+        setConferences(updatedConferences);
+        setEditingIndex(null);
+      } else {
+        // Mode création : ajouter une nouvelle conférence
+        setConferences([...conferences, data]);
+      }
+      
+      // Réinitialiser le formulaire après soumission
+      reset(defaultValues);
     } catch (error) {
-      console.error(error);
+      console.error('Erreur lors de la soumission:', error);
     }
   });
+
+  const handleDelete = (index: number) => {
+    const updatedConferences = conferences.filter((_, i) => i !== index);
+    setConferences(updatedConferences);
+    
+    // Si on supprime l'élément en cours d'édition, réinitialiser
+    if (editingIndex === index) {
+      setEditingIndex(null);
+      reset(defaultValues);
+    }
+  };
+
+  const handleEdit = (index: number) => {
+    const conferenceToEdit = conferences[index];
+    setEditingIndex(index);
+    reset(conferenceToEdit);
+    
+    // Scroll vers le formulaire
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return {
     methods,
     control,
     isSubmitting,
     onSubmit,
+    watchRetransmission,
+    conferences,
+    handleDelete,
+    handleEdit,
+    editingIndex,
   };
 };

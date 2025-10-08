@@ -12,6 +12,12 @@ export interface AgendaItem {
   statut: 'en_cours' | 'terminer' | 'a_venir';
 }
 
+// Type pour les organisateurs
+export interface Organizer {
+  image: File | string | null;
+  description: string;
+}
+
 // Schéma de validation pour les informations générales
 const LandingPageSchema = z.object({
   message_bienvenue: z.string().min(1, 'Le message de bienvenue est obligatoire.'),
@@ -29,6 +35,19 @@ const LandingPageSchema = z.object({
 export type LandingPageSchemaType = z.infer<typeof LandingPageSchema>;
 
 export const useLandingPageController = () => {
+  // État pour gérer les organisateurs
+  const [organizateurs, setOrganizateurs] = useState<Organizer[]>([]);
+  const [isAddingOrganizer, setIsAddingOrganizer] = useState(false);
+  const [currentOrganizer, setCurrentOrganizer] = useState<{
+    image: File | string | null;
+    description: string;
+    index: number | null;
+  }>({
+    image: null,
+    description: '',
+    index: null,
+  });
+
   // Données d'exemple pour l'agenda
   const [agendaItems, setAgendaItems] = useState<AgendaItem[]>([
     {
@@ -72,9 +91,10 @@ export const useLandingPageController = () => {
     try {
       // Actions à effectuer avec les données du formulaire
       console.log('Données du formulaire:', data);
+      console.log('Organisateurs:', organizateurs);
       
       // Ici vous pourriez faire un appel API pour sauvegarder les données
-      // await saveGeneralInfo(data);
+      // await saveGeneralInfo(data, organizateurs);
       
       // Afficher un message de succès
       console.log('Informations générales sauvegardées avec succès');
@@ -83,11 +103,63 @@ export const useLandingPageController = () => {
     }
   });
 
+  // Gestionnaires pour les organisateurs
+  const handleAddOrganizer = () => {
+    if (!currentOrganizer.image || !currentOrganizer.description) {
+      console.error('Veuillez remplir tous les champs');
+      return;
+    }
+
+    if (currentOrganizer.index !== null) {
+      // Mode édition
+      const updatedOrganizers = [...organizateurs];
+      updatedOrganizers[currentOrganizer.index] = {
+        image: currentOrganizer.image,
+        description: currentOrganizer.description,
+      };
+      setOrganizateurs(updatedOrganizers);
+    } else {
+      // Mode ajout
+      setOrganizateurs([
+        ...organizateurs,
+        {
+          image: currentOrganizer.image,
+          description: currentOrganizer.description,
+        },
+      ]);
+    }
+
+    // Réinitialiser le formulaire d'organisateur
+    setCurrentOrganizer({ image: null, description: '', index: null });
+    setIsAddingOrganizer(false);
+  };
+
+  const handleEditOrganizer = (index: number) => {
+    const organizer = organizateurs[index];
+    setCurrentOrganizer({
+      image: organizer.image,
+      description: organizer.description,
+      index,
+    });
+    setIsAddingOrganizer(true);
+  };
+
+  const handleDeleteOrganizer = (index: number) => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet organisateur ?')) {
+      const updatedOrganizers = organizateurs.filter((_, i) => i !== index);
+      setOrganizateurs(updatedOrganizers);
+      
+      // Si on supprime l'organisateur en cours d'édition, réinitialiser
+      if (currentOrganizer.index === index) {
+        setCurrentOrganizer({ image: null, description: '', index: null });
+        setIsAddingOrganizer(false);
+      }
+    }
+  };
+
   // Gestionnaires pour l'agenda
   const handleAddAgenda = () => {
     console.log('Ajouter une nouvelle activité à l\'agenda');
-    // Ici vous pourriez ouvrir un modal ou naviguer vers une page d'ajout
-    // Par exemple, ouvrir un dialog avec un formulaire
   };
 
   const handleEditAgenda = (id: string) => {
@@ -95,13 +167,11 @@ export const useLandingPageController = () => {
     const item = agendaItems.find((item) => item.id === id);
     if (item) {
       console.log('Données de l\'activité à modifier:', item);
-      // Ici vous pourriez ouvrir un modal ou naviguer vers une page d'édition
     }
   };
 
   const handleDeleteAgenda = (id: string) => {
     console.log('Supprimer l\'activité avec l\'ID:', id);
-    // Ici vous pourriez afficher une confirmation avant la suppression
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette activité ?')) {
       setAgendaItems((prevItems) => prevItems.filter((item) => item.id !== id));
       console.log('Activité supprimée avec succès');
@@ -113,7 +183,6 @@ export const useLandingPageController = () => {
     const item = agendaItems.find((item) => item.id === id);
     if (item) {
       console.log('Détails de l\'activité:', item);
-      // Ici vous pourriez ouvrir un modal ou naviguer vers une page de détails
     }
   };
 
@@ -146,5 +215,14 @@ export const useLandingPageController = () => {
     handleViewAgenda,
     addAgendaItem,
     updateAgendaItem,
+    // Nouveaux exports pour les organisateurs
+    organizateurs,
+    handleAddOrganizer,
+    handleDeleteOrganizer,
+    handleEditOrganizer,
+    currentOrganizer,
+    setCurrentOrganizer,
+    isAddingOrganizer,
+    setIsAddingOrganizer,
   };
 };

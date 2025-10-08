@@ -1,7 +1,30 @@
 import { Controller } from 'react-hook-form';
 
+import EditIcon from '@mui/icons-material/Edit';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, Card, Button, Divider, MenuItem, CardHeader, CardContent } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Box,
+  Card,
+  Button,
+  Divider,
+  MenuItem,
+  CardHeader,
+  CardContent,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+} from '@mui/material';
 
 import { Form, Field } from 'src/components/hook-form';
 
@@ -20,13 +43,20 @@ const OPTIONS = [
 ];
 
 const VisioConference = () => {
-  const { methods, onSubmit, control, isSubmitting } = useVisioConferenceController();
+  const {
+    methods,
+    onSubmit,
+    control,
+    isSubmitting,
+    watchRetransmission,
+    conferences,
+    handleDelete,
+    handleEdit,
+  } = useVisioConferenceController();
+
   return (
     <Card>
-      <CardHeader
-        title="Configurer les visio-conférence"
-        // subheader="Configurez la charte graphique de votre événement pour une expérience utilisateur cohérente."
-      />
+      <CardHeader title="Configurer les visio-conférence" />
       <CardContent>
         <Form methods={methods} onSubmit={onSubmit}>
           <Box
@@ -63,7 +93,8 @@ const VisioConference = () => {
               />
             </div>
 
-            <div className="grid grid-cols-4 max-md:grid-cols-1 gap-6 gap-y-10">
+            {/* 4 inputs alignés */}
+            <div className="grid grid-cols-4 max-md:grid-cols-1 gap-6">
               <Controller
                 name="intitule_conference"
                 control={control}
@@ -79,11 +110,7 @@ const VisioConference = () => {
                 name="date_conference"
                 control={control}
                 render={({ field }) => (
-                  <Field.DatePicker
-                    // {...field}
-                    name="date_conference"
-                    label="Date de la conférence"
-                  />
+                  <Field.DatePicker name="date_conference" label="Date de la conférence" />
                 )}
               />
 
@@ -92,7 +119,7 @@ const VisioConference = () => {
                 control={control}
                 render={({ field }) => (
                   <Field.Select {...field} name="service_visio" label="Service de visioconférence">
-                    <MenuItem value="">Zoom/Teams/Google Meet/8*8</MenuItem>
+                    <MenuItem value="">Sélectionner</MenuItem>
                     <Divider sx={{ borderStyle: 'dashed' }} />
                     {OPTIONS.map((option) => (
                       <MenuItem key={option.value} value={option.label}>
@@ -113,47 +140,88 @@ const VisioConference = () => {
                   />
                 )}
               />
-              <div className=' '>
-              <p className='text-sm '>Retransmission</p>
-              <div className=' flex flex-row'>
-
-              <Controller
-                name="isYoutube"
-                control={control}
-                render={({ field }) => (
-                  <Field.Checkbox {...field} label="Youtube" />
-                )}
-              />
-              <Controller
-                name="isFacebook"
-                control={control}
-                render={({ field }) => (
-                  <Field.Checkbox {...field} label="Facebook" />
-                )}
-              />
-              </div>
-              </div>
-              <Controller
-                name="lien_stream"
-                control={control}
-                render={({ field }) => (
-                  <Field.Text
-                    {...field}
-                    label="Lien de stream"
-                    placeholder="Ex: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                  />
-                )}
-              />
-              
-
-              <Controller
-                name="diffusion_key"
-                control={control}
-                render={({ field }) => (
-                  <Field.Text {...field} label="Clé de diffusion" placeholder="Ex: 123456789" />
-                )}
-              />
             </div>
+
+            {/* Radio Buttons pour accès participants */}
+            <Controller
+              name="autoriser_acces_participants"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Autoriser les participants à accéder à la visioconférence
+                  </FormLabel>
+                  <RadioGroup {...field} row>
+                    <FormControlLabel value="oui" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="non" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              )}
+            />
+
+            {/* Radio Buttons pour retransmission */}
+            <Controller
+              name="autoriser_retransmission"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Autoriser la Retransmission</FormLabel>
+                  <RadioGroup {...field} row>
+                    <FormControlLabel value="oui" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="non" control={<Radio />} label="Non" />
+                  </RadioGroup>
+                </FormControl>
+              )}
+            />
+
+            {/* Affichage conditionnel si retransmission = oui */}
+            {watchRetransmission === 'oui' && (
+              <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex flex-row gap-6">
+                  <Controller
+                    name="isYoutube"
+                    control={control}
+                    render={({ field }) => <Field.Checkbox {...field} label="Youtube" />}
+                  />
+                  <Controller
+                    name="isFacebook"
+                    control={control}
+                    render={({ field }) => <Field.Checkbox {...field} label="Facebook" />}
+                  />
+                  <Controller
+                    name="isTiktok"
+                    control={control}
+                    render={({ field }) => <Field.Checkbox {...field} label="Tiktok" />}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 max-md:grid-cols-1 gap-6">
+                  <Controller
+                    name="lien_stream"
+                    control={control}
+                    render={({ field }) => (
+                      <Field.Text
+                        {...field}
+                        label="Lien de stream"
+                        placeholder="Ex: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="diffusion_key"
+                    control={control}
+                    render={({ field }) => (
+                      <Field.Text
+                        {...field}
+                        label="Clé de diffusion"
+                        placeholder="Ex: 123456789"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-end gap-5 mt-5">
               <Button variant="outlined" color="inherit" onClick={() => methods.reset()}>
@@ -170,11 +238,78 @@ const VisioConference = () => {
                 loading={isSubmitting}
                 loadingIndicator="Validation..."
               >
-                Enregister
+                Enregistrer
               </LoadingButton>
             </div>
           </Box>
         </Form>
+
+        {/* Tableau récapitulatif */}
+        {conferences.length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Divider sx={{ mb: 3 }} />
+            <h3 className="text-lg font-semibold mb-3">
+              Récapitulatif des conférences enregistrées
+            </h3>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Activité</TableCell>
+                    <TableCell>Intitulé</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Service</TableCell>
+                    <TableCell>Accès participants</TableCell>
+                    <TableCell>Retransmission</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {conferences.map((conf, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{conf.activite}</TableCell>
+                      <TableCell>{conf.intitule_conference}</TableCell>
+                      <TableCell>
+                        {new Date(conf.date_conference).toLocaleDateString('fr-FR')}
+                      </TableCell>
+                      <TableCell>{conf.service_visio}</TableCell>
+                      <TableCell>{conf.autoriser_acces_participants}</TableCell>
+                      <TableCell>
+                        {conf.autoriser_retransmission === 'oui' ? (
+                          <div>
+                            {conf.isYoutube && '📺 YouTube '}
+                            {conf.isFacebook && '👍 Facebook '}
+                            {conf.isTiktok && '🎵 TikTok'}
+                          </div>
+                        ) : (
+                          'Non'
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => handleEdit(index)}
+                          aria-label="modifier"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDelete(index)}
+                          aria-label="supprimer"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

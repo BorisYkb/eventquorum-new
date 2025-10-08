@@ -1,5 +1,3 @@
-//src/app/organisateur/gestionparticipant/consultation/page.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -37,6 +35,7 @@ import {
     Tab,
     Breadcrumbs,
     Link,
+    Chip,
 } from '@mui/material';
 
 // Interface pour les participants
@@ -46,28 +45,22 @@ interface Participant {
     prenom: string;
     email: string;
     connecte: boolean;
-    present?: boolean;
+    emmarger: boolean;
 }
 
 /**
- * Page de consultation des participants connectés et présents
- * Affiche deux listes selon la maquette : connectés et présence
- * Permet la recherche, filtrage et exportation des données
+ * Page de consultation des participants connectés
+ * Affiche la liste des connectés avec leur statut d'émargement
+ * Permet la recherche, filtrage par statut et exportation des données
  */
 const ConsultationPage = () => {
     const router = useRouter();
 
     // États pour la gestion des données et filtres
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeList, setActiveList] = useState<'connectes' | 'presence'>('connectes');
+    const [statusFilter, setStatusFilter] = useState<'tous' | 'oui' | 'non'>('tous');
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
-    // Configuration des onglets
-    const TABS = [
-        { value: 'connectes', label: 'Liste des connectés' },
-        { value: 'presence', label: 'Liste de présence' },
-    ];
 
     // Données simulées des participants
     const participants: Participant[] = [
@@ -77,7 +70,7 @@ const ConsultationPage = () => {
             prenom: 'Emmanuel',
             email: 'koffi@gmail.com',
             connecte: true,
-            present: true,
+            emmarger: true,
         },
         {
             id: 2,
@@ -85,15 +78,15 @@ const ConsultationPage = () => {
             prenom: 'Marie',
             email: 'kouassi@gmail.com',
             connecte: true,
-            present: false,
+            emmarger: false,
         },
         {
             id: 3,
             nom: 'Ouattara',
             prenom: 'Jean',
             email: 'jean@gmail.com',
-            connecte: false,
-            present: true,
+            connecte: true,
+            emmarger: true,
         },
         {
             id: 4,
@@ -101,7 +94,7 @@ const ConsultationPage = () => {
             prenom: 'Fatou',
             email: 'fatou@gmail.com',
             connecte: true,
-            present: true,
+            emmarger: true,
         },
         {
             id: 5,
@@ -109,61 +102,61 @@ const ConsultationPage = () => {
             prenom: 'Sekou',
             email: 'sekou@gmail.com',
             connecte: true,
-            present: false,
+            emmarger: false,
         },
         {
             id: 6,
-            nom: 'Koffi',
-            prenom: 'Emmanuel',
-            email: 'koffi@gmail.com',
+            nom: 'Diallo',
+            prenom: 'Aminata',
+            email: 'aminata@gmail.com',
             connecte: true,
-            present: true,
+            emmarger: true,
         },
         {
             id: 7,
-            nom: 'Kouassi',
-            prenom: 'Marie',
-            email: 'kouassi@gmail.com',
+            nom: 'Yao',
+            prenom: 'Kouadio',
+            email: 'kouadio@gmail.com',
             connecte: true,
-            present: false,
+            emmarger: false,
         },
         {
             id: 8,
-            nom: 'Ouattara',
-            prenom: 'Jean',
-            email: 'jean@gmail.com',
-            connecte: false,
-            present: true,
+            nom: 'Sangare',
+            prenom: 'Ibrahim',
+            email: 'ibrahim@gmail.com',
+            connecte: true,
+            emmarger: true,
         },
         {
             id: 9,
-            nom: 'Traore',
-            prenom: 'Fatou',
-            email: 'fatou@gmail.com',
+            nom: 'Kone',
+            prenom: 'Mariam',
+            email: 'mariam@gmail.com',
             connecte: true,
-            present: true,
+            emmarger: true,
         },
         {
             id: 10,
-            nom: 'Bamba',
-            prenom: 'Sekou',
-            email: 'sekou@gmail.com',
+            nom: 'Toure',
+            prenom: 'Abou',
+            email: 'abou@gmail.com',
             connecte: true,
-            present: false,
+            emmarger: false,
         },
     ];
 
     /**
-     * Filtrage des participants selon la liste active et le terme de recherche
+     * Filtrage des participants selon le terme de recherche et le statut
      */
     const getFilteredParticipants = () => {
-        let filtered = participants;
+        let filtered = participants.filter(p => p.connecte);
 
-        // Filtrage selon la liste sélectionnée
-        if (activeList === 'connectes') {
-            filtered = participants.filter(p => p.connecte);
-        } else {
-            filtered = participants.filter(p => p.present);
+        // Filtrage par statut d'émargement
+        if (statusFilter === 'oui') {
+            filtered = filtered.filter(p => p.emmarger);
+        } else if (statusFilter === 'non') {
+            filtered = filtered.filter(p => !p.emmarger);
         }
 
         // Filtrage par terme de recherche
@@ -200,19 +193,10 @@ const ConsultationPage = () => {
     };
 
     /**
-     * Changement d'onglet
-     */
-    const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-        setActiveList(newValue as 'connectes' | 'presence');
-        setPage(1);
-        setSearchTerm('');
-    };
-
-    /**
      * Exportation des données
      */
     const handleExport = () => {
-        console.log(`Exporter la liste des ${activeList}`);
+        console.log('Exporter la liste des connectés');
         // TODO: Implémenter l'exportation en CSV/Excel
     };
 
@@ -232,12 +216,11 @@ const ConsultationPage = () => {
     };
 
     /**
-     * Changement de liste active
+     * Changement du filtre de statut
      */
-    const handleListChange = (newList: 'connectes' | 'presence') => {
-        setActiveList(newList);
+    const handleStatusFilterChange = (event: any) => {
+        setStatusFilter(event.target.value);
         setPage(1);
-        setSearchTerm('');
     };
 
     return (
@@ -279,10 +262,7 @@ const ConsultationPage = () => {
                                     Gestion des Participants
                                 </Link>
                                 <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
-                                    {activeList === 'connectes'
-                                        ? 'Liste des personnes connectées'
-                                        : 'Liste des personnes présentes'
-                                    }
+                                    Liste des personnes connectées
                                 </Typography>
                             </Breadcrumbs>
                         </Box>
@@ -296,26 +276,11 @@ const ConsultationPage = () => {
                     border: 1,
                     borderColor: 'divider'
                 }}>
-                    {/* Onglets de navigation */}
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs
-                            value={activeList}
-                            onChange={handleTabChange}
-                            sx={{ px: 3, pt: 2 }}
-                        >
-                            {TABS.map((tab) => (
-                                <Tab
-                                    key={tab.value}
-                                    value={tab.value}
-                                    label={tab.label}
-                                    sx={{
-                                        textTransform: 'none',
-                                        fontWeight: 600,
-                                        fontSize: '0.875rem',
-                                    }}
-                                />
-                            ))}
-                        </Tabs>
+                    {/* En-tête de la carte */}
+                    <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            Liste des connectés
+                        </Typography>
                     </Box>
 
                     {/* Barre d'outils */}
@@ -326,10 +291,10 @@ const ConsultationPage = () => {
                         backgroundColor: 'grey.50'
                     }}>
                         <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
-                            {/* Zone gauche : Informations et recherche */}
+                            {/* Zone gauche : Informations, recherche et filtre */}
                             <Stack direction="row" spacing={2} alignItems="center">
                                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                                    {filteredParticipants.length} personne{filteredParticipants.length > 1 ? 's' : ''} {activeList === 'connectes' ? 'connectée' : 'présente'}{filteredParticipants.length > 1 ? 's' : ''}
+                                    {filteredParticipants.length} personne{filteredParticipants.length > 1 ? 's' : ''} connectée{filteredParticipants.length > 1 ? 's' : ''}
                                 </Typography>
 
                                 <TextField
@@ -351,6 +316,22 @@ const ConsultationPage = () => {
                                         }
                                     }}
                                 />
+
+                                {/* Filtre par statut d'émargement */}
+                                <FormControl size="small" sx={{ minWidth: 150 }}>
+                                    <Select
+                                        value={statusFilter}
+                                        onChange={handleStatusFilterChange}
+                                        displayEmpty
+                                        sx={{
+                                            backgroundColor: 'white',
+                                        }}
+                                    >
+                                        <MenuItem value="tous">Tous les statuts</MenuItem>
+                                        <MenuItem value="oui">Émargé : Oui</MenuItem>
+                                        <MenuItem value="non">Émargé : Non</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Stack>
 
                             {/* Zone droite : Bouton d'exportation */}
@@ -384,6 +365,7 @@ const ConsultationPage = () => {
                                         <TableCell sx={{ fontWeight: 600, py: 2 }}>Nom</TableCell>
                                         <TableCell sx={{ fontWeight: 600, py: 2 }}>Prénom</TableCell>
                                         <TableCell sx={{ fontWeight: 600, py: 2 }}>Email</TableCell>
+                                        <TableCell sx={{ fontWeight: 600, py: 2 }} align="center">Emmarger</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -392,10 +374,8 @@ const ConsultationPage = () => {
                                             key={participant.id}
                                             hover
                                             sx={{
-                                                backgroundColor: index % 2 === 0 ? 'white' : 'grey.50',
-                                                '&:hover': {
-                                                    backgroundColor: 'action.hover',
-                                                }
+                                                backgroundColor: index % 2 === 0 ? 'white' : 'grey.50'
+                                                
                                             }}
                                         >
                                             <TableCell sx={{ py: 2 }}>
@@ -412,6 +392,17 @@ const ConsultationPage = () => {
                                                 <Typography variant="body2" color="primary.main">
                                                     {participant.email}
                                                 </Typography>
+                                            </TableCell>
+                                            <TableCell sx={{ py: 2 }} align="center">
+                                                <Chip
+                                                    label={participant.emmarger ? 'Oui' : 'Non'}
+                                                    color={participant.emmarger ? 'success' : 'default'}
+                                                    size="small"
+                                                    sx={{
+                                                        fontWeight: 500,
+                                                        minWidth: 60,
+                                                    }}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     ))}

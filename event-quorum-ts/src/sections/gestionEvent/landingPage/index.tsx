@@ -23,7 +23,8 @@ import {
   Paper,
   IconButton,
   Chip,
-  Stack
+  Stack,
+  Divider
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -57,11 +58,18 @@ const LandingPage = () => {
     control, 
     isSubmitting,
     agendaItems,
-    
     handleAddAgenda,
     handleEditAgenda,
     handleDeleteAgenda,
-    handleViewAgenda
+    handleViewAgenda,
+    organizateurs,
+    handleAddOrganizer,
+    handleDeleteOrganizer,
+    handleEditOrganizer,
+    currentOrganizer,
+    setCurrentOrganizer,
+    isAddingOrganizer,
+    setIsAddingOrganizer
   } = useLandingPageController();
 
   const showPreview = useBoolean();
@@ -126,7 +134,6 @@ const LandingPage = () => {
         href={paths.organisateur.gestionevent.newactivity}
         startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />  }
         onClick={handleAddAgenda}
-      //   sx={{ backgroundColor: '#1976d2' }}
       >
         Ajouter une activité
       </Button>
@@ -137,16 +144,11 @@ const LandingPage = () => {
       <Card>
         <CardHeader
           title="INFORMATIONS GENERALE"
-        //   subheader="Configurez les informations générales de votre événement"
         />
         <CardContent>
           <Form methods={methods} onSubmit={onSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {/* Short description */}
-          
-              
-              
-
               <Stack>
                 <Typography variant="subtitle2">Short Description de l'évènement</Typography>
                 <Field.Editor
@@ -154,7 +156,6 @@ const LandingPage = () => {
                   name='short_description'
                   placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
                   sx={{ maxHeight: 400 }}
-                  
                 />
               </Stack>
 
@@ -162,22 +163,163 @@ const LandingPage = () => {
                 <Typography variant="subtitle2">Description de l'évènement</Typography>
                 <Field.Editor
                   fullItem
-                  name='short_description'
+                  name='description'
                   placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
                   sx={{ maxHeight: 400 }}
-                  
                 />
               </Stack>
 
+              {/* Section A propos de l'organisateur */}
               <Stack>
-                <Typography variant="subtitle2">A propos de l'oganisateur</Typography>
-                <Field.Editor
-                  fullItem
-                  name='short_description'
-                  placeholder="Ecrivez un texte court pour décrire l'évènement en quelques phrases."
-                  sx={{ maxHeight: 400 }}
-                  
-                />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="subtitle2">A propos de l'organisateur</Typography>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />}
+                    onClick={() => setIsAddingOrganizer(true)}
+                    size="small"
+                  >
+                    Ajouter un organisateur
+                  </Button>
+                </Box>
+
+                {/* Formulaire d'ajout/édition d'organisateur */}
+                {isAddingOrganizer && (
+                  <Card variant="outlined" sx={{ p: 3, mb: 3, backgroundColor: '#f9f9f9' }}>
+                    <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                      {currentOrganizer.index !== null ? 'Modifier l\'organisateur' : 'Nouvel organisateur'}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
+                      {/* Image à gauche */}
+                      <Box sx={{ minWidth: 200 }}>
+                        <UploadAvatar
+                          value={currentOrganizer.image}
+                          onDrop={(acceptedFiles: File[]) => {
+                            setCurrentOrganizer({
+                              ...currentOrganizer,
+                              image: acceptedFiles[0]
+                            });
+                          }}
+                          validator={(fileData) => {
+                            if (fileData.size > 2000000) {
+                              return { code: 'file-too-large', message: 'Fichier trop volumineux' };
+                            }
+                            return null;
+                          }}
+                          helperText={
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                mt: 2,
+                                display: 'block',
+                                textAlign: 'center',
+                                color: 'text.disabled',
+                              }}
+                            >
+                              Photo de l'organisateur
+                            </Typography>
+                          }
+                        />
+                      </Box>
+
+                      {/* Description à droite */}
+                      <Box sx={{ flex: 1 }}>
+                        <Field.Editor
+                          fullItem
+                          name='organizer_description'
+                          value={currentOrganizer.description}
+                          onChange={(value: string) => {
+                            setCurrentOrganizer({
+                              ...currentOrganizer,
+                              description: value
+                            });
+                          }}
+                          placeholder="Décrivez l'organisateur (nom, fonction, biographie...)"
+                          sx={{ maxHeight: 300 }}
+                        />
+                        
+                        <Box sx={{ display: 'flex', gap: 2, mt: 2, justifyContent: 'flex-end' }}>
+                          <Button
+                            variant="outlined"
+                            color="inherit"
+                            onClick={() => {
+                              setIsAddingOrganizer(false);
+                              setCurrentOrganizer({ image: null, description: '', index: null });
+                            }}
+                          >
+                            Annuler
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddOrganizer}
+                            disabled={!currentOrganizer.image || !currentOrganizer.description}
+                          >
+                            {currentOrganizer.index !== null ? 'Mettre à jour' : 'Ajouter'}
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Card>
+                )}
+
+                {/* Liste des organisateurs ajoutés */}
+                {organizateurs.length > 0 && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                      {organizateurs.length} organisateur(s) ajouté(s)
+                    </Typography>
+                    <Stack spacing={2}>
+                      {organizateurs.map((org, index) => (
+                        <Card key={index} variant="outlined" sx={{ p: 2 }}>
+                          <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                            <Box
+                              component="img"
+                              src={typeof org.image === 'string' ? org.image : URL.createObjectURL(org.image)}
+                              alt={`Organisateur ${index + 1}`}
+                              sx={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 1,
+                                objectFit: 'cover'
+                              }}
+                            />
+                            <Box sx={{ flex: 1 }}>
+                              <Typography 
+                                variant="body2" 
+                                dangerouslySetInnerHTML={{ __html: org.description }}
+                                sx={{
+                                  '& p': { margin: 0 },
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                }}
+                              />
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleEditOrganizer(index)}
+                                sx={{ color: 'warning.main' }}
+                              >
+                                <Iconify icon="solar:pen-bold" width={18} height={18} />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleDeleteOrganizer(index)}
+                                sx={{ color: 'error.main' }}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={18} height={18} />
+                              </IconButton>
+                            </Box>
+                          </Box>
+                        </Card>
+                      ))}
+                    </Stack>
+                  </Box>
+                )}
               </Stack>
 
               {/* Type d'événement et Type de connexion */}
@@ -200,9 +342,9 @@ const LandingPage = () => {
                   name="type_connexion"
                   control={control}
                   render={({ field }) => (
-                    <Field.Select {...field} label="Type de connexion" sx={{ minWidth: 200,  }}>
+                    <Field.Select {...field} label="Type de connexion" sx={{ minWidth: 200 }}>
                       {CONNECTION_TYPES.map((option) => (
-                        <MenuItem key={option.value} value={option.value} sx={{}}>
+                        <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -224,8 +366,6 @@ const LandingPage = () => {
                   )}
                 />
 
-                
-
                 <Controller
                   name="importer_video_evenement"
                   control={control}
@@ -236,18 +376,10 @@ const LandingPage = () => {
                     />
                   )}
                 />
-
-                
               </Box>
 
-              
-
               <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                  
-
-                  
-                  <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <UploadAvatar
                       value={avatarUrl}
                       onDrop={handleDropAvatar}
@@ -266,7 +398,6 @@ const LandingPage = () => {
                             display: 'block',
                             textAlign: 'center',
                             color: 'text.disabled',
-
                           }}
                         >
                           Image background (Carré)
@@ -275,8 +406,7 @@ const LandingPage = () => {
                     />
                   </Box>
 
-                  <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <UploadAvatar
                       value={avatarUrl}
                       onDrop={handleDropAvatar}
@@ -295,7 +425,6 @@ const LandingPage = () => {
                             display: 'block',
                             textAlign: 'center',
                             color: 'text.disabled',
-                            
                           }}
                         >
                           Image background (Rectangle)
@@ -303,7 +432,6 @@ const LandingPage = () => {
                       }
                     />
                   </Box>
-                  
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -311,8 +439,6 @@ const LandingPage = () => {
                   variant="contained"
                   color="success"
                   type="submit"
-                //   loading={isSubmitting}
-                //   loadingIndicator="Enregistrement..."
                 >
                   Enregistrer
                 </Button>
@@ -331,9 +457,8 @@ const LandingPage = () => {
               variant="contained"
               component={RouterLink}
               href={paths.organisateur.gestionevent.newactivity}
-              startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />  }
+              startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />}
               onClick={handleAddAgenda}
-            //   sx={{ backgroundColor: '#1976d2' }}
             >
               Ajouter une activité
             </Button>
@@ -358,17 +483,12 @@ const LandingPage = () => {
                     <TableCell>{item.date.endDate.toLocaleDateString()}</TableCell>
                     <TableCell>{item.title}</TableCell>
                     <TableCell>
-                      {/* <Chip
-                        label={getStatusLabel(item.statut)}
-                        color={getStatusColor(item.statut)}
-                        size="small"
-                      /> */}
                       <Label
-                            variant="soft"
-                            color={getStatusColor(item.status)}
-                        >
-                            {getStatusLabel(item.status)}
-                        </Label>
+                        variant="soft"
+                        color={getStatusColor(item.status)}
+                      >
+                        {getStatusLabel(item.status)}
+                      </Label>
                     </TableCell>
                     <TableCell align="center">
                       <IconButton
@@ -376,7 +496,7 @@ const LandingPage = () => {
                         onClick={() => handleViewAgenda(item.id)}
                         sx={{ color: 'text.secondary' }}
                       >
-                        <Iconify icon="solar:eye-bold" width={16} height={16} />  
+                        <Iconify icon="solar:eye-bold" width={16} height={16} />
                       </IconButton>
                       <IconButton
                         component={RouterLink}
@@ -392,7 +512,7 @@ const LandingPage = () => {
                         onClick={() => handleDeleteAgenda(item.id)}
                         sx={{ color: 'error.main' }}
                       >
-                        <Iconify icon="solar:trash-bin-trash-bold" width={16} height={16} /> 
+                        <Iconify icon="solar:trash-bin-trash-bold" width={16} height={16} />
                       </IconButton>
                     </TableCell>
                   </TableRow>

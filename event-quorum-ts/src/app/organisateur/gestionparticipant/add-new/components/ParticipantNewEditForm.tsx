@@ -248,7 +248,7 @@ export function ParticipantNewEditForm({ item }: Props) {
       </Card>
 
       {/* 2. Import de fichier */}
-      <Card sx={{ p: 3 }}>
+      {/* <Card sx={{ p: 3 }}>
         <Typography variant="h6" gutterBottom>
           2. Importer la liste des invités via un fichier
         </Typography>
@@ -295,19 +295,19 @@ export function ParticipantNewEditForm({ item }: Props) {
             Enregistrer
           </LoadingButton>
         </Stack>
-      </Card>
+      </Card> */}
 
       {/* 3. Import par activité */}
       <Card sx={{ p: 3 }}>
         <Typography variant="h6" gutterBottom>
-          3. Importer la liste des invités par activité
+          2. Importer la liste des invités par activité
         </Typography>
         
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Choisir l'activité puis télécharger le fichier correspondant
         </Typography>
 
-        <Box sx={{mb: 3, display: 'flex', justifyContent: 'space-between'}}>
+        <Box sx={{mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: "center"}}>
           <FormControl >
             <InputLabel>Choisir l'activité</InputLabel>
             <Select
@@ -316,6 +316,7 @@ export function ParticipantNewEditForm({ item }: Props) {
               value={selectedActivity}
               onChange={(e) => setSelectedActivity(e.target.value)}
               label="Choisir l'activité"
+              sx={{ minWidth: 200 }}
               
             >
               <MenuItem value="">
@@ -329,17 +330,24 @@ export function ParticipantNewEditForm({ item }: Props) {
             </Select>
           </FormControl>
 
-          <FormControlLabel
-            label="Afficher les miniatures"
-            control={
-              <Switch
-                checked={showPreview2}
-                onChange={(e) => setShowPreview2(e.target.checked)}
-                inputProps={{ id: 'show-thumbnails-switch-2' }}
-              />
-            }
-            sx={{ mb: 3, width: 1, justifyContent: 'flex-end' }}
-          />
+          <Box sx={{display: "flex", alignItems: "center", gap: 3}}>
+
+            <Button variant= "contained" sx={{ minWidth: 250 }}>
+                Exporter un modèle de fichier
+            </Button>
+
+            <FormControlLabel
+              label="Afficher les miniatures"
+              control={
+                <Switch
+                  checked={showPreview2}
+                  onChange={(e) => setShowPreview2(e.target.checked)}
+                  inputProps={{ id: 'show-thumbnails-switch-2' }}
+                />
+              }
+              sx={{ mb: 3, width: 1, justifyContent: 'flex-end' }}
+            />
+          </Box>
         </Box>
         
         <Upload
@@ -356,6 +364,7 @@ export function ParticipantNewEditForm({ item }: Props) {
             'text/csv': ['.csv'],
           }}
           helperText="Formats acceptés: .xlsx, .xls, .csv"
+          
         />
 
         <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
