@@ -169,22 +169,24 @@ const CreateAccessPage: React.FC = () => {
   const renderRoleSpecificPermissions = () => {
     switch (formData.role) {
       case 'Superviseur':
-        return (
-          <SupervisorPermissionsBlock
-            autoriserExport={formData.permissions.autoriserExport}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <SupervisorPermissionsBlock
+        //     autoriserExport={formData.permissions.autoriserExport}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
       
       case 'Operateur de saisie':
-        return (
-          <OperatorPermissionsBlock
-            preciserEnregistrements={formData.permissions.preciserEnregistrements}
-            typeEntree={formData.permissions.typeEntree}
-            admissionActivite={formData.permissions.admissionActivite}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <OperatorPermissionsBlock
+        //     preciserEnregistrements={formData.permissions.preciserEnregistrements}
+        //     typeEntree={formData.permissions.typeEntree}
+        //     admissionActivite={formData.permissions.admissionActivite}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
         
       case 'Intervenant':
         return (
@@ -196,12 +198,13 @@ const CreateAccessPage: React.FC = () => {
         );
         
       case 'Guichetier':
-        return (
-          <GuichetierPermissionsBlock
-            ajouterParticipants={formData.permissions.ajouterParticipants}
-            onPermissionChange={handlePermissionChange}
-          />
-        );
+        // return (
+        //   <GuichetierPermissionsBlock
+        //     ajouterParticipants={formData.permissions.ajouterParticipants}
+        //     onPermissionChange={handlePermissionChange}
+        //   />
+        // );
+        return null;
         
       case 'Organisateur':
       default:
@@ -292,7 +295,7 @@ const CreateAccessPage: React.FC = () => {
                   <Stack spacing={3}>
                     <TextField
                       fullWidth
-                      label="Nom de famille"
+                      label="Nom"
                       value={formData.nom}
                       onChange={handleInputChange('nom')}
                       required

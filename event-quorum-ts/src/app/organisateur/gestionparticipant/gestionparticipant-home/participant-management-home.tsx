@@ -1,8 +1,7 @@
-//src/app/organisateur/gestionparticipant/gestionparticipant-home/participant-management-home.tsx
-
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTabs } from 'minimal-shared/hooks';
 
 import {
@@ -24,8 +23,7 @@ import InvitesTable from './components/InvitesTable';
 // Import des composants
 import ExportButtons from './components/ExportButtons';
 import ParticipantsTable from './components/ParticipantsTable';
-// Import des nouveaux composants modals
-import ParticipantDetailModal from '../components/ParticipantDetailModal';
+// Import du modal de suppression uniquement
 import ParticipantDeleteModal from '../components/ParticipantDeleteModal';
 
 /**
@@ -33,11 +31,12 @@ import ParticipantDeleteModal from '../components/ParticipantDeleteModal';
  * Intègre la navigation par onglets entre Invités et Participants
  */
 const ParticipantManagementPage = () => {
+  const router = useRouter();
+  
   // Gestion des onglets
   const tabs = useTabs('invites');
 
   // États pour les modals
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
   
@@ -179,19 +178,13 @@ const ParticipantManagementPage = () => {
   };
 
   const handleView = (id: number) => {
-    const participant = participants.find(p => p.id === id);
-    if (participant) {
-      setSelectedParticipant(participant);
-      setDetailModalOpen(true);
-    }
+    // Redirection vers la page de détail au lieu d'ouvrir un modal
+    router.push(`/organisateur/gestionparticipant/detail/${id}`);
   };
 
   const handleEdit = (id: number) => {
-    setSnackbar({
-      open: true,
-      message: 'Redirection vers la page d\'édition',
-      severity: 'info',
-    });
+    // Redirection vers la page d'édition
+    router.push(`/organisateur/gestionparticipant/edit/${id}`);
   };
 
   const handleCloseSnackbar = () => {
@@ -223,8 +216,6 @@ const ParticipantManagementPage = () => {
               borderRadius: 1,
               backgroundColor: "white",
               boxShadow: 'none'
-              // bgcolor: 'background.paper',
-              // boxShadow: '0 1px 3px rgba(0,0,0,0.12)'
             }}
           >
             {TABS.map((tab) => (
@@ -259,13 +250,6 @@ const ParticipantManagementPage = () => {
             setSnackbar={setSnackbar}
           />
         )}
-
-        {/* {tabs.value === 'participants' && (
-          <ParticipantsTable
-            participants={participants}
-            setSnackbar={setSnackbar}
-          />
-        )} */}
 
         {/* Footer de la page */}
         <Box sx={{
@@ -304,17 +288,6 @@ const ParticipantManagementPage = () => {
           </Stack>
         </Box>
       </Stack>
-
-      {/* Modal de détail du participant */}
-      <ParticipantDetailModal
-        open={detailModalOpen}
-        onClose={() => {
-          setDetailModalOpen(false);
-          setSelectedParticipant(null);
-        }}
-        participant={selectedParticipant}
-        onEdit={handleEdit}
-      />
 
       {/* Modal de confirmation de suppression */}
       <ParticipantDeleteModal

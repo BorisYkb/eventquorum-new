@@ -21,14 +21,36 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
+    Button,
+    Card,
+    IconButton,
+    Stack,
+    TextField,
+    Chip,
 } from '@mui/material';
 
 import { Upload } from 'src/components/upload';
+import { Editor } from 'src/components/editor';
+import { Field } from 'src/components/hook-form';
+import { Iconify } from 'src/components/iconify';
+import { UploadAvatar } from 'src/components/upload'; 
 
 interface IntervenantPermissionsBlockProps {
     consulterTelEmail: boolean;
     repondreQuestions: boolean;
     onPermissionChange: (permission: string) => (value: boolean | string) => void;
+}
+
+interface ReseauSocial {
+    nom: string;
+    lien: string;
+}
+
+interface Intervenant {
+    image: File | string | null;
+    description: string;
+    reseauxSociaux: ReseauSocial[];
+    index: number | null;
 }
 
 /**
@@ -46,10 +68,21 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
     const [files, setFiles] = useState<(File | string)[]>([]);
     const [showPreview, setShowPreview] = React.useState(true);
     
-    // Nouveaux states pour les images
+    // States pour les images
     const [pourActivite, setPourActivite] = useState(false);
     const [pourEvenement, setPourEvenement] = useState(false);
-    const [activiteSelectionnee, setActiviteSelectionnee] = useState('');
+    const [activiteSelectionnee, setActiviteSelectionnee] = useState<string[]>([]);
+
+    // States pour les intervenants
+    const [isAddingIntervenant, setIsAddingIntervenant] = useState(false);
+    const [intervenants, setIntervenants] = useState<Intervenant[]>([]);
+    const [currentIntervenant, setCurrentIntervenant] = useState<Intervenant>({
+        image: null,
+        description: '',
+        reseauxSociaux: [],
+        index: null
+    });
+    const [nouveauReseau, setNouveauReseau] = useState({ nom: '', lien: '' });
 
     // Liste des activités (à adapter selon vos données)
     const activites = [
@@ -61,12 +94,62 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
     const handleDropMultiFile = (acceptedFiles: File[]) => {
         setFiles([...files, ...acceptedFiles]);
     };
+    
     const handleRemoveFile = (inputFile: File | string) => {
         const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
         setFiles(filesFiltered);
-    }
+    };
+    
     const handleRemoveAllFiles = () => {
-      setFiles([]);
+        setFiles([]);
+    };
+
+    // Ajouter un réseau social à l'intervenant en cours
+    const handleAddReseauSocial = () => {
+        if (nouveauReseau.nom && nouveauReseau.lien) {
+            setCurrentIntervenant({
+                ...currentIntervenant,
+                reseauxSociaux: [...currentIntervenant.reseauxSociaux, { ...nouveauReseau }]
+            });
+            setNouveauReseau({ nom: '', lien: '' });
+        }
+    };
+
+    // Supprimer un réseau social
+    const handleDeleteReseauSocial = (index: number) => {
+        setCurrentIntervenant({
+            ...currentIntervenant,
+            reseauxSociaux: currentIntervenant.reseauxSociaux.filter((_, i) => i !== index)
+        });
+    };
+
+    // Ajouter ou mettre à jour un intervenant
+    const handleAddIntervenant = () => {
+        if (currentIntervenant.index !== null) {
+            // Mise à jour
+            const updatedIntervenants = [...intervenants];
+            updatedIntervenants[currentIntervenant.index] = {
+                ...currentIntervenant,
+                index: null
+            };
+            setIntervenants(updatedIntervenants);
+        } else {
+            // Ajout
+            setIntervenants([...intervenants, { ...currentIntervenant, index: null }]);
+        }
+        setIsAddingIntervenant(false);
+        setCurrentIntervenant({ image: null, description: '', reseauxSociaux: [], index: null });
+    };
+
+    // Éditer un intervenant
+    const handleEditIntervenant = (index: number) => {
+        setCurrentIntervenant({ ...intervenants[index], index });
+        setIsAddingIntervenant(true);
+    };
+
+    // Supprimer un intervenant
+    const handleDeleteIntervenant = (index: number) => {
+        setIntervenants(intervenants.filter((_, i) => i !== index));
     };
 
     const intervenantPermissions = [
@@ -82,54 +165,8 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
         }
     ];
 
-
-
     return (
-        <>
-            {/* <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle1" sx={{
-                    fontWeight: 600,
-                    mb: 2,
-                    color: '#374151',
-                    display: 'flex',
-                    alignItems: 'center'
-                }}>
-                    <Box sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        backgroundColor: theme.palette.warning.main,
-                        mr: 1
-                    }} />
-                    Participants
-                </Typography>
-
-                <TableContainer component={Paper} variant="outlined" sx={{ mb: 2 }}>
-                    <Table size="small">
-                        <TableBody>
-                            {intervenantPermissions.map((permission) => (
-                                <TableRow key={permission.key}>
-                                    <TableCell sx={{ border: 'none', py: 1.5 }}>
-                                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                            {permission.label}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell sx={{ border: 'none', py: 1.5, width: 150 }} align="right">
-                                        <Switch
-                                            checked={permission.value}
-                                            onChange={(e) => onPermissionChange(permission.key)(e.target.checked)}
-                                            size="small"
-                                            color="primary"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box> */}
-
-            <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" sx={{
                     fontWeight: 600,
                     mb: 2,
@@ -144,7 +181,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                         backgroundColor: theme.palette.warning.main,
                         mr: 1
                     }} />
-                    Images des intervenants
+                    Informations des intervenants
                 </Typography>
 
                 <Box sx={{ mb: 2 }}>
@@ -183,11 +220,12 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
 
                 {pourActivite && (
                     <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-                        <InputLabel>Sélectionner une activité</InputLabel>
+                        <InputLabel>Sélectionner une ou plusieurs activités</InputLabel>
                         <Select
+                            multiple
                             value={activiteSelectionnee}
                             onChange={(e) => setActiviteSelectionnee(e.target.value)}
-                            label="Sélectionner une activité"
+                            label="Sélectionner une ou plusieurs activités"
                         >
                             {activites.map((activite) => (
                                 <MenuItem key={activite.id} value={activite.id}>
@@ -199,18 +237,241 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                 )}
 
                 {(pourActivite || pourEvenement) && (
-                    <Upload
-                        multiple
-                        thumbnail={showPreview}
-                        value={files}
-                        onDrop={handleDropMultiFile}
-                        onRemove={handleRemoveFile}
-                        onRemoveAll={handleRemoveAllFiles}
-                        onUpload={() => console.info('ON UPLOAD')}
-                    />
+                    <Stack>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Typography variant="subtitle2">Liste des intervenants</Typography>
+                            <Button
+                                variant="outlined"
+                                startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />}
+                                onClick={() => setIsAddingIntervenant(true)}
+                                size="small"
+                            >
+                                Ajouter un intervenant
+                            </Button>
+                        </Box>
+
+                        {/* Formulaire d'ajout/édition d'intervenant */}
+                        {isAddingIntervenant && (
+                            <Card variant="outlined" sx={{ p: 3, mb: 3, backgroundColor: '#f9f9f9' }}>
+                                <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                                    {currentIntervenant.index !== null ? 'Modifier l\'intervenant' : 'Nouvel intervenant'}
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
+                                    {/* Image à gauche */}
+                                    <Box sx={{ minWidth: 200 }}>
+                                        <UploadAvatar
+                                            value={currentIntervenant.image}
+                                            onDrop={(acceptedFiles: File[]) => {
+                                                setCurrentIntervenant({
+                                                    ...currentIntervenant,
+                                                    image: acceptedFiles[0]
+                                                });
+                                            }}
+                                            validator={(fileData) => {
+                                                if (fileData.size > 2000000) {
+                                                    return { code: 'file-too-large', message: 'Fichier trop volumineux' };
+                                                }
+                                                return null;
+                                            }}
+                                            helperText={
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{
+                                                        mt: 2,
+                                                        display: 'block',
+                                                        textAlign: 'center',
+                                                        color: 'text.disabled',
+                                                    }}
+                                                >
+                                                    Photo de l'intervenant
+                                                </Typography>
+                                            }
+                                        />
+                                    </Box>
+
+                                    {/* Description et réseaux sociaux à droite */}
+                                    <Box sx={{ flex: 1 }}>
+                                        <Editor
+                                            fullItem
+                                            
+                                            value={currentIntervenant.description}
+                                            onChange={(value: string) => {
+                                                setCurrentIntervenant({
+                                                    ...currentIntervenant,
+                                                    description: value
+                                                });
+                                            }}
+                                            placeholder="Décrivez l'intervenant (nom, fonction, biographie...)"
+                                            sx={{ maxHeight: 300, mb: 2 }}
+                                        />
+
+                                        {/* Section réseaux sociaux */}
+                                        <Box sx={{ mb: 2 }}>
+                                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                                Réseaux sociaux
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                                                <TextField
+                                                    size="small"
+                                                    placeholder="Nom (ex: LinkedIn)"
+                                                    value={nouveauReseau.nom}
+                                                    onChange={(e) => setNouveauReseau({ ...nouveauReseau, nom: e.target.value })}
+                                                    sx={{ flex: 1 }}
+                                                />
+                                                <TextField
+                                                    size="small"
+                                                    placeholder="Lien (ex: https://...)"
+                                                    value={nouveauReseau.lien}
+                                                    onChange={(e) => setNouveauReseau({ ...nouveauReseau, lien: e.target.value })}
+                                                    sx={{ flex: 2 }}
+                                                />
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onClick={handleAddReseauSocial}
+                                                    disabled={!nouveauReseau.nom || !nouveauReseau.lien}
+                                                >
+                                                    Ajouter
+                                                </Button>
+                                            </Box>
+
+                                            {/* Liste des réseaux sociaux ajoutés */}
+                                            {currentIntervenant.reseauxSociaux.length > 0 && (
+                                                <Stack spacing={1}>
+                                                    {currentIntervenant.reseauxSociaux.map((reseau, index) => (
+                                                        <Box
+                                                            key={index}
+                                                            sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 1,
+                                                                p: 1,
+                                                                bgcolor: 'background.paper',
+                                                                borderRadius: 1,
+                                                                border: '1px solid',
+                                                                borderColor: 'divider'
+                                                            }}
+                                                        >
+                                                            <Typography variant="body2" sx={{ fontWeight: 600, minWidth: 80 }}>
+                                                                {reseau.nom}:
+                                                            </Typography>
+                                                            <Typography variant="body2" sx={{ flex: 1, color: 'primary.main' }}>
+                                                                {reseau.lien}
+                                                            </Typography>
+                                                            <IconButton
+                                                                size="small"
+                                                                onClick={() => handleDeleteReseauSocial(index)}
+                                                                sx={{ color: 'error.main' }}
+                                                            >
+                                                                <Iconify icon="solar:trash-bin-trash-bold" width={18} height={18} />
+                                                            </IconButton>
+                                                        </Box>
+                                                    ))}
+                                                </Stack>
+                                            )}
+                                        </Box>
+                                        
+                                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                                            <Button
+                                                variant="outlined"
+                                                color="inherit"
+                                                onClick={() => {
+                                                    setIsAddingIntervenant(false);
+                                                    setCurrentIntervenant({ image: null, description: '', reseauxSociaux: [], index: null });
+                                                    setNouveauReseau({ nom: '', lien: '' });
+                                                }}
+                                            >
+                                                Annuler
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={handleAddIntervenant}
+                                                disabled={!currentIntervenant.image || !currentIntervenant.description}
+                                            >
+                                                {currentIntervenant.index !== null ? 'Mettre à jour' : 'Ajouter'}
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Card>
+                        )}
+
+                        {/* Liste des intervenants ajoutés */}
+                        {intervenants.length > 0 && (
+                            <Box sx={{ mt: 2 }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                                    {intervenants.length} intervenant(s) ajouté(s)
+                                </Typography>
+                                <Stack spacing={2}>
+                                    {intervenants.map((intervenant, index) => (
+                                        <Card key={index} variant="outlined" sx={{ p: 2 }}>
+                                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                                                <Box
+                                                    component="img"
+                                                    src={typeof intervenant.image === 'string' ? intervenant.image : URL.createObjectURL(intervenant.image)}
+                                                    alt={`Intervenant ${index + 1}`}
+                                                    sx={{
+                                                        width: 80,
+                                                        height: 80,
+                                                        borderRadius: 1,
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                                <Box sx={{ flex: 1 }}>
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        dangerouslySetInnerHTML={{ __html: intervenant.description }}
+                                                        sx={{
+                                                            '& p': { margin: 0 },
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            display: '-webkit-box',
+                                                            WebkitLineClamp: 2,
+                                                            WebkitBoxOrient: 'vertical',
+                                                            mb: 1
+                                                        }}
+                                                    />
+                                                    {intervenant.reseauxSociaux.length > 0 && (
+                                                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                                            {intervenant.reseauxSociaux.map((reseau, idx) => (
+                                                                <Chip
+                                                                    key={idx}
+                                                                    label={reseau.nom}
+                                                                    size="small"
+                                                                    variant="outlined"
+                                                                    onClick={() => window.open(reseau.lien, '_blank')}
+                                                                    sx={{ cursor: 'pointer' }}
+                                                                />
+                                                            ))}
+                                                        </Box>
+                                                    )}
+                                                </Box>
+                                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleEditIntervenant(index)}
+                                                        sx={{ color: 'warning.main' }}
+                                                    >
+                                                        <Iconify icon="solar:pen-bold" width={18} height={18} />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleDeleteIntervenant(index)}
+                                                        sx={{ color: 'error.main' }}
+                                                    >
+                                                        <Iconify icon="solar:trash-bin-trash-bold" width={18} height={18} />
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
+                                        </Card>
+                                    ))}
+                                </Stack>
+                            </Box>
+                        )}
+                    </Stack>
                 )}
             </Box>
-        </>
     );
 };
 

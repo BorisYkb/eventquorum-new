@@ -1,7 +1,15 @@
 //src/app/organisateur/gestionparticipant/components/ParticipantDeleteModal.tsx
+
 'use client';
 
 import React from 'react';
+
+import {
+  Close as CloseIcon,
+  Warning as WarningIcon,
+  Person as PersonIcon,
+  Delete as DeleteIcon,
+} from '@mui/icons-material';
 import {
   Dialog,
   DialogTitle,
@@ -15,12 +23,6 @@ import {
   IconButton,
   Alert,
 } from '@mui/material';
-import {
-  Close as CloseIcon,
-  Warning as WarningIcon,
-  Person as PersonIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
 
 // Import du type
 import { Participant } from 'src/app/organisateur/gestionparticipant/gestionparticipant-home/components/types';

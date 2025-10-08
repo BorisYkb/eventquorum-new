@@ -1,11 +1,13 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/NavigationButtons.tsx
+
 'use client';
+
+import { useRouter } from 'next/navigation';
 
 import {
   Stack,
   Button,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import {
   PersonAdd as PersonAddIcon,
   Group as GroupIcon,
