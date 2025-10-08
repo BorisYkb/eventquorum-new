@@ -24,11 +24,11 @@ import { Iconify } from 'src/components/iconify';
 import { CurrentQuestion, Question, QUESTION_TYPES } from '../nouveau/types';
 
 // Import des composants dynamiques pour chaque type
-import ListeDeroulanteQuestion from '../nouveau/components/QuestionTypeComponents/ListeDeroulanteQuestion';
-import CaseACocherQuestion from '../nouveau/components/QuestionTypeComponents/CaseACocherQuestion';
-import QuestionLibreQuestion from '../nouveau/components/QuestionTypeComponents/QuestionLibreQuestion';
-import EchelleLineaireQuestion from '../nouveau/components/QuestionTypeComponents/EchelleLineaireQuestion';
-import ChoixMultipleQuestion from '../nouveau/components/QuestionTypeComponents/ChoixMultipleQuestion';
+import ListeDeroulanteQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/ListeDeroulanteQuestion';
+import CaseACocherQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/CaseACocherQuestion';
+import QuestionLibreQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/QuestionLibreQuestion';
+import EchelleLineaireQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/EchelleLineaireQuestion';
+import ChoixMultipleQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/ChoixMultipleQuestion';
 
 interface QuestionEditModalProps {
   open: boolean;

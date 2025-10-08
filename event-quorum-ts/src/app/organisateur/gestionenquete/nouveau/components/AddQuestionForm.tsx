@@ -17,11 +17,11 @@ import {
 import { CurrentQuestion, Enquete, Question, QUESTION_TYPES } from '../types';
 
 // Import des composants pour chaque type de question
-import ListeDeroulanteQuestion from './QuestionTypeComponents/ListeDeroulanteQuestion';
-import CaseACocherQuestion from './QuestionTypeComponents/CaseACocherQuestion';
-import QuestionLibreQuestion from './QuestionTypeComponents/QuestionLibreQuestion';
-import EchelleLineaireQuestion from './QuestionTypeComponents/EchelleLineaireQuestion';
-import ChoixMultipleQuestion from './QuestionTypeComponents/ChoixMultipleQuestion';
+import ListeDeroulanteQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/ListeDeroulanteQuestion';
+import CaseACocherQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/CaseACocherQuestion';
+import QuestionLibreQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/QuestionLibreQuestion';
+import EchelleLineaireQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/EchelleLineaireQuestion';
+import ChoixMultipleQuestion from 'src/sections/gestionEnquete/QuestionTypeComponents/ChoixMultipleQuestion';
 
 interface AddQuestionFormProps {
   enquetes: Enquete[];
