@@ -1,8 +1,15 @@
 // File: src/app/organisateur/gestionhabilitations/[id]/modifier/page.tsx
+
 'use client'
+
+import type { SelectChangeEvent } from '@mui/material/Select';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import type { SelectChangeEvent } from '@mui/material/Select';
+
+import Grid from '@mui/material/Grid';
+import { ArrowBack } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -19,18 +26,17 @@ import {
   Alert,
   Snackbar,
 } from '@mui/material';
+
 import Loading from 'src/app/loading';
-import Grid from '@mui/material/Grid';
-import { ArrowBack } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+
 import { Label } from 'src/components/label';
 
 // Import des composants de permissions (réutilisés)
-import BasePermissionsBlock from '../../nouveau/components/BasePermissionsBlock';
-import SupervisorPermissionsBlock from '../../nouveau/components/SupervisorPermissionsBlock';
-import OperatorPermissionsBlock from '../../nouveau/components/OperatorPermissionsBlock';
+// import BasePermissionsBlock from '../../nouveau/components/BasePermissionsBlock';
+// import OperatorPermissionsBlock from '../../nouveau/components/OperatorPermissionsBlock';
+// import SupervisorPermissionsBlock from '../../nouveau/components/SupervisorPermissionsBlock';
+// import GuichetierPermissionsBlock from '../../nouveau/components/GuichetierPermissionsBlock';
 import IntervenantPermissionsBlock from '../../nouveau/components/IntervenantPermissionsBlock';
-import GuichetierPermissionsBlock from '../../nouveau/components/GuichetierPermissionsBlock';
 
 interface EditAccessForm {
   nom: string;
@@ -76,7 +82,7 @@ const EditAccessPage: React.FC = () => {
     prenom: '',
     email: '',
     telephone: '',
-    role: 'Operateur de saisie',
+    role: "Agent d'admission",
     mdp: '',
     permissions: {
       // Permissions de base
@@ -103,18 +109,18 @@ const EditAccessPage: React.FC = () => {
     phone: '0123456789',
     email: 'jean.dupont@example.com',
     role: 'Superviseur',
-    permissions: {
-      lecture: true,
-      ecriture: true,
-      modification: false,
-      autoriserExport: true,
-      preciserEnregistrements: false,
-      typeEntree: '',
-      admissionActivite: '',
-      consulterTelEmail: false,
-      repondreQuestions: false,
-      ajouterParticipants: false,
-    }
+    // permissions: {
+    //   lecture: true,
+    //   ecriture: true,
+    //   modification: false,
+    //   autoriserExport: true,
+    //   preciserEnregistrements: false,
+    //   typeEntree: '',
+    //   admissionActivite: '',
+    //   consulterTelEmail: false,
+    //   repondreQuestions: false,
+    //   ajouterParticipants: false,
+    // }
   };
 
   // Chargement des données existantes

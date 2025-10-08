@@ -56,7 +56,7 @@ const VisioConference = () => {
 
   return (
     <Card>
-      <CardHeader title="Configurer les visio-conférence" />
+      <CardHeader title="Configurer la visio-conférence" />
       <CardContent>
         <Form methods={methods} onSubmit={onSubmit}>
           <Box
@@ -74,7 +74,7 @@ const VisioConference = () => {
                 control={control}
                 render={({ field }) => (
                   <Field.Select {...field} name="activite" label="Choisir une activité">
-                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="">Toutes les activités</MenuItem>
                     <Divider sx={{ borderStyle: 'dashed' }} />
                     {Activites.map((option) => (
                       <MenuItem key={option.value} value={option.label}>
@@ -165,7 +165,7 @@ const VisioConference = () => {
               control={control}
               render={({ field }) => (
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Autoriser la Retransmission</FormLabel>
+                  <FormLabel component="legend">Activité la Retransmission de l'évènement pour les participants</FormLabel>
                   <RadioGroup {...field} row>
                     <FormControlLabel value="oui" control={<Radio />} label="Oui" />
                     <FormControlLabel value="non" control={<Radio />} label="Non" />

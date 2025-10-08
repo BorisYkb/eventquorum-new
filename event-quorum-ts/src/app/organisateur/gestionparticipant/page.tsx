@@ -6,7 +6,7 @@ import ParticipantManagementPage from 'src/app/organisateur/gestionparticipant/g
 
 // ----------------------------------------------------------------------
 
-export const metadata: Metadata = { title: `Coming soon - ${CONFIG.appName}` };
+export const metadata: Metadata = { title: `Gestion des participant - ${CONFIG.appName}` };
 
 export default function Page() {
     return <ParticipantManagementPage />;
