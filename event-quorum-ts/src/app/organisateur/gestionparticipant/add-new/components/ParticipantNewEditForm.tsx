@@ -297,7 +297,7 @@ export function ParticipantNewEditForm({ item }: Props) {
         </Stack>
       </Card> */}
 
-      {/* 3. Import par activité */}
+      {/* 2. Import par activité */}
       <Card sx={{ p: 3 }}>
         <Typography variant="h6" gutterBottom>
           2. Importer la liste des invités par activité

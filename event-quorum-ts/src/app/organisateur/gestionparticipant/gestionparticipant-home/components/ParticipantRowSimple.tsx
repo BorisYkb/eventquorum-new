@@ -23,8 +23,7 @@ type ParticipantRowSimpleProps = {
  * Sans les colonnes : Connecté, Actions, et sans checkbox
  * Avec la colonne Émargement
  */
-const ParticipantRowSimple: React.FC<ParticipantRowSimpleProps> = ({ participant }) => {
-    return (
+const ParticipantRowSimple: React.FC<ParticipantRowSimpleProps> = ({ participant }) => (
         <TableRow hover>
             <TableCell>
                 <Stack direction="row" spacing={2} alignItems="center">
@@ -71,6 +70,5 @@ const ParticipantRowSimple: React.FC<ParticipantRowSimpleProps> = ({ participant
             </TableCell>
         </TableRow>
     );
-};
 
 export default ParticipantRowSimple;
