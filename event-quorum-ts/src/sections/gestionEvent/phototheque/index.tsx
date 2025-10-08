@@ -227,7 +227,7 @@ export default function Phototheque() {
           fontWeight: 600,
           display: 'flex',
           alignItems: 'center',
-          fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
+          fontSize: { xs: '0.9rem', sm: '1rem', md: '1.2rem' },
         }}
       >
         Photothèque de l'événement
@@ -251,7 +251,7 @@ export default function Phototheque() {
                 variant="h6"
                 sx={{
                   fontWeight: 600,
-                  fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+                  fontSize: { xs: '0.8rem', sm: '0.825rem', md: '1.05rem' },
                   mb: 1
                 }}
               >

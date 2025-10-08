@@ -92,7 +92,7 @@ const SURVEY_DATA = [
     date: '12/05/2023 à 08H00',
     expirationDate: '13/05/2023 à 08H00',
     status: 'Terminé',
-    statusColor: 'info',
+    statusColor: 'success',
     note: '10/10',
     score: 10,
   },
@@ -275,7 +275,7 @@ export default function MesInteractionsPage() {
           fontSize: { xs: '0.75rem', sm: '0.875rem' },
           py: { xs: 1, sm: 1.5 },
         }}>
-          Date
+          Date de début
         </TableCell>
         {!isSmallMobile && (
           <TableCell sx={{
@@ -283,7 +283,7 @@ export default function MesInteractionsPage() {
             fontSize: { xs: '0.75rem', sm: '0.875rem' },
             py: { xs: 1, sm: 1.5 },
           }}>
-            Date d'expiration
+            Date de fin
           </TableCell>
         )}
         <TableCell sx={{
@@ -329,13 +329,13 @@ export default function MesInteractionsPage() {
           >
             {survey.title}
           </Typography>
-          <Typography
+          {/* <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
             {survey.type}
-          </Typography>
+          </Typography> */}
         </Box>
       </TableCell>
 
