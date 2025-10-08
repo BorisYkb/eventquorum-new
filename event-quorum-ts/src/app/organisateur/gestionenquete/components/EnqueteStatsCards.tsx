@@ -7,7 +7,7 @@ import { WidgetSummary } from './WidgetSummary';
 interface EnqueteStatsCardsProps {
   createdAt: string;
   typeEnquete: 'live' | 'asynchrone';
-  activite: string;
+  activite: string | string[]; // ✅ Accepte string OU string[]
 }
 
 /**
@@ -29,6 +29,22 @@ const EnqueteStatsCards: React.FC<EnqueteStatsCardsProps> = ({
   // Formatage du type d'enquête pour l'affichage
   const typeEnqueteDisplay = typeEnquete === 'live' ? 'Synchrone' : 'Asynchrone';
 
+  /**
+   * ✅ Formatage des activités
+   * Si string → retourne tel quel
+   * Si string[] → joint avec des virgules
+   */
+  const activitesDisplay = Array.isArray(activite)
+    ? activite.join(', ')
+    : activite;
+
+  /**
+   * ✅ Titre dynamique selon le nombre d'activités
+   */
+  const activitesTitle = Array.isArray(activite) && activite.length > 1
+    ? 'Activités concernées'
+    : 'Activité concernée';
+
   return (
     <Grid container spacing={3} sx={{ mb: 4 }}>
       {/* Widget Date de création */}
@@ -46,7 +62,7 @@ const EnqueteStatsCards: React.FC<EnqueteStatsCardsProps> = ({
             '& .MuiBox-root': {
               '&:has(> .MuiBox-root)': {
                 '& .MuiBox-root:first-of-type': {
-                  fontSize: '1.2rem !important', // Au lieu de h3 (2rem)
+                  fontSize: '1.2rem !important',
                   fontWeight: 600
                 }
               }
@@ -79,14 +95,13 @@ const EnqueteStatsCards: React.FC<EnqueteStatsCardsProps> = ({
         />
       </Grid>
 
-      {/* Widget Activité concernée */}
+      {/* Widget Activité(s) concernée(s) - ✅ Avec liste d'activités */}
       <Grid item xs={12} sm={6} md={4}>
         <WidgetSummary
-          title="Activité concernée"
-          total={activite}
+          title={activitesTitle}
+          total={activitesDisplay}
           color="success"
           icon="solar:target-bold-duotone"
-          subtitle="Événement principal"
           sx={{
             borderRadius: '12px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -95,8 +110,9 @@ const EnqueteStatsCards: React.FC<EnqueteStatsCardsProps> = ({
             '& .MuiBox-root': {
               '&:has(> .MuiBox-root)': {
                 '& .MuiBox-root:first-of-type': {
-                  fontSize: '1rem !important', // Plus petit pour le texte long
-                  fontWeight: 600
+                  fontSize: '1rem !important', // Plus petit pour accommoder plusieurs activités
+                  fontWeight: 600,
+                  lineHeight: 1.3 // Meilleur espacement pour le texte long
                 }
               }
             }

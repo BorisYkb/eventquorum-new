@@ -1,3 +1,5 @@
+// File: src/sections/gestionEvent/phototheque/index.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -10,9 +12,9 @@ import {
   Chip,
   Autocomplete,
   TextField,
+  Grid,
 } from '@mui/material';
 import { Upload } from 'src/components/upload';
-import { Iconify } from 'src/components/iconify';
 import { PhotoList } from './photo-list';
 
 /**
@@ -77,7 +79,6 @@ export default function Phototheque() {
 
   /**
    * Gère le drop de fichiers multiples dans la zone d'upload
-   * @param acceptedFiles - Fichiers acceptés par le composant Upload
    */
   const handleDropMultiFile = (acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
@@ -85,7 +86,6 @@ export default function Phototheque() {
 
   /**
    * Supprime un fichier de la liste temporaire (avant enregistrement)
-   * @param inputFile - Fichier à supprimer (peut être File ou string)
    */
   const handleRemoveFile = (inputFile: File | string) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
@@ -127,8 +127,6 @@ export default function Phototheque() {
   /**
    * Enregistre les photos avec les métadonnées
    * Crée une carte pour chaque combinaison (photo × destination)
-   * 
-   * Exemple : 2 photos × (2 activités + 1 événement) = 6 cartes créées
    */
   const handleSavePhotos = () => {
     // Validation 1 : Au moins une destination doit être sélectionnée
@@ -206,7 +204,6 @@ export default function Phototheque() {
 
   /**
    * Supprime les photos sélectionnées
-   * @param photoIds - Liste des IDs des photos à supprimer
    */
   const handleDeletePhotos = (photoIds: string[]) => {
     // Libère les URLs d'objets pour éviter les fuites mémoire
@@ -223,173 +220,182 @@ export default function Phototheque() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      {/* ============ SECTION 1 : SÉLECTION DES DESTINATIONS ============ */}
+      {/* ============ TITRE PRINCIPAL ============ */}
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
+        }}
+      >
+        Photothèque de l'événement
+      </Typography>
+
+      {/* ============ SECTIONS 1 & 2 : CÔTE À CÔTE ============ */}
       <Box
         sx={{
-          display: 'flex',
-          gap: 2,
-          flexDirection: 'column',
           boxShadow: 3,
           p: 3,
           borderRadius: 2,
           bgcolor: 'background.paper',
         }}
       >
-        {/* Titre de la section */}
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 600,
-            mb: 1,
-            display: 'flex',
-            alignItems: 'center',
-            fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
-          }}
-        >
-          Photothèque de l'événement
-        </Typography>
-
-        {/* Checkboxes de sélection des destinations */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {/* Checkbox Activité avec Autocomplete */}
-          <FormControlLabel
-            control={
-              <Checkbox checked={isActivityChecked} onChange={handleActivityCheckChange} />
-            }
-            label={
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                Activité
+        <Grid container spacing={3}>
+          {/* COLONNE GAUCHE : Sélection des destinations */}
+          <Grid item xs={12} md={5}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {/* Titre de la section */}
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+                  mb: 1
+                }}
+              >
+                Sélection des destinations
               </Typography>
-            }
-          />
 
-          {/* Autocomplete des activités (visible uniquement si checkbox cochée) */}
-          {isActivityChecked && (
-            <Box sx={{ ml: 4 }}>
-              <Autocomplete
-                multiple
-                disableCloseOnSelect
-                options={MOCK_ACTIVITIES}
-                value={selectedActivities}
-                onChange={handleActivitySelectChange}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="+ Sélectionner les activités"
-                    variant="outlined"
-                  />
-                )}
-                renderOption={(props, activity) => (
-                  <li {...props} key={activity.id}>
-                    <Box
+              {/* Checkboxes de sélection */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Checkbox Activité avec Autocomplete */}
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={isActivityChecked} onChange={handleActivityCheckChange} />
+                  }
+                  label={
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      Activité
+                    </Typography>
+                  }
+                />
+
+                {/* Autocomplete des activités (visible uniquement si checkbox cochée) */}
+                {isActivityChecked && (
+                  <Box sx={{ ml: 4 }}>
+                    <Autocomplete
+                      multiple
+                      disableCloseOnSelect
+                      options={MOCK_ACTIVITIES}
+                      value={selectedActivities}
+                      onChange={handleActivitySelectChange}
+                      getOptionLabel={(option) => option.name}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="+ Sélectionner les activités"
+                          variant="outlined"
+                        />
+                      )}
+                      renderOption={(props, activity) => (
+                        <li {...props} key={activity.id}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1.5,
+                              width: '100%',
+                            }}
+                          >
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontWeight: 500,
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {activity.name}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </li>
+                      )}
+                      renderTags={(selected, getTagProps) =>
+                        selected.map((activity, index) => (
+                          <Chip
+                            {...getTagProps({ index })}
+                            key={activity.id}
+                            size="small"
+                            variant="soft"
+                            label={activity.name}
+                            sx={{
+                              fontSize: { xs: '0.75rem', sm: '0.8125rem' },
+                            }}
+                          />
+                        ))
+                      }
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1.5,
-                        width: '100%',
-                      }}
-                    >
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontWeight: 500,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {activity.name}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </li>
-                )}
-                renderTags={(selected, getTagProps) =>
-                  selected.map((activity, index) => (
-                    <Chip
-                      {...getTagProps({ index })}
-                      key={activity.id}
-                      size="small"
-                      variant="soft"
-                      label={activity.name}
-                      sx={{
-                        fontSize: { xs: '0.75rem', sm: '0.8125rem' },
+                        '& .MuiOutlinedInput-root': {
+                          py: 1,
+                        },
                       }}
                     />
-                  ))
-                }
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    py: 1,
-                  },
-                }}
-              />
+                  </Box>
+                )}
+
+                {/* Checkbox Image de l'événement */}
+                <FormControlLabel
+                  control={<Checkbox checked={isEventChecked} onChange={handleEventCheckChange} />}
+                  label={
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      Image de l'événement
+                    </Typography>
+                  }
+                />
+              </Box>
             </Box>
-          )}
+          </Grid>
 
-          {/* Checkbox Image de l'événement */}
-          <FormControlLabel
-            control={<Checkbox checked={isEventChecked} onChange={handleEventCheckChange} />}
-            label={
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                Image de l'événement
+          {/* COLONNE DROITE : Upload des images */}
+          <Grid item xs={12} md={7}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
+              {/* Titre de la section */}
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+                  mb: 1
+                }}
+              >
+                Upload des images
               </Typography>
-            }
-          />
-        </Box>
-      </Box>
 
-      {/* ============ SECTION 2 : UPLOAD DES IMAGES ============ */}
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 2,
-          flexDirection: 'column',
-          boxShadow: 3,
-          p: 3,
-          borderRadius: 2,
-          bgcolor: 'background.paper',
-        }}
-      >
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 600,
-            mb: 1,
-            fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' },
-          }}
-        >
-          Upload des images
-        </Typography>
+              {/* Composant Upload */}
+              <Box sx={{ flex: 1 }}>
+                <Upload
+                  multiple
+                  thumbnail={showPreview}
+                  value={files}
+                  onDrop={handleDropMultiFile}
+                  onRemove={handleRemoveFile}
+                  onRemoveAll={handleRemoveAllFiles}
+                />
+              </Box>
 
-        {/* Composant Upload de minimals.cc */}
-        <Upload
-          multiple
-          thumbnail={showPreview}
-          value={files}
-          onDrop={handleDropMultiFile}
-          onRemove={handleRemoveFile}
-          onRemoveAll={handleRemoveAllFiles}
-        />
-
-        {/* Bouton Enregistrer */}
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleSavePhotos}
-          disabled={files.length === 0}
-          sx={{
-            mt: 2,
-            alignSelf: 'flex-end',
-            minWidth: { xs: '100%', sm: 150 },
-            fontSize: { xs: '0.875rem', sm: '0.9375rem', md: '1rem' },
-          }}
-        >
-          Enregistrer
-        </Button>
+              {/* Bouton Enregistrer */}
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleSavePhotos}
+                disabled={files.length === 0}
+                sx={{
+                  alignSelf: 'flex-end',
+                  minWidth: { xs: '100%', sm: 150 },
+                  fontSize: { xs: '0.875rem', sm: '0.9375rem', md: '1rem' },
+                }}
+              >
+                Enregistrer
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
 
       {/* ============ SECTION 3 : LISTE DES PHOTOS ENREGISTRÉES ============ */}

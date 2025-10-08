@@ -10,8 +10,12 @@ import MuiEnquetesDashboard, { Enquete } from './components/MuiEnquetesDashboard
 
 // ----------------------------------------------------------------------
 
-// Données d'exemple - remplacez par vos vraies données ou un appel API
+/**
+ * Données d'exemple - remplacez par vos vraies données ou un appel API
+ * ✅ Inclut des exemples avec une seule activité ET plusieurs activités
+ */
 const sampleEnquetes: Enquete[] = [
+  // ✅ Exemple 1 : UNE SEULE activité
   {
     id: 1,
     titre: "Satisfaction des participants",
@@ -21,15 +25,23 @@ const sampleEnquetes: Enquete[] = [
     statut: "Terminé",
     createdAt: "2024-01-15"
   },
+
+  // ✅ Exemple 2 : PLUSIEURS activités
   {
     id: 2,
-    titre: "Évaluation de la qualité des intervenants",
-    activite: "PANEL DE HAUT NIVEAU",
+    titre: "Évaluation globale de l'événement",
+    activite: [
+      "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+      "PANEL DE HAUT NIVEAU",
+      "POINT DE PRESSE"
+    ],
     code: "ENQ-002",
-    nombreParticipants: 89,
+    nombreParticipants: 234,
     statut: "En cours",
     createdAt: "2024-02-10"
   },
+
+  // ✅ Exemple 3 : UNE SEULE activité
   {
     id: 3,
     titre: "Feedback sur l'organisation",
@@ -39,15 +51,23 @@ const sampleEnquetes: Enquete[] = [
     statut: "Non démarré",
     createdAt: "2024-01-20"
   },
+
+  // ✅ Exemple 4 : PLUSIEURS activités
   {
     id: 4,
-    titre: "Enquête de satisfaction générale",
-    activite: "COOLING BREAK",
+    titre: "Satisfaction générale - Journée complète",
+    activite: [
+      "COOLING BREAK",
+      "PAUSE CAFE",
+      "WORKSHOP"
+    ],
     code: "ENQ-004",
-    nombreParticipants: 234,
+    nombreParticipants: 189,
     statut: "Terminé",
     createdAt: "2024-03-05"
   },
+
+  // ✅ Exemple 5 : UNE SEULE activité
   {
     id: 5,
     titre: "Évaluation des installations",
@@ -57,24 +77,36 @@ const sampleEnquetes: Enquete[] = [
     statut: "En cours",
     createdAt: "2024-02-28"
   },
+
+  // ✅ Exemple 6 : PLUSIEURS activités (toutes les activités principales)
   {
     id: 6,
-    titre: "Questionnaire post-événement",
-    activite: "PANEL DE HAUT NIVEAU",
+    titre: "Enquête complète - Tous les ateliers",
+    activite: [
+      "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+      "PANEL DE HAUT NIVEAU"
+    ],
     code: "ENQ-006",
-    nombreParticipants: 167,
+    nombreParticipants: 342,
     statut: "Non démarré",
     createdAt: "2024-03-12"
   },
+
+  // ✅ Exemple 7 : PLUSIEURS activités
   {
     id: 7,
-    titre: "Analyse des besoins futurs",
-    activite: "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+    titre: "Analyse des sessions principales",
+    activite: [
+      "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+      "PANEL DE HAUT NIVEAU"
+    ],
     code: "ENQ-007",
     nombreParticipants: 203,
     statut: "En cours",
     createdAt: "2024-03-20"
   },
+
+  // ✅ Exemple 8 : UNE SEULE activité
   {
     id: 8,
     titre: "Évaluation de la communication",
@@ -84,15 +116,23 @@ const sampleEnquetes: Enquete[] = [
     statut: "Terminé",
     createdAt: "2024-02-15"
   },
+
+  // ✅ Exemple 9 : PLUSIEURS activités
   {
     id: 9,
-    titre: "Satisfaction des sponsors",
-    activite: "COOLING BREAK",
+    titre: "Satisfaction des pauses et ateliers",
+    activite: [
+      "COOLING BREAK",
+      "WORKSHOP",
+      "PAUSE CAFE"
+    ],
     code: "ENQ-009",
-    nombreParticipants: 32,
+    nombreParticipants: 167,
     statut: "Non démarré",
     createdAt: "2024-03-25"
   },
+
+  // ✅ Exemple 10 : UNE SEULE activité
   {
     id: 10,
     titre: "Enquête sur l'accessibilité",
@@ -104,13 +144,19 @@ const sampleEnquetes: Enquete[] = [
   }
 ];
 
+/**
+ * Page principale de gestion des enquêtes
+ * Charge et affiche la liste des enquêtes avec le dashboard
+ */
 export default function Page() {
   const [enquetes, setEnquetes] = useState<Enquete[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simuler un chargement de données
-    // Remplacez ceci par votre appel API réel
+    /**
+     * Chargement des données des enquêtes
+     * Simuler un chargement - Remplacez par votre appel API réel
+     */
     const loadEnquetes = async () => {
       try {
         // Simulation d'un délai d'API
@@ -131,12 +177,12 @@ export default function Page() {
 
     loadEnquetes();
   }, []);
-  
+
+  // Affichage du loader pendant le chargement
   if (loading) {
     return <LoadingScreen />;
   }
 
-
-
+  // Affichage du dashboard avec les enquêtes
   return <MuiEnquetesDashboard enquetes={enquetes} />;
 }

@@ -1,4 +1,5 @@
 // File: src/app/organisateur/gestionenquetes/[id]/page.tsx
+// ✅ Version avec support flexible des activités (sans modifier les types de base)
 
 'use client'
 
@@ -17,11 +18,12 @@ import AddQuestionToEnquete from 'src/sections/gestionEnquete/AddQuestionToEnque
 import QuestionEditModal from '../components/QuestionEditModal';
 import Loading from 'src/app/loading';
 
-// Import des types mis à jour
+// Import des types - ✅ ON NE MODIFIE PAS LES TYPES
 import { Question, CurrentQuestion, Enquete } from '../nouveau/types';
 
 /**
  * Interface pour les détails complets d'une enquête avec ses questions
+ * ✅ Garde le type original "activite: string"
  */
 interface EnqueteDetail extends Enquete {
   nombreParticipants: number;
@@ -31,13 +33,12 @@ interface EnqueteDetail extends Enquete {
 }
 
 /**
- * Données d'exemple - à remplacer par vos vraies données
- * ✅ Réduit à 2 questions comme demandé
+ * ✅ Exemple 1 : Enquête avec UNE SEULE activité (format actuel)
  */
-const sampleEnqueteData: EnqueteDetail = {
+const sampleEnqueteSingleActivity: EnqueteDetail = {
   id: 1,
   titre: "Satisfaction des participants",
-  activite: "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+  activite: "CÉRÉMONIE D'OUVERTURE OFFICIELLE", // ✅ String simple
   code: "ENQ-001",
   nombreParticipants: 156,
   statut: "En cours",
@@ -70,6 +71,49 @@ const sampleEnqueteData: EnqueteDetail = {
 };
 
 /**
+ * ✅ Exemple 2 : Données "enrichies" pour simulation de plusieurs activités
+ * On garde le type de base mais on ajoute une prop optionnelle
+ */
+interface EnqueteDetailExtended extends EnqueteDetail {
+  activites?: string[]; // ✅ Propriété optionnelle pour plusieurs activités
+}
+
+const sampleEnqueteMultipleActivities: EnqueteDetailExtended = {
+  id: 2,
+  titre: "Évaluation globale de l'événement",
+  activite: "PANEL DE HAUT NIVEAU", // ✅ Garde le type de base pour compatibilité
+  activites: [ // ✅ Propriété additionnelle pour plusieurs activités
+    "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
+    "PANEL DE HAUT NIVEAU",
+    "POINT DE PRESSE",
+    "WORKSHOP"
+  ],
+  code: "ENQ-002",
+  nombreParticipants: 234,
+  statut: "En cours",
+  typeEnquete: "live",
+  enqueteAnonymat: false,
+  authentificationNumerique: true,
+  createdAt: "2024-01-20",
+  questions: [
+    {
+      id: 1,
+      question: "Sur une échelle de 1 à 10, comment évaluez-vous la qualité globale ?",
+      type: "echelle_lineaire",
+      reponses: [],
+      enqueteId: 2,
+      nombrePoints: 0,
+      bonneReponse: 0,
+      required: true,
+      echelleMin: 1,
+      echelleMax: 10,
+      labelMin: "Très mauvais",
+      labelMax: "Excellent"
+    }
+  ]
+};
+
+/**
  * Liste des enquêtes disponibles pour le modal d'édition
  */
 const sampleEnquetes = [
@@ -79,8 +123,8 @@ const sampleEnquetes = [
 ];
 
 /**
- * Page de détail d'une enquête - Version mise à jour
- * Avec section "Ajouter une question" et redirection vers page de détail de question
+ * Page de détail d'une enquête
+ * ✅ Supporte maintenant les deux formats d'activités sans modifier les types
  */
 const EnqueteDetailPage: React.FC = () => {
   const router = useRouter();
@@ -88,7 +132,7 @@ const EnqueteDetailPage: React.FC = () => {
   const enqueteId = params.id as string;
 
   // États principaux
-  const [enqueteData, setEnqueteData] = useState<EnqueteDetail | null>(null);
+  const [enqueteData, setEnqueteData] = useState<EnqueteDetailExtended | null>(null);
   const [loading, setLoading] = useState(true);
 
   // États pour les modals
@@ -127,7 +171,15 @@ const EnqueteDetailPage: React.FC = () => {
 
         // Simulation d'un délai de chargement
         await new Promise(resolve => setTimeout(resolve, 500));
-        setEnqueteData(sampleEnqueteData);
+
+        // ✅ Choix de l'exemple selon l'ID
+        // ID "1" = une seule activité
+        // ID "2" = plusieurs activités
+        setEnqueteData(
+          enqueteId === "1"
+            ? sampleEnqueteSingleActivity
+            : sampleEnqueteMultipleActivities
+        );
 
       } catch (error) {
         console.error('Erreur lors du chargement de l\'enquête:', error);
@@ -145,16 +197,10 @@ const EnqueteDetailPage: React.FC = () => {
   // GESTIONNAIRES D'ÉVÉNEMENTS - NAVIGATION
   // ===========================================
 
-  /**
-   * Retour vers la liste des enquêtes
-   */
   const handleBack = () => {
     router.push('/organisateur/gestionenquete');
   };
 
-  /**
-   * Redirection vers la page de modification de l'enquête
-   */
   const handleEditEnquete = () => {
     router.push(`/organisateur/gestionenquete/${enqueteId}/modifier`);
   };
@@ -163,33 +209,21 @@ const EnqueteDetailPage: React.FC = () => {
   // GESTIONNAIRES D'ÉVÉNEMENTS - ACTIONS ENQUÊTE
   // ===========================================
 
-  /**
-   * Démarrage de l'enquête
-   */
   const handleStartSurvey = () => {
     console.log('Démarrage de l\'enquête:', enqueteId);
-    // TODO: Logique pour démarrer l'enquête
     setSuccessMessage('Enquête démarrée avec succès !');
     setShowSuccessAlert(true);
   };
 
-  /**
-   * Suspension de l'enquête
-   */
   const handleSuspendSurvey = () => {
     console.log('Suspension de l\'enquête:', enqueteId);
-    // TODO: Logique pour suspendre l'enquête
     setSuccessMessage('Enquête suspendue !');
     setShowSuccessAlert(true);
   };
 
-  /**
-   * Fin de l'enquête
-   */
   const handleEndSurvey = () => {
     if (window.confirm('Êtes-vous sûr de vouloir terminer cette enquête ?')) {
       console.log('Fin de l\'enquête:', enqueteId);
-      // TODO: Logique pour terminer l'enquête
       setSuccessMessage('Enquête terminée !');
       setShowSuccessAlert(true);
     }
@@ -199,14 +233,9 @@ const EnqueteDetailPage: React.FC = () => {
   // GESTIONNAIRES D'ÉVÉNEMENTS - AJOUT QUESTION
   // ===========================================
 
-  /**
-   * ✅ NOUVEAU : Ajout d'une question
-   * Génère un ID unique et ajoute la question au tableau
-   */
   const handleAddQuestion = (questionData: Omit<Question, 'id'>) => {
     if (!enqueteData) return;
 
-    // Génère un nouvel ID unique (max ID + 1)
     const newId = Math.max(...enqueteData.questions.map(q => q.id), 0) + 1;
 
     const newQuestion: Question = {
@@ -214,16 +243,12 @@ const EnqueteDetailPage: React.FC = () => {
       ...questionData
     };
 
-    // Ajoute la nouvelle question au début du tableau
     setEnqueteData({
       ...enqueteData,
       questions: [newQuestion, ...enqueteData.questions]
     });
 
     console.log('Nouvelle question ajoutée:', newQuestion);
-    // TODO: Appel API pour sauvegarder la question
-
-    // Afficher le message de succès
     setSuccessMessage('Question ajoutée avec succès !');
     setShowSuccessAlert(true);
   };
@@ -232,17 +257,10 @@ const EnqueteDetailPage: React.FC = () => {
   // GESTIONNAIRES D'ÉVÉNEMENTS - QUESTIONS
   // ===========================================
 
-  /**
-   * ✅ MODIFIÉ : Redirection vers la page de détail de la question
-   * Au lieu d'ouvrir un modal
-   */
   const handleViewQuestion = (questionId: number) => {
     router.push(`/organisateur/gestionenquete/${enqueteId}/questions/${questionId}`);
   };
 
-  /**
-   * Modification d'une question
-   */
   const handleEditQuestion = (questionId: number) => {
     if (enqueteData) {
       const question = enqueteData.questions.find(q => q.id === questionId);
@@ -266,9 +284,6 @@ const EnqueteDetailPage: React.FC = () => {
     }
   };
 
-  /**
-   * Suppression d'une question
-   */
   const handleDeleteQuestion = (questionId: number) => {
     if (enqueteData) {
       const updatedQuestions = enqueteData.questions.filter(q => q.id !== questionId);
@@ -277,16 +292,11 @@ const EnqueteDetailPage: React.FC = () => {
         questions: updatedQuestions
       });
       console.log('Question supprimée:', questionId);
-      // TODO: Appel API pour supprimer la question
-
       setSuccessMessage('Question supprimée avec succès !');
       setShowSuccessAlert(true);
     }
   };
 
-  /**
-   * Fonction pour fermer l'alerte de succès
-   */
   const handleCloseSuccessAlert = () => {
     setShowSuccessAlert(false);
   };
@@ -295,9 +305,6 @@ const EnqueteDetailPage: React.FC = () => {
   // GESTIONNAIRES D'ÉVÉNEMENTS - MODIFICATION QUESTION
   // ===========================================
 
-  /**
-   * Changement des propriétés de la question en cours de modification
-   */
   const handleCurrentQuestionChange = (field: string, value: any) => {
     setCurrentQuestion(prev => ({
       ...prev,
@@ -305,9 +312,6 @@ const EnqueteDetailPage: React.FC = () => {
     }));
   };
 
-  /**
-   * Ajout d'une réponse à la question en cours de modification
-   */
   const handleAddReponse = () => {
     setCurrentQuestion(prev => ({
       ...prev,
@@ -315,9 +319,6 @@ const EnqueteDetailPage: React.FC = () => {
     }));
   };
 
-  /**
-   * Suppression d'une réponse de la question en cours de modification
-   */
   const handleRemoveReponse = (index: number) => {
     if (currentQuestion.reponses.length > 1) {
       setCurrentQuestion(prev => ({
@@ -327,9 +328,6 @@ const EnqueteDetailPage: React.FC = () => {
     }
   };
 
-  /**
-   * Modification d'une réponse de la question en cours de modification
-   */
   const handleReponseChange = (index: number, value: string) => {
     setCurrentQuestion(prev => ({
       ...prev,
@@ -337,9 +335,6 @@ const EnqueteDetailPage: React.FC = () => {
     }));
   };
 
-  /**
-   * Sauvegarde des modifications d'une question
-   */
   const handleSaveEditedQuestion = () => {
     if (!currentQuestion.question.trim()) {
       alert('Veuillez saisir une question valide.');
@@ -351,7 +346,6 @@ const EnqueteDetailPage: React.FC = () => {
       return;
     }
 
-    // Validation spécifique selon le type
     if (['liste_deroulante', 'case_a_cocher', 'choix_multiple'].includes(currentQuestion.type)) {
       const validReponses = currentQuestion.reponses.filter(rep => rep.trim());
       if (validReponses.length < 2) {
@@ -392,8 +386,6 @@ const EnqueteDetailPage: React.FC = () => {
     setEditModalOpen(false);
     setQuestionToEdit(null);
     console.log('Question modifiée:', updatedQuestion);
-    // TODO: Appel API pour sauvegarder les modifications
-
     setSuccessMessage('Question modifiée avec succès !');
     setShowSuccessAlert(true);
   };
@@ -453,11 +445,15 @@ const EnqueteDetailPage: React.FC = () => {
           authentificationNumerique={enqueteData.authentificationNumerique}
         />
 
-        {/* Cartes de statistiques */}
+        {/* 
+          ✅ Cartes de statistiques - Support flexible
+          Passe "activites" si disponible, sinon "activite"
+          Le composant gère automatiquement les deux cas
+        */}
         <EnqueteStatsCards
           createdAt={enqueteData.createdAt}
           typeEnquete={enqueteData.typeEnquete}
-          activite={enqueteData.activite}
+          activite={enqueteData.activites || enqueteData.activite}
         />
 
         {/* Boutons d'actions sur l'enquête */}
@@ -467,7 +463,7 @@ const EnqueteDetailPage: React.FC = () => {
           onEndSurvey={handleEndSurvey}
         />
 
-        {/* ✅ Section Ajouter une question */}
+        {/* Section Ajouter une question */}
         <AddQuestionToEnquete
           enqueteId={enqueteData.id}
           onQuestionAdded={handleAddQuestion}
