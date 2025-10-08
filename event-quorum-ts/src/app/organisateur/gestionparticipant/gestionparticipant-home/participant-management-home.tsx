@@ -179,7 +179,7 @@ const ParticipantManagementPage = () => {
 
   const handleView = (id: number) => {
     // Redirection vers la page de détail au lieu d'ouvrir un modal
-    router.push(`/organisateur/gestionparticipant/detail/${id}`);
+    router.push(`/organisateur/gestionparticipant/gestionparticipant-home/detail/${id}`);
   };
 
   const handleEdit = (id: number) => {
@@ -203,7 +203,7 @@ const ParticipantManagementPage = () => {
         {/* En-tête de la page */}
         <Box>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
-            Gestion des Participants
+            Gestion des invités
           </Typography>
         </Box>
 

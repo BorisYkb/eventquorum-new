@@ -1,8 +1,11 @@
 //src/app/organisateur/gestionparticipant/gestionparticipant-home/components/ExportButtons.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import {
   Button,
   Stack,
@@ -11,7 +14,6 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 // Types
 type ExportOption = {
@@ -223,7 +225,7 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({ currentTab }) => {
                   fontWeight: 600,
                 }}
               >
-                Consulter
+                Consulter la liste des connectés
               </Button>
             </Tooltip>
           </>
