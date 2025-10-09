@@ -9,6 +9,7 @@ import {
   Email as EmailIcon,
   Phone as PhoneIcon,
   Edit as EditIcon,
+  CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import {
   Box,
@@ -23,6 +24,7 @@ import {
   Avatar,
   Breadcrumbs,
   Link,
+  Chip,
 } from '@mui/material';
 
 // Import du type
@@ -35,6 +37,7 @@ interface Participant {
   connecte: boolean;
   emargement: string | null;
   activite: string;
+  typeConnexion: 'en ligne' | 'physique'; // Nouveau champ
   datePremiereConnexion?: string;
   dateDerniereConnexion?: string;
 }
@@ -56,6 +59,7 @@ const ParticipantDetailPage = () => {
     connecte: true,
     emargement: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
     activite: 'conference',
+    typeConnexion: 'en ligne', // 'en ligne' ou 'physique'
     datePremiereConnexion: '2024-01-20T09:30:00',
     dateDerniereConnexion: '2024-01-26T14:45:00',
   };
@@ -263,8 +267,21 @@ const ParticipantDetailPage = () => {
                 </Typography>
 
                 <Stack spacing={2}>
-                  {/* Connecté */}
+                  {/* Type de connexion */}
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ minWidth: 180 }}>
+                      Type de connexion
+                    </Typography>
+                    <Chip 
+                      label={participant.typeConnexion === 'en ligne' ? 'En ligne' : 'Physique'}
+                      color={participant.typeConnexion === 'en ligne' ? 'success' : 'info'}
+                      size="small"
+                      variant="filled"
+                    />
+                  </Box>
+
+                  {/* Connecté */}
+                  {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Typography variant="body2" color="text.secondary" sx={{ minWidth: 180 }}>
                       Connecté
                     </Typography>
@@ -299,7 +316,7 @@ const ParticipantDetailPage = () => {
                         </>
                       )}
                     </Box>
-                  </Box>
+                  </Box> */}
 
                   {/* Date de première connexion */}
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -323,63 +340,96 @@ const ParticipantDetailPage = () => {
                 </Stack>
               </Paper>
 
-              {/* Section émargement */}
+              {/* Section émargement - Adaptatif selon le type de connexion */}
               <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: 1, borderColor: 'divider' }}>
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: 'text.primary' }}>
                   Émargement
                 </Typography>
 
-                {participant.emargement ? (
-                  <Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      Signature de l'invité
+                {participant.typeConnexion === 'en ligne' ? (
+                  // Affichage pour connexion en ligne
+                  <Box
+                    sx={{
+                      border: 1,
+                      borderColor: 'success.main',
+                      borderRadius: 2,
+                      p: 4,
+                      backgroundColor: 'success.lighter',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 2,
+                    }}
+                  >
+                    <CheckCircleIcon sx={{ fontSize: 54, color: 'success.main' }} />
+                    {/* <Typography variant="h6" sx={{ fontWeight: 600, color: 'success.main' }}>
+                      Participation en ligne
+                    </Typography> */}
+                    <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                      Ce participant suit l'événement en ligne. Aucune signature physique requise.
                     </Typography>
+                    <Chip 
+                      label="En ligne" 
+                      color="success" 
+                      size="medium"
+                      sx={{ mt: 1, fontWeight: 600 }}
+                    />
+                  </Box>
+                ) : (
+                  // Affichage pour connexion physique (signature)
+                  participant.emargement ? (
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        Signature de l'invité
+                      </Typography>
+                      <Box
+                        sx={{
+                          border: 1,
+                          borderColor: 'divider',
+                          borderRadius: 2,
+                          p: 2,
+                          backgroundColor: 'grey.50',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          minHeight: 100,
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={participant.emargement}
+                          alt="Signature"
+                          sx={{
+                            maxWidth: '100%',
+                            maxHeight: 300,
+                            objectFit: 'contain',
+                          }}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="100"%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ESignature%3C/text%3E%3C/svg%3E';
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  ) : (
                     <Box
                       sx={{
                         border: 1,
                         borderColor: 'divider',
                         borderRadius: 2,
-                        p: 2,
+                        p: 4,
                         backgroundColor: 'grey.50',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        minHeight: 200,
+                        textAlign: 'center',
                       }}
                     >
-                      <Box
-                        component="img"
-                        src={participant.emargement}
-                        alt="Signature"
-                        sx={{
-                          maxWidth: '100%',
-                          maxHeight: 300,
-                          objectFit: 'contain',
-                        }}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="100"%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ESignature%3C/text%3E%3C/svg%3E';
-                        }}
-                      />
+                      <Typography variant="body1" sx={{ fontWeight: 500, color: 'warning.main' }}>
+                        Aucune signature enregistrée
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        L'invité n'a pas encore émargé
+                      </Typography>
                     </Box>
-                  </Box>
-                ) : (
-                  <Box
-                    sx={{
-                      border: 1,
-                      borderColor: 'divider',
-                      borderRadius: 2,
-                      p: 4,
-                      backgroundColor: 'grey.50',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Typography variant="body1" sx={{ fontWeight: 500, color: 'warning.main' }}>
-                      Aucune signature enregistrée
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      L'invité n'a pas encore émargé
-                    </Typography>
-                  </Box>
+                  )
                 )}
               </Paper>
 

@@ -363,7 +363,11 @@ export function ParticipantNewEditForm({ item }: Props) {
             'application/vnd.ms-excel': ['.xls'],
             'text/csv': ['.csv'],
           }}
-          helperText="Formats acceptés: .xlsx, .xls, .csv"
+          helperText={
+            <>
+              Formats acceptés : <strong>.xlsx, .xls, .csv</strong> |  Formats d’en-têtes autorisés : <em> <strong>nom, prenom, email, numero_tel, lieu_habitation</strong></em>
+            </>
+          }
           
         />
 

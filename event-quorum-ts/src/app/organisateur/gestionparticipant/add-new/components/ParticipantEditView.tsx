@@ -1,17 +1,17 @@
 'use client';
 
+import { Button } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/admin';
 
+import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ParticipantNewEditForm } from './ParticipantNewEditForm';
-import { Button } from '@mui/material';
-import { RouterLink } from 'src/routes/components';
-import { Iconify } from 'src/components/iconify';
-
 import { IParticipantItem } from './types';
+import { ParticipantNewEditForm } from './ParticipantNewEditForm';
 
 // ----------------------------------------------------------------------
 

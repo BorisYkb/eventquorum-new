@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import {
   Box,
   Typography,
@@ -14,7 +15,9 @@ import {
   TextField,
   Grid,
 } from '@mui/material';
+
 import { Upload } from 'src/components/upload';
+
 import { PhotoList } from './photo-list';
 
 /**
@@ -359,12 +362,12 @@ export default function Phototheque() {
               <Typography
                 variant="h6"
                 sx={{
-                  fontWeight: 600,
-                  fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+                  fontWeight: 400,
+                  fontSize: { xs: '0.8rem', sm: '1rem', md: '1rem' },
                   mb: 1
                 }}
               >
-                Upload des images
+                Télécharger des images
               </Typography>
 
               {/* Composant Upload */}
