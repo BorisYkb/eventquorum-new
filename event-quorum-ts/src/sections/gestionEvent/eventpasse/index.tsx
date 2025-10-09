@@ -46,14 +46,14 @@ export default function EventPasse() {
   const { handleSubmit, reset } = methods;
 
   const OPTIONS = [
-    { value: 'option 1', label: 'Option 1' },
-    { value: 'option 2', label: 'Option 2' },
-    { value: 'option 3', label: 'Option 3' },
-    { value: 'option 4', label: 'Option 4' },
-    { value: 'option 5', label: 'Option 5' },
-    { value: 'option 6', label: 'Option 6' },
-    { value: 'option 7', label: 'Option 7' },
-    { value: 'option 8', label: 'Option 8' },
+    { value: 'Event 1', label: 'Event 1' },
+    { value: 'Event 2', label: 'Event 2' },
+    { value: 'Event 3', label: 'Event 3' },
+    { value: 'Event 4', label: 'Event 4' },
+    { value: 'Event 5', label: 'Event 5' },
+    { value: 'Event 6', label: 'Event 6' },
+    { value: 'Event 7', label: 'Event 7' },
+    { value: 'Event 8', label: 'Event 8' },
   ];
 
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);

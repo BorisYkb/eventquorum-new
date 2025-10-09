@@ -187,7 +187,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                                 <TableCell sx={{ fontWeight: 600 }}>Nom & Prénoms</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Téléphone</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Connecté</TableCell>
+                                <TableCell sx={{ fontWeight: 600 }}>1ère Connexion</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Émargement</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
                             </TableRow>

@@ -4,12 +4,12 @@ import { useState, useCallback } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import { 
-  Box, 
-  Card, 
-  Button, 
-  MenuItem, 
-  CardHeader, 
+import {
+  Box,
+  Card,
+  Button,
+  MenuItem,
+  CardHeader,
   CardContent,
   Typography,
   Switch,
@@ -52,10 +52,10 @@ const CONNECTION_TYPES = [
 ];
 
 const LandingPage = () => {
-  const { 
-    methods, 
-    onSubmit, 
-    control, 
+  const {
+    methods,
+    onSubmit,
+    control,
     isSubmitting,
     agendaItems,
     handleAddAgenda,
@@ -73,7 +73,7 @@ const LandingPage = () => {
   } = useLandingPageController();
 
   const showPreview = useBoolean();
-  
+
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [avatarUrl, setAvatarUrl] = useState<File | string | null>(null);
 
@@ -83,20 +83,20 @@ const LandingPage = () => {
   }, []);
 
   const handleDropMultiFile = useCallback(
-      (acceptedFiles: File[]) => {
-        setFiles([...files, ...acceptedFiles]);
-      },
-      [files]
-    );
-  
-    const handleRemoveFile = (inputFile: File | string) => {
-      const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
-      setFiles(filesFiltered);
-    };
-  
-    const handleRemoveAllFiles = () => {
-      setFiles([]);
-    };
+    (acceptedFiles: File[]) => {
+      setFiles([...files, ...acceptedFiles]);
+    },
+    [files]
+  );
+
+  const handleRemoveFile = (inputFile: File | string) => {
+    const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
+    setFiles(filesFiltered);
+  };
+
+  const handleRemoveAllFiles = () => {
+    setFiles([]);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -129,21 +129,21 @@ const LandingPage = () => {
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button
-        variant="contained"
-        component={RouterLink}
-        href={paths.organisateur.gestionevent.newactivity}
-        startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />  }
-        onClick={handleAddAgenda}
-      >
-        Ajouter une activité
-      </Button>
+          variant="contained"
+          component={RouterLink}
+          href={paths.organisateur.gestionevent.newactivity}
+          startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />}
+          onClick={handleAddAgenda}
+        >
+          Ajouter une activité
+        </Button>
       </Box>
-      
+
 
       {/* Informations Générales */}
       <Card>
         <CardHeader
-          title="INFORMATIONS GENERALE"
+          title="Informations Générales"
         />
         <CardContent>
           <Form methods={methods} onSubmit={onSubmit}>
@@ -237,7 +237,7 @@ const LandingPage = () => {
                           placeholder="Décrivez l'organisateur (nom, fonction, biographie...)"
                           sx={{ maxHeight: 300 }}
                         />
-                        
+
                         <Box sx={{ display: 'flex', gap: 2, mt: 2, justifyContent: 'flex-end' }}>
                           <Button
                             variant="outlined"
@@ -275,7 +275,14 @@ const LandingPage = () => {
                           <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                             <Box
                               component="img"
-                              src={typeof org.image === 'string' ? org.image : URL.createObjectURL(org.image)}
+                              src={
+                                typeof org.image === 'string'
+                                  ? org.image
+                                  : org.image
+                                    ? URL.createObjectURL(org.image)
+                                    : undefined
+                              }
+
                               alt={`Organisateur ${index + 1}`}
                               sx={{
                                 width: 80,
@@ -285,8 +292,8 @@ const LandingPage = () => {
                               }}
                             />
                             <Box sx={{ flex: 1 }}>
-                              <Typography 
-                                variant="body2" 
+                              <Typography
+                                variant="body2"
                                 dangerouslySetInnerHTML={{ __html: org.description }}
                                 sx={{
                                   '& p': { margin: 0 },
@@ -371,7 +378,7 @@ const LandingPage = () => {
                   control={control}
                   render={({ field }) => (
                     <FormControlLabel
-                      control={<UploadBox sx={{ mr: 3}}/>}
+                      control={<UploadBox sx={{ mr: 3 }} />}
                       label="Importer la vidéo de l'événement"
                     />
                   )}
@@ -379,59 +386,59 @@ const LandingPage = () => {
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <UploadAvatar
-                      value={avatarUrl}
-                      onDrop={handleDropAvatar}
-                      validator={(fileData) => {
-                        if (fileData.size > 1000000) {
-                          return { code: 'file-too-large', message: '' };
-                        }
-                        return null;
-                      }}
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                          }}
-                        >
-                          Image background (Carré)
-                        </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <UploadAvatar
+                    value={avatarUrl}
+                    onDrop={handleDropAvatar}
+                    validator={(fileData) => {
+                      if (fileData.size > 1000000) {
+                        return { code: 'file-too-large', message: '' };
                       }
-                    />
-                  </Box>
+                      return null;
+                    }}
+                    helperText={
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          mt: 3,
+                          mx: 'auto',
+                          display: 'block',
+                          textAlign: 'center',
+                          color: 'text.disabled',
+                        }}
+                      >
+                        Image background (Carré)
+                      </Typography>
+                    }
+                  />
+                </Box>
 
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <UploadAvatar
-                      value={avatarUrl}
-                      onDrop={handleDropAvatar}
-                      validator={(fileData) => {
-                        if (fileData.size > 1000000) {
-                          return { code: 'file-too-large', message: '' };
-                        }
-                        return null;
-                      }}
-                      helperText={
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            mt: 3,
-                            mx: 'auto',
-                            display: 'block',
-                            textAlign: 'center',
-                            color: 'text.disabled',
-                          }}
-                        >
-                          Image background (Rectangle)
-                        </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <UploadAvatar
+                    value={avatarUrl}
+                    onDrop={handleDropAvatar}
+                    validator={(fileData) => {
+                      if (fileData.size > 1000000) {
+                        return { code: 'file-too-large', message: '' };
                       }
-                    />
-                  </Box>
+                      return null;
+                    }}
+                    helperText={
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          mt: 3,
+                          mx: 'auto',
+                          display: 'block',
+                          textAlign: 'center',
+                          color: 'text.disabled',
+                        }}
+                      >
+                        Image background (Rectangle)
+                      </Typography>
+                    }
+                  />
+                </Box>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -451,7 +458,7 @@ const LandingPage = () => {
       {/* Agenda */}
       <Card>
         <CardHeader
-          title="ACTIVITES / AGENDA"
+          title="Activités / Agenda"
           action={
             <Button
               variant="contained"

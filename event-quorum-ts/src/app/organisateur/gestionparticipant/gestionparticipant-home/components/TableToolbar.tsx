@@ -140,7 +140,7 @@ const TableToolbar = ({
                 disabled={isDeleting} // Désactivation pendant la suppression
               />
             }
-            label="Activé signature électronique"
+            label="E-signature pour les participants en ligne"
             labelPlacement="start"
             sx={{ mr: 2 }}
           />

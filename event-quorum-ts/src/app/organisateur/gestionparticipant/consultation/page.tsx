@@ -41,8 +41,7 @@ import {
 // Interface pour les participants
 interface Participant {
     id: number;
-    nom: string;
-    prenom: string;
+    nom_prenom: string;
     email: string;
     connecte: boolean;
     emmarger: boolean;
@@ -66,80 +65,76 @@ const ConsultationPage = () => {
     const participants: Participant[] = [
         {
             id: 1,
-            nom: 'Koffi',
-            prenom: 'Emmanuel',
+            nom_prenom: 'Koffi Emmanuel',
             email: 'koffi@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 2,
-            nom: 'Kouassi',
-            prenom: 'Marie',
+            nom_prenom: 'Kouassi Marie',
             email: 'kouassi@gmail.com',
             connecte: true,
             emmarger: false,
         },
         {
             id: 3,
-            nom: 'Ouattara',
-            prenom: 'Jean',
+            nom_prenom: 'Ouattara Jean',
             email: 'jean@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 4,
-            nom: 'Traore',
-            prenom: 'Fatou',
+            nom_prenom: 'Traore Fatou',
+
             email: 'fatou@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 5,
-            nom: 'Bamba',
-            prenom: 'Sekou',
+            nom_prenom: 'Bamba Sekou',
+
             email: 'sekou@gmail.com',
             connecte: true,
             emmarger: false,
         },
         {
             id: 6,
-            nom: 'Diallo',
-            prenom: 'Aminata',
+            nom_prenom: 'Diallo Aminata',
+        
             email: 'aminata@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 7,
-            nom: 'Yao',
-            prenom: 'Kouadio',
+            nom_prenom: 'Yao Kouadio',
+        
             email: 'kouadio@gmail.com',
             connecte: true,
             emmarger: false,
         },
         {
             id: 8,
-            nom: 'Sangare',
-            prenom: 'Ibrahim',
+            nom_prenom: 'Sangare Ibrahim',
+        
             email: 'ibrahim@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 9,
-            nom: 'Kone',
-            prenom: 'Mariam',
+            nom_prenom: 'Kone Mariam',
+    
             email: 'mariam@gmail.com',
             connecte: true,
             emmarger: true,
         },
         {
             id: 10,
-            nom: 'Toure',
-            prenom: 'Abou',
+            nom_prenom: 'Toure Abou',
             email: 'abou@gmail.com',
             connecte: true,
             emmarger: false,
@@ -162,8 +157,7 @@ const ConsultationPage = () => {
         // Filtrage par terme de recherche
         if (searchTerm) {
             filtered = filtered.filter(participant =>
-                participant.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                participant.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                participant.nom_prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 participant.email.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
@@ -242,7 +236,7 @@ const ConsultationPage = () => {
                         </IconButton>
                         <Box>
                             <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                                Consultation des Participants
+                                Consulter la liste des connectés
                             </Typography>
                             {/* Breadcrumbs */}
                             <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
@@ -362,10 +356,10 @@ const ConsultationPage = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: 'grey.50' }}>
-                                        <TableCell sx={{ fontWeight: 600, py: 2 }}>Nom</TableCell>
-                                        <TableCell sx={{ fontWeight: 600, py: 2 }}>Prénom</TableCell>
+                                        <TableCell sx={{ fontWeight: 600, py: 2 }}>Nom et prénoms</TableCell>
+                                        {/* <TableCell sx={{ fontWeight: 600, py: 2 }}>Prénom</TableCell> */}
                                         <TableCell sx={{ fontWeight: 600, py: 2 }}>Email</TableCell>
-                                        <TableCell sx={{ fontWeight: 600, py: 2 }} align="center">Emmarger</TableCell>
+                                        <TableCell sx={{ fontWeight: 600, py: 2 }} align="center">À émarger ?</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -380,16 +374,16 @@ const ConsultationPage = () => {
                                         >
                                             <TableCell sx={{ py: 2 }}>
                                                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                                    {participant.nom}
+                                                    {participant.nom_prenom}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={{ py: 2 }}>
+                                            {/* <TableCell sx={{ py: 2 }}>
                                                 <Typography variant="body2">
                                                     {participant.prenom}
                                                 </Typography>
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell sx={{ py: 2 }}>
-                                                <Typography variant="body2" color="primary.main">
+                                                <Typography variant="body2">
                                                     {participant.email}
                                                 </Typography>
                                             </TableCell>
