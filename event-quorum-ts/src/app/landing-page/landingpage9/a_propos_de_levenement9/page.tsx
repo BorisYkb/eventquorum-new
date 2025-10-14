@@ -12,7 +12,7 @@ import SARADescriptionSection from './component/SARADescriptionSection'
 
 import { useState } from 'react'
 import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
-import Header1_9 from '../landingpage9/Header1_9'
+import Header1_9 from '../Header1_9'
 
 
 

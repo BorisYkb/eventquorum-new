@@ -147,7 +147,7 @@ const EnqueteTableRow: React.FC<EnqueteTableRowProps> = ({
             <TableCell sx={{ py: 2 }}>
                 <Typography variant="body2" sx={{
                     fontSize: '14px',
-                    color: '#1976D2',
+                    // color: '#1976D2',
                     fontWeight: 500,
                     fontFamily: 'monospace'
                 }}>

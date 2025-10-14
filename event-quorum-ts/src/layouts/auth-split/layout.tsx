@@ -1,3 +1,4 @@
+//src/layouts/auth-split/layout.tsx
 'use client';
 
 import type { Breakpoint } from '@mui/material/styles';
@@ -107,7 +108,12 @@ export function AuthSplitLayout({
     <MainSection
       {...slotProps?.main}
       sx={[
-        (theme) => ({ [theme.breakpoints.up(layoutQuery)]: { flexDirection: 'row' } }),
+        (theme) => ({
+          [theme.breakpoints.up(layoutQuery)]: {
+            flexDirection: 'row',
+            alignItems: 'center' // ✅ Ajouter cette ligne pour centrer verticalement
+          }
+        }),
         ...(Array.isArray(slotProps?.main?.sx)
           ? (slotProps?.main?.sx ?? [])
           : [slotProps?.main?.sx]),

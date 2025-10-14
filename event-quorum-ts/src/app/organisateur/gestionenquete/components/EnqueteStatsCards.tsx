@@ -35,7 +35,7 @@ const EnqueteStatsCards: React.FC<EnqueteStatsCardsProps> = ({
    * Si string[] → joint avec des virgules
    */
   const activitesDisplay = Array.isArray(activite)
-    ? activite.join(', ')
+    ? activite.join(' ⦁ ')
     : activite;
 
   /**

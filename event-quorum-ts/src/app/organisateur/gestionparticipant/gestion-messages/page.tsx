@@ -53,7 +53,7 @@ interface DemandeInscription {
   type: 'Programmé' | 'Automatique';
   statut: 'Envoyé' | 'Échec' | 'En cours';
   nombreDestinataires: number;
-  modeEnvoi: 'WhatsApp/Téléphone' | 'WhatsApp' | 'Téléphone' | 'Mail';
+  modeEnvoi: 'WhatsApp/SMS' | 'WhatsApp' | 'SMS' | 'Mail';
 }
 
 /**
@@ -75,16 +75,16 @@ const GestionMessagesPage = () => {
     {
       id: 1,
       date: '04/01/2024 10H00',
-      titre: 'Mail d\'invitation',
+      titre: 'Message d\'invitation',
       type: 'Programmé',
       statut: 'Envoyé',
       nombreDestinataires: 100,
-      modeEnvoi: 'WhatsApp/Téléphone',
+      modeEnvoi: 'WhatsApp/SMS',
     },
     {
       id: 2,
       date: '04/01/2024 10H00',
-      titre: 'Mail de relance',
+      titre: 'Message de relance',
       type: 'Programmé',
       statut: 'Envoyé',
       nombreDestinataires: 100,
@@ -93,16 +93,16 @@ const GestionMessagesPage = () => {
     {
       id: 3,
       date: '04/01/2024 10H00',
-      titre: 'Mail de bienvenue',
+      titre: 'Message de bienvenue',
       type: 'Automatique',
       statut: 'Échec',
       nombreDestinataires: 1,
-      modeEnvoi: 'Téléphone',
+      modeEnvoi: 'SMS',
     },
     {
       id: 4,
       date: '04/01/2024 10H00',
-      titre: 'Mail de confirmation',
+      titre: 'Message de confirmation',
       type: 'Automatique',
       statut: 'Envoyé',
       nombreDestinataires: 100,
@@ -383,7 +383,7 @@ const GestionMessagesPage = () => {
                     fontWeight: 600,
                   }}
                 >
-                  Autre message
+                  Messages automatiques
                 </Button>
 
                 <Button

@@ -25,14 +25,14 @@ const EnqueteInfoCard: React.FC<EnqueteInfoCardProps> = ({
         mb: 2, 
         color: '#333' 
       }}>
-        Titre de l'enquête
+        {titre}
       </Typography>
       
       <Card sx={{
         p: 3,
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        border: '1px solid #e9ecef'
+        // backgroundColor: '#f8f9fa',
+        // borderRadius: '8px',
+        // border: '1px solid #e9ecef'
       }}>
         <Box sx={{ 
           display: 'flex', 
@@ -42,14 +42,14 @@ const EnqueteInfoCard: React.FC<EnqueteInfoCardProps> = ({
           gap: 2
         }}>
           {/* Titre de l'enquête */}
-          <Typography variant="h5" sx={{
+          {/* <Typography variant="h5" sx={{
             color: '#333',
             fontWeight: 600,
             flex: 1,
             minWidth: '300px'
           }}>
             {titre}
-          </Typography>
+          </Typography> */}
 
           {/* Options de l'enquête */}
           <Box sx={{ 

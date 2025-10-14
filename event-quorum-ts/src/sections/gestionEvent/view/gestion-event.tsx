@@ -34,7 +34,7 @@ const TABS = [
   { value: 'landingPage', label: 'LandingPage', render: () => <LandingPage /> },
   { value: 'infosPaiement', label: 'Infos paiement', render: () => <InfoPaiement/> },
   { value: 'faqs', label: "FAQ's", render: () => <Faqs /> },
-  { value: 'eventpasse', label: "Evènement passé", render: () => <EventPasse /> },
+  { value: 'eventpasse', label: "Evènements passés", render: () => <EventPasse /> },
   { value: 'phototheque', label: 'Photothèque', render: () => <Phototheque/> },
 ];
 

@@ -145,8 +145,9 @@ const DetailMessagePage = () => {
                 },
                 statistiques: {
                     envoyes: 100,
-                    
+
                     echecs: 5,
+                    recus: 0
                 },
                 dateCreation: '2024-01-04T10:00',
                 dateEnvoi: '2024-01-05T14:30',

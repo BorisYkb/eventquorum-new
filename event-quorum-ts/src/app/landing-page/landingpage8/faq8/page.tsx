@@ -5,7 +5,7 @@ import Header2 from 'src/components/landing-page-components/layout/header/Header
 import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import { useState } from "react"
-import Header1_8 from '../landingpage8/Header1_8'
+import Header1_8 from '../Header1_8'
 
 export default function Faq8() {
 	const [isTab, setIsTab] = useState(1)

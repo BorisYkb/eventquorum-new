@@ -431,7 +431,7 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ py: 2 }}>
-                          <Typography variant="body2" sx={{ fontSize: '14px', color: '#1976D2' }}>
+                          <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
                             {auth.email}
                           </Typography>
                         </TableCell>

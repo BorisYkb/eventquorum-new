@@ -24,21 +24,44 @@ import TableToolbar from './TableToolbar';
 import ParticipantRow from './ParticipantRow';
 import PaginationControls from './PaginationControls';
 
+/**
+ * Props du composant InvitesTable
+ */
 interface InvitesTableProps {
+    /** Liste des participants */
     participants: Participant[];
+    /** Callback pour ajouter un participant */
     onAdd: () => void;
+    /** Callback pour voir les détails d'un participant */
     onView: (id: number) => void;
+    /** Callback pour modifier un participant */
     onEdit: (id: number) => void;
+    /** Callback pour supprimer un participant */
     onDelete: (id: number) => void;
+    /** Indique si une suppression est en cours */
     isDeleting: boolean;
+    /** Fonction pour mettre à jour la liste des participants */
     setParticipants: React.Dispatch<React.SetStateAction<Participant[]>>;
-    setSnackbar: React.Dispatch<React.SetStateAction<{
-        open: boolean;
-        message: string;
-        severity: 'success' | 'error' | 'warning' | 'info';
-    }>>;
+    /** Fonction pour afficher une notification */
+    setSnackbar: React.Dispatch<
+        React.SetStateAction<{
+            open: boolean;
+            message: string;
+            severity: 'success' | 'error' | 'warning' | 'info';
+        }>
+    >;
+    /** Callback pour exporter les filtres actifs vers le composant parent */
+    onFiltersChange?: (filters: {
+        activityFilter: string;
+        firstConnectionFilter: string;
+        connectionTypeFilter: string;
+    }) => void;
 }
 
+/**
+ * Composant InvitesTable
+ * Tableau de gestion des invités avec filtres, recherche et pagination
+ */
 const InvitesTable: React.FC<InvitesTableProps> = ({
     participants,
     onAdd,
@@ -47,31 +70,108 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
     onDelete,
     isDeleting,
     setParticipants,
-    setSnackbar
+    setSnackbar,
+    onFiltersChange,
 }) => {
-    // États pour la gestion de la table des invités
+    // États pour la gestion de la sélection et des filtres
     const [selectedParticipants, setSelectedParticipants] = useState<number[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [activityFilter, setActivityFilter] = useState('');
+    const [firstConnectionFilter, setFirstConnectionFilter] = useState('');
+    const [connectionTypeFilter, setConnectionTypeFilter] = useState('');
     const [signatureEnabled, setSignatureEnabled] = useState(true);
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     /**
-     * Filtrage des participants basé sur la recherche et les filtres
+     * Helper pour notifier les changements de filtres
      */
-    const filteredParticipants = participants.filter(participant => {
+    const notifyFiltersChange = (filters: {
+        activityFilter: string;
+        firstConnectionFilter: string;
+        connectionTypeFilter: string;
+    }) => {
+        if (onFiltersChange) {
+            onFiltersChange(filters);
+        }
+    };
+
+    /**
+     * Gestion du changement de filtre d'activité
+     */
+    const handleActivityFilterChange = (value: string) => {
+        setActivityFilter(value);
+        notifyFiltersChange({
+            activityFilter: value,
+            firstConnectionFilter,
+            connectionTypeFilter,
+        });
+    };
+
+    /**
+     * Gestion du changement de filtre de première connexion
+     */
+    const handleFirstConnectionFilterChange = (value: string) => {
+        setFirstConnectionFilter(value);
+        notifyFiltersChange({
+            activityFilter,
+            firstConnectionFilter: value,
+            connectionTypeFilter,
+        });
+    };
+
+    /**
+     * Gestion du changement de filtre de type de connexion
+     */
+    const handleConnectionTypeFilterChange = (value: string) => {
+        setConnectionTypeFilter(value);
+        notifyFiltersChange({
+            activityFilter,
+            firstConnectionFilter,
+            connectionTypeFilter: value,
+        });
+    };
+
+    /**
+     * Filtrage des participants basé sur tous les critères :
+     * - Recherche par nom, prénom, email
+     * - Filtre par activité
+     * - Filtre par première connexion
+     * - Filtre par type de connexion
+     */
+    const filteredParticipants = participants.filter((participant) => {
+        // Filtre de recherche (nom, prénom, email)
         const matchesSearch =
             participant.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             participant.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             participant.email.toLowerCase().includes(searchTerm.toLowerCase());
 
+        // Filtre par activité
         const matchesActivity = !activityFilter || participant.activite === activityFilter;
 
-        return matchesSearch && matchesActivity;
+        // Filtre par première connexion
+        // 'effectuee' = connecte === true
+        // 'non_effectuee' = connecte === false
+        // '' = tous
+        const matchesFirstConnection =
+            !firstConnectionFilter ||
+            (firstConnectionFilter === 'effectuee' && participant.connecte) ||
+            (firstConnectionFilter === 'non_effectuee' && !participant.connecte);
+
+        // Filtre par type de connexion (en ligne, en présentiel)
+        const matchesConnectionType =
+            !connectionTypeFilter || participant.typeConnexion === connectionTypeFilter;
+
+        // Retourne true si tous les filtres sont satisfaits
+        return (
+            matchesSearch &&
+            matchesActivity &&
+            matchesFirstConnection &&
+            matchesConnectionType
+        );
     });
 
-    // Calcul de la pagination
+    // Calcul de la pagination basée sur les résultats filtrés
     const totalPages = Math.ceil(filteredParticipants.length / rowsPerPage);
     const paginatedParticipants = filteredParticipants.slice(
         (page - 1) * rowsPerPage,
@@ -79,13 +179,15 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
     );
 
     /**
-     * Gestion de la sélection de tous les participants
+     * Gestion de la sélection de tous les participants de la page courante
      */
     const handleSelectAll = () => {
         if (selectedParticipants.length === paginatedParticipants.length) {
+            // Désélectionner tous
             setSelectedParticipants([]);
         } else {
-            setSelectedParticipants(paginatedParticipants.map(p => p.id));
+            // Sélectionner tous les participants de la page courante
+            setSelectedParticipants(paginatedParticipants.map((p) => p.id));
         }
     };
 
@@ -94,8 +196,10 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      */
     const handleSelectParticipant = (id: number) => {
         if (selectedParticipants.includes(id)) {
-            setSelectedParticipants(selectedParticipants.filter(pid => pid !== id));
+            // Désélectionner
+            setSelectedParticipants(selectedParticipants.filter((pid) => pid !== id));
         } else {
+            // Sélectionner
             setSelectedParticipants([...selectedParticipants, id]);
         }
     };
@@ -108,11 +212,11 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
 
         try {
             // Simulation d'un appel API pour la suppression multiple
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise((resolve) => setTimeout(resolve, 1500));
 
             // Suppression des participants sélectionnés
-            setParticipants(prev =>
-                prev.filter(p => !selectedParticipants.includes(p.id))
+            setParticipants((prev) =>
+                prev.filter((p) => !selectedParticipants.includes(p.id))
             );
 
             // Réinitialisation de la sélection
@@ -124,7 +228,6 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                 message: `${selectedParticipants.length} participant(s) supprimé(s) avec succès`,
                 severity: 'success',
             });
-
         } catch (error) {
             // Gestion des erreurs
             setSnackbar({
@@ -140,6 +243,8 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      */
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
+        // Réinitialiser la sélection lors du changement de page
+        setSelectedParticipants([]);
     };
 
     /**
@@ -147,26 +252,41 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      */
     const handleRowsPerPageChange = (event: any) => {
         setRowsPerPage(event.target.value);
-        setPage(1);
+        setPage(1); // Retour à la première page
+        setSelectedParticipants([]); // Réinitialiser la sélection
     };
 
     return (
-        <Card sx={{
-            borderRadius: 2,
-            boxShadow: 'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px'
-        }}>
+        <Card
+            sx={{
+                borderRadius: 2,
+                boxShadow:
+                    'rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px',
+            }}
+        >
             <Box sx={{ p: 3 }}>
-                {/* Barre d'outils du tableau */}
+                {/* Barre d'outils du tableau avec tous les filtres */}
                 <TableToolbar
                     selectedCount={selectedParticipants.length}
                     onSelectAll={handleSelectAll}
-                    isAllSelected={selectedParticipants.length === paginatedParticipants.length && paginatedParticipants.length > 0}
+                    isAllSelected={
+                        selectedParticipants.length === paginatedParticipants.length &&
+                        paginatedParticipants.length > 0
+                    }
                     onDelete={handleDelete}
                     onAdd={onAdd}
                     searchTerm={searchTerm}
                     onSearchChange={(e) => setSearchTerm(e.target.value)}
                     activityFilter={activityFilter}
-                    onActivityFilterChange={(e) => setActivityFilter(e.target.value)}
+                    onActivityFilterChange={(e) => handleActivityFilterChange(e.target.value)}
+                    firstConnectionFilter={firstConnectionFilter}
+                    onFirstConnectionFilterChange={(e) =>
+                        handleFirstConnectionFilterChange(e.target.value)
+                    }
+                    connectionTypeFilter={connectionTypeFilter}
+                    onConnectionTypeFilterChange={(e) =>
+                        handleConnectionTypeFilterChange(e.target.value)
+                    }
                     signatureEnabled={signatureEnabled}
                     onSignatureToggle={setSignatureEnabled}
                     isDeleting={isDeleting}
@@ -179,14 +299,21 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
-                                        indeterminate={selectedParticipants.length > 0 && selectedParticipants.length < paginatedParticipants.length}
-                                        checked={paginatedParticipants.length > 0 && selectedParticipants.length === paginatedParticipants.length}
+                                        indeterminate={
+                                            selectedParticipants.length > 0 &&
+                                            selectedParticipants.length < paginatedParticipants.length
+                                        }
+                                        checked={
+                                            paginatedParticipants.length > 0 &&
+                                            selectedParticipants.length === paginatedParticipants.length
+                                        }
                                         onChange={handleSelectAll}
                                     />
                                 </TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Nom & Prénoms</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Téléphone</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
+                                {/* <TableCell sx={{ fontWeight: 600 }}>Type</TableCell> */}
                                 <TableCell sx={{ fontWeight: 600 }}>1ère Connexion</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Émargement</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>

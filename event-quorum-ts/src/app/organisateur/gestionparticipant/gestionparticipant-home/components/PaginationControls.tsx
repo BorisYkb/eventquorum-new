@@ -46,7 +46,7 @@ const PaginationControls = ({
         </Select>
       </FormControl>
       <Typography variant="body2" color="text.secondary">
-        Total: {totalItems} participants
+        Total: {totalItems} invités
       </Typography>
     </Stack>
     

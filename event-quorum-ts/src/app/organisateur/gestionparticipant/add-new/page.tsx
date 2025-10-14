@@ -1,3 +1,5 @@
+//src/app/organisateur/gestionparticipant/add-new/page.tsx
+
 import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';

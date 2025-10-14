@@ -12,18 +12,32 @@ import {
   Tooltip,
   Menu,
   MenuItem,
-  Typography,
 } from '@mui/material';
 
-// Types
+/**
+ * Type pour les options d'export
+ */
 type ExportOption = {
   value: string;
   label: string;
 };
 
+/**
+ * Type pour les filtres actifs
+ */
+type ActiveFilters = {
+  activityFilter: string;
+  firstConnectionFilter: string;
+  connectionTypeFilter: string;
+};
+
+/**
+ * Options d'export pour la liste des invités
+ * Format : Activité (Format)
+ */
 const EXPORT_INVITE_OPTIONS: ExportOption[] = [
-  { value: 'tous', label: 'Tous (PDF)' },
-  { value: 'tous', label: 'Tous (Excel)' },
+  { value: 'tous-pdf', label: 'Tous (PDF)' },
+  { value: 'tous-excel', label: 'Tous (Excel)' },
   { value: 'pdf-conference', label: 'Conférence principale (PDF)' },
   { value: 'excel-conference', label: 'Conférence principale (Excel)' },
   { value: 'pdf-workshop', label: 'Atelier pratique (PDF)' },
@@ -34,22 +48,25 @@ const EXPORT_INVITE_OPTIONS: ExportOption[] = [
   { value: 'excel-cocktail', label: 'Cocktail de clôture (Excel)' },
 ];
 
+/**
+ * Options d'export pour la liste de présence
+ * Inclut les options pour le type de connexion (en ligne/présentiel/tout)
+ */
 const EXPORT_PRESENCE_OPTIONS: ExportOption[] = [
-  { value: 'tous', label: 'Tous (PDF)' },
-  { value: 'tous', label: 'Tous (Excel)' },
-  { value: 'pdf-conference', label: 'Présence Conférence (PDF)' },
-  { value: 'excel-conference', label: 'Présence Conférence (Excel)' },
-  { value: 'pdf-workshop', label: 'Présence Atelier (PDF)' },
-  { value: 'excel-workshop', label: 'Présence Atelier (Excel)' },
-  { value: 'pdf-networking', label: 'Présence Networking (PDF)' },
-  { value: 'excel-networking', label: 'Présence Networking (Excel)' },
-  { value: 'pdf-cocktail', label: 'Présence Cocktail (PDF)' },
-  { value: 'excel-cocktail', label: 'Présence Cocktail (Excel)' },
+  // Tous
+  { value: 'tous-tout-pdf', label: 'Tous (PDF)' },
+  { value: 'tous-tout-excel', label: 'Tout (Excel)' },
+  { value: 'en-ligne-excel', label: 'En ligne (Excel)' },
+  { value: 'en-ligne-pdf', label: 'En ligne (PDF)' },
+  { value: 'en-presentiel-pdf', label: 'En présentiel (PDF)' },
+  { value: 'en-presentiel-excel', label: 'En présentiel (Excel)' },
 ];
-
+/**
+ * Options d'export pour la liste des participants
+ */
 const EXPORT_PARTICIPANTS_OPTIONS: ExportOption[] = [
-  { value: 'tous', label: 'Tous les participants (PDF)' },
-  { value: 'tous', label: 'Tous les participants (Excel)' },
+  { value: 'tous-pdf', label: 'Tous les participants (PDF)' },
+  { value: 'tous-excel', label: 'Tous les participants (Excel)' },
   { value: 'pdf-conference', label: 'Participants Conférence (PDF)' },
   { value: 'excel-conference', label: 'Participants Conférence (Excel)' },
   { value: 'pdf-workshop', label: 'Participants Atelier (PDF)' },
@@ -60,84 +77,147 @@ const EXPORT_PARTICIPANTS_OPTIONS: ExportOption[] = [
   { value: 'excel-cocktail', label: 'Participants Cocktail (Excel)' },
 ];
 
+/**
+ * Props du composant ExportButtons
+ */
 interface ExportButtonsProps {
-  currentTab: string; // 'invites' ou 'participants'
+  /** Onglet actuellement affiché ('invites' ou 'participants') */
+  currentTab: string;
+  /** Filtres actuellement actifs */
+  activeFilters?: ActiveFilters;
 }
 
-const ExportButtons: React.FC<ExportButtonsProps> = ({ currentTab }) => {
+/**
+ * Composant ExportButtons
+ * Boutons d'export pour les listes d'invités, présence et participants
+ * Prend en compte les filtres actifs lors de l'export
+ */
+const ExportButtons: React.FC<ExportButtonsProps> = ({
+  currentTab,
+  activeFilters = {
+    activityFilter: '',
+    firstConnectionFilter: '',
+    connectionTypeFilter: '',
+  }
+}) => {
   const router = useRouter();
+
+  // États pour les menus déroulants
   const [inviteMenuAnchor, setInviteMenuAnchor] = useState<null | HTMLElement>(null);
   const [presenceMenuAnchor, setPresenceMenuAnchor] = useState<null | HTMLElement>(null);
   const [participantsMenuAnchor, setParticipantsMenuAnchor] = useState<null | HTMLElement>(null);
 
+  /**
+   * Ouvre le menu d'export des invités
+   */
   const handleInviteMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setInviteMenuAnchor(event.currentTarget);
   };
 
+  /**
+   * Ferme le menu d'export des invités
+   */
   const handleInviteMenuClose = () => {
     setInviteMenuAnchor(null);
   };
 
+  /**
+   * Ouvre le menu d'export de la liste de présence
+   */
   const handlePresenceMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setPresenceMenuAnchor(event.currentTarget);
   };
 
+  /**
+   * Ferme le menu d'export de la liste de présence
+   */
   const handlePresenceMenuClose = () => {
     setPresenceMenuAnchor(null);
   };
 
+  /**
+   * Ouvre le menu d'export des participants
+   */
   const handleParticipantsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setParticipantsMenuAnchor(event.currentTarget);
   };
 
+  /**
+   * Ferme le menu d'export des participants
+   */
   const handleParticipantsMenuClose = () => {
     setParticipantsMenuAnchor(null);
   };
 
+  /**
+   * Gère l'export de la liste des invités
+   * Prend en compte les filtres actifs
+   */
   const handleExportInvites = (option: string) => {
-    console.log('Export invités:', option);
+    console.log('Export invités:', {
+      option,
+      filters: activeFilters,
+    });
+
+    // TODO: Implémenter l'appel API pour l'export avec les filtres
+    // L'API devra recevoir les filtres actifs pour exporter uniquement
+    // les données filtrées
+
     handleInviteMenuClose();
   };
 
+  /**
+   * Gère l'export de la liste de présence
+   * Prend en compte les filtres actifs
+   * Note : Liste de présence = invités qui ont émargé (emargement !== null)
+   */
   const handleExportPresence = (option: string) => {
-    console.log('Export présence:', option);
+    console.log('Export présence:', {
+      option,
+      filters: activeFilters,
+      note: 'Exporter uniquement les participants qui ont émargé',
+    });
+
+    // TODO: Implémenter l'appel API pour l'export avec les filtres
+    // L'API devra :
+    // 1. Filtrer par emargement !== null (liste de présence)
+    // 2. Appliquer les autres filtres actifs (activité, 1ère connexion, type de connexion)
+    // 3. Exporter au format demandé (PDF ou Excel)
+
     handlePresenceMenuClose();
   };
 
+  /**
+   * Gère l'export de la liste des participants
+   * Prend en compte les filtres actifs
+   */
   const handleExportParticipants = (option: string) => {
-    console.log('Export participants:', option);
+    console.log('Export participants:', {
+      option,
+      filters: activeFilters,
+    });
+
+    // TODO: Implémenter l'appel API pour l'export avec les filtres
+
     handleParticipantsMenuClose();
   };
 
+  /**
+   * Redirige vers la page de consultation des connectés
+   */
   const handleConsultConnected = () => {
+    // Redirection vers la page de consultation
     router.push('/organisateur/gestionparticipant/consultation');
-  };
-
-  // Titre dynamique selon l'onglet
-  const getTitle = () => {
-    switch (currentTab) {
-      case 'invites':
-        return 'Liste des invités';
-      case 'participants':
-        return 'Liste des participants';
-      default:
-        return 'Liste des invités';
-    }
   };
 
   return (
     <Stack
       direction="row"
-      justifyContent="space-between"
+      justifyContent="flex-end"
       alignItems="center"
       sx={{ mb: 2 }}
     >
-      {/* Titre à gauche - Dynamique */}
-      {/* <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-        {getTitle()}
-      </Typography> */}
-
-      {/* Boutons à droite - Adaptatifs selon l'onglet */}
+      {/* Boutons adaptés selon l'onglet */}
       <Stack direction="row" spacing={2}>
         {currentTab === 'invites' && (
           <>

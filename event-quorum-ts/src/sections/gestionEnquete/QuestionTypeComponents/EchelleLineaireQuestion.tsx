@@ -8,7 +8,7 @@ import {
   Button,
   IconButton
 } from '@mui/material';
-import { CurrentQuestion } from '../../types';
+import { CurrentQuestion } from 'src/app/organisateur/gestionenquete/nouveau/types';
 
 interface EchelleLineaireQuestionProps {
   currentQuestion: CurrentQuestion;

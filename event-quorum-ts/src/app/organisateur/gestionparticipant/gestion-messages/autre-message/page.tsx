@@ -1,4 +1,3 @@
-//src/app/organisateur/gestionparticipant/gestion-messages/autre-message/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -19,9 +18,9 @@ import {
     Paper,
     FormControl,
     FormLabel,
-    Radio,
     FormControlLabel,
-    RadioGroup,
+    Checkbox,
+    FormGroup,
 } from '@mui/material';
 import {
     ArrowBack as ArrowBackIcon,
@@ -38,6 +37,13 @@ interface MessagePredefini {
     description: string;
     contenuDefaut: string;
     declencheur?: string;
+}
+
+// Interface pour les modes d'envoi
+interface ModeEnvoi {
+    whatsapp: boolean;
+    sms: boolean;
+    mail: boolean;
 }
 
 /**
@@ -57,39 +63,47 @@ const AutreMessagePage = () => {
         message4: '',
         messageInscription: 'Inscrivez-vous dès maintenant pour accéder à votre espace',
     });
-    const [typeMessage, setTypeMessage] = useState('programmé');
+
+    // État pour les modes d'envoi de chaque message
+    const [modesEnvoi, setModesEnvoi] = useState<Record<string, ModeEnvoi>>({
+        message1: { whatsapp: false, sms: false, mail: true },
+        message2: { whatsapp: false, sms: false, mail: true },
+        message3: { whatsapp: false, sms: false, mail: true },
+        message4: { whatsapp: false, sms: false, mail: true },
+        messageInscription: { whatsapp: false, sms: false, mail: true },
+    });
 
     // Messages prédéfinis
     const messagesPredefinis: MessagePredefini[] = [
         {
             id: 'message1',
-            titre: 'Message d\'informations de paiement ou guichet',
-            description: 'Ce message s\'affiche lorsque le participant décide de passer au guichet',
-            contenuDefaut: 'Parfait, rapprochez-vous d\'une hôtesse qui vous guidera vers le guichet de payement. Merci de préparer la monnaie.',
+            titre: 'Message d\'informations de paiement au guichet',
+            description: 'Affiché lorsque le participant choisit de payer directement au guichet physique',
+            contenuDefaut: 'Parfait ! Rapprochez-vous d\'une hôtesse qui vous guidera vers le guichet de paiement. Merci de préparer la monnaie exacte si possible.',
         },
         {
             id: 'message2',
-            titre: 'Message 2',
-            description: 'Description du message 2',
-            contenuDefaut: '',
+            titre: 'Message de confirmation après paiement',
+            description: 'Envoyé automatiquement après validation et traitement réussi du paiement',
+            contenuDefaut: 'Votre paiement a été validé avec succès ! Vous recevrez votre billet de confirmation par email d\'ici quelques instants. Merci de votre participation.',
         },
         {
             id: 'message3',
-            titre: 'Message 3',
-            description: 'Description du message 3',
-            contenuDefaut: '',
+            titre: 'Message d\'alerte problème technique',
+            description: 'Diffusé en cas de dysfonctionnement technique ou d\'interruption de service',
+            contenuDefaut: 'Nous rencontrons actuellement un problème technique. Nos équipes travaillent à sa résolution. Veuillez réessayer dans quelques minutes ou contactez notre support.',
         },
         {
             id: 'message4',
-            titre: 'Message 4',
-            description: 'Description du message 4',
-            contenuDefaut: '',
+            titre: 'Message de report ou annulation d\'événement',
+            description: 'Communiqué aux participants en cas de changement de date ou d\'annulation de l\'événement',
+            contenuDefaut: 'Important : L\'événement a été reporté à une date ultérieure. Votre inscription reste valide. Vous serez informé de la nouvelle date prochainement. Nous nous excusons pour ce désagrément.',
         },
         {
             id: 'messageInscription',
-            titre: 'Message d\'informations d\'inscription',
-            description: 'Ce message s\'affiche lorsque le participant décide de s\'inscrire',
-            contenuDefaut: 'Inscrivez-vous dès maintenant pour accéder à votre espace',
+            titre: 'Message d\'invitation à l\'inscription',
+            description: 'Affiché pour encourager les visiteurs à créer un compte et s\'inscrire à l\'événement',
+            contenuDefaut: 'Inscrivez-vous dès maintenant pour accéder à votre espace participant et profiter de toutes les fonctionnalités de l\'événement.',
         },
     ];
 
@@ -128,22 +142,31 @@ const AutreMessagePage = () => {
     };
 
     /**
-     * Sauvegarde d'un message
+     * Gestion du changement de mode d'envoi
      */
-    const handleSauvegarder = (messageId: string) => {
-        console.log(`Sauvegarder le message ${messageId}:`, messagesContent[messageId]);
-        // TODO: Implémenter la sauvegarde
-        alert(`Message "${messagesPredefinis.find(m => m.id === messageId)?.titre}" sauvegardé !`);
+    const handleModeEnvoiChange = (messageId: string, mode: keyof ModeEnvoi) => (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setModesEnvoi(prev => ({
+            ...prev,
+            [messageId]: {
+                ...prev[messageId],
+                [mode]: event.target.checked,
+            },
+        }));
     };
 
     /**
-     * Sauvegarde de tous les messages
+     * Sauvegarde d'un message
      */
-    // const handleSauvegarderTout = () => {
-    //     console.log('Sauvegarder tous les messages:', messagesContent);
-    //     // TODO: Implémenter la sauvegarde globale
-    //     alert('Tous les messages ont été sauvegardés !');
-    // };
+    const handleSauvegarder = (messageId: string) => {
+        console.log(`Sauvegarder le message ${messageId}:`, {
+            contenu: messagesContent[messageId],
+            modesEnvoi: modesEnvoi[messageId],
+        });
+        // TODO: Implémenter la sauvegarde
+        alert(`Message "${messagesPredefinis.find(m => m.id === messageId)?.titre}" sauvegardé !`);
+    };
 
     return (
         <Container maxWidth="lg" sx={{ py: 2 }}>
@@ -199,21 +222,6 @@ const AutreMessagePage = () => {
                                 </Typography>
                             </Breadcrumbs>
                         </Box>
-                        {/* <Button
-                            variant="contained"
-                            onClick={handleSauvegarderTout}
-                            sx={{
-                                backgroundColor: '#00BCD4',
-                                color: 'white',
-                                '&:hover': { backgroundColor: '#00ACC1' },
-                                borderRadius: 1,
-                                textTransform: 'none',
-                                fontWeight: 600,
-                                px: 3,
-                            }}
-                        >
-                            Sauvegarder tout
-                        </Button> */}
                     </Box>
                 </Box>
 
@@ -224,7 +232,7 @@ const AutreMessagePage = () => {
                 }}>
                     <Box sx={{ p: 3 }}>
                         <Stack spacing={3}>
-                            {messagesPredefinis.map((message, index) => (
+                            {messagesPredefinis.map((message) => (
                                 <Accordion
                                     key={message.id}
                                     expanded={messagesExpanded === message.id}
@@ -259,39 +267,55 @@ const AutreMessagePage = () => {
 
                                     <AccordionDetails sx={{ p: 3, backgroundColor: 'grey.50' }}>
                                         <Stack spacing={3}>
-                                            {/* Description du message */}
-                                            <Box sx={{ flex: 1, minWidth: 250 }}>
+                                            {/* Mode d'envoi avec checkboxes */}
+                                            <Box>
                                                 <FormControl component="fieldset" fullWidth>
                                                     <FormLabel
                                                         component="legend"
                                                         sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}
                                                     >
-                                                        Type de message
+                                                        Mode d'envoi
                                                     </FormLabel>
 
-                                                    <RadioGroup
-                                                        row // <== rend horizontal par défaut
-                                                        value={typeMessage}
-                                                        onChange={(e) => setTypeMessage(e.target.value)}
+                                                    <FormGroup
                                                         sx={{
                                                             display: 'flex',
-                                                            flexDirection: { xs: 'column', sm: 'row' }, // colonne sur mobile, ligne sur tablette+
-                                                            gap: 2, // espace entre les éléments
+                                                            flexDirection: { xs: 'column', sm: 'row' },
+                                                            gap: 2,
                                                         }}
                                                     >
                                                         <FormControlLabel
-                                                            value="programmé"
-                                                            control={<Radio />}
-                                                            label="Programmé"
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={modesEnvoi[message.id]?.whatsapp || false}
+                                                                    onChange={handleModeEnvoiChange(message.id, 'whatsapp')}
+                                                                />
+                                                            }
+                                                            label="WhatsApp"
                                                         />
                                                         <FormControlLabel
-                                                            value="automatique"
-                                                            control={<Radio />}
-                                                            label="Automatique"
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={modesEnvoi[message.id]?.sms || false}
+                                                                    onChange={handleModeEnvoiChange(message.id, 'sms')}
+                                                                />
+                                                            }
+                                                            label="SMS"
                                                         />
-                                                    </RadioGroup>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={modesEnvoi[message.id]?.mail || false}
+                                                                    onChange={handleModeEnvoiChange(message.id, 'mail')}
+                                                                />
+                                                            }
+                                                            label="Mail"
+                                                        />
+                                                    </FormGroup>
                                                 </FormControl>
                                             </Box>
+
+                                            {/* Description du message */}
                                             {message.description && (
                                                 <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
                                                     {message.description}
@@ -354,37 +378,6 @@ const AutreMessagePage = () => {
                         </Stack>
                     </Box>
                 </Card>
-
-                {/* Actions globales */}
-                {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button
-                        variant="outlined"
-                        onClick={handleBack}
-                        sx={{
-                            borderRadius: 1,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            px: 4,
-                        }}
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleSauvegarderTout}
-                        sx={{
-                            backgroundColor: '#00BCD4',
-                            color: 'white',
-                            '&:hover': { backgroundColor: '#00ACC1' },
-                            borderRadius: 1,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            px: 4,
-                        }}
-                    >
-                        Sauvegarder tous les messages
-                    </Button>
-                </Box> */}
 
                 {/* Footer */}
                 <Box sx={{

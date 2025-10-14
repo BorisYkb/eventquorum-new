@@ -9,18 +9,25 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {
-    Box,
-    Typography,
-    TableContainer,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-    Paper,
-    Button,
-    TextField,
-    IconButton,
+  Box,
+  Typography,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Button,
+  TextField,
+  IconButton,
 } from '@mui/material';
+
+// Type pour une FAQ
+interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+}
 
 export default function Faqs() {
   const theme = useTheme();
@@ -28,10 +35,10 @@ export default function Faqs() {
   // États pour le formulaire
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [editingId, setEditingId] = useState(null);
-  
+  const [editingId, setEditingId] = useState<number | null>(null);
+
   // État pour les FAQs
-  const [savedFaqs, setSavedFaqs] = useState([]);
+  const [savedFaqs, setSavedFaqs] = useState<Faq[]>([]);
 
   // Fonction pour ajouter une FAQ directement
   const handleAddFaq = () => {
@@ -48,12 +55,12 @@ export default function Faqs() {
   };
 
   // Fonction pour supprimer une FAQ
-  const handleDeleteSaved = (id) => {
+  const handleDeleteSaved = (id: number) => {
     setSavedFaqs(savedFaqs.filter((faq) => faq.id !== id));
   };
 
   // Fonction pour commencer la modification
-  const handleEdit = (faq) => {
+  const handleEdit = (faq: Faq) => {
     setEditingId(faq.id);
     setQuestion(faq.question);
     setAnswer(faq.answer);
@@ -62,8 +69,8 @@ export default function Faqs() {
   // Fonction pour enregistrer la modification
   const handleSaveEdit = () => {
     if (question.trim() && answer.trim()) {
-      setSavedFaqs(savedFaqs.map(faq => 
-        faq.id === editingId 
+      setSavedFaqs(savedFaqs.map(faq =>
+        faq.id === editingId
           ? { ...faq, question: question.trim(), answer: answer.trim() }
           : faq
       ));
@@ -92,7 +99,7 @@ export default function Faqs() {
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 3 }}>
             {editingId ? 'Modifier la question' : 'Ajouter une nouvelle question'}
           </Typography>
-          
+
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
               fullWidth
@@ -103,7 +110,7 @@ export default function Faqs() {
               placeholder="Entrez votre question..."
               size="small"
             />
-            
+
             <TextField
               fullWidth
               label="Réponse"
@@ -114,7 +121,7 @@ export default function Faqs() {
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Entrez la réponse..."
             />
-            
+
             <Box sx={{ display: 'flex', gap: 2 }}>
               {editingId ? (
                 <>
@@ -157,7 +164,7 @@ export default function Faqs() {
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 2 }}>
               FAQs Enregistrées ({savedFaqs.length})
             </Typography>
-            
+
             <TableContainer>
               <Table>
                 <TableBody>
@@ -173,9 +180,9 @@ export default function Faqs() {
                     </TableCell>
                   </TableRow>
                   {savedFaqs.map((faq, index) => (
-                    <TableRow 
+                    <TableRow
                       key={faq.id}
-                      sx={{ 
+                      sx={{
                         '&:hover': { bgcolor: '#f9fafb' },
                         bgcolor: index % 2 === 0 ? 'white' : '#f9fafb'
                       }}
@@ -190,7 +197,7 @@ export default function Faqs() {
                         <IconButton
                           size="small"
                           onClick={() => handleEdit(faq)}
-                          sx={{ 
+                          sx={{
                             color: '#2563eb',
                             '&:hover': { bgcolor: '#dbeafe' },
                             mr: 1
@@ -201,7 +208,7 @@ export default function Faqs() {
                         <IconButton
                           size="small"
                           onClick={() => handleDeleteSaved(faq.id)}
-                          sx={{ 
+                          sx={{
                             color: '#dc2626',
                             '&:hover': { bgcolor: '#fee2e2' }
                           }}

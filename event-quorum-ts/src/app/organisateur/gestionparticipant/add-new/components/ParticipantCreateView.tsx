@@ -1,3 +1,5 @@
+//src/app/organisateur/gestionparticipant/add-new/components/ParticipantCreateView.tsx
+
 'use client';
 
 import { Button } from '@mui/material';

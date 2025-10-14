@@ -5,7 +5,7 @@ import Header2 from 'src/components/landing-page-components/layout/header/Header
 import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import { useState } from "react"
-import Header1_5 from '../landingpage5/Header1_5'
+import Header1_5 from '../Header1_5'
 
 export default function Faq5() {
 	const [isTab, setIsTab] = useState(1)

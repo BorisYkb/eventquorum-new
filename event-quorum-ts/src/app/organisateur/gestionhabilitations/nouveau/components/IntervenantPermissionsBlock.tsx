@@ -189,7 +189,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                 <Select
                     multiple
                     value={activiteSelectionnee}
-                    onChange={(e) => setActiviteSelectionnee(e.target.value)}
+                    onChange={(e) => setActiviteSelectionnee(typeof e.target.value === 'string' ? [e.target.value] : e.target.value)}
                     label="Sélectionner une ou plusieurs activités"
                 >
                     {activites.map((activite) => (
@@ -356,7 +356,13 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
                                         <Box
                                             component="img"
-                                            src={typeof intervenant.image === 'string' ? intervenant.image : URL.createObjectURL(intervenant.image)}
+                                            src={
+                                                typeof intervenant.image === 'string'
+                                                    ? intervenant.image
+                                                    : intervenant.image
+                                                        ? URL.createObjectURL(intervenant.image)
+                                                        : undefined
+                                            }
                                             alt={`Intervenant ${index + 1}`}
                                             sx={{
                                                 width: 80,
