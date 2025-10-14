@@ -222,7 +222,7 @@ export default function Phototheque() {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {/* ============ TITRE PRINCIPAL ============ */}
       <Typography
         variant="h4"
@@ -236,7 +236,7 @@ export default function Phototheque() {
         Photothèque de l'événement
       </Typography>
 
-      {/* ============ SECTIONS 1 & 2 : CÔTE À CÔTE ============ */}
+      {/* ============ SECTION UNIFIÉE : UPLOAD ET DESTINATION ============ */}
       <Box
         sx={{
           boxShadow: 3,
@@ -245,32 +245,43 @@ export default function Phototheque() {
           bgcolor: 'background.paper',
         }}
       >
+        {/* Titre de la section unifiée */}
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 600,
+            fontSize: { xs: '0.8rem', sm: '0.825rem', md: '1.05rem' },
+            mb: 3
+          }}
+        >
+          Enregistrez des images dans la photothèque
+        </Typography>
+
+        {/* Grille avec deux colonnes côte à côte */}
         <Grid container spacing={3}>
           {/* COLONNE GAUCHE : Sélection des destinations */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Titre de la section */}
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 600,
-                  fontSize: { xs: '0.8rem', sm: '0.825rem', md: '1.05rem' },
-                  mb: 1
-                }}
-              >
-                Sélection des destinations
-              </Typography>
-
               {/* Checkboxes de sélection */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+                {/* Checkbox Image de l'événement */}
+                <FormControlLabel
+                  control={<Checkbox checked={isEventChecked} onChange={handleEventCheckChange} />}
+                  label={
+                    <Typography variant="body1" sx={{ fontWeight: 400, fontSize: { xs: '0.8rem', sm: '1rem', md: '1rem' }, }}>
+                      Image de l'événement
+                    </Typography>
+                  }
+                />
                 {/* Checkbox Activité avec Autocomplete */}
                 <FormControlLabel
                   control={
                     <Checkbox checked={isActivityChecked} onChange={handleActivityCheckChange} />
                   }
                   label={
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      Activité
+                    <Typography variant="body1" sx={{ fontWeight: 400, fontSize: { xs: '0.8rem', sm: '1rem', md: '1rem' }, }}>
+                      Image d'un activité
                     </Typography>
                   }
                 />
@@ -341,35 +352,13 @@ export default function Phototheque() {
                     />
                   </Box>
                 )}
-
-                {/* Checkbox Image de l'événement */}
-                <FormControlLabel
-                  control={<Checkbox checked={isEventChecked} onChange={handleEventCheckChange} />}
-                  label={
-                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      Image de l'événement
-                    </Typography>
-                  }
-                />
               </Box>
             </Box>
           </Grid>
 
           {/* COLONNE DROITE : Upload des images */}
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
-              {/* Titre de la section */}
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 400,
-                  fontSize: { xs: '0.8rem', sm: '1rem', md: '1rem' },
-                  mb: 1
-                }}
-              >
-                Télécharger des images
-              </Typography>
-
               {/* Composant Upload */}
               <Box sx={{ flex: 1 }}>
                 <Upload

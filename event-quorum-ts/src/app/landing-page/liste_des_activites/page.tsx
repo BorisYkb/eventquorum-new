@@ -1,7 +1,7 @@
 "use client"
 import Countdown from 'src/components/landing-page-components/elements/Countdown'
 import Layout from "src/components/landing-page-components/layout/Layout"
-import ModernPagination from "../../components/elements/ModernPagination" // Nouveau composant de pagination
+import ModernPagination from "src/components/landing-page-components/elements/ModernPagination" // Nouveau composant de pagination
 import Link from "next/link"
 import React, { useState, useEffect } from "react"
 import RegistrationForm from 'src/components/landing-page-components/elements/RegistrationForm'

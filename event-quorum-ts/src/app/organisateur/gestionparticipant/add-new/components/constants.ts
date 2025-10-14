@@ -1,3 +1,5 @@
+//src/app/organisateur/gestionparticipant/add-new/components/constants.ts
+
 import { ActivityOption } from './types';
 
 // Options d'activités disponibles

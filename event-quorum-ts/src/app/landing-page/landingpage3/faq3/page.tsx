@@ -6,7 +6,7 @@ import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
 import { useState } from "react"
 
-import Header1_3 from '../landingpage3/Header1_3'
+import Header1_3 from '../Header1_3'
 import Countdown2 from 'src/components/landing-page-components/elements/Countdown2'
 
 export default function Faq3() {

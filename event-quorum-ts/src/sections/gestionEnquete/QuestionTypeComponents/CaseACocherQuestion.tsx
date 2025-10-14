@@ -11,7 +11,7 @@ import {
   MenuItem,
   FormControl
 } from '@mui/material';
-import { CurrentQuestion } from '../../types';
+import { CurrentQuestion } from 'src/app/organisateur/gestionenquete/nouveau/types';
 
 interface CaseACocherQuestionProps {
   currentQuestion: CurrentQuestion;

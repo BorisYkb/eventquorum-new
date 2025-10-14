@@ -10,7 +10,7 @@ import Section4 from 'src/components/landing-page-components/sections/home1/sect
 import Footer2 from 'src/components/landing-page-components/layout/footer/Footer2'
 import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
 import Section4activite from 'src/components/landing-page-components/sections/home1/Section4activite'
-import Section4activite_2 from '../landingpage2/components/Section4activite_2'
+import Section4activite_2 from '../components/Section4activite_2'
 
 // Images pour la galerie
 const galleryImages = [

@@ -28,7 +28,7 @@ export default function AddClassBody() {
 				'/landing-page/landingpage1': 'homepage1-body',
 				'/landing-page/landingpage2': 'homepage2-body',
 				'/landing-page/landingpage3': 'homepage3-body',
-				'/landing-page/landingpage3': 'homepage4-body',
+				'/landing-page/landingpage4': 'homepage4-body',
 				'/landing-page/landingpage5': 'homepage5-body',
 				'/landing-page/landingpage6': 'homepage6-body',
 				'/landing-page/landingpage7': 'homepage7-body',

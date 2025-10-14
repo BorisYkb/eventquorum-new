@@ -56,12 +56,12 @@ export function AuthSplitSection({
           px: 3,
           pb: 3,
           width: 1,
-          maxWidth: 480,
+          maxWidth: 550,
           display: 'none',
           position: 'relative',
           pt: 'var(--layout-header-desktop-height)',
           [theme.breakpoints.up(layoutQuery)]: {
-            gap: 8,
+            gap: 4,
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
@@ -77,11 +77,11 @@ export function AuthSplitSection({
           {title}
         </Typography>
 
-        {subtitle && (
+        {/* {subtitle && (
           <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }}>
             {subtitle}
           </Typography>
-        )}
+        )} */}
       </div>
 
       {/* Composant Carrousel */}

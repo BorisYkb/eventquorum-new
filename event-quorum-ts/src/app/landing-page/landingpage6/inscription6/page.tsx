@@ -2,7 +2,7 @@
 import Countdown from 'src/components/landing-page-components/elements/Countdown'
 import Layout from "src/components/landing-page-components/layout/Layout"
 import Link from "next/link"
-import ContactCarousel from '../connexion/ContactCarousel' // Importer le composant carrousel
+import ContactCarousel from '../../connexion/ContactCarousel' // Importer le composant carrousel
 import '/public/assets/landing-page/css/ContactCarousel.css'; // Importer les styles CSS
 import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
 

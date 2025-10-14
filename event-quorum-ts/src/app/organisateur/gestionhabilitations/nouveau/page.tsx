@@ -276,7 +276,7 @@ const CreateAccessPage: React.FC = () => {
                   <IntervenantPermissionsBlock
                     consulterTelEmail={false}
                     repondreQuestions={false}
-                    onPermissionChange={() => {}}
+                    onPermissionChange={() => () => {}}
                   />
                 </Box>
               </Card>

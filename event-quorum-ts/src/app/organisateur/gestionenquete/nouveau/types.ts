@@ -1,4 +1,4 @@
-// File: src/app/organisateur/gestionenquetes/nouveau/types.ts
+// src/app/organisateur/gestionenquete/nouveau/types.ts
 
 export interface Enquete {
   id: number;
