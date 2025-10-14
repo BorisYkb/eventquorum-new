@@ -1,5 +1,7 @@
 // src/app/organisateur/gestionhabilitations/components/MuiAuthorizationDashboard.tsx
+
 'use client'
+
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -431,7 +433,7 @@ const MuiAuthorizationDashboard: React.FC<MuiAuthorizationDashboardProps> = ({
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ py: 2 }}>
-                          <Typography variant="body2" sx={{ fontSize: '14px', color: '#1976D2' }}>
+                          <Typography variant="body2" sx={{ fontSize: '14px' }}>
                             {auth.email}
                           </Typography>
                         </TableCell>

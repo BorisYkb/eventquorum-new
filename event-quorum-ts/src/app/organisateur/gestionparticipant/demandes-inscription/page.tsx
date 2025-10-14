@@ -249,7 +249,7 @@ const DemandesInscriptionPage = () => {
                                     onClick={handleBackToManagement}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -442,7 +442,7 @@ const DemandesInscriptionPage = () => {
                                                 </Typography>
                                             </TableCell>
                                             <TableCell>
-                                                <Typography variant="body2" color="primary.main">
+                                                <Typography variant="body2" >
                                                     {demande.email}
                                                 </Typography>
                                             </TableCell>

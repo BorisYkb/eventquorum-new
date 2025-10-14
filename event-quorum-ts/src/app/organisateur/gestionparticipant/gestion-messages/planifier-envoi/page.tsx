@@ -185,7 +185,7 @@ const PlanifierEnvoiPage = () => {
                                     onClick={() => router.push('/organisateur/gestionparticipant')}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -198,7 +198,7 @@ const PlanifierEnvoiPage = () => {
                                     onClick={handleBackToMessages}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -428,6 +428,9 @@ const PlanifierEnvoiPage = () => {
                                                 <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités" />
                                                 <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités en ligne" />
                                                 <FormControlLabel control={<Checkbox size="small" />} label="Tous les invités en présentiel" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les participants" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les participants en ligne" />
+                                                <FormControlLabel control={<Checkbox size="small" />} label="Tous les participants en présentiel" />
                                                 <FormControlLabel control={<Checkbox size="small" />} label="Demandeur d'inscription" />
                                             </FormGroup>
                                         </Paper>

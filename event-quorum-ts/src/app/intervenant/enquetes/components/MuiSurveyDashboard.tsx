@@ -1,35 +1,40 @@
 // components/MuiSurveyDashboard.tsx
+
 'use client'
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TextField from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
+import FormControl from '@mui/material/FormControl';
+import TableContainer from '@mui/material/TableContainer';
+import InputAdornment from '@mui/material/InputAdornment';
+import TablePagination from '@mui/material/TablePagination';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+
 import { Survey } from '../types/survey';
 
 interface MuiSurveyDashboardProps {
@@ -253,7 +258,7 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                         </TableCell>
                         <TableCell sx={{ py: 2 }}>
                           <Typography variant="body2" sx={{
-                            color: '#1976D2',
+                            
                             fontWeight: 500,
                             fontSize: '14px'
                           }}>

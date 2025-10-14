@@ -67,7 +67,7 @@ const SurveyDetailView: React.FC<SurveyDetailViewProps> = ({ survey, questions }
         <div className="bg-white rounded-lg shadow-sm p-6">
           {/* Titre de l'enquête */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Titre de l'enquête</h2>
+            
             <div className="bg-gray-50 p-4 rounded-lg text-gray-800 text-lg">
               {survey.title}
             </div>

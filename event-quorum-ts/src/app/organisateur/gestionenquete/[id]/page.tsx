@@ -5,21 +5,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Box, Card, Typography } from '@mui/material';
+
 import { Alert, Snackbar } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
+
+import Loading from 'src/app/loading';
+
+import AddQuestionToEnquete from 'src/sections/gestionEnquete/AddQuestionToEnquete';
 
 // Import des composants modulaires
 import EnqueteHeader from '../components/EnqueteHeader';
 import EnqueteInfoCard from '../components/EnqueteInfoCard';
 import EnqueteStatsCards from '../components/EnqueteStatsCards';
-import EnqueteActionButtons from '../components/EnqueteActionButtons';
-import EnqueteQuestionsTable from '../components/EnqueteQuestionsTable';
-import AddQuestionToEnquete from 'src/sections/gestionEnquete/AddQuestionToEnquete';
 import QuestionEditModal from '../components/QuestionEditModal';
-import Loading from 'src/app/loading';
-
+import EnqueteActionButtons from '../components/EnqueteActionButtons';
 // Import des types - ✅ ON NE MODIFIE PAS LES TYPES
 import { Question, CurrentQuestion, Enquete } from '../nouveau/types';
+import EnqueteQuestionsTable from '../components/EnqueteQuestionsTable';
 
 /**
  * Interface pour les détails complets d'une enquête avec ses questions

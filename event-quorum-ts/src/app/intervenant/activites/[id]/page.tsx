@@ -106,32 +106,7 @@ export default function ActivityDetailPage() {
     { id: 3, name: 'Kouakou Evariste', email: 'kouakou.evariste@email.com', type: 'Présentiel', status: 'Déconnecté', dateRegistered: '2025/05/01 09:00' },
   ];
 
-  const questionsList = [
-    {
-      id: 1,
-      participant: 'Chonou Oriane',
-      question: 'Comment avez invitez la prochaine fois ?',
-      time: '10:30',
-      answered: true,
-      response: "Pour gérer les états dans React, vous pouvez utiliser le hook useState pour les composants fonctionnels ou this.state pour les composants de classe. Le hook useState retourne un tableau avec la valeur actuelle de l'état et une fonction pour le mettre à jour."
-    },
-    {
-      id: 2,
-      participant: 'Kouamé Boris Yakoué',
-      question: 'Quelle est la différence entre props et state ?',
-      time: '11:15',
-      answered: false,
-      response: ""
-    },
-    {
-      id: 3,
-      participant: 'Kouakou Evariste',
-      question: 'Comment optimiser les performances ?',
-      time: '14:20',
-      answered: true,
-      response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."
-    }
-  ];
+
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -198,6 +173,54 @@ export default function ActivityDetailPage() {
     setResponseToDelete(null);
   };
 
+  // N'oubliez pas d'ajouter ces éléments dans votre composant :
+
+  // 1. Dans vos états (au début du composant) :
+  const [questionSearchTerm, setQuestionSearchTerm] = useState('');
+
+  // 2. Ajoutez la propriété 'date' dans questionsList :
+  const questionsList = [
+  {
+    id: 1,
+    participant: 'Chonou Oriane',
+    question: 'Comment avez invitez la prochaine fois ?',
+    date: '12/05/2025',  // ← AJOUTEZ CETTE LIGNE
+    time: '10:30',
+    answered: true,
+    response: "Pour gérer les états dans React..."
+  },
+  // ... autres questions avec 'date' ajoutée
+  {
+    id: 2,
+    participant: 'Kouamé Boris Yakoué',
+    question: 'Quelle est la différence entre props et state ?',
+    date: '12/05/2025',
+    time: '11:15',
+    answered: false,
+    response: ""
+  },
+  {
+    id: 3,
+    participant: 'Kouakou Evariste',
+    question: 'Comment optimiser les performances ?',
+    date: '12/05/2025',
+    time: '14:20',
+    answered: true,
+    response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."
+  }
+];
+
+// 3. Ajoutez le filtre pour les questions :
+const filteredQuestions = questionsList.filter(question =>
+  question.participant.toLowerCase().includes(questionSearchTerm.toLowerCase()) ||
+  question.question.toLowerCase().includes(questionSearchTerm.toLowerCase())
+);
+
+// 4. Ajoutez la fonction handleViewQuestion :
+const handleViewQuestion = (questionId: number) => {
+  router.push(`/intervenant/activites/${activityId}/questions/${questionId}`);
+};
+
   const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (status) {
       case 'Confirmé':
@@ -259,7 +282,7 @@ export default function ActivityDetailPage() {
             startIcon={<Iconify icon="eva:arrow-back-fill" />}
             onClick={() => router.back()}
             sx={{
-              borderRadius: 2,
+              
               bgcolor: '#000',
               color: 'white',
               '&:hover': { bgcolor: '#333' }
@@ -532,204 +555,139 @@ export default function ActivityDetailPage() {
 
         
 
+
         <TabPanel value={activeTab} index={2}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Questions des participants
-            </Typography>
+            <TextField
+              placeholder="Rechercher une question..."
+              value={questionSearchTerm}
+              onChange={(e) => setQuestionSearchTerm(e.target.value)}
+              size="small"
+              sx={{ width: 300 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: '#9E9E9E' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Label
                 variant="soft"
                 color="success"
-                sx={{ borderRadius: 2, fontSize: '12px' }}
+                sx={{ borderRadius: 2, fontSize: '12px', py: 1.5, px: 2 }}
               >
-                Questions répondues: {questionsList.filter(q => q.answered).length.toString().padStart(2, '0')}
+                Répondues: {questionsList.filter(q => q.answered).length.toString().padStart(2, '0')}
               </Label>
               <Label
                 variant="soft"
                 color="warning"
-                sx={{ borderRadius: 2, fontSize: '12px' }}
+                sx={{ borderRadius: 2, fontSize: '12px', py: 1.5, px: 2 }}
               >
-                Questions en attente: {questionsList.filter(q => !q.answered).length.toString().padStart(2, '0')}
+                En attente: {questionsList.filter(q => !q.answered).length.toString().padStart(2, '0')}
               </Label>
             </Box>
           </Box>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {questionsList.map((question) => (
-              <Card key={question.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2 }}>
-                {/* En-tête avec nom du participant */}
-                <Box sx={{ bgcolor: '#F8F9FA', p: 2, borderBottom: 1, borderColor: 'divider' }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Typography variant="body2" fontWeight="bold" color="primary.main">
+            
+          <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#F8F9FA', py: 2 } }}>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '15%' }}>Participant</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '40%' }}>Question</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '12%' }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '10%' }}>Heure</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '13%' }}>Statut</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '10%', textAlign: 'center' }}>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredQuestions.map((question) => (
+                  <TableRow key={question.id} hover sx={{ '&:hover': { bgcolor: '#F8F9FA' } }}>
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151', fontWeight: 500 }}>
                         {question.participant}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        • {question.time}
-                      </Typography>
-                    </Box>
-                    <Label
-                      variant="soft"
-                      color={question.answered ? 'success' : 'warning'}
-                      sx={{ borderRadius: 2, fontSize: '11px' }}
-                    >
-                      {question.answered ? 'Répondu' : 'En attente'}
-                    </Label>
-                  </Box>
-                </Box>
-            
-                <Box sx={{ p: 3 }}>
-                  {/* Question du participant */}
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium', mb: 1, display: 'block' }}>
-                      Question :
-                    </Typography>
-                    <Card sx={{ p: 2, bgcolor: '#F3F4F6', borderRadius: 2, border: '1px solid #E5E7EB' }}>
-                      <Typography variant="body2" sx={{ fontSize: '14px', lineHeight: 1.5 }}>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontSize: '14px', 
+                          color: '#6B7280',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}
+                      >
                         {question.question}
                       </Typography>
-                    </Card>
-                  </Box>
-            
-                  {/* Zone de réponse */}
-                  <Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium', mb: 1, display: 'block' }}>
-                      Votre réponse :
-                    </Typography>
-
-                    {editingResponse === question.id ? (
-                      // Mode édition
-                      <Box>
-                        <TextField
-                          multiline
-                          rows={4}
-                          value={editResponseText}
-                          onChange={(e) => setEditResponseText(e.target.value)}
-                          placeholder="Tapez votre réponse ici..."
-                          fullWidth
-                          sx={{ 
-                            mb: 2,
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: 2
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
+                        {question.date}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
+                        {question.time}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Label
+                        variant="soft"
+                        color={question.answered ? 'success' : 'warning'}
+                        sx={{ borderRadius: 1.5 }}
+                      >
+                        {question.answered ? 'Répondu' : 'En attente'}
+                      </Label>
+                    </TableCell>
+                    <TableCell sx={{ py: 2, textAlign: 'center' }}>
+                      {question.answered ? (
+                        <Tooltip title="Voir les détails">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleViewQuestion(question.id)}
+                            sx={{
+                            color: '#374151',
+                            '&:hover': {
+                              bgcolor: 'action.hover'
                             }
+                            }}
+                          >
+                            <Iconify icon="solar:eye-bold" />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => handleViewQuestion(question.id)}
+                          sx={{
+                            textTransform: 'none',
+                            bgcolor: 'primary.main',
+                            '&:hover': { bgcolor: 'primary.dark' },
+                            borderRadius: 1.5,
+                            px: 2,
+                            py: 0.5
                           }}
-                        />
-                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                          <Button
-                            size="small"
-                            onClick={() => {
-                              setEditingResponse(null);
-                              setEditResponseText('');
-                            }}
-                            sx={{ textTransform: 'none', color: 'text.secondary' }}
-                          >
-                            Annuler
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="contained"
-                            onClick={() => handleSaveResponse(question.id)}
-                            disabled={!editResponseText.trim()}
-                            sx={{ 
-                              textTransform: 'none',
-                              bgcolor: 'success.main',
-                              '&:hover': { bgcolor: 'success.dark' },
-                              borderRadius: 1.5
-                            }}
-                          >
-                            Envoyer
-                          </Button>
-                        </Box>
-                      </Box>
-                    ) : (
-                      // Mode affichage
-                      <Box>
-                        <Card sx={{ 
-                          p: 2, 
-                          bgcolor: question.answered ? '#F0FDF4' : '#F9FAFB', 
-                          minHeight: 80, 
-                          borderRadius: 2,
-                          border: question.answered ? '1px solid #D1FAE5' : '1px solid #E5E7EB',
-                          mb: 2
-                        }}>
-                          {question.answered && question.response ? (
-                            <Typography variant="body2" sx={{ fontSize: '14px', lineHeight: 1.5, color: '#374151' }}>
-                              {question.response}
-                            </Typography>
-                          ) : (
-                            <Typography 
-                              variant="body2" 
-                              color="text.disabled" 
-                              fontStyle="italic" 
-                              sx={{ 
-                                fontSize: '14px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                minHeight: 50
-                              }}
-                            >
-                              Cliquez sur "Répondre" pour saisir votre réponse...
-                            </Typography>
-                          )}
-                        </Card>
-                        
-                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                          {question.answered && question.response ? (
-                            <>
-                              <Tooltip title="Modifier la réponse">
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleEditResponse(question.id, question.response)}
-                                  sx={{ 
-                                    bgcolor: 'primary.lighter',
-                                    color: 'primary.main',
-                                    '&:hover': { bgcolor: 'primary.light' }
-                                  }}
-                                >
-                                  <Iconify icon="eva:edit-2-fill" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Effacer la réponse">
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleDeleteResponse(question.id)}
-                                  sx={{ 
-                                    bgcolor: 'error.lighter',
-                                    color: 'error.main',
-                                    '&:hover': { bgcolor: 'error.light' }
-                                  }}
-                                >
-                                  <Iconify icon="eva:trash-2-fill" width={16} />
-                                </IconButton>
-                              </Tooltip>
-                            </>
-                          ) : (
-                            <Button
-                              size="small"
-                              variant="contained"
-                              startIcon={<Iconify icon="eva:message-circle-fill" width={16} />}
-                              onClick={() => handleEditResponse(question.id, '')}
-                              sx={{ 
-                                textTransform: 'none',
-                                bgcolor: 'primary.main',
-                                '&:hover': { bgcolor: 'primary.dark' },
-                                borderRadius: 1.5,
-                                px: 2
-                              }}
-                            >
-                              Répondre
-                            </Button>
-                          )}
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                </Box>
-              </Card>
-            ))}
-          </Box>
+                        >
+                          Répondre
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </TabPanel>
+
+
           
         {/* Dialog de confirmation pour supprimer une réponse */}
         <Dialog

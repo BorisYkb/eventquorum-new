@@ -1,5 +1,10 @@
 // components/AuthorizationDetailModal.tsx
 import React from 'react';
+
+import Grid from '@mui/material/Grid2';
+import Paper from '@mui/material/Paper';
+import { ArrowBack } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import {
   Dialog,
   DialogContent,
@@ -20,12 +25,9 @@ import {
   Divider,
   Chip
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import Paper from '@mui/material/Paper';
-import { ArrowBack } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import { Iconify } from 'src/components/iconify';
+
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 
 interface Authorization {
   id: number;

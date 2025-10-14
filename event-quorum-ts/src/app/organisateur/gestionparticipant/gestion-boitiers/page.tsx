@@ -252,7 +252,7 @@ const GestionBoitiersPage = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Box>
                             <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                                GESTION DES BOITIERS ÉLECTRONIQUES
+                                Gestion des boîtiers électroniques
                             </Typography>
                             {/* Breadcrumbs */}
                             <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
@@ -262,7 +262,7 @@ const GestionBoitiersPage = () => {
                                     onClick={handleBackToManagement}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -291,8 +291,8 @@ const GestionBoitiersPage = () => {
                             {(() => {
                                 const boitiersNonRendus = boitiers.filter(b => b.statut === 'Obtenu').length;
                                 return (
-                                    <Typography variant="body2" color="primary.main" sx={{ fontWeight: 500 }}>
-                                        Au total {boitiersNonRendus} boitier{boitiersNonRendus > 1 ? 's' : ''} électronique{boitiersNonRendus > 1 ? 's' : ''} à récupérer
+                                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                        {boitiersNonRendus} boitier{boitiersNonRendus > 1 ? 's' : ''} électronique{boitiersNonRendus > 1 ? 's' : ''} à récupérer
                                     </Typography>
                                 );
                             })()}
@@ -383,7 +383,7 @@ const GestionBoitiersPage = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: 'grey.50' }}>
-                                        <TableCell sx={{ fontWeight: 600, width: 100 }}></TableCell>
+                                        <TableCell sx={{ fontWeight: 600, width: 100 }}>Action</TableCell>
                                         <TableCell sx={{ fontWeight: 600 }}>Numéro boitier électronique</TableCell>
                                         <TableCell sx={{ fontWeight: 600 }}>Nom/Prénom</TableCell>
                                         <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
@@ -432,7 +432,7 @@ const GestionBoitiersPage = () => {
                                                 </Typography>
                                             </TableCell>
                                             <TableCell>
-                                                <Typography variant="body2" color="primary.main">
+                                                <Typography variant="body2" >
                                                     {boitier.email}
                                                 </Typography>
                                             </TableCell>

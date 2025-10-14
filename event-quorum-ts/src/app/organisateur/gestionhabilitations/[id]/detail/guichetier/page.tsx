@@ -1,7 +1,14 @@
 // File: src/app/organisateur/gestionhabilitations/[id]/detail/guichetier/page.tsx
+
 'use client'
+
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import { ArrowBack, Edit } from '@mui/icons-material';
+import { CheckCircle, Cancel } from '@mui/icons-material';
 import {
     Box,
     Card,
@@ -17,12 +24,10 @@ import {
     TableCell,
     Paper,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { ArrowBack, Edit } from '@mui/icons-material';
-import { CheckCircle, Cancel } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import { Label } from 'src/components/label';
+
 import Loading from 'src/app/loading';
+
+import { Label } from 'src/components/label';
 
 interface GuichetierData {
     id: number;
@@ -125,8 +130,7 @@ const GuichetierDetailPage: React.FC = () => {
      * @param value - Valeur booléenne de la permission
      * @returns JSX Element représentant le statut
      */
-    const renderPermissionStatus = (value: boolean) => {
-        return value ? (
+    const renderPermissionStatus = (value: boolean) => value ? (
             <Chip
                 icon={<CheckCircle sx={{ fontSize: '16px !important' }} />}
                 label="Activé"
@@ -143,7 +147,6 @@ const GuichetierDetailPage: React.FC = () => {
                 variant="outlined"
             />
         );
-    };
 
     /**
      * Détermine la couleur du chip de statut selon l'état de l'utilisateur

@@ -1,12 +1,15 @@
 // components/SurveyList.tsx
+
 'use client'
+
+import { Eye } from 'lucide-react';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye } from 'lucide-react';
-import { Survey } from '../types/survey';
+
 import StatsCards from './StatsCards';
-import SearchAndFilterBar from './SearchAndFilterBar';
 import ModernTable from './ModernTable';
+import { Survey } from '../types/survey';
+import SearchAndFilterBar from './SearchAndFilterBar';
 
 interface SurveyListProps {
   surveys: Survey[];

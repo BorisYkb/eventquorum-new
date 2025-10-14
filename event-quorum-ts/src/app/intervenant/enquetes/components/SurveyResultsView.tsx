@@ -1,11 +1,16 @@
 // components/SurveyResultsView.tsx
+
 'use client'
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Question, OptionDetail } from '../types/survey';
-import DetailModal from './modals/DetailModal';
+
 import Button from '@mui/material/Button';
+
 import { Iconify } from 'src/components/iconify';
+
+import DetailModal from './modals/DetailModal';
+import { Question, OptionDetail } from '../types/survey';
 
 interface SurveyResultsViewProps {
   surveyId: string;
@@ -108,7 +113,7 @@ const SurveyResultsView: React.FC<SurveyResultsViewProps> = ({ surveyId, questio
                             <div
                               className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${percentage}%` }}
-                            ></div>
+                             />
                           </div>
                           <span className="text-sm text-gray-600 min-w-0">{count} réponses</span>
                         </div>

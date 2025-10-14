@@ -49,8 +49,7 @@ const InfoCard: React.FC<{
   value: string | number;
   icon: React.ReactNode;
   color: string;
-}> = ({ title, value, icon, color }) => {
-  return (
+}> = ({ title, value, icon, color }) => (
     <Card sx={{
       p: 3,
       height: '100%',
@@ -99,7 +98,6 @@ const InfoCard: React.FC<{
       </Box>
     </Card>
   );
-};
 
 
 const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) => {
@@ -215,32 +213,25 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
         <Card sx={{ p: 3 }}>
           {/* Titre de l'enquête */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+            {/* <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
               Titre de l'enquête
-            </Typography>
-            <Card sx={{
-              p: 3,
-              backgroundColor: '#f8f9fa',
-              display: 'inline-block',
-              minWidth: 'fit-content',
-              borderRadius: 2,
-              border: '1px solid #e0e0e0'
-            }}>
-              <Typography variant="h6" sx={{
+            </Typography> */}
+            <Typography variant="h4" sx={{
                 color: theme.palette.text.primary,
-                textAlign: 'center',
                 fontWeight: 600
               }}>
                 {survey.title}
-              </Typography>
-            </Card>
+            </Typography>
+            
+              
+            
           </Box>
 
           {/* Cards d'informations améliorées */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
+            {/* <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
               Informations de l'enquête
-            </Typography>
+            </Typography> */}
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <InfoCard
@@ -273,9 +264,9 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
 
           {/* Boutons d'action de l'enquête */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
+            {/* <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>
               Actions sur l'enquête
-            </Typography>
+            </Typography> */}
             <Stack direction="row" spacing={2} justifyContent="center">
               <Tooltip title="Démarrer l'enquête" placement="top" arrow>
                 <Button
