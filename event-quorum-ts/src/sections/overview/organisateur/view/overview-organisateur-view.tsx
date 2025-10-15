@@ -149,7 +149,7 @@ export function OverviewOrganisateurView() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurDonutChart
+          <SuperviseurDonutChart 
             title="Répartition des activités"
             chart={{
               series: [

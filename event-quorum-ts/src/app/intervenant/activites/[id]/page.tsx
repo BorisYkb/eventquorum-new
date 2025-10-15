@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
@@ -25,7 +26,9 @@ import TableCell from '@mui/material/TableCell';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Pagination from '@mui/material/Pagination';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -74,6 +77,15 @@ export default function ActivityDetailPage() {
   const [responseToDelete, setResponseToDelete] = useState<number | null>(null);
   const [editingResponse, setEditingResponse] = useState<number | null>(null);
   const [editResponseText, setEditResponseText] = useState('');
+  const [questionSearchTerm, setQuestionSearchTerm] = useState('');
+  
+  // États pour les filtres
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [emargementFilter, setEmargementFilter] = useState<string>('all');
+  
+  // États pour la pagination
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
 
   const activity = {
     id: activityId,
@@ -101,35 +113,77 @@ export default function ActivityDetailPage() {
   };
 
   const participantsList = [
-    { id: 1, name: 'Chonou Oriane', email: 'oriane.chonou@email.com', type: 'Présentiel', status: 'Connecté', dateRegistered: '2025/05/01 09:00' },
-    { id: 2, name: 'Kouamé Boris Yakoué', email: 'kouame.boris@email.com', type: 'En ligne', status: 'Connecté', dateRegistered: '2025/05/01 09:00' },
-    { id: 3, name: 'Kouakou Evariste', email: 'kouakou.evariste@email.com', type: 'Présentiel', status: 'Déconnecté', dateRegistered: '2025/05/01 09:00' },
+    { id: 1, name: 'Chonou Oriane', email: 'oriane.chonou@email.com', type: 'Présentiel', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 09:00' },
+    { id: 2, name: 'Kouamé Boris Yakoué', email: 'kouame.boris@email.com', type: 'En ligne', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 09:00' },
+    { id: 3, name: 'Kouakou Evariste', email: 'kouakou.evariste@email.com', type: 'Présentiel', status: 'Déconnecté', emarger: false, dateRegistered: '2025/05/01 09:00' },
+    { id: 4, name: 'Aya Koffi', email: 'aya.koffi@email.com', type: 'En ligne', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 10:00' },
+    { id: 5, name: 'Konan Jean', email: 'konan.jean@email.com', type: 'Présentiel', status: 'Connecté', emarger: false, dateRegistered: '2025/05/01 10:15' },
+    { id: 6, name: 'Yao Marie', email: 'yao.marie@email.com', type: 'En ligne', status: 'Déconnecté', emarger: true, dateRegistered: '2025/05/01 10:30' },
+    { id: 7, name: 'N\'Guessan Paul', email: 'nguessan.paul@email.com', type: 'Présentiel', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 11:00' },
+    { id: 8, name: 'Bamba Fatou', email: 'bamba.fatou@email.com', type: 'En ligne', status: 'Connecté', emarger: false, dateRegistered: '2025/05/01 11:15' },
+    { id: 9, name: 'Diallo Ibrahim', email: 'diallo.ibrahim@email.com', type: 'Présentiel', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 11:30' },
+    { id: 10, name: 'Traoré Aminata', email: 'traore.aminata@email.com', type: 'En ligne', status: 'Déconnecté', emarger: false, dateRegistered: '2025/05/01 12:00' },
+    { id: 11, name: 'Coulibaly Moussa', email: 'coulibaly.moussa@email.com', type: 'Présentiel', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 12:15' },
+    { id: 12, name: 'Kone Mariam', email: 'kone.mariam@email.com', type: 'En ligne', status: 'Connecté', emarger: true, dateRegistered: '2025/05/01 12:30' },
   ];
 
-
+  const questionsList = [
+    {
+      id: 1,
+      participant: 'Chonou Oriane',
+      question: 'Comment avez invitez la prochaine fois ?',
+      date: '12/05/2025',
+      time: '10:30',
+      answered: true,
+      response: "Pour gérer les états dans React..."
+    },
+    {
+      id: 2,
+      participant: 'Kouamé Boris Yakoué',
+      question: 'Quelle est la différence entre props et state ?',
+      date: '12/05/2025',
+      time: '11:15',
+      answered: false,
+      response: ""
+    },
+    {
+      id: 3,
+      participant: 'Kouakou Evariste',
+      question: 'Comment optimiser les performances ?',
+      date: '12/05/2025',
+      time: '14:20',
+      answered: true,
+      response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."
+    }
+  ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
     setSearchTerm('');
+    setTypeFilter('all');
+    setEmargementFilter('all');
+    setPage(1);
+  };
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   // Fonction pour exporter en Excel
   const exportToExcel = () => {
-    // Préparer les données pour l'export
-    const dataToExport = participantsList.map(participant => ({
+    const dataToExport = filteredParticipants.map(participant => ({
       'Nom': participant.name,
       'Email': participant.email,
       'Type': participant.type,
-      'Statut': participant.status
+      'Statut': participant.status,
+      'Émargement': participant.emarger ? 'Émargé' : 'Non émargé'
     }));
 
-    // Créer un CSV (simulant l'export Excel)
     const csvContent = [
       Object.keys(dataToExport[0]).join(','),
       ...dataToExport.map(row => Object.values(row).join(','))
     ].join('\n');
 
-    // Télécharger le fichier
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -141,14 +195,12 @@ export default function ActivityDetailPage() {
     window.URL.revokeObjectURL(url);
   };
 
-  // Fonctions pour gérer les réponses
   const handleEditResponse = (questionId: number, currentResponse: string) => {
     setEditingResponse(questionId);
     setEditResponseText(currentResponse);
   };
 
   const handleSaveResponse = (questionId: number) => {
-    // Ici vous pouvez ajouter la logique pour sauvegarder la réponse
     console.log(`Sauvegarde de la réponse pour la question ${questionId}: ${editResponseText}`);
     setEditingResponse(null);
     setEditResponseText('');
@@ -161,7 +213,6 @@ export default function ActivityDetailPage() {
 
   const confirmDeleteResponse = () => {
     if (responseToDelete) {
-      // Ici vous pouvez ajouter la logique pour supprimer la réponse
       console.log(`Suppression de la réponse pour la question ${responseToDelete}`);
       setDeleteDialogOpen(false);
       setResponseToDelete(null);
@@ -173,53 +224,9 @@ export default function ActivityDetailPage() {
     setResponseToDelete(null);
   };
 
-  // N'oubliez pas d'ajouter ces éléments dans votre composant :
-
-  // 1. Dans vos états (au début du composant) :
-  const [questionSearchTerm, setQuestionSearchTerm] = useState('');
-
-  // 2. Ajoutez la propriété 'date' dans questionsList :
-  const questionsList = [
-  {
-    id: 1,
-    participant: 'Chonou Oriane',
-    question: 'Comment avez invitez la prochaine fois ?',
-    date: '12/05/2025',  // ← AJOUTEZ CETTE LIGNE
-    time: '10:30',
-    answered: true,
-    response: "Pour gérer les états dans React..."
-  },
-  // ... autres questions avec 'date' ajoutée
-  {
-    id: 2,
-    participant: 'Kouamé Boris Yakoué',
-    question: 'Quelle est la différence entre props et state ?',
-    date: '12/05/2025',
-    time: '11:15',
-    answered: false,
-    response: ""
-  },
-  {
-    id: 3,
-    participant: 'Kouakou Evariste',
-    question: 'Comment optimiser les performances ?',
-    date: '12/05/2025',
-    time: '14:20',
-    answered: true,
-    response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."
-  }
-];
-
-// 3. Ajoutez le filtre pour les questions :
-const filteredQuestions = questionsList.filter(question =>
-  question.participant.toLowerCase().includes(questionSearchTerm.toLowerCase()) ||
-  question.question.toLowerCase().includes(questionSearchTerm.toLowerCase())
-);
-
-// 4. Ajoutez la fonction handleViewQuestion :
-const handleViewQuestion = (questionId: number) => {
-  router.push(`/intervenant/activites/${activityId}/questions/${questionId}`);
-};
+  const handleViewQuestion = (questionId: number) => {
+    router.push(`/intervenant/activites/${activityId}/questions/${questionId}`);
+  };
 
   const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (status) {
@@ -236,18 +243,38 @@ const handleViewQuestion = (questionId: number) => {
     }
   };
 
-  const filteredParticipants = participantsList.filter(person =>
-    person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    person.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filtrage des participants avec tous les filtres
+  const filteredParticipants = participantsList.filter(person => {
+    const matchesSearch = person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         person.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesType = typeFilter === 'all' || person.type === typeFilter;
+    
+    const matchesEmargement = emargementFilter === 'all' || 
+                             (emargementFilter === 'emarger' && person.emarger) ||
+                             (emargementFilter === 'non-emarger' && !person.emarger);
+    
+    return matchesSearch && matchesType && matchesEmargement;
+  });
+
+  // Pagination
+  const paginatedParticipants = filteredParticipants.slice(
+    (page - 1) * rowsPerPage,
+    page * rowsPerPage
   );
 
-  // Couleurs alternées pour les widgets
+  const totalPages = Math.ceil(filteredParticipants.length / rowsPerPage);
+
+  const filteredQuestions = questionsList.filter(question =>
+    question.participant.toLowerCase().includes(questionSearchTerm.toLowerCase()) ||
+    question.question.toLowerCase().includes(questionSearchTerm.toLowerCase())
+  );
+
   const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' => {
     const colors: Array<'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'> = ['primary', 'secondary', 'success', 'warning', 'error', 'info'];
     return colors[index % colors.length];
   };
 
-  // Fonction pour afficher les informations dans l'onglet Information
   const renderInfoBox = (label: string, value: string | undefined) => (
     <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
       <Typography
@@ -282,7 +309,6 @@ const handleViewQuestion = (questionId: number) => {
             startIcon={<Iconify icon="eva:arrow-back-fill" />}
             onClick={() => router.back()}
             sx={{
-              
               bgcolor: '#000',
               color: 'white',
               '&:hover': { bgcolor: '#333' }
@@ -294,7 +320,6 @@ const handleViewQuestion = (questionId: number) => {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      {/* En-tête avec nom et type */}
       <Card sx={{ borderRadius: 2, overflow: 'hidden', mb: 3 }}>
         <Box sx={{ borderLeft: 4, borderColor: 'primary.main', p: 4 }}>
           <Typography variant="h3" gutterBottom sx={{ fontWeight: 600 }}>
@@ -306,7 +331,6 @@ const handleViewQuestion = (questionId: number) => {
         </Box>
       </Card>
 
-      {/* Statistiques avec SuperviseurWidgetSummary */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <SuperviseurWidgetSummary
@@ -318,7 +342,7 @@ const handleViewQuestion = (questionId: number) => {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <SuperviseurWidgetSummary
-            title="Participants"
+            title="Invités ayant émarger"
             total={activity.participants}
             color={getWidgetColor(1)}
             sx={{ height: 180 }}
@@ -348,18 +372,9 @@ const handleViewQuestion = (questionId: number) => {
             sx={{ height: 180 }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <SuperviseurWidgetSummary
-            title="Présence confirmée"
-            total={10}
-            color={getWidgetColor(5)}
-            sx={{ height: 180 }}
-          />
-        </Grid>
       </Grid>
 
       <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        {/* Onglets */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 4 }}>
           <Tabs
             value={activeTab}
@@ -373,16 +388,14 @@ const handleViewQuestion = (questionId: number) => {
             }}
           >
             <Tab label="Information" />
-            <Tab label="Liste des participants" />
-            <Tab label="Questions des participants" />
+            <Tab label="Liste des invités" />
+            <Tab label="Questions des invités" />
           </Tabs>
         </Box>
 
-        {/* Contenu des onglets */}
         <TabPanel value={activeTab} index={0}>
           <Box sx={{ bgcolor: 'grey.50', p: 3, borderRadius: 2 }}>
             <Grid container spacing={3}>
-              {/* Informations principales */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Card sx={{ p: 4, height: 'fit-content' }}>
                   <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
@@ -390,14 +403,12 @@ const handleViewQuestion = (questionId: number) => {
                   </Typography>
                   <Stack spacing={2}>
                     {renderInfoBox("Type d'activité", activity.type)}
-
                     {renderInfoBox("Statut", activity.status)}
                     {renderInfoBox("Durée", activity.duration)}
                   </Stack>
                 </Card>
               </Grid>
 
-              {/* Date et lieu */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Card sx={{ p: 4, height: 'fit-content' }}>
                   <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
@@ -412,7 +423,6 @@ const handleViewQuestion = (questionId: number) => {
                 </Card>
               </Grid>
 
-              {/* Description */}
               <Grid size={{ xs: 12 }}>
                 <Card sx={{ p: 4 }}>
                   <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
@@ -424,7 +434,6 @@ const handleViewQuestion = (questionId: number) => {
                 </Card>
               </Grid>
 
-              {/* Ressources */}
               <Grid size={{ xs: 12 }}>
                 <Card sx={{ p: 4 }}>
                   <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
@@ -465,37 +474,91 @@ const handleViewQuestion = (questionId: number) => {
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <TextField
-              placeholder="Rechercher un participant..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              size="small"
-              sx={{ width: 300 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: '#9E9E9E' }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
+          {/* Barre de recherche et filtres */}
+          <Box sx={{ mb: 3 }}>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <TextField
+                  placeholder="Rechercher un invité..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setPage(1);
+                  }}
+                  size="small"
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="eva:search-fill" sx={{ color: '#9E9E9E' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
 
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:download-fill" />}
-              onClick={exportToExcel}
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                bgcolor: 'black.main',
-                '&:hover': {
-                  bgcolor: 'black.dark'
-                }
-              }}
-            >
-              Exporter
-            </Button>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <FormControl fullWidth size="small">
+                  <TextField
+                    select
+                    value={typeFilter}
+                    onChange={(e) => {
+                      setTypeFilter(e.target.value);
+                      setPage(1);
+                    }}
+                    size="small"
+                    label="Type"
+                  >
+                    <MenuItem value="all">Tous les types</MenuItem>
+                    <MenuItem value="Présentiel">Présentiel</MenuItem>
+                    <MenuItem value="En ligne">En ligne</MenuItem>
+                  </TextField>
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <FormControl fullWidth size="small">
+                  <TextField
+                    select
+                    value={emargementFilter}
+                    onChange={(e) => {
+                      setEmargementFilter(e.target.value);
+                      setPage(1);
+                    }}
+                    size="small"
+                    label="Émargement"
+                  >
+                    <MenuItem value="all">Tous</MenuItem>
+                    <MenuItem value="emarger">Émargé</MenuItem>
+                    <MenuItem value="non-emarger">Non émargé</MenuItem>
+                  </TextField>
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+                <Button
+                  variant="contained"
+                  startIcon={<Iconify icon="eva:download-fill" />}
+                  onClick={exportToExcel}
+                  fullWidth
+                  sx={{
+                    height: '40px',
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    bgcolor: '#000',
+                    '&:hover': {
+                      bgcolor: '#333'
+                    }
+                  }}
+                >
+                  Exporter
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Typography variant="body2" color="text.secondary">
+              {filteredParticipants.length} invité(s) trouvé(s)
+            </Typography>
           </Box>
 
           <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
@@ -506,11 +569,13 @@ const handleViewQuestion = (questionId: number) => {
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Email</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Type</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Statut</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Émargement</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>Enregistrée le</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredParticipants.map((person) => (
+                {paginatedParticipants.length > 0 ? (
+                  paginatedParticipants.map((person) => (
                     <TableRow key={person.id} hover sx={{ '&:hover': { bgcolor: '#F8F9FA' } }}>
                       <TableCell sx={{ py: 2 }}>
                         <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
@@ -536,6 +601,14 @@ const handleViewQuestion = (questionId: number) => {
                         </Label>
                       </TableCell>
                       <TableCell sx={{ py: 2 }}>
+                        <Label
+                          variant="soft"
+                          color={person.emarger ? 'success' : 'error'}
+                        >
+                          {person.emarger ? 'Émargé' : 'Non émargé'}
+                        </Label>
+                      </TableCell>
+                      <TableCell sx={{ py: 2 }}>
                         <Typography variant="body2" sx={{ fontSize: '14px', color: '#6B7280' }}>
                           {new Date(person.dateRegistered).toLocaleString('fr-FR', {
                             year: 'numeric',
@@ -547,14 +620,35 @@ const handleViewQuestion = (questionId: number) => {
                         </Typography>
                       </TableCell>
                     </TableRow>
-                ))}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Aucun invité trouvé avec les filtres appliqués
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                shape="rounded"
+                showFirstButton
+                showLastButton
+              />
+            </Box>
+          )}
         </TabPanel>
-
-        
-
 
         <TabPanel value={activeTab} index={2}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -590,7 +684,7 @@ const handleViewQuestion = (questionId: number) => {
               </Label>
             </Box>
           </Box>
-            
+
           <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
             <Table>
               <TableHead>
@@ -612,10 +706,10 @@ const handleViewQuestion = (questionId: number) => {
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ py: 2 }}>
-                      <Typography 
-                        variant="body2" 
-                        sx={{ 
-                          fontSize: '14px', 
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: '14px',
                           color: '#6B7280',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -653,10 +747,10 @@ const handleViewQuestion = (questionId: number) => {
                             size="small"
                             onClick={() => handleViewQuestion(question.id)}
                             sx={{
-                            color: '#374151',
-                            '&:hover': {
-                              bgcolor: 'action.hover'
-                            }
+                              color: '#374151',
+                              '&:hover': {
+                                bgcolor: 'action.hover'
+                              }
                             }}
                           >
                             <Iconify icon="solar:eye-bold" />
@@ -687,9 +781,6 @@ const handleViewQuestion = (questionId: number) => {
           </TableContainer>
         </TabPanel>
 
-
-          
-        {/* Dialog de confirmation pour supprimer une réponse */}
         <Dialog
           open={deleteDialogOpen}
           onClose={cancelDelete}
@@ -712,9 +803,9 @@ const handleViewQuestion = (questionId: number) => {
             <Button onClick={cancelDelete} sx={{ textTransform: 'none' }}>
               Annuler
             </Button>
-            <Button 
-              onClick={confirmDeleteResponse} 
-              variant="contained" 
+            <Button
+              onClick={confirmDeleteResponse}
+              variant="contained"
               color="error"
               sx={{ textTransform: 'none' }}
             >

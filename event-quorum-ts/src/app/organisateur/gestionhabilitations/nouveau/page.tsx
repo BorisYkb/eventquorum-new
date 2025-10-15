@@ -1,4 +1,4 @@
-// File 1: src/app/organisateur/gestionhabilitations/nouveau/page.tsx
+// File: src/app/organisateur/gestionhabilitations/nouveau/page.tsx
 
 'use client'
 
@@ -22,9 +22,18 @@ import {
   Button,
   IconButton,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Chip,
 } from '@mui/material';
 
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 
 import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
 
@@ -37,9 +46,19 @@ interface CreateAccessForm {
   mdp: string;
 }
 
+interface SavedAccess extends CreateAccessForm {
+  id: number;
+  dateCreation: string;
+  intervenantData?: {
+    activites: string[];
+    intervenants: number;
+  };
+}
+
 const CreateAccessPage: React.FC = () => {
   const router = useRouter();
   const theme = useTheme();
+  
   const [formData, setFormData] = useState<CreateAccessForm>({
     nom: '',
     prenom: '',
@@ -48,6 +67,10 @@ const CreateAccessPage: React.FC = () => {
     role: "Agent d'admission",
     mdp: '',
   });
+
+  // État pour les accès enregistrés
+  const [savedAccesses, setSavedAccesses] = useState<SavedAccess[]>([]);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const handleInputChange = (field: keyof CreateAccessForm) => (
     event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
@@ -69,10 +92,63 @@ const CreateAccessPage: React.FC = () => {
     router.push('/organisateur/gestionhabilitations');
   };
 
+  const handleReset = () => {
+    setFormData({
+      nom: '',
+      prenom: '',
+      email: '',
+      telephone: '',
+      role: "Agent d'admission",
+      mdp: '',
+    });
+    setEditingIndex(null);
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Données du formulaire:', formData);
-    router.push('/organisateur/gestionhabilitations');
+    
+    const newAccess: SavedAccess = {
+      ...formData,
+      id: editingIndex !== null ? savedAccesses[editingIndex].id : Date.now(),
+      dateCreation: editingIndex !== null ? savedAccesses[editingIndex].dateCreation : new Date().toISOString(),
+      // TODO: Récupérer les vraies données de l'intervenant si le rôle est "Intervenant"
+      intervenantData: formData.role === 'Intervenant' ? {
+        activites: ['Activité 1', 'Activité 2'], // À remplacer par les vraies données
+        intervenants: 2, // À remplacer par le vrai nombre
+      } : undefined,
+    };
+
+    if (editingIndex !== null) {
+      // Mise à jour
+      const updated = [...savedAccesses];
+      updated[editingIndex] = newAccess;
+      setSavedAccesses(updated);
+      setEditingIndex(null);
+    } else {
+      // Ajout
+      setSavedAccesses([...savedAccesses, newAccess]);
+    }
+
+    // Réinitialiser le formulaire
+    handleReset();
+  };
+
+  const handleEdit = (index: number) => {
+    const access = savedAccesses[index];
+    setFormData({
+      nom: access.nom,
+      prenom: access.prenom,
+      email: access.email,
+      telephone: access.telephone,
+      role: access.role,
+      mdp: '', // Ne pas afficher le mot de passe
+    });
+    setEditingIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDelete = (index: number) => {
+    setSavedAccesses(savedAccesses.filter((_, i) => i !== index));
   };
 
   const roles = [
@@ -95,6 +171,15 @@ const CreateAccessPage: React.FC = () => {
       default:
         return 'default';
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   };
 
   return (
@@ -126,8 +211,8 @@ const CreateAccessPage: React.FC = () => {
             <Label variant="soft" color={getRoleColor(formData.role)}>
               {formData.role}
             </Label>
-            <Label variant="soft" color="success">
-              Nouveau
+            <Label variant="soft" color={editingIndex !== null ? 'warning' : 'success'}>
+              {editingIndex !== null ? 'Modification' : 'Nouveau'}
             </Label>
           </Box>
         </Box>
@@ -251,8 +336,6 @@ const CreateAccessPage: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-
-                    
                   </Grid>
                 </form>
               </Box>
@@ -289,7 +372,7 @@ const CreateAccessPage: React.FC = () => {
           <Button
             variant="outlined"
             color="error"
-            onClick={handleCancel}
+            onClick={handleReset}
             sx={{ px: 4 }}
           >
             Annuler
@@ -300,14 +383,85 @@ const CreateAccessPage: React.FC = () => {
             onClick={handleSubmit}
             sx={{ px: 4 }}
           >
-            Enregistrer l&apos;utilisateur
+            {editingIndex !== null ? 'Mettre à jour' : 'Enregistrer l\'utilisateur'}
           </Button>
         </Box>
+
+        {/* Tableau récapitulatif */}
+        {savedAccesses.length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Card>
+              <Box sx={{
+                p: 2,
+                backgroundColor: '#fafafa',
+                borderBottom: '1px solid #e0e0e0'
+              }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Accès enregistrés ({savedAccesses.length})
+                </Typography>
+              </Box>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: '#f3f4f6' }}>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Nom & Prénom</TableCell>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Email</TableCell>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Téléphone</TableCell>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Rôle</TableCell>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Date création</TableCell>
+                      <TableCell align="center" sx={{ fontWeight: 600, color: '#374151', width: 120 }}>
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {savedAccesses.map((access, index) => (
+                      <TableRow key={access.id} hover sx={{ '&:hover': { bgcolor: '#f9fafb' } }}>
+                        <TableCell sx={{ fontWeight: 500 }}>
+                          {access.prenom} {access.nom}
+                        </TableCell>
+                        <TableCell sx={{ color: 'primary.main' }}>{access.email}</TableCell>
+                        <TableCell>{access.telephone}</TableCell>
+                        <TableCell>
+                          <Label variant="soft" color={getRoleColor(access.role)}>
+                            {access.role}
+                          </Label>
+                          {access.role === 'Intervenant' && access.intervenantData && (
+                            <Box sx={{ mt: 1 }}>
+                              <Typography variant="caption" color="text.secondary">
+                                {access.intervenantData.activites.length} activité(s) • {access.intervenantData.intervenants} intervenant(s)
+                              </Typography>
+                            </Box>
+                          )}
+                        </TableCell>
+                        <TableCell>{formatDate(access.dateCreation)}</TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            size="small"
+                            onClick={() => handleEdit(index)}
+                            sx={{ color: 'warning.main', mr: 1 }}
+                          >
+                            <Iconify icon="solar:pen-bold" width={18} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleDelete(index)}
+                            sx={{ color: 'error.main' }}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" width={18} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Card>
+          </Box>
+        )}
       </Box>
     </Box>
   );
 };
 
 export default CreateAccessPage;
-
-// ============================================

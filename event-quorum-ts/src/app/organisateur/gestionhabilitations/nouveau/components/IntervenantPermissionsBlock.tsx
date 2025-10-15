@@ -27,6 +27,10 @@ import {
     Stack,
     TextField,
     Chip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
 } from '@mui/material';
 
 import { Upload } from 'src/components/upload';
@@ -53,11 +57,17 @@ interface Intervenant {
     index: number | null;
 }
 
-/**
- * Composant des permissions spécifiques au rôle Intervenant
- * - Consulter Tel & Email des participants
- * - Répondre aux questions des participants
- */
+// Liste des réseaux sociaux préenregistrés
+const RESEAUX_SOCIAUX_PREDEFINIS = [
+    'LinkedIn',
+    'Twitter',
+    'Facebook',
+    'Instagram',
+    'YouTube',
+    'GitHub',
+    'TikTok',
+];
+
 const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = ({
     consulterTelEmail,
     repondreQuestions,
@@ -69,12 +79,9 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
     const [showPreview, setShowPreview] = React.useState(true);
     
     // States pour les images
-    const [pourActivite, setPourActivite] = useState(false);
-    const [pourEvenement, setPourEvenement] = useState(false);
     const [activiteSelectionnee, setActiviteSelectionnee] = useState<string[]>([]);
 
     // States pour les intervenants
-    const [isAddingIntervenant, setIsAddingIntervenant] = useState(false);
     const [intervenants, setIntervenants] = useState<Intervenant[]>([]);
     const [currentIntervenant, setCurrentIntervenant] = useState<Intervenant>({
         image: null,
@@ -82,7 +89,15 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
         reseauxSociaux: [],
         index: null
     });
-    const [nouveauReseau, setNouveauReseau] = useState({ nom: '', lien: '' });
+    
+    // States pour les réseaux sociaux
+    const [reseauxSociauxDisponibles, setReseauxSociauxDisponibles] = useState<string[]>(RESEAUX_SOCIAUX_PREDEFINIS);
+    const [selectedReseau, setSelectedReseau] = useState('');
+    const [nouveauLien, setNouveauLien] = useState('');
+    
+    // Dialog pour ajouter un nouveau réseau
+    const [openNewReseauDialog, setOpenNewReseauDialog] = useState(false);
+    const [newReseauName, setNewReseauName] = useState('');
 
     // Liste des activités (à adapter selon vos données)
     const activites = [
@@ -106,12 +121,23 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
 
     // Ajouter un réseau social à l'intervenant en cours
     const handleAddReseauSocial = () => {
-        if (nouveauReseau.nom && nouveauReseau.lien) {
+        if (selectedReseau && nouveauLien) {
             setCurrentIntervenant({
                 ...currentIntervenant,
-                reseauxSociaux: [...currentIntervenant.reseauxSociaux, { ...nouveauReseau }]
+                reseauxSociaux: [...currentIntervenant.reseauxSociaux, { nom: selectedReseau, lien: nouveauLien }]
             });
-            setNouveauReseau({ nom: '', lien: '' });
+            setSelectedReseau('');
+            setNouveauLien('');
+        }
+    };
+
+    // Ajouter un nouveau réseau social à la liste
+    const handleAddNewReseauToList = () => {
+        if (newReseauName && !reseauxSociauxDisponibles.includes(newReseauName)) {
+            setReseauxSociauxDisponibles([...reseauxSociauxDisponibles, newReseauName]);
+            setSelectedReseau(newReseauName);
+            setOpenNewReseauDialog(false);
+            setNewReseauName('');
         }
     };
 
@@ -126,7 +152,6 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
     // Ajouter ou mettre à jour un intervenant
     const handleAddIntervenant = () => {
         if (currentIntervenant.index !== null) {
-            // Mise à jour
             const updatedIntervenants = [...intervenants];
             updatedIntervenants[currentIntervenant.index] = {
                 ...currentIntervenant,
@@ -134,36 +159,20 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
             };
             setIntervenants(updatedIntervenants);
         } else {
-            // Ajout
             setIntervenants([...intervenants, { ...currentIntervenant, index: null }]);
         }
-        setIsAddingIntervenant(false);
         setCurrentIntervenant({ image: null, description: '', reseauxSociaux: [], index: null });
     };
 
     // Éditer un intervenant
     const handleEditIntervenant = (index: number) => {
         setCurrentIntervenant({ ...intervenants[index], index });
-        setIsAddingIntervenant(true);
     };
 
     // Supprimer un intervenant
     const handleDeleteIntervenant = (index: number) => {
         setIntervenants(intervenants.filter((_, i) => i !== index));
     };
-
-    const intervenantPermissions = [
-        {
-            key: 'consulterTelEmail',
-            label: 'Consulter Tel & Email des participants',
-            value: consulterTelEmail
-        },
-        {
-            key: 'repondreQuestions',
-            label: 'Répondre aux questions des participants',
-            value: repondreQuestions
-        }
-    ];
 
     return (
         <Box sx={{ mb: 3 }}>
@@ -260,25 +269,44 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                     Réseaux sociaux
                                 </Typography>
                                 <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
-                                    <TextField
-                                        size="small"
-                                        placeholder="Nom (ex: LinkedIn)"
-                                        value={nouveauReseau.nom}
-                                        onChange={(e) => setNouveauReseau({ ...nouveauReseau, nom: e.target.value })}
-                                        sx={{ flex: 1 }}
-                                    />
+                                    <FormControl size="small" sx={{ flex: 1 }}>
+                                        <InputLabel>Réseau social</InputLabel>
+                                        <Select
+                                            value={selectedReseau}
+                                            onChange={(e) => setSelectedReseau(e.target.value)}
+                                            label="Réseau social"
+                                        >
+                                            {reseauxSociauxDisponibles.map((reseau) => (
+                                                <MenuItem key={reseau} value={reseau}>
+                                                    {reseau}
+                                                </MenuItem>
+                                            ))}
+                                            <MenuItem 
+                                                value="__add_new__" 
+                                                onClick={() => setOpenNewReseauDialog(true)}
+                                                sx={{ 
+                                                    color: 'primary.main', 
+                                                    fontStyle: 'italic',
+                                                    borderTop: 1,
+                                                    borderColor: 'divider'
+                                                }}
+                                            >
+                                                + Ajouter un nouveau réseau
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
                                     <TextField
                                         size="small"
                                         placeholder="Lien (ex: https://...)"
-                                        value={nouveauReseau.lien}
-                                        onChange={(e) => setNouveauReseau({ ...nouveauReseau, lien: e.target.value })}
+                                        value={nouveauLien}
+                                        onChange={(e) => setNouveauLien(e.target.value)}
                                         sx={{ flex: 2 }}
                                     />
                                     <Button
                                         variant="outlined"
                                         size="small"
                                         onClick={handleAddReseauSocial}
-                                        disabled={!nouveauReseau.nom || !nouveauReseau.lien}
+                                        disabled={!selectedReseau || !nouveauLien}
                                     >
                                         Ajouter
                                     </Button>
@@ -326,7 +354,6 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                     color="inherit"
                                     onClick={() => {
                                         setCurrentIntervenant({ image: null, description: '', reseauxSociaux: [], index: null });
-                                        setNouveauReseau({ nom: '', lien: '' });
                                     }}
                                 >
                                     Annuler
@@ -337,7 +364,7 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                                     onClick={handleAddIntervenant}
                                     disabled={!currentIntervenant.image || !currentIntervenant.description}
                                 >
-                                    {currentIntervenant.index !== null ? 'Mettre à jour' : 'Enregistrer'}
+                                    {currentIntervenant.index !== null ? 'Mettre à jour' : 'Ajouter'}
                                 </Button>
                             </Box>
                         </Box>
@@ -423,6 +450,32 @@ const IntervenantPermissionsBlock: React.FC<IntervenantPermissionsBlockProps> = 
                     </Box>
                 )}
             </Stack>
+
+            {/* Dialog pour ajouter un nouveau réseau */}
+            <Dialog open={openNewReseauDialog} onClose={() => setOpenNewReseauDialog(false)}>
+                <DialogTitle>Ajouter un nouveau réseau social</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Nom du réseau social"
+                        fullWidth
+                        value={newReseauName}
+                        onChange={(e) => setNewReseauName(e.target.value)}
+                        placeholder="Ex: Discord, Telegram, etc."
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenNewReseauDialog(false)}>Annuler</Button>
+                    <Button 
+                        onClick={handleAddNewReseauToList} 
+                        variant="contained"
+                        disabled={!newReseauName.trim()}
+                    >
+                        Ajouter
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

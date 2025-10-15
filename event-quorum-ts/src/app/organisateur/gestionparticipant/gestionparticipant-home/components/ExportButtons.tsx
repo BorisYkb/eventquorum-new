@@ -36,16 +36,8 @@ type ActiveFilters = {
  * Format : Activité (Format)
  */
 const EXPORT_INVITE_OPTIONS: ExportOption[] = [
-  { value: 'tous-pdf', label: 'Tous (PDF)' },
-  { value: 'tous-excel', label: 'Tous (Excel)' },
-  { value: 'pdf-conference', label: 'Conférence principale (PDF)' },
-  { value: 'excel-conference', label: 'Conférence principale (Excel)' },
-  { value: 'pdf-workshop', label: 'Atelier pratique (PDF)' },
-  { value: 'excel-workshop', label: 'Atelier pratique (Excel)' },
-  { value: 'pdf-networking', label: 'Session networking (PDF)' },
-  { value: 'excel-networking', label: 'Session networking (Excel)' },
-  { value: 'pdf-cocktail', label: 'Cocktail de clôture (PDF)' },
-  { value: 'excel-cocktail', label: 'Cocktail de clôture (Excel)' },
+  { value: 'tous-pdf', label: 'Liste des invités en PDF' },
+  { value: 'tous-excel', label: 'Liste des invités en Excel' },
 ];
 
 /**
@@ -54,27 +46,16 @@ const EXPORT_INVITE_OPTIONS: ExportOption[] = [
  */
 const EXPORT_PRESENCE_OPTIONS: ExportOption[] = [
   // Tous
-  { value: 'tous-tout-pdf', label: 'Tous (PDF)' },
-  { value: 'tous-tout-excel', label: 'Tout (Excel)' },
-  { value: 'en-ligne-excel', label: 'En ligne (Excel)' },
-  { value: 'en-ligne-pdf', label: 'En ligne (PDF)' },
-  { value: 'en-presentiel-pdf', label: 'En présentiel (PDF)' },
-  { value: 'en-presentiel-excel', label: 'En présentiel (Excel)' },
+  { value: 'tous-tout-pdf', label: 'Liste de présence en PDF' },
+  { value: 'tous-tout-excel', label: 'Liste de présence en Excel' },
 ];
 /**
  * Options d'export pour la liste des participants
  */
 const EXPORT_PARTICIPANTS_OPTIONS: ExportOption[] = [
-  { value: 'tous-pdf', label: 'Tous les participants (PDF)' },
-  { value: 'tous-excel', label: 'Tous les participants (Excel)' },
-  { value: 'pdf-conference', label: 'Participants Conférence (PDF)' },
-  { value: 'excel-conference', label: 'Participants Conférence (Excel)' },
-  { value: 'pdf-workshop', label: 'Participants Atelier (PDF)' },
-  { value: 'excel-workshop', label: 'Participants Atelier (Excel)' },
-  { value: 'pdf-networking', label: 'Participants Networking (PDF)' },
-  { value: 'excel-networking', label: 'Participants Networking (Excel)' },
-  { value: 'pdf-cocktail', label: 'Participants Cocktail (PDF)' },
-  { value: 'excel-cocktail', label: 'Participants Cocktail (Excel)' },
+  { value: 'tous-pdf', label: 'en PDF' },
+  { value: 'tous-excel', label: 'en Excel' },
+
 ];
 
 /**
@@ -222,8 +203,7 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
         {currentTab === 'invites' && (
           <>
             {/* Bouton Exporter liste des invités */}
-            <Tooltip title="Exporter la liste des invités (PDF & Excel)" arrow>
-              <Button
+            <Button
                 variant="contained"
                 onClick={handleInviteMenuOpen}
                 endIcon={<ExpandMoreIcon />}
@@ -237,8 +217,8 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
                 }}
               >
                 Exporter la liste des invités
-              </Button>
-            </Tooltip>
+            </Button>
+            
             <Menu
               anchorEl={inviteMenuAnchor}
               open={Boolean(inviteMenuAnchor)}
@@ -257,8 +237,7 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
             </Menu>
 
             {/* Bouton Exporter liste de présence */}
-            <Tooltip title="Exporter la liste de présence (PDF & Excel)" arrow>
-              <Button
+            <Button
                 variant="contained"
                 onClick={handlePresenceMenuOpen}
                 endIcon={<ExpandMoreIcon />}
@@ -273,7 +252,7 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
               >
                 Exporter la liste de présence
               </Button>
-            </Tooltip>
+            
             <Menu
               anchorEl={presenceMenuAnchor}
               open={Boolean(presenceMenuAnchor)}

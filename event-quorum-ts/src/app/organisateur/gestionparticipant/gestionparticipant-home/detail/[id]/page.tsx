@@ -113,6 +113,9 @@ const ParticipantDetailPage = () => {
               <ArrowBackIcon />
             </IconButton>
             <Box sx={{ flex: 1 }}>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                  Information sur l'invité
+              </Typography>
               <Breadcrumbs aria-label="breadcrumb">
                 <Link
                   component="button"
@@ -120,7 +123,7 @@ const ParticipantDetailPage = () => {
                   onClick={handleBack}
                   sx={{
                     textDecoration: 'none',
-                    color: 'primary.main',
+                    
                     fontWeight: 500,
                     '&:hover': {
                       textDecoration: 'underline',
@@ -129,7 +132,7 @@ const ParticipantDetailPage = () => {
                 >
                   Gestion des invités
                 </Link>
-                <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
+                <Typography variant="body2"  sx={{ fontWeight: 500 }}>
                   Détail de l'invité
                 </Typography>
               </Breadcrumbs>
@@ -159,18 +162,7 @@ const ParticipantDetailPage = () => {
           }}
         >
           <Stack spacing={4}>
-            {/* Titre */}
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                color: '#FF5630',
-                textTransform: 'uppercase',
-                letterSpacing: 0.5,
-              }}
-            >
-              Détail de l'invité
-            </Typography>
+            
 
             {/* Grille des informations - Nom, Prénom, Téléphone */}
             <Grid container spacing={3}>
@@ -262,6 +254,58 @@ const ParticipantDetailPage = () => {
                 </Stack>
               </Grid>
             </Grid>
+              
+            <Box sx={{display: "flex", flexDirection: "row", gap: 10}}>
+              {/* Type de connexion */}
+              <Grid item xs={12} md={6}>
+                <Stack spacing={1}>
+                  <Typography variant="body2" color="text.secondary">
+                    Type de connexion
+                  </Typography>
+                  <Box
+                    sx={{
+                      p: 2,
+                      border: 1,
+                      borderColor: 'divider',
+                      borderRadius: 1,
+                      backgroundColor: 'grey.50',
+                    }}
+                  >
+                    <Chip
+                      label={participant.typeConnexion === 'en ligne' ? 'En ligne' : 'En présentiel'}
+                      color={participant.typeConnexion === 'en ligne' ? 'info' : 'success'}
+                      size="small"
+                      sx={{ fontWeight: 500 }}
+                    />
+                  </Box>
+                </Stack>
+              </Grid>
+                  
+              {/* Date d'émargement */}
+              <Grid item xs={12} md={6}>
+                <Stack spacing={1}>
+                  <Typography variant="body2" color="text.secondary">
+                    Date d'émargement
+                  </Typography>
+                  <Box
+                    sx={{
+                      p: 2,
+                      border: 1,
+                      borderColor: 'divider',
+                      borderRadius: 1,
+                      backgroundColor: 'grey.50',
+                    }}
+                  >
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {participant.datePremiereConnexion 
+                        ? formatDate(participant.datePremiereConnexion)
+                        : 'Non émargé'
+                      }
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Grid>
+            </Box>
 
             {/* Section Activités */}
             <Box>

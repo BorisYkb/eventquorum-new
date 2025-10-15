@@ -187,7 +187,7 @@ const AutreMessagePage = () => {
                         </IconButton>
                         <Box sx={{ flex: 1 }}>
                             <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                                Autre Message
+                                Message automatique
                             </Typography>
                             {/* Breadcrumbs */}
                             <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
@@ -197,7 +197,7 @@ const AutreMessagePage = () => {
                                     onClick={() => router.push('/organisateur/gestionparticipant')}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -210,7 +210,7 @@ const AutreMessagePage = () => {
                                     onClick={handleBackToMessages}
                                     sx={{
                                         textDecoration: 'none',
-                                        color: 'primary.main',
+                                        
                                         fontWeight: 500,
                                         '&:hover': { textDecoration: 'underline' }
                                     }}
@@ -218,7 +218,7 @@ const AutreMessagePage = () => {
                                     Gestion des messages
                                 </Link>
                                 <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
-                                    Autre message
+                                    Message automatique
                                 </Typography>
                             </Breadcrumbs>
                         </Box>
@@ -269,7 +269,7 @@ const AutreMessagePage = () => {
                                         <Stack spacing={3}>
                                             {/* Mode d'envoi avec checkboxes */}
                                             <Box>
-                                                <FormControl component="fieldset" fullWidth>
+                                                <FormControl component="fieldset" fullWidth sx={{}}>
                                                     <FormLabel
                                                         component="legend"
                                                         sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}
@@ -289,6 +289,7 @@ const AutreMessagePage = () => {
                                                                 <Checkbox
                                                                     checked={modesEnvoi[message.id]?.whatsapp || false}
                                                                     onChange={handleModeEnvoiChange(message.id, 'whatsapp')}
+                                                                    disabled={message.id === 'message1'}
                                                                 />
                                                             }
                                                             label="WhatsApp"
@@ -298,6 +299,7 @@ const AutreMessagePage = () => {
                                                                 <Checkbox
                                                                     checked={modesEnvoi[message.id]?.sms || false}
                                                                     onChange={handleModeEnvoiChange(message.id, 'sms')}
+                                                                    disabled={message.id === 'message1'}
                                                                 />
                                                             }
                                                             label="SMS"
@@ -307,9 +309,10 @@ const AutreMessagePage = () => {
                                                                 <Checkbox
                                                                     checked={modesEnvoi[message.id]?.mail || false}
                                                                     onChange={handleModeEnvoiChange(message.id, 'mail')}
+                                                                    disabled={message.id === 'message1'}
                                                                 />
                                                             }
-                                                            label="Mail"
+                                                            label="Email"
                                                         />
                                                     </FormGroup>
                                                 </FormControl>
@@ -318,7 +321,7 @@ const AutreMessagePage = () => {
                                             {/* Description du message */}
                                             {message.description && (
                                                 <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                                                    {message.description}
+                                                    NB : {message.description}
                                                 </Typography>
                                             )}
 

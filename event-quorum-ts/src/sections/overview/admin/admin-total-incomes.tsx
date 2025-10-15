@@ -18,7 +18,7 @@ import { Chart, useChart } from 'src/components/chart';
 type Props = CardProps & {
     total: number;
     title: string;
-    percent: number;
+    
     chart: {
         colors?: string[];
         categories: string[];
@@ -29,7 +29,7 @@ type Props = CardProps & {
     };
 };
 
-export function AdminTotalIncomes({ title, total, percent, chart, sx, ...other }: Props) {
+export function AdminTotalIncomes({ title, total, chart, sx, ...other }: Props) {
     const theme = useTheme();
 
     const chartColors = chart.colors ?? [hexAlpha(theme.palette.primary.lighter, 0.64)];
@@ -73,16 +73,16 @@ export function AdminTotalIncomes({ title, total, percent, chart, sx, ...other }
                     typography: 'subtitle2',
                 }}
             >
-                <Iconify icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
-                <Box component="span">
+                {/* <Iconify icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} /> */}
+                {/* <Box component="span">
                     {percent > 0 && '+'}
                     {fPercent(percent)}
-                </Box>
+                </Box> */}
             </Box>
 
-            <Box component="span" sx={{ opacity: 0.64, typography: 'body2' }}>
+            {/* <Box component="span" sx={{ opacity: 0.64, typography: 'body2' }}>
                 que mois dernier
-            </Box>
+            </Box> */}
         </Box>
     );
 

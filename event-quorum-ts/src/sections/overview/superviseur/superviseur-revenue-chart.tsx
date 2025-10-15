@@ -79,16 +79,16 @@ export function SuperviseurRevenueChart({ title, chart, sx, ...other }: Props) {
                     typography: 'subtitle2',
                 }}
             >
-                <Iconify icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
+                {/* <Iconify icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
                 <Box component="span">
                     {percent > 0 && '+'}
                     {fPercent(percent)}
-                </Box>
+                </Box> */}
             </Box>
 
-            <Box component="span" sx={{ opacity: 0.64, typography: 'body2' }}>
+            {/* <Box component="span" sx={{ opacity: 0.64, typography: 'body2' }}>
                 que période précédente
-            </Box>
+            </Box> */}
         </Box>
     );
 
@@ -100,7 +100,7 @@ export function SuperviseurRevenueChart({ title, chart, sx, ...other }: Props) {
                     borderRadius: 2,
                     boxShadow: 'none',
                     color: 'primary.lighter',
-                    height: 350,
+                    height: 250,
                     bgcolor: 'primary.darker',
                 }),
                 ...(Array.isArray(sx) ? sx : [sx]),

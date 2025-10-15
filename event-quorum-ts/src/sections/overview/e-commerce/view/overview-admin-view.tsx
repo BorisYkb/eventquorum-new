@@ -1,5 +1,6 @@
 'use client';
 
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
@@ -18,15 +19,14 @@ import {
 import { useMockedUser } from 'src/auth/hooks';
 
 import { EcommerceWelcome } from '../ecommerce-welcome';
-import { EventsList, _lastFiveEvents } from '../../admin/admin-last-five-event';
-import { AdminWidgetSummary } from '../../admin/view/admin-widget-summary';
-import { AdminCurrentBalance } from '../../admin/admin-current-balance';
-import { PAYMENT_DATA, PaymentMethodsList } from '../../admin/admin-sales-overview';
-import { EventsYearlyAnalytics } from '../../admin/admin-event-yearly-analytics';
-import { _eventsList, EventsCarousel } from '../../admin/admin-event-carousel';
-import { Box } from '@mui/material';
-import { EventNumberByState } from '../../admin/admin-event-by-state';
 import { AdminTotalIncomes } from '../../admin/admin-total-incomes';
+import { EventNumberByState } from '../../admin/admin-event-by-state';
+import { AdminCurrentBalance } from '../../admin/admin-current-balance';
+import { AdminWidgetSummary } from '../../admin/view/admin-widget-summary';
+import { _eventsList, EventsCarousel } from '../../admin/admin-event-carousel';
+import { EventsList, _lastFiveEvents } from '../../admin/admin-last-five-event';
+import { EventsYearlyAnalytics } from '../../admin/admin-event-yearly-analytics';
+import { PAYMENT_DATA, PaymentMethodsList } from '../../admin/admin-sales-overview';
 // ----------------------------------------------------------------------
 
 export function OverviewAdminView() {
@@ -210,12 +210,12 @@ export function OverviewAdminView() {
                     <AdminTotalIncomes
                         title="Bilan financier"
                         total={15650000}
-                        percent={2.6}
+                        // percent={2.6}
                         chart={{
                             categories: ['Jan', 'Fév', 'Mars', 'Avr', 'Mai', 'Juin',
                                 'Juil', 'Août', 'Sept'],
                             series: [{ data: [120000, 150000, 180000, 220000, 250000, 300000, 280000, 260000, 310000] }],
-                        }}
+                        }}                   
                     />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6, lg: 8 }}>

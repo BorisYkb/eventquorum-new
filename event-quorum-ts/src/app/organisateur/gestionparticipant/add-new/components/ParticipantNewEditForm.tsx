@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
 import { LoadingButton } from '@mui/lab';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import {
   Box,
   Grid,
@@ -23,8 +24,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Chip,
 } from '@mui/material';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -69,7 +70,7 @@ export function ParticipantNewEditForm({ item }: Props) {
 
   // États pour l'import par activité
   const [files2, setFiles2] = useState<File[]>([]);
-  const [selectedActivity, setSelectedActivity] = useState<string>('');
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
 
   // États de chargement
   const [isSubmitting1, setIsSubmitting1] = useState(false);
@@ -97,7 +98,10 @@ export function ParticipantNewEditForm({ item }: Props) {
     values: item,
   });
 
-  const { reset, handleSubmit } = methods;
+  const { reset, handleSubmit, watch, setValue } = methods;
+
+  // Surveillance des activités sélectionnées dans le formulaire
+  const selectedFormActivities = watch('activites') || [];
 
   /**
    * Gestion de l'expansion des accordions
@@ -167,8 +171,8 @@ export function ParticipantNewEditForm({ item }: Props) {
    * Soumission de l'import par activité
    */
   const handleSubmitBulkImport = async () => {
-    if (!selectedActivity) {
-      toast.error('Veuillez sélectionner une activité');
+    if (selectedActivities.length === 0) {
+      toast.error('Veuillez sélectionner au moins une activité');
       return;
     }
 
@@ -182,14 +186,17 @@ export function ParticipantNewEditForm({ item }: Props) {
       // Simulation d'un appel API
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      console.info('BULK IMPORT', { activity: selectedActivity, files: files2 });
+      console.info('BULK IMPORT', { activities: selectedActivities, files: files2 });
+
+      const activitiesLabels = selectedActivities
+        .map((activityValue) => ACTIVITY_OPTIONS.find((a) => a.value === activityValue)?.label)
+        .join(', ');
 
       toast.success(
-        `Participants importés pour l'activité "${ACTIVITY_OPTIONS.find((a) => a.value === selectedActivity)?.label
-        }"!`
+        `Participants importés pour ${selectedActivities.length > 1 ? 'les activités' : "l'activité"} "${activitiesLabels}"!`
       );
       setFiles2([]);
-      setSelectedActivity('');
+      setSelectedActivities([]);
     } catch (error) {
       console.error(error);
       toast.error("Une erreur est survenue lors de l'importation");
@@ -256,7 +263,30 @@ export function ParticipantNewEditForm({ item }: Props) {
               Activités
             </Typography>
 
-            <Field.MultiCheckbox name="activites" options={ACTIVITY_OPTIONS} sx={{ mt: 2, mb: 3 }} />
+            {/* Select multiple pour les activités */}
+            <FormControl fullWidth sx={{ mt: 2, mb: 3 }}>
+              <InputLabel>Sélectionner une ou plusieurs activités</InputLabel>
+              <Select
+                multiple
+                value={selectedFormActivities}
+                onChange={(e) => setValue('activites', e.target.value as string[])}
+                label="Sélectionner une ou plusieurs activités"
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const activity = ACTIVITY_OPTIONS.find((a) => a.value === value);
+                      return <Chip key={value} label={activity?.label} size="small" />;
+                    })}
+                  </Box>
+                )}
+              >
+                {ACTIVITY_OPTIONS.map((activity) => (
+                  <MenuItem key={activity.value} value={activity.value}>
+                    {activity.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             <Stack direction="row" justifyContent="flex-end">
               <LoadingButton
@@ -302,7 +332,7 @@ export function ParticipantNewEditForm({ item }: Props) {
 
         <AccordionDetails sx={{ px: 3, pb: 3 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Choisir l'activité puis télécharger le fichier correspondant
+            Choisir une ou plusieurs activités puis télécharger le fichier correspondant
           </Typography>
 
           {/* Sélecteur d'activité et bouton d'export */}
@@ -316,16 +346,22 @@ export function ParticipantNewEditForm({ item }: Props) {
               gap: 2,
             }}
           >
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Choisir l'activité</InputLabel>
+            <FormControl sx={{ minWidth: 300 }}>
+              <InputLabel>Choisir une ou plusieurs activités</InputLabel>
               <Select
-                value={selectedActivity}
-                onChange={(e) => setSelectedActivity(e.target.value)}
-                label="Choisir l'activité"
+                multiple
+                value={selectedActivities}
+                onChange={(e) => setSelectedActivities(e.target.value as string[])}
+                label="Choisir une ou plusieurs activités"
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const activity = ACTIVITY_OPTIONS.find((a) => a.value === value);
+                      return <Chip key={value} label={activity?.label} size="small" />;
+                    })}
+                  </Box>
+                )}
               >
-                <MenuItem value="">
-                  <em>Sélectionner une activité</em>
-                </MenuItem>
                 {ACTIVITY_OPTIONS.map((activity) => (
                   <MenuItem key={activity.value} value={activity.value}>
                     {activity.label}
