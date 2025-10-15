@@ -63,7 +63,14 @@ export const paths = {
       updatePassword: `${ROOTS.AUTH}/amplify/update-password`,
       resetPassword: `${ROOTS.AUTH}/amplify/reset-password`,
     },
-    jwt: { signIn: `${ROOTS.AUTH}/jwt/sign-in`, signUp: `${ROOTS.AUTH}/jwt/sign-up` },
+    jwt: {
+      signIn: `${ROOTS.AUTH}/jwt/sign-in`,
+      signUp: `${ROOTS.AUTH}/jwt/sign-up`,
+      // Routes de réinitialisation
+      forgotPassword: '/auth-demo/split/forgot-password',
+      verifyOtp: '/auth-demo/split/verify-otp',
+      newPassword: '/auth-demo/split/new-password',
+    },
     firebase: {
       signIn: `${ROOTS.AUTH}/firebase/sign-in`,
       verify: `${ROOTS.AUTH}/firebase/verify`,
@@ -161,7 +168,7 @@ export const paths = {
       newactivity: `${ROOTS.ORGANISATEUR}/gestionevent/newactivity`,
       eventfinancialsituation: {
         root: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation`,
-        perboxoffice: (id: string) =>`${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/boxoffice/${id}`
+        perboxoffice: (id: string) => `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/boxoffice/${id}`
       },
       edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionevent/${id}/editactivity`,
     },
@@ -190,24 +197,24 @@ export const paths = {
   },
 
   // OPERATEUR
-operateur: {
-  root: ROOTS.OPERATEUR,
-  ADMISSION_ENTREE: {
-    root: `${ROOTS.OPERATEUR}/admission-entree`,
-    scan: `${ROOTS.OPERATEUR}/admission-entree/scan`,
-    liste: `${ROOTS.OPERATEUR}/admission-entree/liste`,
-    participant: (id: string) => `${ROOTS.OPERATEUR}/admission-entree/participant/${id}`,
-    recherche: `${ROOTS.OPERATEUR}/admission-entree/recherche`,
+  operateur: {
+    root: ROOTS.OPERATEUR,
+    ADMISSION_ENTREE: {
+      root: `${ROOTS.OPERATEUR}/admission-entree`,
+      scan: `${ROOTS.OPERATEUR}/admission-entree/scan`,
+      liste: `${ROOTS.OPERATEUR}/admission-entree/liste`,
+      participant: (id: string) => `${ROOTS.OPERATEUR}/admission-entree/participant/${id}`,
+      recherche: `${ROOTS.OPERATEUR}/admission-entree/recherche`,
+    },
+    ADMISSION_ACTIVITE: {
+      root: `${ROOTS.OPERATEUR}/admission-activite`,
+      scan: `${ROOTS.OPERATEUR}/admission-activite/scan`,
+      liste: `${ROOTS.OPERATEUR}/admission-activite/liste`,
+      activite: (id: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${id}`,
+      participant: (activityId: string, participantId: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${activityId}/participant/${participantId}`,
+      recherche: `${ROOTS.OPERATEUR}/admission-activite/recherche`,
+    }
   },
-  ADMISSION_ACTIVITE: {
-    root: `${ROOTS.OPERATEUR}/admission-activite`,
-    scan: `${ROOTS.OPERATEUR}/admission-activite/scan`,
-    liste: `${ROOTS.OPERATEUR}/admission-activite/liste`,
-    activite: (id: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${id}`,
-    participant: (activityId: string, participantId: string) => `${ROOTS.OPERATEUR}/admission-activite/activite/${activityId}/participant/${participantId}`,
-    recherche: `${ROOTS.OPERATEUR}/admission-activite/recherche`,
-  }
-},
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,

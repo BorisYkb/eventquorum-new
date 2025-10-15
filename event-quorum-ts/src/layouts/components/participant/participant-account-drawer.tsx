@@ -28,9 +28,9 @@ import { AnimateBorder } from 'src/components/animate';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-import { UpgradeBlock } from './nav-upgrade';
-import { AccountButton } from './account-button';
-import { SignOutButton } from './sign-out-button';
+import { UpgradeBlock } from '../nav-upgrade';
+import { AccountButton } from '../account-button';
+import { SignOutButton } from '../sign-out-button';
 
 // ----------------------------------------------------------------------
 
@@ -43,12 +43,17 @@ export type AccountDrawerProps = IconButtonProps & {
   }[];
 };
 
-export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
+export function ParticipantAccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
   const pathname = usePathname();
 
   const { user } = useMockedUser();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+
+  // Vérifier si on est sur une page enligne ou enpresentiel
+  const isPresenceTracked = pathname.startsWith('/participant/enligne/payer') ||
+    pathname.startsWith('/participant/enpresentiel/payer/suivredirecte');
+
 
   const renderAvatar = () => (
     <AnimateBorder
@@ -117,6 +122,37 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
     </MenuList>
   );
 
+  const renderPresenceMessage = () => {
+    if (!isPresenceTracked) return null;
+
+    return (
+      <Box
+        sx={{
+          px: 2.5,
+          py: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}
+      >
+        <Iconify
+          icon="material-symbols:info"
+          sx={{ color: 'info.main', width: 20, height: 20 }}
+        />
+
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'info.main',
+            fontWeight: 500,
+          }}
+        >
+          Vous êtes inscrit sur la liste de présence.
+        </Typography>
+      </Box>
+    );
+  };
+
   return (
     <>
       <AccountButton
@@ -168,9 +204,8 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
 
           {renderList()}
 
-          {/* <Box sx={{ px: 2.5, py: 3 }}>
-            <UpgradeBlock />
-          </Box> */}
+          {renderPresenceMessage()}
+
         </Scrollbar>
 
         <Box sx={{ p: 2.5 }}>

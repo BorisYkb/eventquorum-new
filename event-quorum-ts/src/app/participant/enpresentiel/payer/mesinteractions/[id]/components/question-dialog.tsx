@@ -119,7 +119,7 @@ export function QuestionDialog({ open, question, isMobile, onClose }: QuestionDi
                     {!question.isFreeResponse && question.options && question.options.length > 1 && (
                         <Box>
                             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                Options disponibles
+                                Options de réponse
                             </Typography>
                             <Stack spacing={1}>
                                 {question.options.map((option, index) => {
@@ -127,84 +127,98 @@ export function QuestionDialog({ open, question, isMobile, onClose }: QuestionDi
                                     const isUserResponse = option === question.userResponse;
                                     // Déterminer si cette option est la réponse correcte
                                     const isCorrectAnswer = option === question.correctAnswer;
+                                    // L'utilisateur a répondu faux et c'est cette option
+                                    const isWrongUserResponse = isUserResponse && !question.isCorrect;
 
                                     return (
-                                        <Chip
+                                        <Box
                                             key={index}
-                                            label={option}
-                                            variant={isUserResponse ? "filled" : "outlined"}
-                                            color={
-                                                isUserResponse
-                                                    ? question.isCorrect ? "success" : "error"
-                                                    : isCorrectAnswer
-                                                        ? "success"
-                                                        : "default"
-                                            }
                                             sx={{
-                                                alignSelf: 'flex-start',
-                                                height: 'auto',
-                                                minHeight: 32,
-                                                py: 1,
-                                                '& .MuiChip-label': {
-                                                    whiteSpace: 'normal',
-                                                    wordWrap: 'break-word'
-                                                }
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 2,
+                                                p: 2,
+                                                borderRadius: 1,
+                                                bgcolor: isWrongUserResponse
+                                                    ? 'error.lighter'
+                                                    : (isUserResponse || isCorrectAnswer)
+                                                        ? 'success.lighter'
+                                                        : 'grey.100',
+                                                border: '1px solid',
+                                                borderColor: isWrongUserResponse
+                                                    ? 'error.light'
+                                                    : (isUserResponse || isCorrectAnswer)
+                                                        ? 'success.light'
+                                                        : 'grey.300'
                                             }}
-                                        />
+                                        >
+                                            {/* Icône à gauche */}
+                                            {isWrongUserResponse ? (
+                                                <Iconify
+                                                    icon="solar:close-circle-bold"
+                                                    sx={{
+                                                        color: 'error.main',
+                                                        width: { xs: 20, sm: 24 },
+                                                        height: { xs: 20, sm: 24 },
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                            ) : (isUserResponse && question.isCorrect) ? (
+                                                <Iconify
+                                                    icon="solar:check-circle-bold"
+                                                    sx={{
+                                                        color: 'success.main',
+                                                        width: { xs: 20, sm: 24 },
+                                                        height: { xs: 20, sm: 24 },
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                            ) : (
+                                                <Box
+                                                    sx={{
+                                                        width: { xs: 20, sm: 24 },
+                                                        height: { xs: 20, sm: 24 },
+                                                        borderRadius: 1,
+                                                        border: '2px solid',
+                                                        borderColor: 'grey.400',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                            )}
+
+                                            {/* Texte de l'option */}
+                                            <Typography
+                                                sx={{
+                                                    flex: 1,
+                                                    fontWeight: (isUserResponse || isCorrectAnswer) ? 400 : 300,
+                                                    fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                                                }}
+                                            >
+                                                {`${index + 1}. ${option}`}
+                                            </Typography>
+
+                                            {/* Badge à droite - uniquement sur la bonne réponse */}
+                                            {isCorrectAnswer && (
+                                                <Chip
+                                                    label="Bonne réponse"
+                                                    size="small"
+                                                    sx={{
+                                                        bgcolor: 'success.main',
+                                                        color: 'white',
+                                                        fontWeight: 500,
+                                                        height: { xs: 22, sm: 24 },
+                                                        fontSize: { xs: '0.65rem', sm: '0.7rem' }
+                                                    }}
+                                                />
+                                            )}
+                                        </Box>
                                     );
                                 })}
                             </Stack>
                         </Box>
                     )}
 
-                    {/* Comparaison des réponses complètes */}
-                    <Stack direction={isMobile ? "column" : "row"} spacing={3}>
-                        {/* Votre réponse complète */}
-                        <Box flex={1}>
-                            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                Votre réponse
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                sx={{
-                                    color: question.responseColor,
-                                    fontWeight: 500,
-                                    p: 1.5,
-                                    bgcolor: 'action.hover',
-                                    borderRadius: 1,
-                                    wordWrap: 'break-word'
-                                }}
-                            >
-                                {question.userResponse}
-                            </Typography>
-                        </Box>
-
-                        {/* Réponse attendue complète (si ce n'est pas une réponse libre) */}
-                        {!question.isFreeResponse && (
-                            <Box flex={1}>
-                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                    Réponse attendue
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    sx={{
-                                        color: question.correctAnswer === '----------------'
-                                            ? 'text.disabled'
-                                            : 'success.main',
-                                        fontWeight: 500,
-                                        p: 1.5,
-                                        bgcolor: 'action.hover',
-                                        borderRadius: 1,
-                                        wordWrap: 'break-word'
-                                    }}
-                                >
-                                    {question.correctAnswer}
-                                </Typography>
-                            </Box>
-                        )}
-                    </Stack>
-
-                    {/* Explication détaillée */}
+                    {/* Explication détaillée
                     {question.detailedExplanation && (
                         <Box>
                             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
@@ -224,7 +238,7 @@ export function QuestionDialog({ open, question, isMobile, onClose }: QuestionDi
                                 {question.detailedExplanation}
                             </Typography>
                         </Box>
-                    )}
+                    )} */}
                 </Stack>
             </DialogContent>
 

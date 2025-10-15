@@ -32,7 +32,7 @@ import { LayoutSection } from '../core/layout-section';
 import { NavVertical } from './nav-vertical';
 import { NavHorizontal } from './nav-horizontal';
 import { ParticipantHeaderActions } from './header-actions';
-import { AccountDrawer } from '../components/account-drawer';
+import { ParticipantAccountDrawer } from '../components/participant/participant-account-drawer';
 import { SettingsButton } from '../components/settings-button';
 import { LanguagePopover } from '../components/language-popover';
 import { ContactsPopover } from '../components/contacts-popover';
@@ -166,7 +166,7 @@ export function ParticipantLayout({
           {/* <SettingsButton /> */}
 
           {/** @slot Account drawer - utilise la config participant */}
-          <AccountDrawer data={participantAccountData} />
+          <ParticipantAccountDrawer data={participantAccountData} />
         </Box>
       ),
     };

@@ -82,7 +82,7 @@ const SURVEY_DATA = [
     expirationDate: '11/09/2024 11H00',
     status: 'Non démarré',
     statusColor: 'warning',
-    note: '7/10',
+    note: '00',
     score: 7,
   },
   {
@@ -329,13 +329,13 @@ export default function MesInteractionsPage() {
           >
             {survey.title}
           </Typography>
-          <Typography
+          {/* <Typography
             variant="body2"
             color="text.secondary"
             sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
           >
             {survey.type}
-          </Typography>
+          </Typography> */}
         </Box>
       </TableCell>
 

@@ -17,7 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { useRouter, useSearchParams } from 'src/routes/hooks';
+import { useRouter, useSearchParams, usePathname } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
 
@@ -48,6 +48,7 @@ export const SignInSchema = zod.object({
 
 export function JwtSignInView() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
@@ -56,6 +57,9 @@ export function JwtSignInView() {
   const { checkUserSession } = useAuthContext();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Vérifier si on est sur une page participant
+  const isParticipantPath = returnTo?.includes('participant') ?? false;
 
   const defaultValues: SignInSchemaType = {
     email: 'demo@minimals.cc',
@@ -92,13 +96,24 @@ export function JwtSignInView() {
       <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
         {/* <Link
           component={RouterLink}
-          href="#"
+          href={paths.auth.jwt.forgotPassword}
           variant="body2"
           color="inherit"
           sx={{ alignSelf: 'flex-end' }}
         >
-          Forgot password?
+          Mot de passe oublié ?
         </Link> */}
+        {isParticipantPath && (
+          <Link
+            component={RouterLink}
+            href={paths.auth.jwt.forgotPassword}
+            variant="body2"
+            color="inherit"
+            sx={{ alignSelf: 'flex-end' }}
+          >
+            Mot de passe oublié ?
+          </Link>
+        )}
 
         <Field.Text
           name="password"

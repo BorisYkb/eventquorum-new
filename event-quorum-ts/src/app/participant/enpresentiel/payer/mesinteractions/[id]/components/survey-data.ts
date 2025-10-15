@@ -44,7 +44,7 @@ export const SURVEY_QUESTIONS: SurveyQuestion[] = [
         id: 3,
         question: 'QUESTION 3',
         description: 'Quelles suggestions avez-vous pour améliorer les prochaines éditions ? (Réponse libre)',
-        correctAnswer: '----------------',
+        correctAnswer: '-',
         userResponse: 'Il serait intéressant d\'organiser plus de sessions pratiques avec des ateliers interactifs et d\'améliorer la gestion du temps pour permettre davantage d\'échanges entre participants',
         responseColor: 'info.main',
         isCorrect: true,

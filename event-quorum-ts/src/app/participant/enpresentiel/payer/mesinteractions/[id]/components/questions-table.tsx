@@ -29,7 +29,7 @@ interface QuestionsTableProps {
  * Tronque une réponse à 10 caractères + "..."
  */
 const truncateResponse = (text: string, maxLength: number = 30): string => {
-    if (!text || text === '----------------') return text;
+    if (!text || text === '-') return text;
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
 };
 
@@ -83,9 +83,9 @@ export function QuestionsTable({ questions, fontSizes, isMobile, onViewDetails }
                                         variant="body2"
                                         sx={{
                                             ...fontSizes.tableCell,
-                                            color: question.correctAnswer === '----------------'
+                                            color: question.correctAnswer === '-'
                                                 ? 'text.disabled'
-                                                : 'text.primary'
+                                                : 'black',
                                         }}
                                     >
                                         {truncateResponse(question.correctAnswer)}

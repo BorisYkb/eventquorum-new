@@ -19,21 +19,11 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
 
   // Menu de base commun à tous les niveaux
   const baseItems: AccountDrawerProps['data'] = [
-    // { 
-    //   label: 'Accueil', 
-    //   href: '/participant', 
-    //   icon: <Iconify icon="solar:home-angle-bold-duotone" /> 
-    // },
     {
       label: 'Mes informations personnelles',
       href: '#profile',
       icon: <Iconify icon="solar:user-bold-duotone" />,
     },
-    // {
-    //   label: 'Modifier mon mot de passe',
-    //   href: '#password',
-    //   icon: <Iconify icon="solar:lock-password-bold-duotone" />,
-    // },
   ];
 
   // Actions dynamiques selon le niveau
@@ -57,14 +47,8 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
     });
   }
 
-  // Si participant a payé, peut voir ses résultats
+  // Si participant a payé, peut voir son réçu de paiement
   if (pathname.includes('/payer')) {
-    // dynamicItems.push({
-    //   label: 'Voir mes résultats',
-    //   href: '#results',
-    //   icon: <Iconify icon="solar:chart-bold-duotone" />,
-    // });
-
     dynamicItems.push({
       label: 'Reçu de paiement',
       href: '#receipt',
@@ -72,14 +56,6 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
     });
   }
 
-  // Déconnexion toujours en dernier
-  // const logoutItem: AccountDrawerProps['data'] = [
-  //   {
-  //     label: 'Se déconnecter',
-  //     href: '#logout',
-  //     icon: <Iconify icon="solar:logout-2-bold-duotone" />,
-  //   },
-  // ];
 
   return [...baseItems, ...dynamicItems];
 }
