@@ -164,6 +164,15 @@ export const paths = {
         perboxoffice: (id: string) =>`${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/boxoffice/${id}`
       },
       edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionevent/${id}/editactivity`,
+
+      // Nouvelles routes à ajouter
+      financialSituation: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation`,
+      financialSituationByCounter: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/guichets`,
+      activityPayments: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/activite`,
+      
+      // Si vous voulez une fonction pour générer le chemin avec l'ID de l'activité
+      activityPaymentDetail: (activityId: string) => 
+        `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/activite/${activityId}`,
     },
     gestionparticipant: {
       root: `${ROOTS.ORGANISATEUR}/gestionparticipant`,
@@ -294,4 +303,6 @@ operateur: {
       },
     },
   },
+
+
 };

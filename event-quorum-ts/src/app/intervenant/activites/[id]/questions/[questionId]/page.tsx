@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 import Box from '@mui/material/Box';
@@ -32,6 +32,8 @@ export default function QuestionDetailPage() {
   const questionId = params.questionId;
 
   const [responseText, setResponseText] = useState('');
+  const [originalResponseText, setOriginalResponseText] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
@@ -91,11 +93,24 @@ export default function QuestionDetailPage() {
   const question = questionData[Number(questionId)] || questionData[1];
 
   // Initialiser le texte de réponse si la question est déjà répondue
-  useState(() => {
+  useEffect(() => {
     if (question.answered && question.response) {
       setResponseText(question.response);
+      setOriginalResponseText(question.response);
+      setIsEditing(false); // Mode lecture par défaut si déjà répondu
+    } else {
+      setIsEditing(true); // Mode édition par défaut si pas encore répondu
     }
-  });
+  }, [question.answered, question.response]);
+
+  const handleEditMode = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setResponseText(originalResponseText);
+    setIsEditing(false);
+  };
 
   const handleClearResponse = () => {
     setClearDialogOpen(true);
@@ -259,13 +274,32 @@ export default function QuestionDetailPage() {
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Votre réponse
                   </Typography>
-                  <Label
-                    variant="soft"
-                    color={question.answered ? 'success' : 'warning'}
-                    sx={{ borderRadius: 2 }}
-                  >
-                    {question.answered ? 'Répondu' : 'En attente'}
-                  </Label>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Label
+                      variant="soft"
+                      color={question.answered ? 'success' : 'warning'}
+                      sx={{ borderRadius: 2 }}
+                    >
+                      {question.answered ? 'Répondu' : 'En attente'}
+                    </Label>
+                    
+                    {/* Bouton Modifier visible seulement si déjà répondu et pas en mode édition */}
+                    {question.answered && !isEditing && (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        startIcon={<Iconify icon="eva:edit-2-outline" />}
+                        onClick={handleEditMode}
+                        sx={{
+                          textTransform: 'none',
+                          borderRadius: 1.5,
+                          px: 2
+                        }}
+                      >
+                        Modifier
+                      </Button>
+                    )}
+                  </Box>
                 </Box>
               </Box>
 
@@ -277,46 +311,96 @@ export default function QuestionDetailPage() {
                   onChange={(e) => setResponseText(e.target.value)}
                   placeholder="Tapez votre réponse ici..."
                   fullWidth
+                  disabled={!isEditing}
                   sx={{
                     mb: 3,
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 2,
-                      bgcolor: 'background.paper',
-                      fontSize: '14px'
+                      bgcolor: isEditing ? 'background.paper' : 'grey.100',
+                      fontSize: '14px',
+                      '&.Mui-disabled': {
+                        bgcolor: 'grey.100',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'grey.300'
+                        }
+                      }
+                    },
+                    '& .MuiInputBase-input.Mui-disabled': {
+                      WebkitTextFillColor: 'rgba(0, 0, 0, 0.6)',
+                      color: 'rgba(0, 0, 0, 0.6)'
                     }
                   }}
                 />
 
+                {/* Boutons conditionnels selon le mode */}
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    startIcon={<Iconify icon="eva:trash-2-outline" />}
-                    onClick={handleClearResponse}
-                    disabled={!responseText.trim()}
-                    sx={{
-                      textTransform: 'none',
-                      borderRadius: 2,
-                      px: 3
-                    }}
-                  >
-                    Effacer
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<Iconify icon="eva:paper-plane-fill" />}
-                    onClick={handleSendResponse}
-                    disabled={!responseText.trim() || isSending}
-                    sx={{
-                      textTransform: 'none',
-                      bgcolor: 'success.main',
-                      '&:hover': { bgcolor: 'success.dark' },
-                      borderRadius: 2,
-                      px: 3
-                    }}
-                  >
-                    {isSending ? 'Envoi...' : 'Envoyer la réponse'}
-                  </Button>
+                  {isEditing ? (
+                    <>
+                      {/* Mode édition - Boutons Effacer et Envoyer/Enregistrer */}
+                      {question.answered && (
+                        <Button
+                          variant="outlined"
+                          startIcon={<Iconify icon="eva:close-outline" />}
+                          onClick={handleCancelEdit}
+                          sx={{
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            px: 3
+                          }}
+                        >
+                          Annuler
+                        </Button>
+                      )}
+                      
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<Iconify icon="eva:trash-2-outline" />}
+                        onClick={handleClearResponse}
+                        disabled={!responseText.trim()}
+                        sx={{
+                          textTransform: 'none',
+                          borderRadius: 2,
+                          px: 3
+                        }}
+                      >
+                        Effacer
+                      </Button>
+                      
+                      <Button
+                        variant="contained"
+                        startIcon={<Iconify icon={question.answered ? "eva:save-outline" : "eva:paper-plane-fill"} />}
+                        onClick={handleSendResponse}
+                        disabled={!responseText.trim() || isSending}
+                        sx={{
+                          textTransform: 'none',
+                          bgcolor: 'success.main',
+                          '&:hover': { bgcolor: 'success.dark' },
+                          borderRadius: 2,
+                          px: 3
+                        }}
+                      >
+                        {isSending ? 'Envoi...' : question.answered ? 'Enregistrer les modifications' : 'Envoyer la réponse'}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Mode lecture - Aucun bouton d'action (le bouton Modifier est dans le header) */}
+                      <Box sx={{ 
+                        p: 2, 
+                        bgcolor: 'info.lighter', 
+                        borderRadius: 2, 
+                        display: 'flex', 
+                        alignItems: 'center',
+                        gap: 1
+                      }}>
+                        <Iconify icon="eva:lock-outline" sx={{ color: 'info.main' }} width={20} />
+                        <Typography variant="body2" color="info.dark">
+                          Cliquez sur "Modifier" pour éditer cette réponse
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
                 </Box>
               </Box>
             </Card>
@@ -382,12 +466,14 @@ export default function QuestionDetailPage() {
         <DialogTitle sx={{ pb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Iconify icon="eva:checkmark-circle-2-fill" sx={{ color: 'success.main' }} width={28} />
-            Réponse envoyée
+            {question.answered ? 'Modification enregistrée' : 'Réponse envoyée'}
           </Box>
         </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ fontSize: '14px' }}>
-            Votre réponse a été envoyée avec succès au participant. Il recevra une notification de votre réponse.
+            {question.answered 
+              ? 'Votre modification a été enregistrée avec succès. Le participant recevra une notification de la mise à jour.'
+              : 'Votre réponse a été envoyée avec succès au participant. Il recevra une notification de votre réponse.'}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 3, pt: 1 }}>

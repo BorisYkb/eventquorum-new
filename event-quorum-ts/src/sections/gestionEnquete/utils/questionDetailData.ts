@@ -1,6 +1,7 @@
 // File: src/sections/gestionEnquete/utils/questionDetailData.ts
 
 import { Question } from 'src/app/organisateur/gestionenquete/nouveau/types';
+
 import type { QuestionResult, ParticipantResult } from '../types/resultTypes';
 
 /**

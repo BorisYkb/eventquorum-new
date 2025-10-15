@@ -2,20 +2,23 @@
 
 'use client'
 
+// Import des types et utilitaires
+import type { QuestionDetailData } from 'src/sections/gestionEnquete/utils/questionDetailData';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+
 import { Box, Typography, Button } from '@mui/material';
-import { Iconify } from 'src/components/iconify';
+
 import Loading from 'src/app/loading';
 
+import { Iconify } from 'src/components/iconify';
+
+import { getSampleQuestionData } from 'src/sections/gestionEnquete/utils/questionDetailData';
 // Import des composants modulaires
 import QuestionDetailSection from 'src/sections/gestionEnquete/components/QuestionDetailSection';
 import QuestionResultsSection from 'src/sections/gestionEnquete/components/QuestionResultsSection';
 import QuestionParticipantsSection from 'src/sections/gestionEnquete/components/QuestionParticipantsSection';
-
-// Import des types et utilitaires
-import type { QuestionDetailData } from 'src/sections/gestionEnquete/utils/questionDetailData';
-import { getSampleQuestionData } from 'src/sections/gestionEnquete/utils/questionDetailData';
 
 /**
  * Page de détail d'une question - Version refactorisée

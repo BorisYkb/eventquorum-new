@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
@@ -79,11 +80,9 @@ export default function ActivityDetailPage() {
   const [editResponseText, setEditResponseText] = useState('');
   const [questionSearchTerm, setQuestionSearchTerm] = useState('');
   
-  // États pour les filtres
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [emargementFilter, setEmargementFilter] = useState<string>('all');
   
-  // États pour la pagination
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -169,7 +168,6 @@ export default function ActivityDetailPage() {
     setPage(value);
   };
 
-  // Fonction pour exporter en Excel
   const exportToExcel = () => {
     const dataToExport = filteredParticipants.map(participant => ({
       'Nom': participant.name,
@@ -243,7 +241,6 @@ export default function ActivityDetailPage() {
     }
   };
 
-  // Filtrage des participants avec tous les filtres
   const filteredParticipants = participantsList.filter(person => {
     const matchesSearch = person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          person.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -257,7 +254,6 @@ export default function ActivityDetailPage() {
     return matchesSearch && matchesType && matchesEmargement;
   });
 
-  // Pagination
   const paginatedParticipants = filteredParticipants.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
@@ -275,22 +271,28 @@ export default function ActivityDetailPage() {
     return colors[index % colors.length];
   };
 
-  const renderInfoBox = (label: string, value: string | undefined) => (
-    <Box sx={{ display: 'flex', alignItems: 'center', py: 1.5 }}>
-      <Typography
-        sx={{
-          minWidth: 150,
-          fontWeight: 'medium',
-          color: 'text.secondary',
-          fontSize: '0.9rem',
-          mr: 3
-        }}
-      >
-        {label}
-      </Typography>
-      <Typography sx={{ fontWeight: 'medium', fontSize: '0.9rem' }}>
-        {value || '-'}
-      </Typography>
+  const InfoItem = ({ icon, label, value }: { icon: string; label: string; value: string | undefined }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 2 }}>
+      <Box sx={{
+        width: 48,
+        height: 48,
+        borderRadius: 2,
+        bgcolor: 'primary.lighter',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0
+      }}>
+        <Iconify icon={icon} width={24} sx={{ color: 'primary.main' }} />
+      </Box>
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+          {label}
+        </Typography>
+        <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary' }}>
+          {value || '-'}
+        </Typography>
+      </Box>
     </Box>
   );
 
@@ -332,7 +334,7 @@ export default function ActivityDetailPage() {
       </Card>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
           <SuperviseurWidgetSummary
             title="Invités"
             total={activity.invited}
@@ -340,7 +342,7 @@ export default function ActivityDetailPage() {
             sx={{ height: 180 }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
           <SuperviseurWidgetSummary
             title="Invités ayant émarger"
             total={activity.participants}
@@ -348,7 +350,7 @@ export default function ActivityDetailPage() {
             sx={{ height: 180 }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
           <SuperviseurWidgetSummary
             title="Présentiel"
             total={activity.presentielParticipants}
@@ -356,7 +358,7 @@ export default function ActivityDetailPage() {
             sx={{ height: 180 }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
           <SuperviseurWidgetSummary
             title="En ligne"
             total={activity.onlineParticipants}
@@ -364,7 +366,7 @@ export default function ActivityDetailPage() {
             sx={{ height: 180 }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
           <SuperviseurWidgetSummary
             title="Connectés"
             total={activity.connected}
@@ -394,87 +396,131 @@ export default function ActivityDetailPage() {
         </Box>
 
         <TabPanel value={activeTab} index={0}>
-          <Box sx={{ bgcolor: 'grey.50', p: 3, borderRadius: 2 }}>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ p: 4, height: 'fit-content' }}>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
-                    INFORMATIONS GÉNÉRALES
-                  </Typography>
-                  <Stack spacing={2}>
-                    {renderInfoBox("Type d'activité", activity.type)}
-                    {renderInfoBox("Statut", activity.status)}
-                    {renderInfoBox("Durée", activity.duration)}
-                  </Stack>
-                </Card>
-              </Grid>
+          <Grid container spacing={3}>
+            {/* Section Informations générales et Date & Lieu */}
+            <Grid size={12}>
+              <Card sx={{ p: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                <Grid container spacing={4}>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Iconify icon="solar:document-text-bold-duotone" width={24} sx={{ color: 'primary.main' }} />
+                      Informations générales
+                    </Typography>
+                    <Stack divider={<Divider />}>
+                      <InfoItem icon="solar:tag-bold-duotone" label="Type d'activité" value={activity.type} />
+                      <InfoItem icon="solar:clock-circle-bold-duotone" label="Statut" value={activity.status} />
+                      <InfoItem icon="solar:calendar-bold-duotone" label="Durée" value={activity.duration} />
+                    </Stack>
+                  </Grid>
 
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Card sx={{ p: 4, height: 'fit-content' }}>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
-                    DATE & LIEU
-                  </Typography>
-                  <Stack spacing={2}>
-                    {renderInfoBox("Date", activity.date)}
-                    {renderInfoBox("Heure", activity.time)}
-                    {renderInfoBox("Lieu", activity.location)}
-                    {renderInfoBox("Capacité max", `${activity.maxParticipants} participants`)}
-                  </Stack>
-                </Card>
-              </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Iconify icon="solar:map-point-bold-duotone" width={24} sx={{ color: 'primary.main' }} />
+                      Date & Lieu
+                    </Typography>
+                    <Stack divider={<Divider />}>
+                      <InfoItem icon="solar:calendar-mark-bold-duotone" label="Date" value={activity.date} />
+                      <InfoItem icon="solar:clock-circle-bold-duotone" label="Heure" value={activity.time} />
+                      <InfoItem icon="solar:map-point-bold-duotone" label="Lieu" value={activity.location} />
+                      <InfoItem icon="solar:users-group-rounded-bold-duotone" label="Capacité maximale" value={`${activity.maxParticipants} participants`} />
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
 
-              <Grid size={{ xs: 12 }}>
-                <Card sx={{ p: 4 }}>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
-                    DESCRIPTION
-                  </Typography>
-                  <Typography variant="body1" sx={{ lineHeight: 1.6, fontSize: '0.9rem' }}>
-                    {activity.description}
-                  </Typography>
-                </Card>
-              </Grid>
+            {/* Section Description */}
+            <Grid size={12}>
+              <Card sx={{ p: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Iconify icon="solar:document-text-bold-duotone" width={24} sx={{ color: 'primary.main' }} />
+                  Description
+                </Typography>
+                <Typography variant="body1" sx={{ lineHeight: 1.8, color: 'text.secondary' }}>
+                  {activity.description}
+                </Typography>
+              </Card>
+            </Grid>
 
-              <Grid size={{ xs: 12 }}>
-                <Card sx={{ p: 4 }}>
-                  <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', fontWeight: 600 }}>
-                    RESSOURCES DISPONIBLES
-                  </Typography>
-                  <Stack spacing={2}>
-                    {activity.resources.map((resource, index) => (
+            {/* Section Ressources */}
+            <Grid size={12}>
+              <Card sx={{ p: 4, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Iconify icon="solar:folder-with-files-bold-duotone" width={24} sx={{ color: 'primary.main' }} />
+                  Ressources disponibles
+                </Typography>
+                <Grid container spacing={2}>
+                  {activity.resources.map((resource, index) => (
+                    <Grid size={{ xs: 12, sm: 6 }} key={index}>
                       <Box
-                        key={index}
                         sx={{
-                          p: 3,
+                          p: 2.5,
                           bgcolor: 'grey.50',
                           borderRadius: 2,
-                          border: 1,
+                          border: '1px solid',
                           borderColor: 'grey.200',
                           display: 'flex',
                           alignItems: 'center',
                           gap: 2,
+                          transition: 'all 0.2s',
+                          cursor: 'pointer',
                           '&:hover': {
-                            bgcolor: 'grey.100',
-                            borderColor: 'primary.light'
+                            bgcolor: 'primary.lighter',
+                            borderColor: 'primary.main',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                           }
                         }}
                       >
-                        <Label variant="soft" color="primary" sx={{ borderRadius: 1 }}>
-                          {resource.type}
-                        </Label>
-                        <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
-                          {resource.name}
-                        </Typography>
+                        <Box sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 1.5,
+                          bgcolor: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          <Iconify 
+                            icon={
+                              resource.type === 'Document' ? 'solar:document-bold-duotone' :
+                              resource.type === 'Lien' ? 'solar:link-bold-duotone' :
+                              resource.type === 'Vidéo' ? 'solar:videocamera-record-bold-duotone' :
+                              'solar:user-bold-duotone'
+                            } 
+                            width={24} 
+                            sx={{ color: 'primary.main' }} 
+                          />
+                        </Box>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Typography variant="caption" sx={{ 
+                            color: 'text.secondary', 
+                            display: 'block',
+                            mb: 0.5
+                          }}>
+                            {resource.type}
+                          </Typography>
+                          <Typography variant="body2" sx={{ 
+                            fontWeight: 500,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            {resource.name}
+                          </Typography>
+                        </Box>
+                        <Iconify icon="solar:arrow-right-bold" width={20} sx={{ color: 'text.disabled' }} />
                       </Box>
-                    ))}
-                  </Stack>
-                </Card>
-              </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Card>
             </Grid>
-          </Box>
+          </Grid>
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
-          {/* Barre de recherche et filtres */}
           <Box sx={{ mb: 3 }}>
             <Grid container spacing={2} sx={{ mb: 2 }}>
               <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -634,7 +680,6 @@ export default function ActivityDetailPage() {
             </Table>
           </TableContainer>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
               <Pagination

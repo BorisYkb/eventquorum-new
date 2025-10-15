@@ -1,12 +1,6 @@
 'use client';
 
-import { paths } from 'src/routes/paths';
-
-import { DashboardContent } from 'src/layouts/admin';
-
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTheme } from '@mui/material/styles';
-
 import { 
     Box, 
     Button, 
@@ -20,16 +14,21 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
-    Chip,
     IconButton,
     Paper
 } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+
+import { DashboardContent } from 'src/layouts/admin';
+
+import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
 import { FicheClientEventWidget } from 'src/sections/gestionclient/ficheclient/ficheclient-event-tab-widget';
-import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +44,7 @@ const paymentMethods = [
 // Mock data for activities
 const activitiesData = [
     {
+        id: 1,
         name: 'Workshop cyber',
         places: '20/25',
         receivedAmount: '300 000 FCFA',
@@ -53,6 +53,7 @@ const activitiesData = [
         statusColor: 'error' as const,
     },
     {
+        id: 2,
         name: 'Workshop Dev',
         places: '20/25',
         receivedAmount: '300 000 FCFA',
@@ -61,6 +62,7 @@ const activitiesData = [
         statusColor: 'success' as const,
     },
     {
+        id: 3,
         name: 'Workshop',
         places: '30/40',
         receivedAmount: '300 000 FCFA',
@@ -93,7 +95,6 @@ export function EventFinancialSituationView() {
             <Box display="flex" justifyContent="flex-end" mb={4}>
                 <Button
                     variant="contained"
-                    // color={theme.vars.palette.}
                     startIcon={<Iconify icon="solar:printer-minimalistic-bold" />}
                     type="submit"
                     sx={{ width: '200px' }}
@@ -170,6 +171,8 @@ export function EventFinancialSituationView() {
             {/* Financial Situation Button */}
             <Box display="flex" justifyContent="end" mb={4}>
                 <Button
+                    component={RouterLink}
+                    href={paths.organisateur.gestionevent.financialSituationByCounter}
                     variant="contained"
                     sx={{ 
                         backgroundColor: '#00BCD4', 
@@ -243,11 +246,13 @@ export function EventFinancialSituationView() {
                                             color={activity.statusColor}
                                             variant="soft"
                                         >{activity.status}</Label>
-
-                                        
                                     </TableCell>
                                     <TableCell align="center">
-                                        <IconButton size="small">
+                                        <IconButton 
+                                            size="small"
+                                            component={RouterLink}
+                                            href={`${paths.organisateur.gestionevent.activityPayments}/${activity.id}`}
+                                        >
                                             <Iconify icon="solar:eye-bold" />
                                         </IconButton>
                                     </TableCell>

@@ -1,6 +1,16 @@
 'use client'
 
-import { useParams } from 'next/navigation';
+
+
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+
+import { Box, Typography, Button } from '@mui/material';
+
+import Loading from 'src/app/loading';
+
+import { Iconify } from 'src/components/iconify';
+
 
 import { Question } from '../../../types/survey';
 import MuiQuestionDetail from '../../../components/MuiQuestionDetail';
@@ -43,7 +53,10 @@ export default function QuestionDetailPage() {
   const params = useParams();
   const surveyId = params.id as string;
   const questionId = parseInt(params.questionId as string);
+  
 
+
+  
   // Trouver la question correspondante
   const question = mockQuestions.find(q => q.id === questionId);
 
@@ -60,11 +73,15 @@ export default function QuestionDetailPage() {
   }
 
   return (
-    <MuiQuestionDetail
-      surveyId={surveyId}
-      questionId={questionId}
-      question={question}
-      questionNumber={questionNumber}
-    />
+    <Box>
+      <MuiQuestionDetail
+        surveyId={surveyId}
+        questionId={questionId}
+        question={question}
+        questionNumber={questionNumber}
+      />
+
+      
+    </Box>
   );
 }

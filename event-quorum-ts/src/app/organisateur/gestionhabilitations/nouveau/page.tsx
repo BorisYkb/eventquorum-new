@@ -21,21 +21,34 @@ import {
   InputLabel,
   Button,
   IconButton,
-  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Chip,
+  Collapse,
 } from '@mui/material';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
 import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
+
+interface ReseauSocial {
+  nom: string;
+  lien: string;
+}
+
+interface IntervenantData {
+  activites: string[];
+  intervenants: {
+    image: File | string | null;
+    description: string;
+    reseauxSociaux: ReseauSocial[];
+  }[];
+}
 
 interface CreateAccessForm {
   nom: string;
@@ -49,10 +62,7 @@ interface CreateAccessForm {
 interface SavedAccess extends CreateAccessForm {
   id: number;
   dateCreation: string;
-  intervenantData?: {
-    activites: string[];
-    intervenants: number;
-  };
+  intervenantData?: IntervenantData;
 }
 
 const CreateAccessPage: React.FC = () => {
@@ -68,9 +78,18 @@ const CreateAccessPage: React.FC = () => {
     mdp: '',
   });
 
+  // État pour les données de l'intervenant
+  const [intervenantData, setIntervenantData] = useState<IntervenantData>({
+    activites: [],
+    intervenants: []
+  });
+
   // État pour les accès enregistrés
   const [savedAccesses, setSavedAccesses] = useState<SavedAccess[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  
+  // État pour l'expansion des lignes du tableau
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
   const handleInputChange = (field: keyof CreateAccessForm) => (
     event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
@@ -86,6 +105,14 @@ const CreateAccessPage: React.FC = () => {
       ...prev,
       role: event.target.value,
     }));
+    
+    // Réinitialiser les données d'intervenant si on change de rôle
+    if (event.target.value !== 'Intervenant') {
+      setIntervenantData({
+        activites: [],
+        intervenants: []
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -101,21 +128,33 @@ const CreateAccessPage: React.FC = () => {
       role: "Agent d'admission",
       mdp: '',
     });
+    setIntervenantData({
+      activites: [],
+      intervenants: []
+    });
     setEditingIndex(null);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     
+    // Validation pour le rôle Intervenant
+    if (formData.role === 'Intervenant') {
+      if (intervenantData.activites.length === 0) {
+        alert('Veuillez sélectionner au moins une activité pour l\'intervenant');
+        return;
+      }
+      if (intervenantData.intervenants.length === 0) {
+        alert('Veuillez ajouter au moins un intervenant');
+        return;
+      }
+    }
+    
     const newAccess: SavedAccess = {
       ...formData,
       id: editingIndex !== null ? savedAccesses[editingIndex].id : Date.now(),
       dateCreation: editingIndex !== null ? savedAccesses[editingIndex].dateCreation : new Date().toISOString(),
-      // TODO: Récupérer les vraies données de l'intervenant si le rôle est "Intervenant"
-      intervenantData: formData.role === 'Intervenant' ? {
-        activites: ['Activité 1', 'Activité 2'], // À remplacer par les vraies données
-        intervenants: 2, // À remplacer par le vrai nombre
-      } : undefined,
+      intervenantData: formData.role === 'Intervenant' ? { ...intervenantData } : undefined,
     };
 
     if (editingIndex !== null) {
@@ -143,12 +182,26 @@ const CreateAccessPage: React.FC = () => {
       role: access.role,
       mdp: '', // Ne pas afficher le mot de passe
     });
+    
+    // Charger les données de l'intervenant si c'est un intervenant
+    if (access.role === 'Intervenant' && access.intervenantData) {
+      setIntervenantData({ ...access.intervenantData });
+    }
+    
     setEditingIndex(index);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (index: number) => {
     setSavedAccesses(savedAccesses.filter((_, i) => i !== index));
+  };
+
+  const toggleRowExpansion = (index: number) => {
+    setExpandedRows(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
   };
 
   const roles = [
@@ -181,6 +234,13 @@ const CreateAccessPage: React.FC = () => {
       year: 'numeric',
     });
   };
+
+  // Liste des activités (à adapter selon vos données)
+  const activites = [
+    { id: '1', nom: 'Activité 1' },
+    { id: '2', nom: 'Activité 2' },
+    { id: '3', nom: 'Activité 3' },
+  ];
 
   return (
     <Box sx={{ p: 3, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
@@ -354,12 +414,15 @@ const CreateAccessPage: React.FC = () => {
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Informations Supplémentaires - Intervenant
                   </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Ces informations seront enregistrées avec l'utilisateur
+                  </Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>
                   <IntervenantPermissionsBlock
-                    consulterTelEmail={false}
-                    repondreQuestions={false}
-                    onPermissionChange={() => () => {}}
+                    activites={activites}
+                    intervenantData={intervenantData}
+                    onIntervenantDataChange={setIntervenantData}
                   />
                 </Box>
               </Card>
@@ -404,6 +467,7 @@ const CreateAccessPage: React.FC = () => {
                 <Table>
                   <TableHead>
                     <TableRow sx={{ bgcolor: '#f3f4f6' }}>
+                      <TableCell sx={{ fontWeight: 600, color: '#374151', width: 50 }}></TableCell>
                       <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Nom & Prénom</TableCell>
                       <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Email</TableCell>
                       <TableCell sx={{ fontWeight: 600, color: '#374151' }}>Téléphone</TableCell>
@@ -416,42 +480,148 @@ const CreateAccessPage: React.FC = () => {
                   </TableHead>
                   <TableBody>
                     {savedAccesses.map((access, index) => (
-                      <TableRow key={access.id} hover sx={{ '&:hover': { bgcolor: '#f9fafb' } }}>
-                        <TableCell sx={{ fontWeight: 500 }}>
-                          {access.prenom} {access.nom}
-                        </TableCell>
-                        <TableCell sx={{ color: 'primary.main' }}>{access.email}</TableCell>
-                        <TableCell>{access.telephone}</TableCell>
-                        <TableCell>
-                          <Label variant="soft" color={getRoleColor(access.role)}>
-                            {access.role}
-                          </Label>
-                          {access.role === 'Intervenant' && access.intervenantData && (
-                            <Box sx={{ mt: 1 }}>
-                              <Typography variant="caption" color="text.secondary">
-                                {access.intervenantData.activites.length} activité(s) • {access.intervenantData.intervenants} intervenant(s)
-                              </Typography>
-                            </Box>
-                          )}
-                        </TableCell>
-                        <TableCell>{formatDate(access.dateCreation)}</TableCell>
-                        <TableCell align="center">
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEdit(index)}
-                            sx={{ color: 'warning.main', mr: 1 }}
-                          >
-                            <Iconify icon="solar:pen-bold" width={18} />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDelete(index)}
-                            sx={{ color: 'error.main' }}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" width={18} />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
+                      <React.Fragment key={access.id}>
+                        <TableRow hover sx={{ '&:hover': { bgcolor: '#f9fafb' } }}>
+                          <TableCell>
+                            {access.role === 'Intervenant' && access.intervenantData && (
+                              <IconButton
+                                size="small"
+                                onClick={() => toggleRowExpansion(index)}
+                              >
+                                <Iconify 
+                                  icon={expandedRows.includes(index) ? "eva:arrow-ios-upward-fill" : "eva:arrow-ios-downward-fill"} 
+                                  width={20} 
+                                />
+                              </IconButton>
+                            )}
+                          </TableCell>
+                          <TableCell sx={{ fontWeight: 500 }}>
+                            {access.prenom} {access.nom}
+                          </TableCell>
+                          <TableCell sx={{ color: 'primary.main' }}>{access.email}</TableCell>
+                          <TableCell>{access.telephone}</TableCell>
+                          <TableCell>
+                            <Label variant="soft" color={getRoleColor(access.role)}>
+                              {access.role}
+                            </Label>
+                            {access.role === 'Intervenant' && access.intervenantData && (
+                              <Box sx={{ mt: 1 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  {access.intervenantData.activites.length} activité(s) • {access.intervenantData.intervenants.length} intervenant(s)
+                                </Typography>
+                              </Box>
+                            )}
+                          </TableCell>
+                          <TableCell>{formatDate(access.dateCreation)}</TableCell>
+                          <TableCell align="center">
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEdit(index)}
+                              sx={{ color: 'warning.main', mr: 1 }}
+                            >
+                              <Iconify icon="solar:pen-bold" width={18} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDelete(index)}
+                              sx={{ color: 'error.main' }}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" width={18} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                        
+                        {/* Ligne expansible pour les détails de l'intervenant */}
+                        {access.role === 'Intervenant' && access.intervenantData && (
+                          <TableRow>
+                            <TableCell colSpan={7} sx={{ py: 0, borderBottom: expandedRows.includes(index) ? undefined : 'none' }}>
+                              <Collapse in={expandedRows.includes(index)} timeout="auto" unmountOnExit>
+                                <Box sx={{ p: 3, bgcolor: '#fafbfc' }}>
+                                  <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                                    Détails de l'intervenant
+                                  </Typography>
+                                  
+                                  {/* Activités */}
+                                  <Box sx={{ mb: 2 }}>
+                                    <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                                      Activités assignées:
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                      {access.intervenantData.activites.map((actId) => {
+                                        const activite = activites.find(a => a.id === actId);
+                                        return (
+                                          <Chip 
+                                            key={actId}
+                                            label={activite?.nom || actId}
+                                            size="small"
+                                            color="primary"
+                                            variant="outlined"
+                                          />
+                                        );
+                                      })}
+                                    </Box>
+                                  </Box>
+                                  
+                                  {/* Intervenants */}
+                                  <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                                    Intervenants ({access.intervenantData.intervenants.length}):
+                                  </Typography>
+                                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                    {access.intervenantData.intervenants.map((intervenant, idx) => (
+                                      <Card key={idx} variant="outlined" sx={{ p: 2 }}>
+                                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                                          <Box
+                                            component="img"
+                                            src={
+                                              typeof intervenant.image === 'string'
+                                                ? intervenant.image
+                                                : intervenant.image
+                                                  ? URL.createObjectURL(intervenant.image)
+                                                  : undefined
+                                            }
+                                            alt={`Intervenant ${idx + 1}`}
+                                            sx={{
+                                              width: 80,
+                                              height: 80,
+                                              borderRadius: 1,
+                                              objectFit: 'cover'
+                                            }}
+                                          />
+                                          <Box sx={{ flex: 1 }}>
+                                            <Typography 
+                                              variant="body2" 
+                                              dangerouslySetInnerHTML={{ __html: intervenant.description }}
+                                              sx={{
+                                                '& p': { margin: 0 },
+                                                mb: 1
+                                              }}
+                                            />
+                                            {intervenant.reseauxSociaux.length > 0 && (
+                                              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                                                {intervenant.reseauxSociaux.map((reseau, rIdx) => (
+                                                  <Chip
+                                                    key={rIdx}
+                                                    label={reseau.nom}
+                                                    size="small"
+                                                    variant="outlined"
+                                                    onClick={() => window.open(reseau.lien, '_blank')}
+                                                    sx={{ cursor: 'pointer' }}
+                                                    icon={<Iconify icon="mdi:link-variant" width={14} />}
+                                                  />
+                                                ))}
+                                              </Box>
+                                            )}
+                                          </Box>
+                                        </Box>
+                                      </Card>
+                                    ))}
+                                  </Box>
+                                </Box>
+                              </Collapse>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
                     ))}
                   </TableBody>
                 </Table>
