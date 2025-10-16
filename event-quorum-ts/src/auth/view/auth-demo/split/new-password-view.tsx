@@ -227,7 +227,7 @@ export function NewPasswordView() {
       sessionStorage.removeItem('verification_token');
 
       // Redirection vers la page de connexion avec message de succès
-      router.push(`${paths.auth.jwt.signIn}?reset=success`);
+      router.push(`${paths.auth.jwt.signIn}?returnTo=%2Fparticipant%2F`);
     } catch (error) {
       console.error('Erreur lors de la réinitialisation:', error);
       setError('Une erreur est survenue. Veuillez réessayer.');

@@ -44,8 +44,25 @@ export default function QuestionDetailPage() {
     type: 'Formation'
   };
 
+  type Question = {
+    id: number;
+    participant: {
+      name: string;
+      email: string;
+      type: string;
+      status: string;
+    };
+    question: string;
+    date: string;
+    time: string;
+    answered: boolean;
+    response: string;
+  };
+
   // Récupérer les données de la question - à remplacer par un appel API réel
-  const questionData = {
+
+  const questionData: Record<number, Question> = {
+
     1: {
       id: 1,
       participant: {
@@ -129,12 +146,12 @@ export default function QuestionDetailPage() {
     if (!responseText.trim()) return;
 
     setIsSending(true);
-    
+
     // Simuler l'envoi - remplacer par un vrai appel API
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     console.log(`Envoi de la réponse pour la question ${questionId}:`, responseText);
-    
+
     setIsSending(false);
     setSuccessDialogOpen(true);
   };
@@ -145,11 +162,11 @@ export default function QuestionDetailPage() {
   };
 
   const getInitials = (name: string) => name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 
   const getStatusColor = (status: string): 'success' | 'error' => status === 'Connecté' ? 'success' : 'error';
 
@@ -282,7 +299,7 @@ export default function QuestionDetailPage() {
                     >
                       {question.answered ? 'Répondu' : 'En attente'}
                     </Label>
-                    
+
                     {/* Bouton Modifier visible seulement si déjà répondu et pas en mode édition */}
                     {question.answered && !isEditing && (
                       <Button
@@ -351,7 +368,7 @@ export default function QuestionDetailPage() {
                           Annuler
                         </Button>
                       )}
-                      
+
                       <Button
                         variant="outlined"
                         color="error"
@@ -366,7 +383,7 @@ export default function QuestionDetailPage() {
                       >
                         Effacer
                       </Button>
-                      
+
                       <Button
                         variant="contained"
                         startIcon={<Iconify icon={question.answered ? "eva:save-outline" : "eva:paper-plane-fill"} />}
@@ -386,11 +403,11 @@ export default function QuestionDetailPage() {
                   ) : (
                     <>
                       {/* Mode lecture - Aucun bouton d'action (le bouton Modifier est dans le header) */}
-                      <Box sx={{ 
-                        p: 2, 
-                        bgcolor: 'info.lighter', 
-                        borderRadius: 2, 
-                        display: 'flex', 
+                      <Box sx={{
+                        p: 2,
+                        bgcolor: 'info.lighter',
+                        borderRadius: 2,
+                        display: 'flex',
                         alignItems: 'center',
                         gap: 1
                       }}>
@@ -411,7 +428,7 @@ export default function QuestionDetailPage() {
                 <Iconify icon="eva:info-outline" width={24} sx={{ color: 'info.main', flexShrink: 0, mt: 0.5 }} />
                 <Box>
                   <Typography variant="body2" sx={{ fontSize: '13px', lineHeight: 1.6, color: '#1E40AF' }}>
-                    <strong>Conseil :</strong> Assurez-vous que votre réponse est claire et complète avant de l'envoyer. 
+                    <strong>Conseil :</strong> Assurez-vous que votre réponse est claire et complète avant de l'envoyer.
                     Une fois envoyée, la réponse sera visible par le participant. Vous pourrez toujours la modifier ultérieurement si nécessaire.
                   </Typography>
                 </Box>
@@ -471,7 +488,7 @@ export default function QuestionDetailPage() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ fontSize: '14px' }}>
-            {question.answered 
+            {question.answered
               ? 'Votre modification a été enregistrée avec succès. Le participant recevra une notification de la mise à jour.'
               : 'Votre réponse a été envoyée avec succès au participant. Il recevra une notification de votre réponse.'}
           </DialogContentText>

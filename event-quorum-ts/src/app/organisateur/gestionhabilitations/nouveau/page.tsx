@@ -34,7 +34,7 @@ import {
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
-import IntervenantPermissionsBlock from './components/IntervenantPermissionsBlock';
+import IntervenantIntervenantSupinfos from 'src/sections/gestionhabilitation/nouveau/Intervenant-Sup-infos';
 
 interface ReseauSocial {
   nom: string;
@@ -43,11 +43,9 @@ interface ReseauSocial {
 
 interface IntervenantData {
   activites: string[];
-  intervenants: {
-    image: File | string | null;
-    description: string;
-    reseauxSociaux: ReseauSocial[];
-  }[];
+  image: File | string | null;
+  description: string;
+  reseauxSociaux: ReseauSocial[];
 }
 
 interface CreateAccessForm {
@@ -68,7 +66,7 @@ interface SavedAccess extends CreateAccessForm {
 const CreateAccessPage: React.FC = () => {
   const router = useRouter();
   const theme = useTheme();
-  
+
   const [formData, setFormData] = useState<CreateAccessForm>({
     nom: '',
     prenom: '',
@@ -81,13 +79,15 @@ const CreateAccessPage: React.FC = () => {
   // État pour les données de l'intervenant
   const [intervenantData, setIntervenantData] = useState<IntervenantData>({
     activites: [],
-    intervenants: []
+    image: null,
+    description: '',
+    reseauxSociaux: []
   });
 
   // État pour les accès enregistrés
   const [savedAccesses, setSavedAccesses] = useState<SavedAccess[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  
+
   // État pour l'expansion des lignes du tableau
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
@@ -105,12 +105,14 @@ const CreateAccessPage: React.FC = () => {
       ...prev,
       role: event.target.value,
     }));
-    
+
     // Réinitialiser les données d'intervenant si on change de rôle
     if (event.target.value !== 'Intervenant') {
       setIntervenantData({
         activites: [],
-        intervenants: []
+        image: null,
+        description: '',
+        reseauxSociaux: []
       });
     }
   };
@@ -130,26 +132,32 @@ const CreateAccessPage: React.FC = () => {
     });
     setIntervenantData({
       activites: [],
-      intervenants: []
+      image: null,
+      description: '',
+      reseauxSociaux: []
     });
     setEditingIndex(null);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     // Validation pour le rôle Intervenant
     if (formData.role === 'Intervenant') {
       if (intervenantData.activites.length === 0) {
         alert('Veuillez sélectionner au moins une activité pour l\'intervenant');
         return;
       }
-      if (intervenantData.intervenants.length === 0) {
-        alert('Veuillez ajouter au moins un intervenant');
+      if (!intervenantData.image) {
+        alert('Veuillez ajouter une photo pour l\'intervenant');
+        return;
+      }
+      if (!intervenantData.description) {
+        alert('Veuillez ajouter une description pour l\'intervenant');
         return;
       }
     }
-    
+
     const newAccess: SavedAccess = {
       ...formData,
       id: editingIndex !== null ? savedAccesses[editingIndex].id : Date.now(),
@@ -182,12 +190,12 @@ const CreateAccessPage: React.FC = () => {
       role: access.role,
       mdp: '', // Ne pas afficher le mot de passe
     });
-    
+
     // Charger les données de l'intervenant si c'est un intervenant
     if (access.role === 'Intervenant' && access.intervenantData) {
       setIntervenantData({ ...access.intervenantData });
     }
-    
+
     setEditingIndex(index);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -197,8 +205,8 @@ const CreateAccessPage: React.FC = () => {
   };
 
   const toggleRowExpansion = (index: number) => {
-    setExpandedRows(prev => 
-      prev.includes(index) 
+    setExpandedRows(prev =>
+      prev.includes(index)
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
@@ -419,7 +427,7 @@ const CreateAccessPage: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>
-                  <IntervenantPermissionsBlock
+                  <IntervenantIntervenantSupinfos
                     activites={activites}
                     intervenantData={intervenantData}
                     onIntervenantDataChange={setIntervenantData}
@@ -488,9 +496,9 @@ const CreateAccessPage: React.FC = () => {
                                 size="small"
                                 onClick={() => toggleRowExpansion(index)}
                               >
-                                <Iconify 
-                                  icon={expandedRows.includes(index) ? "eva:arrow-ios-upward-fill" : "eva:arrow-ios-downward-fill"} 
-                                  width={20} 
+                                <Iconify
+                                  icon={expandedRows.includes(index) ? "eva:arrow-ios-upward-fill" : "eva:arrow-ios-downward-fill"}
+                                  width={20}
                                 />
                               </IconButton>
                             )}
@@ -507,7 +515,7 @@ const CreateAccessPage: React.FC = () => {
                             {access.role === 'Intervenant' && access.intervenantData && (
                               <Box sx={{ mt: 1 }}>
                                 <Typography variant="caption" color="text.secondary">
-                                  {access.intervenantData.activites.length} activité(s) • {access.intervenantData.intervenants.length} intervenant(s)
+                                  {access.intervenantData.activites.length} activité(s)
                                 </Typography>
                               </Box>
                             )}
@@ -530,7 +538,7 @@ const CreateAccessPage: React.FC = () => {
                             </IconButton>
                           </TableCell>
                         </TableRow>
-                        
+
                         {/* Ligne expansible pour les détails de l'intervenant */}
                         {access.role === 'Intervenant' && access.intervenantData && (
                           <TableRow>
@@ -540,7 +548,7 @@ const CreateAccessPage: React.FC = () => {
                                   <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
                                     Détails de l'intervenant
                                   </Typography>
-                                  
+
                                   {/* Activités */}
                                   <Box sx={{ mb: 2 }}>
                                     <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
@@ -550,7 +558,7 @@ const CreateAccessPage: React.FC = () => {
                                       {access.intervenantData.activites.map((actId) => {
                                         const activite = activites.find(a => a.id === actId);
                                         return (
-                                          <Chip 
+                                          <Chip
                                             key={actId}
                                             label={activite?.nom || actId}
                                             size="small"
@@ -561,61 +569,57 @@ const CreateAccessPage: React.FC = () => {
                                       })}
                                     </Box>
                                   </Box>
-                                  
-                                  {/* Intervenants */}
+
+                                  {/* Informations de l'intervenant */}
                                   <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                                    Intervenants ({access.intervenantData.intervenants.length}):
+                                    Informations de l'intervenant:
                                   </Typography>
-                                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                    {access.intervenantData.intervenants.map((intervenant, idx) => (
-                                      <Card key={idx} variant="outlined" sx={{ p: 2 }}>
-                                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                                          <Box
-                                            component="img"
-                                            src={
-                                              typeof intervenant.image === 'string'
-                                                ? intervenant.image
-                                                : intervenant.image
-                                                  ? URL.createObjectURL(intervenant.image)
-                                                  : undefined
-                                            }
-                                            alt={`Intervenant ${idx + 1}`}
-                                            sx={{
-                                              width: 80,
-                                              height: 80,
-                                              borderRadius: 1,
-                                              objectFit: 'cover'
-                                            }}
-                                          />
-                                          <Box sx={{ flex: 1 }}>
-                                            <Typography 
-                                              variant="body2" 
-                                              dangerouslySetInnerHTML={{ __html: intervenant.description }}
-                                              sx={{
-                                                '& p': { margin: 0 },
-                                                mb: 1
-                                              }}
-                                            />
-                                            {intervenant.reseauxSociaux.length > 0 && (
-                                              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-                                                {intervenant.reseauxSociaux.map((reseau, rIdx) => (
-                                                  <Chip
-                                                    key={rIdx}
-                                                    label={reseau.nom}
-                                                    size="small"
-                                                    variant="outlined"
-                                                    onClick={() => window.open(reseau.lien, '_blank')}
-                                                    sx={{ cursor: 'pointer' }}
-                                                    icon={<Iconify icon="mdi:link-variant" width={14} />}
-                                                  />
-                                                ))}
-                                              </Box>
-                                            )}
+                                  <Card variant="outlined" sx={{ p: 2 }}>
+                                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                                      <Box
+                                        component="img"
+                                        src={
+                                          typeof access.intervenantData.image === 'string'
+                                            ? access.intervenantData.image
+                                            : access.intervenantData.image
+                                              ? URL.createObjectURL(access.intervenantData.image)
+                                              : undefined
+                                        }
+                                        alt="Intervenant"
+                                        sx={{
+                                          width: 80,
+                                          height: 80,
+                                          borderRadius: 1,
+                                          objectFit: 'cover'
+                                        }}
+                                      />
+                                      <Box sx={{ flex: 1 }}>
+                                        <Typography
+                                          variant="body2"
+                                          dangerouslySetInnerHTML={{ __html: access.intervenantData.description }}
+                                          sx={{
+                                            '& p': { margin: 0 },
+                                            mb: 1
+                                          }}
+                                        />
+                                        {access.intervenantData.reseauxSociaux.length > 0 && (
+                                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+                                            {access.intervenantData.reseauxSociaux.map((reseau, rIdx) => (
+                                              <Chip
+                                                key={rIdx}
+                                                label={reseau.nom}
+                                                size="small"
+                                                variant="outlined"
+                                                onClick={() => window.open(reseau.lien, '_blank')}
+                                                sx={{ cursor: 'pointer' }}
+                                                icon={<Iconify icon="mdi:link-variant" width={14} />}
+                                              />
+                                            ))}
                                           </Box>
-                                        </Box>
-                                      </Card>
-                                    ))}
-                                  </Box>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  </Card>
                                 </Box>
                               </Collapse>
                             </TableCell>

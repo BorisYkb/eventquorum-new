@@ -21,17 +21,27 @@ import {
   InputLabel,
   Button,
   IconButton,
-  Stack,
   CircularProgress,
   Alert,
   Snackbar,
 } from '@mui/material';
 
 import Loading from 'src/app/loading';
-
 import { Label } from 'src/components/label';
 
-import IntervenantPermissionsBlock from '../../nouveau/components/IntervenantPermissionsBlock';
+import IntervenantSupinfos from 'src/sections/gestionhabilitation/nouveau/Intervenant-Sup-infos';
+
+interface ReseauSocial {
+  nom: string;
+  lien: string;
+}
+
+interface IntervenantData {
+  activites: string[];
+  image: File | string | null;
+  description: string;
+  reseauxSociaux: ReseauSocial[];
+}
 
 interface EditAccessForm {
   nom: string;
@@ -42,6 +52,48 @@ interface EditAccessForm {
   mdp: string;
 }
 
+// Données mockées pour simulation - À remplacer par l'appel API
+const getMockUserData = (id: string) => {
+  // Simuler différents utilisateurs selon l'ID
+  const mockUsers: Record<string, any> = {
+    '1': {
+      id: 1,
+      firstName: 'Jean',
+      lastName: 'Dupont',
+      phone: '07 12 34 56 78',
+      email: 'jean.dupont@example.com',
+      role: 'Superviseur',
+    },
+    '2': {
+      id: 2,
+      firstName: 'Marie',
+      lastName: 'Martin',
+      phone: '05 98 76 54 32',
+      email: 'marie.martin@example.com',
+      role: 'Intervenant',
+      intervenantData: {
+        activites: ['1', '2'],
+        image: 'https://via.placeholder.com/150',
+        description: '<p><strong>Marie Martin</strong> - Experte en développement web</p><p>10 ans d\'expérience en React et TypeScript</p>',
+        reseauxSociaux: [
+          { nom: 'LinkedIn', lien: 'https://linkedin.com/in/mariemartin' },
+          { nom: 'GitHub', lien: 'https://github.com/mariemartin' }
+        ]
+      }
+    },
+    '3': {
+      id: 3,
+      firstName: 'Pierre',
+      lastName: 'Kouassi',
+      phone: '01 23 45 67 89',
+      email: 'pierre.kouassi@example.com',
+      role: "Agent d'admission",
+    }
+  };
+
+  return mockUsers[id] || mockUsers['1'];
+};
+
 const EditAccessPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
@@ -51,6 +103,7 @@ const EditAccessPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  
   const [formData, setFormData] = useState<EditAccessForm>({
     nom: '',
     prenom: '',
@@ -60,15 +113,13 @@ const EditAccessPage: React.FC = () => {
     mdp: '',
   });
 
-  // Simulation des données existantes - à remplacer par un appel API
-  const mockUserData = {
-    id: 1,
-    firstName: 'Jean',
-    lastName: 'Dupont',
-    phone: '0123456789',
-    email: 'jean.dupont@example.com',
-    role: 'Intervenant',
-  };
+  // État pour les données de l'intervenant
+  const [intervenantData, setIntervenantData] = useState<IntervenantData>({
+    activites: [],
+    image: null,
+    description: '',
+    reseauxSociaux: []
+  });
 
   // Chargement des données existantes
   useEffect(() => {
@@ -77,16 +128,32 @@ const EditAccessPage: React.FC = () => {
         setLoading(true);
 
         // TODO: Remplacer par l'appel API réel
+        // const response = await fetch(`/api/authorizations/${authId}`);
+        // const userData = await response.json();
+        
+        // Simulation d'un délai d'API
         await new Promise(resolve => setTimeout(resolve, 1000));
+        const userData = getMockUserData(authId);
 
+        // Pré-remplir les données du formulaire
         setFormData({
-          nom: mockUserData.lastName,
-          prenom: mockUserData.firstName,
-          email: mockUserData.email,
-          telephone: mockUserData.phone,
-          role: mockUserData.role,
+          nom: userData.lastName,
+          prenom: userData.firstName,
+          email: userData.email,
+          telephone: userData.phone,
+          role: userData.role,
           mdp: '',
         });
+
+        // Si c'est un intervenant, pré-remplir les données intervenant
+        if (userData.role === 'Intervenant' && userData.intervenantData) {
+          setIntervenantData({
+            activites: userData.intervenantData.activites || [],
+            image: userData.intervenantData.image || null,
+            description: userData.intervenantData.description || '',
+            reseauxSociaux: userData.intervenantData.reseauxSociaux || []
+          });
+        }
 
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
@@ -114,6 +181,16 @@ const EditAccessPage: React.FC = () => {
       ...prev,
       role: event.target.value,
     }));
+    
+    // Réinitialiser les données d'intervenant si on change de rôle
+    if (event.target.value !== 'Intervenant') {
+      setIntervenantData({
+        activites: [],
+        image: null,
+        description: '',
+        reseauxSociaux: []
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -123,10 +200,36 @@ const EditAccessPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Validation pour le rôle Intervenant
+    if (formData.role === 'Intervenant') {
+      if (intervenantData.activites.length === 0) {
+        alert('Veuillez sélectionner au moins une activité pour l\'intervenant');
+        return;
+      }
+      if (!intervenantData.image) {
+        alert('Veuillez ajouter une photo pour l\'intervenant');
+        return;
+      }
+      if (!intervenantData.description) {
+        alert('Veuillez ajouter une description pour l\'intervenant');
+        return;
+      }
+    }
+
     try {
       setSaving(true);
 
-      // Votre logique de sauvegarde...
+      // TODO: Remplacer par l'appel API réel
+      // const response = await fetch(`/api/authorizations/${authId}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     ...formData,
+      //     intervenantData: formData.role === 'Intervenant' ? intervenantData : undefined
+      //   })
+      // });
+
+      // Simulation d'un délai d'API
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // Afficher l'alerte de succès
@@ -166,6 +269,13 @@ const EditAccessPage: React.FC = () => {
     }
   };
 
+  // Liste des activités (à adapter selon vos données)
+  const activites = [
+    { id: '1', nom: 'Activité 1' },
+    { id: '2', nom: 'Activité 2' },
+    { id: '3', nom: 'Activité 3' },
+  ];
+
   // Affichage du loader pendant le chargement
   if (loading) {
     return <Loading />;
@@ -189,7 +299,7 @@ const EditAccessPage: React.FC = () => {
             </IconButton>
             <Box>
               <Typography variant="h5" sx={{ fontWeight: 600, color: '#333' }}>
-                Modifier l'Accès utilisateur
+                Modification des informations
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Modifiez les informations de l'utilisateur
@@ -304,7 +414,7 @@ const EditAccessPage: React.FC = () => {
                         type="password"
                         value={formData.mdp}
                         onChange={handleInputChange('mdp')}
-                        required
+                        placeholder="Laisser vide pour ne pas modifier"
                         size="small"
                       />
                     </Grid>
@@ -343,12 +453,15 @@ const EditAccessPage: React.FC = () => {
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Informations Supplémentaires - Intervenant
                   </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Ces informations seront enregistrées avec l'utilisateur
+                  </Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>
-                  <IntervenantPermissionsBlock
-                    consulterTelEmail={false}
-                    repondreQuestions={false}
-                    onPermissionChange={() => () => {}}
+                  <IntervenantSupinfos
+                    activites={activites}
+                    intervenantData={intervenantData}
+                    onIntervenantDataChange={setIntervenantData}
                   />
                 </Box>
               </Card>
@@ -377,10 +490,10 @@ const EditAccessPage: React.FC = () => {
             {saving ? (
               <>
                 <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
-                Enregistrement
+                Enregistrement...
               </>
             ) : (
-              "Enregistrer l'Accès"
+              "Enregistrer les modifications"
             )}
           </Button>
         </Box>
