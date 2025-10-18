@@ -1,5 +1,3 @@
-//src/app/organisateur/gestionparticipant/gestionparticipant-home/components/TableToolbar.tsx
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -57,6 +55,10 @@ type TableToolbarProps = {
   connectionTypeFilter: string;
   /** Callback pour le changement du filtre de type de connexion */
   onConnectionTypeFilterChange: (e: any) => void;
+  /** Filtre d'émargement actuel */
+  emargementFilter: string;
+  /** Callback pour le changement du filtre d'émargement */
+  onEmargementFilterChange: (e: any) => void;
   /** Indique si la signature électronique est activée */
   signatureEnabled: boolean;
   /** Callback pour activer/désactiver la signature */
@@ -95,6 +97,15 @@ const CONNECTION_TYPE_OPTIONS = [
 ];
 
 /**
+ * Options de filtre pour l'émargement
+ */
+const EMARGEMENT_OPTIONS = [
+  { value: '', label: 'Tous' },
+  { value: 'signe', label: 'Signé' },
+  { value: 'non_signe', label: 'Non signé' },
+];
+
+/**
  * Composant TableToolbar
  * Barre d'outils pour la gestion des participants avec filtres et actions
  */
@@ -112,6 +123,8 @@ const TableToolbar = ({
   onFirstConnectionFilterChange,
   connectionTypeFilter,
   onConnectionTypeFilterChange,
+  emargementFilter,
+  onEmargementFilterChange,
   signatureEnabled,
   onSignatureToggle,
   isDeleting = false,
@@ -215,6 +228,23 @@ const TableToolbar = ({
               disabled={isDeleting}
             >
               {CONNECTION_TYPE_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Filtre par émargement */}
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Émargement</InputLabel>
+            <Select
+              value={emargementFilter}
+              onChange={onEmargementFilterChange}
+              label="Émargement"
+              disabled={isDeleting}
+            >
+              {EMARGEMENT_OPTIONS.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

@@ -144,15 +144,8 @@ export function ActivityPaymentsDetailView({ activityId }: ActivityPaymentsDetai
         <DashboardContent>
             <CustomBreadcrumbs
                 heading={`Détails des versements - ${activityName}`}
-                links={[
-                    {
-                        name: 'Situation financière',
-                        href: paths.organisateur.gestionevent.financialSituation,
-                    },
-                    {
-                        name: 'Détails des versements',
-                    },
-                ]}
+                subtitle= {`${activityName}`}
+                
                 action={
                     <Button
                         component={RouterLink}

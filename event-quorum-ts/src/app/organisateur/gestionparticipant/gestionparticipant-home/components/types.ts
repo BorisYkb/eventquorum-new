@@ -22,7 +22,9 @@ export type Participant = {
   activite: string;
   /** Type de connexion : en ligne ou en présentiel */
   typeConnexion: 'en ligne' | 'en présentiel';
-};
+  // Nouveau : Indique si le participant a confirmé être dans la salle
+  presentDansLaSalle?: boolean; 
+}
 
 /**
  * Type pour les options d'export

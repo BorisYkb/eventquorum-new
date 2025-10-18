@@ -115,10 +115,7 @@ export default function ActivitiesPage() {
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Liste des activités"
-        links={[
-          { name: 'Intervenant', href: '/intervenant' },
-          { name: 'Activités' }
-        ]}
+        
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
@@ -128,9 +125,9 @@ export default function ActivitiesPage() {
         <Box sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              LA LISTE DES ACTIVITÉS
+              
               <span style={{ paddingLeft: 8, fontWeight: 'normal', color: theme.palette.text.secondary }}>
-                ({filteredActivities.length})
+                {filteredActivities.length} Activité(s)
               </span>
             </Typography>
           </Box>

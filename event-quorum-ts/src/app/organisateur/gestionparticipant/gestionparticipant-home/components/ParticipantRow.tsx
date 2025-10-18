@@ -1,15 +1,7 @@
-//src/app/organisateur/gestionparticipant/gestionparticipant-home/components/ParticipantRow.tsx
-
 'use client';
 
 import { Icon } from '@iconify/react';
 
-import {
-  Edit as EditIcon,
-  Visibility as ViewIcon,
-  Delete as DeleteIcon,
-  Circle as CircleIcon,
-} from '@mui/icons-material';
 import {
   TableRow,
   TableCell,
@@ -22,6 +14,15 @@ import {
   Box,
   Chip,
 } from '@mui/material';
+import {
+  Edit as EditIcon,
+  Visibility as ViewIcon,
+  Delete as DeleteIcon,
+  Circle as CircleIcon,
+  CheckBox as CheckBoxIcon,
+  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
+  Block as BlockIcon,
+} from '@mui/icons-material';
 
 /**
  * Type représentant un participant
@@ -36,6 +37,7 @@ type Participant = {
   emargement: string | null; // URL de la signature ou null
   activite: string;
   typeConnexion: 'en ligne' | 'en présentiel';
+  presentDansLaSalle?: boolean; // true si le participant a confirmé sa présence dans la salle
 };
 
 /**
@@ -54,6 +56,8 @@ type ParticipantRowProps = {
   onView: (id: number) => void;
   /** Callback pour supprimer le participant */
   onDelete: (id: number) => void;
+  /** Indique si la colonne Checking doit être affichée */
+  showChecking: boolean;
 };
 
 /**
@@ -67,6 +71,7 @@ const ParticipantRow = ({
   onEdit,
   onView,
   onDelete,
+  showChecking,
 }: ParticipantRowProps) => {
   /**
    * Gère la redirection vers la page d'édition
@@ -80,6 +85,61 @@ const ParticipantRow = ({
    */
   const handleView = () => {
     onView(participant.id);
+  };
+
+  /**
+   * Rendu de la cellule Checking
+   */
+  const renderCheckingCell = () => {
+    // Si le participant est en ligne
+    if (participant.typeConnexion === 'en ligne') {
+      return (
+        <Typography variant="body2" color="text.secondary" fontStyle="italic">
+          En ligne
+        </Typography>
+      );
+    }
+
+    // Si le participant est en présentiel mais n'a pas émargé
+    if (!participant.emargement) {
+      return (
+        <Tooltip title="Aucun émargement" arrow>
+          <BlockIcon
+            sx={{
+              fontSize: 24,
+              color: 'error.main',
+            }}
+          />
+        </Tooltip>
+      );
+    }
+
+    // Si le participant est en présentiel et a émargé
+    if (participant.presentDansLaSalle) {
+      // Présent dans la salle (validé)
+      return (
+        <Tooltip title="Présent dans la salle" arrow>
+          <CheckBoxIcon
+            sx={{
+              fontSize: 24,
+              color: 'success.main',
+            }}
+          />
+        </Tooltip>
+      );
+    }
+
+    // Non présent dans la salle (carré vide)
+    return (
+      <Tooltip title="Non présent dans la salle" arrow>
+        <CheckBoxOutlineBlankIcon
+          sx={{
+            fontSize: 24,
+            color: 'warning.main',
+          }}
+        />
+      </Tooltip>
+    );
   };
 
   return (
@@ -106,26 +166,6 @@ const ParticipantRow = ({
 
       {/* Email */}
       <TableCell>{participant.email}</TableCell>
-
-      {/* Type de connexion (en ligne / en présentiel) */}
-      {/* <TableCell>
-        <Chip
-          label={participant.typeConnexion}
-          size="small"
-          sx={{
-            backgroundColor:
-              participant.typeConnexion === 'en ligne'
-                ? 'rgba(0, 184, 217, 0.1)'
-                : 'rgba(255, 171, 0, 0.1)',
-            color:
-              participant.typeConnexion === 'en ligne'
-                ? '#00B8D9'
-                : '#FFAB00',
-            fontWeight: 600,
-            textTransform: 'capitalize',
-          }}
-        />
-      </TableCell> */}
 
       {/* 1ère Connexion (indicateur visuel) */}
       <TableCell>
@@ -178,6 +218,13 @@ const ParticipantRow = ({
           </Typography>
         )}
       </TableCell>
+
+      {/* Checking - Affichage conditionnel */}
+      {showChecking && (
+        <TableCell align="center">
+          {renderCheckingCell()}
+        </TableCell>
+      )}
 
       {/* Actions */}
       <TableCell>

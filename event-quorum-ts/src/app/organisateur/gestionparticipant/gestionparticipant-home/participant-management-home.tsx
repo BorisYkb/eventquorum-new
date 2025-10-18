@@ -172,6 +172,20 @@ const ParticipantManagementPage = () => {
         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
       activite: 'workshop',
       typeConnexion: 'en présentiel',
+      
+    },
+    {
+      id: 10,
+      nom: 'Chonou',
+      prenom: 'Oriane',
+      telephone: '0701010101',
+      email: 'mariam@gmail.com',
+      connecte: true,
+      emargement:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      activite: 'cocktail',
+      typeConnexion: 'en présentiel',
+      presentDansLaSalle: true,
     },
   ]);
 
