@@ -46,7 +46,7 @@ export const SURVEY_QUESTIONS: SurveyQuestion[] = [
         description: 'Quelles suggestions avez-vous pour améliorer les prochaines éditions ? (Réponse libre)',
         correctAnswer: '-',
         userResponse: 'Il serait intéressant d\'organiser plus de sessions pratiques avec des ateliers interactifs et d\'améliorer la gestion du temps pour permettre davantage d\'échanges entre participants',
-        responseColor: 'info.main',
+        responseColor: 'text.primary',
         isCorrect: true,
         isFreeResponse: true,
         detailedExplanation: 'Question à réponse libre. Votre retour est précieux pour améliorer nos services. Vos suggestions concernant les ateliers interactifs et la gestion du temps seront prises en compte pour les prochaines éditions.',

@@ -5,6 +5,7 @@
 import { usePathname } from 'next/navigation';
 
 import { Iconify } from 'src/components/iconify';
+import { paths } from 'src/routes/paths';
 
 import type { AccountDrawerProps } from './components/account-drawer';
 
@@ -21,7 +22,7 @@ export function useParticipantAccountData(): AccountDrawerProps['data'] {
   const baseItems: AccountDrawerProps['data'] = [
     {
       label: 'Mes informations personnelles',
-      href: '#profile',
+      href: paths.participant.PROFILE.root,
       icon: <Iconify icon="solar:user-bold-duotone" />,
     },
   ];

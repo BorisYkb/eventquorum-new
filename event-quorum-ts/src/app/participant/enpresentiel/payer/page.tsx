@@ -22,13 +22,13 @@ export default function ParticipantEnresentielPage() {
         <DashboardContent>
             <Grid container spacing={3}>
                 {/* Section 1 - Welcome sans bouton */}
-                <Grid size={12}>
+                {/* <Grid size={12}>
                     <AppWelcome
-                        title="Bienvenu(e) Kouakou Evarist"
+                        title="Bonjour cher(e) Kouakou Evarist"
                         description="Vous etes connecté en tant que participant au SARA 2023."
                         img={<SeoIllustration />}
                     />
-                </Grid>
+                </Grid> */}
 
                 {/* Section 2 - Vidéo hero */}
                 <AccueilCompactVideo />

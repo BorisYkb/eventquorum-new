@@ -217,7 +217,7 @@ export function VerifyOtpView() {
             {/* Information sur l'envoi du code */}
             {identifier && (
                 <Alert severity="info" sx={{ mb: 1 }}>
-                    Code envoyé à <strong>{maskIdentifier(identifier)}</strong>
+                    Entrez le code à 6 chiffres envoyé par <strong>{maskIdentifier(identifier)}</strong>
                 </Alert>
             )}
 
@@ -225,7 +225,7 @@ export function VerifyOtpView() {
             <Field.Code
                 name="code"
                 placeholder="0"
-                helperText="Entrez le code à 6 chiffres reçu"
+                helperText=""
             />
 
             {/* Bouton de soumission */}
@@ -266,7 +266,7 @@ export function VerifyOtpView() {
             {/* Lien de retour */}
             <FormReturnLink
                 href={paths.auth.jwt.forgotPassword}
-                label="Changer d'identifiant"
+                label="Changer de mode de récupération"
             />
         </>
     );

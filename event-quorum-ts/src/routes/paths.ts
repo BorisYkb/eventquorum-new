@@ -21,6 +21,7 @@ const ROOTS = {
   INTERVENANT: '/intervenant',
   GUICHET: '/guichet',
   OPERATEUR: '/operateur',
+  PARTICIPANT: '/participant',
 };
 
 // ----------------------------------------------------------------------
@@ -128,6 +129,19 @@ export const paths = {
       detailevent: (name: string) => `${ROOTS.ADMIN}/phototheque/detailevent/${kebabCase(name)}`,
     }
   },
+
+    // ESPACE PARTICIPANT
+  participant: {
+    root: ROOTS.PARTICIPANT,
+    PROFILE: {
+      root: `${ROOTS.PARTICIPANT}/profile`,
+      accountSettings: `${ROOTS.PARTICIPANT}/profil/account-settings`,
+      editProfile: `${ROOTS.PARTICIPANT}/profil/edit`,
+    },
+  },
+
+
+
   // ESPACE SUPERVISEUR
   superviseur: {
     root: ROOTS.SUPERVISEUR,

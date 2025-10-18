@@ -48,15 +48,22 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
     /**
      * Fonction pour scroller automatiquement vers la section vidéo
      * Se déclenche quand une nouvelle activité est épinglée
+     * Utilise scroll-padding-top: 10% pour l'offset
      */
     useEffect(() => {
         if (pinnedActivity && videoSectionRef.current) {
             // Scroll vers la section vidéo avec un petit délai pour l'animation
             setTimeout(() => {
-                videoSectionRef.current?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                const element = videoSectionRef.current;
+                if (element) {
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition - (window.innerHeight * 0.1); // 10% offset
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             }, 100);
         }
     }, [pinnedActivity?.id]);
@@ -98,7 +105,8 @@ export function AccueilCompactVideo({ pinnedActivity, onWatchLive }: AccueilComp
                 ref={videoSectionRef}
                 sx={{
                     borderRadius: 2,
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    scrollMarginTop: '10%' // CSS natif pour scroll-padding-top
                 }}
             >
                 {/* PREMIÈRE SECTION : Badge + Titre + Infos */}

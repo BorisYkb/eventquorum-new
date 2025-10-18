@@ -40,7 +40,7 @@ export function ActionButtons() {
      * Navigue vers la page de partage d'avis
      */
     const handlePartagerAvis = () => {
-        router.push('/participant/enpresentiel/payer/mesinteractions');
+        router.push('/participant/enpresentiel/payer/mesinteractions?tab=reviews');
     };
 
     /**

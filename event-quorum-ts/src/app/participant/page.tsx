@@ -24,7 +24,7 @@ export default function ParticipantPage() {
         <Grid size={12}>
           <AppWelcome
             title="Bienvenu(e) Chonou Oriane"
-            description="Vous ètes connecté sur l'espace Participant de l'évènement SARA."
+            description="Vous êtes connecté en tant que participant de l'évènement SARA."
             img={<SeoIllustration />}
           />
         </Grid>

@@ -10,7 +10,7 @@ import { SeoIllustration } from 'src/assets/illustrations';
 import { Footer } from 'src/app/participant/components/footer';
 import { AppWelcome } from 'src/app/participant/components/app-welcome-2';
 import { IntervenantCarousel } from 'src/app/participant/components/intervenant-carousel';
-import { AccueilCompactVideo } from 'src/app/participant/components/accueil-compact-video';
+import { AccueilCompactVideo } from 'src/sections/participant/enligne/accueil-compact-video';
 
 import AccueilProgrammeSection2 from './components/programme/accueil-programme-section-2';
 
@@ -22,13 +22,13 @@ export default function ParticipantEnresentielPage() {
         <DashboardContent>
             <Grid container spacing={3}>
                 {/* Section 1 - Welcome sans bouton */}
-                <Grid size={12}>
+                {/* <Grid size={12}>
                     <AppWelcome
                         title="Bonjour cher(e) participant(e) Kouakou Evarist"
                         description="Vous etes connecté en tant que participant au SARA 2023."
                         img={<SeoIllustration />}
                     />
-                </Grid>
+                </Grid> */}
 
                 {/* Section 2 - Vidéo hero */}
                 <AccueilCompactVideo />

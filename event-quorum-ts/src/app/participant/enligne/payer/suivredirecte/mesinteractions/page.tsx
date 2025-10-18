@@ -2,8 +2,10 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+// Import du hook pour lire les paramètres URL
+import { useSearchParams } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -71,7 +73,7 @@ const SURVEY_DATA = [
     expirationDate: '11/09/2024 10H00',
     status: 'En cours',
     statusColor: 'success',
-    note: '----',
+    note: '-',
     score: null,
   },
   {
@@ -137,6 +139,19 @@ const TABS_CONFIG = [
 export default function MesInteractionsPage() {
   // Navigation
   const router = useRouter();
+
+  // Dans le composant
+  const searchParams = useSearchParams();
+
+  // Effect pour détecter le paramètre ?tab= dans l'URL
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+
+    // Si le paramètre existe et est valide (results ou reviews)
+    if (tabFromUrl && ['results', 'reviews'].includes(tabFromUrl)) {
+      setCurrentTab(tabFromUrl); // Active l'onglet correspondant
+    }
+  }, [searchParams]);
 
   // Gestion de l'onglet actif
   const [currentTab, setCurrentTab] = useState('results');

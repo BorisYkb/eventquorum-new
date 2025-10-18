@@ -137,7 +137,7 @@ export function ForgotPasswordView() {
             autoComplete: 'username' // Améliore l'expérience utilisateur
           }
         }}
-        helperText="Entrez l'email ou le numéro associé à votre compte"
+        // helperText="Entrez l'email ou le numéro associé à votre compte"
       />
 
       {/* Bouton de soumission */}
