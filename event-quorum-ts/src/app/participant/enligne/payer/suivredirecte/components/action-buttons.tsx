@@ -283,10 +283,26 @@ export function ActionButtons() {
                                                     value={selectedActivityId}
                                                     onChange={(e) => setSelectedActivityId(e.target.value)}
                                                     label="Sélectionner une activité"
-                                                    size="small"
+                                                    MenuProps={{
+                                                        PaperProps: {
+                                                            sx: {
+                                                                maxHeight: 300,
+                                                                maxWidth: { xs: '90vw', sm: 500 }
+                                                            }
+                                                        }
+                                                    }}
+                                                    sx={{ minHeight: '56px' }}
                                                 >
                                                     {allActivities.map((activity) => (
-                                                        <MenuItem key={activity.id} value={activity.id}>
+                                                        <MenuItem
+                                                            key={activity.id}
+                                                            value={activity.id}
+                                                            sx={{
+                                                                whiteSpace: 'normal',
+                                                                wordWrap: 'break-word',
+                                                                py: 1.5
+                                                            }}
+                                                        >
                                                             {activity.title} ({activity.day})
                                                         </MenuItem>
                                                     ))}
@@ -303,8 +319,8 @@ export function ActionButtons() {
                                                 value={questionText}
                                                 onChange={(e) => setQuestionText(e.target.value)}
                                                 multiline
-                                                rows={1}
-                                                size="small"
+                                                rows={2}
+                                                sx={{ minHeight: '56px' }}
                                             />
                                         </Grid>
 
