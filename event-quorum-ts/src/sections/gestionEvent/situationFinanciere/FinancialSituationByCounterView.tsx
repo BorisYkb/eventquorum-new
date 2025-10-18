@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import Grid from '@mui/material/Grid2';
 import { 
     Box, 
     Button, 
@@ -34,7 +35,10 @@ import { DashboardContent } from 'src/layouts/admin';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+
 import { TransactionDetailModal } from './TransactionDetailModal';
+
 
 // ----------------------------------------------------------------------
 
@@ -128,15 +132,7 @@ export function FinancialSituationByCounterView() {
         <DashboardContent>
             <CustomBreadcrumbs
                 heading="Situation financière par guichet"
-                links={[
-                    {
-                        name: 'Situation financière',
-                        href: paths.organisateur.gestionevent.financialSituation,
-                    },
-                    {
-                        name: 'Par guichet',
-                    },
-                ]}
+                
                 action={
                     <Button
                         component={RouterLink}
@@ -152,63 +148,57 @@ export function FinancialSituationByCounterView() {
 
             {/* Statistics Cards */}
             <Stack direction="row" spacing={3} mb={4}>
-                <Card sx={{ flex: 1, p: 2.5, backgroundColor: '#FFA726' }}>
-                    <Typography variant="h4" color="white" gutterBottom>
-                        20
-                    </Typography>
-                    <Typography variant="body2" color="white">
-                        Nombre de participants
-                    </Typography>
-                </Card>
-                <Card sx={{ flex: 1, p: 2.5, backgroundColor: '#66BB6A' }}>
-                    <Typography variant="h4" color="white" gutterBottom>
-                        15
-                    </Typography>
-                    <Typography variant="body2" color="white">
-                        Nombre de transactions
-                    </Typography>
-                </Card>
-                <Card sx={{ flex: 1, p: 2.5, backgroundColor: '#42A5F5' }}>
-                    <Typography variant="h4" color="white" gutterBottom>
-                        146 000
-                    </Typography>
-                    <Typography variant="body2" color="white">
-                        Montant collecté (FCFA)
-                    </Typography>
-                </Card>
+                
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <SuperviseurWidgetSummary
+                    title="Nombre de guichets"
+                    total={10}
+                    color="secondary"
+                    sx={{ height: 180 }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <SuperviseurWidgetSummary
+                    title="Nombre de transactions"
+                    total={15}
+                    color="primary"
+                    sx={{ height: 180 }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <SuperviseurWidgetSummary
+                    title="Montant collecté (FCFA)"
+                    total={500000}
+                    color="success"
+                    sx={{ height: 180 }}
+                  />
+                </Grid>
+                
             </Stack>
 
-            {/* Filters */}
-            <Card sx={{ mb: 3, p: 3 }}>
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center">
-                    <FormControl sx={{ minWidth: 200 }}>
-                        <InputLabel>Filtrer par guichet</InputLabel>
-                        <Select
-                            value={selectedCounter}
-                            label="Filtrer par guichet"
-                            onChange={(e) => setSelectedCounter(e.target.value)}
-                        >
-                            <MenuItem value="tous">Tous les guichets</MenuItem>
-                            <MenuItem value="guichet1">Guichet 1</MenuItem>
-                            <MenuItem value="guichet2">Guichet 2</MenuItem>
-                            <MenuItem value="guichet3">Guichet 3</MenuItem>
-                        </Select>
-                    </FormControl>
+            
 
-                    <FormControl sx={{ minWidth: 200 }}>
-                        <InputLabel>Filtrer par agent</InputLabel>
-                        <Select
-                            value={selectedAgent}
-                            label="Filtrer par agent"
-                            onChange={(e) => setSelectedAgent(e.target.value)}
-                        >
-                            <MenuItem value="tous">Tous les agents</MenuItem>
-                            <MenuItem value="agent1">Agent 1</MenuItem>
-                            <MenuItem value="agent2">Agent 2</MenuItem>
-                            <MenuItem value="agent3">Agent 3</MenuItem>
-                        </Select>
-                    </FormControl>
+            {/* Export Button */}
+            <Box display="flex" justifyContent="flex-end" mb={3}>
+                <Button
+                    variant="contained"
+                    startIcon={<Iconify icon="solar:printer-minimalistic-bold" />}
+                    sx={{ width: '200px' }}
+                >
+                    Exporter
+                </Button>
+            </Box>
 
+            {/* Transactions Table */}
+            <Card>
+                <CardHeader 
+                    title="Résumé des transactions effectuées"
+                    
+                    sx={{ pb: 1 }}
+                />
+
+                <Stack sx={{p: 3, display: 'flex', flexDirection: 'row' }} spacing={2} alignItems="center">
+                    
                     <TextField
                         placeholder="Rechercher..."
                         value={searchQuery}
@@ -219,27 +209,9 @@ export function FinancialSituationByCounterView() {
                         }}
                     />
                 </Stack>
-            </Card>
 
-            {/* Export Button */}
-            <Box display="flex" justifyContent="flex-end" mb={3}>
-                <Button
-                    variant="contained"
-                    startIcon={<Iconify icon="solar:printer-minimalistic-bold" />}
-                    sx={{ width: '200px' }}
-                >
-                    Exporter (PDF)
-                </Button>
-            </Box>
-
-            {/* Transactions Table */}
-            <Card>
-                <CardHeader 
-                    title={`Liste des transactions effectuées - Numéro du guichet: 5`}
-                    subheader={`Nom de l'agent: Boudou Mbodou Evanel`}
-                    sx={{ pb: 2 }}
-                />
                 <Divider />
+
                 
                 <TableContainer component={Paper} elevation={0}>
                     <Table>
@@ -247,8 +219,8 @@ export function FinancialSituationByCounterView() {
                             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
                                 <TableCell><strong>Nom_Prenom</strong></TableCell>
                                 <TableCell><strong>Email</strong></TableCell>
-                                <TableCell align="center"><strong>Montant</strong></TableCell>
-                                <TableCell align="center"><strong>Date</strong></TableCell>
+                                <TableCell align="center"><strong>Montant (FCFA)</strong></TableCell>
+                                
                                 <TableCell align="center"><strong>Action</strong></TableCell>
                             </TableRow>
                         </TableHead>
@@ -258,7 +230,7 @@ export function FinancialSituationByCounterView() {
                                     <TableCell>{transaction.nom_prenom}</TableCell>
                                     <TableCell>{transaction.email}</TableCell>
                                     <TableCell align="center">{transaction.montant}</TableCell>
-                                    <TableCell align="center">{transaction.date_heure}</TableCell>
+                                    
                                     <TableCell align="center">
                                         <IconButton 
                                             size="small"

@@ -3,15 +3,21 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { DashboardContent } from 'src/layouts/admin';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { paths } from 'src/routes/paths';
+
 import { Button } from '@mui/material';
+
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { Iconify } from 'src/components/iconify';
-import { IActivity, INewActivityItem } from 'src/types/activity';
+
 import { _activityList } from 'src/_mock/_activity';
+import { DashboardContent } from 'src/layouts/admin';
+
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
 import { ActivityNewEditForm } from 'src/sections/gestionEvent/view/activity-new-edit-form';
+
+import { IActivity, INewActivityItem } from 'src/types/activity';
 
 
 export default function ActivityEditPage() {

@@ -1,5 +1,3 @@
-//src/app/organisateur/gestionparticipant/gestionparticipant-home/components/InvitesTable.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -55,6 +53,7 @@ interface InvitesTableProps {
         activityFilter: string;
         firstConnectionFilter: string;
         connectionTypeFilter: string;
+        emargementFilter: string;
     }) => void;
 }
 
@@ -79,9 +78,16 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
     const [activityFilter, setActivityFilter] = useState('');
     const [firstConnectionFilter, setFirstConnectionFilter] = useState('');
     const [connectionTypeFilter, setConnectionTypeFilter] = useState('');
+    const [emargementFilter, setEmargementFilter] = useState('');
     const [signatureEnabled, setSignatureEnabled] = useState(true);
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    /**
+     * Détermine si la colonne Checking doit être affichée
+     * La colonne est affichée uniquement quand une activité spécifique est sélectionnée
+     */
+    const showCheckingColumn = activityFilter !== '';
 
     /**
      * Helper pour notifier les changements de filtres
@@ -90,6 +96,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
         activityFilter: string;
         firstConnectionFilter: string;
         connectionTypeFilter: string;
+        emargementFilter: string;
     }) => {
         if (onFiltersChange) {
             onFiltersChange(filters);
@@ -105,6 +112,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             activityFilter: value,
             firstConnectionFilter,
             connectionTypeFilter,
+            emargementFilter,
         });
     };
 
@@ -117,6 +125,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             activityFilter,
             firstConnectionFilter: value,
             connectionTypeFilter,
+            emargementFilter,
         });
     };
 
@@ -129,6 +138,20 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             activityFilter,
             firstConnectionFilter,
             connectionTypeFilter: value,
+            emargementFilter,
+        });
+    };
+
+    /**
+     * Gestion du changement de filtre d'émargement
+     */
+    const handleEmargementFilterChange = (value: string) => {
+        setEmargementFilter(value);
+        notifyFiltersChange({
+            activityFilter,
+            firstConnectionFilter,
+            connectionTypeFilter,
+            emargementFilter: value,
         });
     };
 
@@ -138,6 +161,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      * - Filtre par activité
      * - Filtre par première connexion
      * - Filtre par type de connexion
+     * - Filtre par émargement
      */
     const filteredParticipants = participants.filter((participant) => {
         // Filtre de recherche (nom, prénom, email)
@@ -162,12 +186,22 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
         const matchesConnectionType =
             !connectionTypeFilter || participant.typeConnexion === connectionTypeFilter;
 
+        // Filtre par émargement
+        // 'signe' = emargement !== null
+        // 'non_signe' = emargement === null
+        // '' = tous
+        const matchesEmargement =
+            !emargementFilter ||
+            (emargementFilter === 'signe' && participant.emargement !== null) ||
+            (emargementFilter === 'non_signe' && participant.emargement === null);
+
         // Retourne true si tous les filtres sont satisfaits
         return (
             matchesSearch &&
             matchesActivity &&
             matchesFirstConnection &&
-            matchesConnectionType
+            matchesConnectionType &&
+            matchesEmargement
         );
     });
 
@@ -287,6 +321,10 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                     onConnectionTypeFilterChange={(e) =>
                         handleConnectionTypeFilterChange(e.target.value)
                     }
+                    emargementFilter={emargementFilter}
+                    onEmargementFilterChange={(e) =>
+                        handleEmargementFilterChange(e.target.value)
+                    }
                     signatureEnabled={signatureEnabled}
                     onSignatureToggle={setSignatureEnabled}
                     isDeleting={isDeleting}
@@ -313,9 +351,14 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                                 <TableCell sx={{ fontWeight: 600 }}>Nom & Prénoms</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Téléphone</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-                                {/* <TableCell sx={{ fontWeight: 600 }}>Type</TableCell> */}
                                 <TableCell sx={{ fontWeight: 600 }}>1ère Connexion</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Émargement</TableCell>
+                                {/* Colonne Checking - Affichage conditionnel */}
+                                {showCheckingColumn && (
+                                    <TableCell sx={{ fontWeight: 600 }} align="center">
+                                        Checking
+                                    </TableCell>
+                                )}
                                 <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -329,6 +372,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                                     onEdit={onEdit}
                                     onView={onView}
                                     onDelete={onDelete}
+                                    showChecking={showCheckingColumn}
                                 />
                             ))}
                         </TableBody>
