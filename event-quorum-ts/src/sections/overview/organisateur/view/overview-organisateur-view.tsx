@@ -108,6 +108,17 @@ export function OverviewOrganisateurView() {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurWidgetSummary
+            title="Places achetées"
+            total={1000}
+            unit="pour"
+            subtitle="950000 FCFA obtenus"
+            color="error"
+            sx={{ height: 180 }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 4 }}>
+          <SuperviseurWidgetSummary
             title="Activités"
             subtitle="6 payantes / 12 total"
             total={12}
@@ -116,16 +127,7 @@ export function OverviewOrganisateurView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <SuperviseurWidgetSummary
-            title="Montant reçu"
-            total={1850000}
-            unit="FCFA"
-            subtitle="1 000 tickets achetés"
-            color="error"
-            sx={{ height: 180 }}
-          />
-        </Grid>
+        
 
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurWidgetSummary

@@ -12,21 +12,21 @@ import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import { useTheme, useMediaQuery, IconButton } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Divider from '@mui/material/Divider';
+import { useTheme, useMediaQuery, IconButton } from '@mui/material';
 
-import { DashboardContent } from 'src/layouts/dashboard';
 import { CONFIG } from 'src/global-config';
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
 import { Image } from 'src/components/image';
+import { Iconify } from 'src/components/iconify';
 import { Lightbox, useLightBox } from 'src/components/lightbox';
 
 import { ACTIVITES_PAYEES } from '../components/activites-payees-data';
@@ -249,16 +249,12 @@ export default function ActivityDetailPagePaid() {
     /**
      * Vérifier si c'est un paiement unique
      */
-    const isPaymentUnique = () => {
-        return activity?.prix === null;
-    };
+    const isPaymentUnique = () => activity?.prix === null;
 
     /**
      * Vérifier si c'est gratuit
      */
-    const isFree = () => {
-        return activity?.prix === 0;
-    };
+    const isFree = () => activity?.prix === 0;
 
     /**
      * Rendu de la galerie photos - Version 3 cadres en ligne
@@ -795,7 +791,7 @@ export default function ActivityDetailPagePaid() {
                                             borderColor: 'primary.light'
                                         }}>
                                             <Typography variant="subtitle2" sx={{ ...fontSizes.subtitle1, mb: 1, textAlign: 'center' }}>
-                                                Accès à toues les activités
+                                                Accès à toutes les activités
                                             </Typography>
                                             <Typography
                                                 variant="h6"
