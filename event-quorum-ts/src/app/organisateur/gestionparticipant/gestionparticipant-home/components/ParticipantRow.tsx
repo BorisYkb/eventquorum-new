@@ -179,14 +179,22 @@ const ParticipantRow = ({
           sx={{
             backgroundColor:
               participant.typeConnexion === 'en ligne'
-                ? 'rgba(0, 184, 217, 0.1)'
-                : 'rgba(255, 171, 0, 0.1)',
+                ? 'success.lighter'
+                : 'warning.lighter',
             color:
               participant.typeConnexion === 'en ligne'
-                ? '#00B8D9'
-                : '#FFAB00',
-            fontWeight: 600,
+                ? 'success.main'
+                : 'warning.main',
+            fontWeight: 700,
             textTransform: 'capitalize',
+            cursor: 'default',
+            '&:hover': {
+              backgroundColor:
+                participant.typeConnexion === 'en ligne'
+                  ? 'success.lighter'
+                  : 'warning.lighter',
+            },
+              boxShadow: 'none', // pas d'ombre
           }}
         />
       </TableCell>
