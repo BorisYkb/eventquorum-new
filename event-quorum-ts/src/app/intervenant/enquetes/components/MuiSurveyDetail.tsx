@@ -345,20 +345,20 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 Liste des questions
               </Typography>
-              <Tooltip title="Consulter les résultats de l'enquête" placement="top" arrow>
-                <Button
-                  variant="contained"
-                  onClick={handleViewResults}
-                  sx={{
-                    backgroundColor: '#000',
-                    color: 'white',
-                    '&:hover': { backgroundColor: '#333' },
-                    minWidth: 120
-                  }}
-                >
-                  Consulter
-                </Button>
-              </Tooltip>
+              
+              <Button
+                variant="contained"
+                onClick={handleViewResults}
+                sx={{
+                  backgroundColor: '#000',
+                  color: 'white',
+                  '&:hover': { backgroundColor: '#333' },
+                  minWidth: 120
+                }}
+              >
+                Consulter Resultats de l'enquête
+              </Button>
+              
             </Box>
 
             {/* Tableau des questions */}
@@ -423,7 +423,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                                   }}
                                   size="small"
                                 >
-                                  <Iconify icon="solar:eye-bold" />
+                                  <Iconify icon="solar:eye-bold" color='black' />
                                 </IconButton>
                               </Tooltip>
                             </TableCell>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Grid from '@mui/material/Grid2';
 import { 
@@ -19,12 +20,7 @@ import {
     Paper,
     IconButton,
     Stack,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
     TextField,
-    Typography
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -36,9 +32,6 @@ import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
-
-import { TransactionDetailModal } from './TransactionDetailModal';
-
 
 // ----------------------------------------------------------------------
 
@@ -95,13 +88,10 @@ const transactionsData = [
 ];
 
 export function FinancialSituationByCounterView() {
+    const router = useRouter();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [selectedCounter, setSelectedCounter] = useState('tous');
-    const [selectedAgent, setSelectedAgent] = useState('tous');
     const [searchQuery, setSearchQuery] = useState('');
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -112,14 +102,9 @@ export function FinancialSituationByCounterView() {
         setPage(0);
     };
 
-    const handleViewDetail = (transaction: any) => {
-        setSelectedTransaction(transaction);
-        setModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setModalOpen(false);
-        setSelectedTransaction(null);
+    const handleViewDetail = (participantId: number) => {
+        // Navigation vers la page de détails du participant
+        router.push(paths.organisateur.gestionevent.financialSituation.participantTransactions(participantId));
     };
 
     // Calculate pagination
@@ -148,7 +133,6 @@ export function FinancialSituationByCounterView() {
 
             {/* Statistics Cards */}
             <Stack direction="row" spacing={3} mb={4}>
-                
                 <Grid size={{ xs: 12, md: 4 }}>
                   <SuperviseurWidgetSummary
                     title="Nombre de guichets"
@@ -173,10 +157,7 @@ export function FinancialSituationByCounterView() {
                     sx={{ height: 180 }}
                   />
                 </Grid>
-                
             </Stack>
-
-            
 
             {/* Export Button */}
             <Box display="flex" justifyContent="flex-end" mb={3}>
@@ -193,12 +174,10 @@ export function FinancialSituationByCounterView() {
             <Card>
                 <CardHeader 
                     title="Résumé des transactions effectuées"
-                    
                     sx={{ pb: 1 }}
                 />
 
                 <Stack sx={{p: 3, display: 'flex', flexDirection: 'row' }} spacing={2} alignItems="center">
-                    
                     <TextField
                         placeholder="Rechercher..."
                         value={searchQuery}
@@ -212,7 +191,6 @@ export function FinancialSituationByCounterView() {
 
                 <Divider />
 
-                
                 <TableContainer component={Paper} elevation={0}>
                     <Table>
                         <TableHead>
@@ -220,7 +198,6 @@ export function FinancialSituationByCounterView() {
                                 <TableCell><strong>Nom_Prenom</strong></TableCell>
                                 <TableCell><strong>Email</strong></TableCell>
                                 <TableCell align="center"><strong>Montant (FCFA)</strong></TableCell>
-                                
                                 <TableCell align="center"><strong>Action</strong></TableCell>
                             </TableRow>
                         </TableHead>
@@ -230,11 +207,10 @@ export function FinancialSituationByCounterView() {
                                     <TableCell>{transaction.nom_prenom}</TableCell>
                                     <TableCell>{transaction.email}</TableCell>
                                     <TableCell align="center">{transaction.montant}</TableCell>
-                                    
                                     <TableCell align="center">
                                         <IconButton 
                                             size="small"
-                                            onClick={() => handleViewDetail(transaction)}
+                                            onClick={() => handleViewDetail(transaction.id)}
                                         >
                                             <Iconify icon="solar:eye-bold" />
                                         </IconButton>
@@ -259,13 +235,6 @@ export function FinancialSituationByCounterView() {
                     }
                 />
             </Card>
-
-            {/* Modal */}
-            <TransactionDetailModal
-                open={modalOpen}
-                onClose={handleCloseModal}
-                transaction={selectedTransaction}
-            />
         </DashboardContent>
     );
 }

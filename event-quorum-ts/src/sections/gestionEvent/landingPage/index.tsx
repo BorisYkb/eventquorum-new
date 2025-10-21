@@ -24,7 +24,10 @@ import {
   IconButton,
   Chip,
   Stack,
-  Divider
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -127,25 +130,22 @@ const LandingPage = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
-          component={RouterLink}
-          href={paths.organisateur.gestionevent.newactivity}
-          startIcon={<Iconify icon="mingcute:add-line" width={16} height={16} />}
-          onClick={handleAddAgenda}
+      {/* Informations Générales - ACCORDÉON */}
+      <Accordion defaultExpanded>
+        <AccordionSummary
+          expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+          sx={{
+            backgroundColor: '#f5f5f5',
+            '&:hover': {
+              backgroundColor: '#eeeeee',
+            },
+          }}
         >
-          Ajouter une activité
-        </Button>
-      </Box>
-
-
-      {/* Informations Générales */}
-      <Card>
-        <CardHeader
-          title="Informations Générales"
-        />
-        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Informations Générales
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ p: 3 }}>
           <Form methods={methods} onSubmit={onSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {/* Short description */}
@@ -452,8 +452,8 @@ const LandingPage = () => {
               </Box>
             </Box>
           </Form>
-        </CardContent>
-      </Card>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Agenda */}
       <Card>

@@ -2,20 +2,22 @@
 
 'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-
-// Import des composants modulaires
-import EnqueteStatsWidgets from 'src/sections/gestionEnquete/components/EnqueteStatsWidgets';
-import EnqueteTable from 'src/sections/gestionEnquete/components/EnqueteTable';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
-
 // Import des types
 import type { Enquete } from 'src/sections/gestionEnquete/components/EnqueteTableRow';
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
+
+import EnqueteTable from 'src/sections/gestionEnquete/components/EnqueteTable';
+// Import des composants modulaires
+import EnqueteStatsWidgets from 'src/sections/gestionEnquete/components/EnqueteStatsWidgets';
+
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface MuiEnquetesDashboardProps {
   enquetes: Enquete[];

@@ -125,21 +125,38 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         {/* En-tête */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            Resultats de l'enquête <br />
             ENQUÊTE {surveyId} - ACTIVITÉ 1
           </Typography>
 
-          <Button
-            variant="contained"
-            startIcon={<ArrowBack />}
-            onClick={handleBack}
-            sx={{
-              bgcolor: '#000',
-              color: 'white',
-              '&:hover': { bgcolor: '#333' }
-            }}
-          >
-            Retour
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="contained"
+              startIcon={<FileDownload />}
+              onClick={handleExport}
+              sx={{
+                bgcolor: '#000',
+                color: 'white',
+                '&:hover': { bgcolor: '#333' }
+              }}
+            >
+              Exporter les résultats (PDF)
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<ArrowBack />}
+              onClick={handleBack}
+              sx={{
+                bgcolor: '#000',
+                color: 'white',
+                '&:hover': { bgcolor: '#333' }
+              }}
+            >
+              Retour
+            </Button>
+
+          </Box>
+          
         </Box>
 
         {/* Widgets de statistiques */}
@@ -272,19 +289,19 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         </Card>
 
         {/* Bouton d'exportation */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
-          <Button
-            variant="contained"
-            startIcon={<FileDownload />}
-            onClick={handleExport}
-            sx={{
-              bgcolor: '#000',
-              color: 'white',
-              '&:hover': { bgcolor: '#333' }
-            }}
-          >
-            Exporter les résultats (PDF)
-          </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Questions de l'enquête
+            </Typography>
+          
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Totales: {totalQuestions}
+            </Typography>
+          </Box>
+          
         </Box>
 
         {/* Questions en accordéons */}

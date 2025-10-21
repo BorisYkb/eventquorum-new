@@ -153,7 +153,7 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
         {/* En-tête avec titre et bouton retour */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            Question {questionNumber} - Détails
+            Détails de la Question {questionNumber}
           </Typography>
 
           <Button
@@ -171,7 +171,7 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
         </Box>
 
         {/* Titre de la question */}
-        <Card sx={{ p: 3, mb: 4 }}>
+        {/* <Card sx={{ p: 3, mb: 4 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
             Question
           </Typography>
@@ -187,10 +187,10 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
               {question.question}
             </Typography>
           </Paper>
-        </Card>
+        </Card> */}
 
         {/* Widgets de statistiques */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid size={4}>
             <SuperviseurWidgetSummary
               title="Total des réponses"
@@ -215,27 +215,31 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
               icon="solar:star-bold-duotone"
             />
           </Grid>
-        </Grid>
+        </Grid> */}
 
+        {/* Section 1 : Détail de la question */}
+        {data && (
+          <QuestionDetailSection question={data.question} />
+        )}
 
         {/* Section 2 : Résultats Globaux (Accordion) */}
-      {data && (
-        <QuestionResultsSection
-            question={data.question}
-            results={data.results}
-            expanded={expandedResults}
-            onToggle={() => setExpandedResults(!expandedResults)}
-        />
-      )}
+        {data && (
+          <QuestionResultsSection
+              question={data.question}
+              results={data.results}
+              expanded={expandedResults}
+              onToggle={() => setExpandedResults(!expandedResults)}
+          />
+        )}
 
-      {/* Section 3 : Résultats par participant (Accordion) */}
-      {data && (
-        <QuestionParticipantsSection
-          participants={data.participantsResults}
-          expanded={expandedParticipants}
-          onToggle={() => setExpandedParticipants(!expandedParticipants)}
-        />
-      )}
+        {/* Section 3 : Résultats par participant (Accordion) */}
+        {data && (
+          <QuestionParticipantsSection
+            participants={data.participantsResults}
+            expanded={expandedParticipants}
+            onToggle={() => setExpandedParticipants(!expandedParticipants)}
+          />
+        )}
 
         {/* Modal de détail */}
         <DetailModal

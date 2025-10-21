@@ -4,18 +4,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+
 import { Box, Button, Tooltip } from '@mui/material';
 
-// ✅ Import des 5 composants spécialisés
-import EnqueteResultsHeader from './components/EnqueteResultsHeader';
-import Question1ResultCard from './components/Question1ResultCard';
-import Question2ResultCard from './components/Question2ResultCard';
-import QuestionChartResultCard from './components/QuestionChartResultCard';
-import QuestionListResultCard from './components/QuestionListResultCard';
 import Loading from 'src/app/loading';
 
 // Import des types
 import { Question, Enquete } from '../../nouveau/types';
+import Question1ResultCard from './components/Question1ResultCard';
+import Question2ResultCard from './components/Question2ResultCard';
+// ✅ Import des 5 composants spécialisés
+import EnqueteResultsHeader from './components/EnqueteResultsHeader';
+import QuestionListResultCard from './components/QuestionListResultCard';
+import QuestionChartResultCard from './components/QuestionChartResultCard';
 
 /**
  * Interface pour les statistiques de l'enquête
@@ -261,13 +262,11 @@ const EnqueteResultsPage: React.FC = () => {
     return [];
   };
 
-  const convertToListReponses = (result: QuestionResult) => {
-    return Object.values(result.reponses).map(reponse => ({
+  const convertToListReponses = (result: QuestionResult) => Object.values(result.reponses).map(reponse => ({
       label: reponse.label,
       count: reponse.count,
       selected: reponse.count > 0
     }));
-  };
 
   /**
    * 🎯 RENDU CONDITIONNEL - Le cœur de l'assemblage

@@ -1,6 +1,7 @@
 // File: src/app/organisateur/gestionenquetes/components/EnqueteInfoCard.tsx
 
 import React from 'react';
+
 import { Box, Card, Typography, Checkbox, FormControlLabel } from '@mui/material';
 
 interface EnqueteInfoCardProps {
@@ -17,8 +18,7 @@ const EnqueteInfoCard: React.FC<EnqueteInfoCardProps> = ({
   titre,
   enqueteAnonymat,
   authentificationNumerique
-}) => {
-  return (
+}) => (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" sx={{ 
         fontWeight: 600, 
@@ -107,6 +107,5 @@ const EnqueteInfoCard: React.FC<EnqueteInfoCardProps> = ({
       </Card>
     </Box>
   );
-};
 
 export default EnqueteInfoCard;

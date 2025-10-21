@@ -187,9 +187,13 @@ export const paths = {
       edit: (id: string) => `${ROOTS.ORGANISATEUR}/gestionevent/${id}/editactivity`,
 
       // Nouvelles routes à ajouter
-      financialSituation: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation`,
+      
       financialSituationByCounter: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/guichets`,
       activityPayments: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/activite`,
+      financialSituation : {
+        root: `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation`,
+        participantTransactions: (id: number) => `${ROOTS.ORGANISATEUR}/gestionevent/eventfinancialsituation/guichets/participant-transactions/${id}`,
+      },
       
       // Si vous voulez une fonction pour générer le chemin avec l'ID de l'activité
       activityPaymentDetail: (activityId: string) => 
