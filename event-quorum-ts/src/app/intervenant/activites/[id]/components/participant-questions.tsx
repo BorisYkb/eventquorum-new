@@ -1,6 +1,4 @@
-// ============================================================================
-// FICHIER 4: superviseur/activites/[id]/components/participant-questions.tsx
-// ============================================================================
+// superviseur/activites/[id]/components/participant-questions.tsx
 
 'use client';
 
@@ -21,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -34,21 +33,71 @@ export default function ParticipantQuestions({ activityId }: ParticipantQuestion
   const [questionSearchTerm, setQuestionSearchTerm] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   // TODO: API - Récupérer les questions
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
+  const fetchQuestions = async () => {
+    try {
+      setRefreshing(true);
+      
+      // TODO: Remplacer par un vrai appel API
       // const response = await fetch(`/api/activities/${activityId}/questions`);
+      // const data = await response.json();
+      // setQuestions(data);
+      
+      // Simuler un délai de chargement
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Données de test
       const mockQuestions = [
-        { id: 1, participant: 'Chonou Oriane', question: 'Comment gérer les états ?', date: '12/05/2025', time: '10:30', answered: true, response: 'Utilisez useState...' },
-        { id: 2, participant: 'Kouamé Boris', question: 'Différence props et state ?', date: '12/05/2025', time: '11:15', answered: false, response: '' },
+        { 
+          id: 1, 
+          participant: 'Chonou Oriane', 
+          question: 'Comment gérer les états ?', 
+          date: '12/05/2025', 
+          time: '10:30', 
+          answered: true, 
+          response: 'Utilisez useState...' 
+        },
+        { 
+          id: 2, 
+          participant: 'Kouamé Boris', 
+          question: 'Différence props et state ?', 
+          date: '12/05/2025', 
+          time: '11:15', 
+          answered: false, 
+          response: '' 
+        },
+        { 
+          id: 3, 
+          participant: 'Kouakou Evariste', 
+          question: 'Comment optimiser les performances ?', 
+          date: '12/05/2025', 
+          time: '14:20', 
+          answered: true, 
+          response: 'Utilisez React.memo...' 
+        },
+        { 
+          id: 4, 
+          participant: 'Aya Koffi', 
+          question: 'Quels sont les hooks les plus utilisés ?', 
+          date: '12/05/2025', 
+          time: '15:00', 
+          answered: false, 
+          response: '' 
+        },
       ];
+      
       setQuestions(mockQuestions);
+    } catch (error) {
+      console.error('Erreur lors du chargement des questions:', error);
+    } finally {
       setLoading(false);
-    };
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
     fetchQuestions();
   }, [activityId]);
 
@@ -61,58 +110,205 @@ export default function ParticipantQuestions({ activityId }: ParticipantQuestion
     router.push(`/intervenant/activites/${activityId}/questions/${questionId}`);
   };
 
-  if (loading) return <Box sx={{ textAlign: 'center', py: 4 }}>Chargement...</Box>;
+  const handleRefresh = () => {
+    fetchQuestions();
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+      {/* Barre de recherche et statistiques */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <TextField
-          placeholder="Rechercher..."
+          placeholder="Rechercher une question..."
           value={questionSearchTerm}
           onChange={(e) => setQuestionSearchTerm(e.target.value)}
           size="small"
           sx={{ width: 300 }}
-          InputProps={{ startAdornment: <InputAdornment position="start"><Iconify icon="eva:search-fill" /></InputAdornment> }}
+          InputProps={{ 
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: '#9E9E9E' }} />
+              </InputAdornment>
+            ) 
+          }}
         />
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Label variant="soft" color="success" sx={{ py: 1.5, px: 2 }}>Répondues: {questions.filter(q => q.answered).length}</Label>
-          <Label variant="soft" color="warning" sx={{ py: 1.5, px: 2 }}>En attente: {questions.filter(q => !q.answered).length}</Label>
+
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          {/* Nombre total de questions */}
+          <Label
+            variant="soft"
+            color="info"
+            sx={{ borderRadius: 2, fontSize: '12px', py: 1.5, px: 2 }}
+          >
+            Total: {questions.length.toString().padStart(2, '0')} question{questions.length > 1 ? 's' : ''}
+          </Label>
+
+          {/* Questions répondues */}
+          <Label
+            variant="soft"
+            color="success"
+            sx={{ borderRadius: 2, fontSize: '12px', py: 1.5, px: 2 }}
+          >
+            Répondues: {questions.filter(q => q.answered).length.toString().padStart(2, '0')}
+          </Label>
+
+          {/* Questions en attente */}
+          <Label
+            variant="soft"
+            color="warning"
+            sx={{ borderRadius: 2, fontSize: '12px', py: 1.5, px: 2 }}
+          >
+            En attente: {questions.filter(q => !q.answered).length.toString().padStart(2, '0')}
+          </Label>
+
+          {/* Bouton actualiser */}
+          <Tooltip title="Actualiser les questions">
+            <IconButton
+              onClick={handleRefresh}
+              disabled={refreshing}
+              sx={{
+                bgcolor: 'primary.lighter',
+                color: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.light',
+                },
+                '&.Mui-disabled': {
+                  bgcolor: 'grey.200',
+                }
+              }}
+            >
+              {refreshing ? (
+                <CircularProgress size={20} sx={{ color: 'primary.main' }} />
+              ) : (
+                <Iconify icon="solar:refresh-bold-duotone" width={20} />
+              )}
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
 
+      {/* Tableau des questions */}
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#F8F9FA' } }}>
-              <TableCell sx={{ fontWeight: 600 }}>Participant</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Question</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Heure</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Statut</TableCell>
-              <TableCell sx={{ fontWeight: 600, textAlign: 'center' }}>Action</TableCell>
+            <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#F8F9FA', py: 2 } }}>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '15%' }}>
+                Participant
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '40%' }}>
+                Question
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '12%' }}>
+                Date
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '10%' }}>
+                Heure
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '13%' }}>
+                Statut
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px', width: '10%', textAlign: 'center' }}>
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredQuestions.map((question) => (
-              <TableRow key={question.id} hover>
-                <TableCell>{question.participant}</TableCell>
-                <TableCell>{question.question}</TableCell>
-                <TableCell>{question.date}</TableCell>
-                <TableCell>{question.time}</TableCell>
-                <TableCell><Label color={question.answered ? 'success' : 'warning'}>{question.answered ? 'Répondu' : 'En attente'}</Label></TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>
-                  {question.answered ? (
-                    <Tooltip title="Voir détails">
-                      <IconButton size="small" onClick={() => handleViewQuestion(question.id)}>
-                        <Iconify icon="solar:eye-bold" />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <Button size="small" variant="contained" onClick={() => handleViewQuestion(question.id)}>Répondre</Button>
-                  )}
+            {filteredQuestions.length > 0 ? (
+              filteredQuestions.map((question) => (
+                <TableRow key={question.id} hover sx={{ '&:hover': { bgcolor: '#F8F9FA' } }}>
+                  <TableCell sx={{ py: 2 }}>
+                    <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151', fontWeight: 500 }}>
+                      {question.participant}
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontSize: '14px',
+                        color: '#6B7280',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}
+                    >
+                      {question.question}
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
+                      {question.date}
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
+                      {question.time}
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Label
+                      variant="soft"
+                      color={question.answered ? 'success' : 'warning'}
+                      sx={{ borderRadius: 1.5 }}
+                    >
+                      {question.answered ? 'Répondu' : 'En attente'}
+                    </Label>
+                  </TableCell>
+                  <TableCell sx={{ py: 2, textAlign: 'center' }}>
+                    {question.answered ? (
+                      <Tooltip title="Voir les détails">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleViewQuestion(question.id)}
+                          sx={{
+                            color: '#374151',
+                            '&:hover': {
+                              bgcolor: 'action.hover'
+                            }
+                          }}
+                        >
+                          <Iconify icon="solar:eye-bold" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => handleViewQuestion(question.id)}
+                        sx={{
+                          textTransform: 'none',
+                          bgcolor: 'primary.main',
+                          '&:hover': { bgcolor: 'primary.dark' },
+                          borderRadius: 1.5,
+                          px: 2,
+                          py: 0.5
+                        }}
+                      >
+                        Répondre
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Aucune question trouvée
+                  </Typography>
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

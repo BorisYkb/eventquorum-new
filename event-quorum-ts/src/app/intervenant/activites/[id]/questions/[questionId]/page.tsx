@@ -57,6 +57,11 @@ export default function QuestionDetailPage() {
     time: string;
     answered: boolean;
     response: string;
+    respondedBy?: {
+      name: string;
+      email: string;
+      respondedAt?: string;
+    };
   };
 
   // Récupérer les données de la question - à remplacer par un appel API réel
@@ -75,7 +80,12 @@ export default function QuestionDetailPage() {
       date: '12/05/2025',
       time: '10:30',
       answered: true,
-      response: "Pour gérer les états dans React, vous pouvez utiliser le hook useState pour les composants fonctionnels ou this.state pour les composants de classe. Le hook useState retourne un tableau avec la valeur actuelle de l'état et une fonction pour le mettre à jour."
+      response: "Pour gérer les états dans React, vous pouvez utiliser le hook useState pour les composants fonctionnels ou this.state pour les composants de classe. Le hook useState retourne un tableau avec la valeur actuelle de l'état et une fonction pour le mettre à jour.",
+      respondedBy: {
+        name: 'Dr. Jean Kouassi',
+        email: 'jean.kouassi@email.com',
+        respondedAt: '12/05/2025 à 11:15'
+      }
     },
     2: {
       id: 2,
@@ -103,7 +113,12 @@ export default function QuestionDetailPage() {
       date: '12/05/2025',
       time: '14:20',
       answered: true,
-      response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants."
+      response: "Pour optimiser les performances dans React, vous pouvez utiliser React.memo pour mémoriser les composants, useCallback pour mémoriser les fonctions, useMemo pour mémoriser les calculs coûteux, et éviter les re-rendus inutiles en optimisant la structure de vos composants.",
+      respondedBy: {
+        name: 'Prof. Marie Aké',
+        email: 'marie.ake@email.com',
+        respondedAt: '12/05/2025 à 15:45'
+      }
     }
   };
 
@@ -289,7 +304,7 @@ export default function QuestionDetailPage() {
               <Box sx={{ bgcolor: '#F8F9FA', p: 3, borderBottom: 1, borderColor: 'divider' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Votre réponse
+                    Réponse
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Label
@@ -321,6 +336,54 @@ export default function QuestionDetailPage() {
               </Box>
 
               <Box sx={{ p: 4 }}>
+                {/* Affichage de l'auteur de la réponse si disponible */}
+                {question.answered && question.respondedBy && (
+                  <Card sx={{ 
+                    p: 2.5, 
+                    mb: 3, 
+                    bgcolor: '#F0F9FF', 
+                    border: '1px solid #BAE6FD',
+                    borderRadius: 2 
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Avatar
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          bgcolor: 'info.main',
+                          fontSize: '0.875rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        {getInitials(question.respondedBy.name)}
+                      </Avatar>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#0369A1', mb: 0.5 }}>
+                          Répondu par {question.respondedBy.name}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {question.respondedBy.email}
+                          </Typography>
+                          {question.respondedBy.respondedAt && (
+                            <>
+                              <Box sx={{ 
+                                width: 4, 
+                                height: 4, 
+                                borderRadius: '50%', 
+                                bgcolor: 'text.secondary' 
+                              }} />
+                              <Typography variant="caption" color="text.secondary">
+                                Le {question.respondedBy.respondedAt}
+                              </Typography>
+                            </>
+                          )}
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Card>
+                )}
+
                 <TextField
                   multiline
                   rows={10}
