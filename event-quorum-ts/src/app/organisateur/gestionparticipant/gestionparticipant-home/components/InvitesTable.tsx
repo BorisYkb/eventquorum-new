@@ -54,6 +54,7 @@ interface InvitesTableProps {
         firstConnectionFilter: string;
         connectionTypeFilter: string;
         emargementFilter: string;
+        checkingFilter: string;
     }) => void;
 }
 
@@ -79,14 +80,11 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
     const [firstConnectionFilter, setFirstConnectionFilter] = useState('');
     const [connectionTypeFilter, setConnectionTypeFilter] = useState('');
     const [emargementFilter, setEmargementFilter] = useState('');
-    const [signatureEnabled, setSignatureEnabled] = useState(true);
+    const [checkingFilter, setCheckingFilter] = useState('');
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    /**
-     * Détermine si la colonne Checking doit être affichée
-     * La colonne est affichée uniquement quand une activité spécifique est sélectionnée
-     */
+    // Détermine si la colonne checking doit être affichée
     const showCheckingColumn = activityFilter !== '';
 
     /**
@@ -97,6 +95,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
         firstConnectionFilter: string;
         connectionTypeFilter: string;
         emargementFilter: string;
+        checkingFilter: string;
     }) => {
         if (onFiltersChange) {
             onFiltersChange(filters);
@@ -108,11 +107,16 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      */
     const handleActivityFilterChange = (value: string) => {
         setActivityFilter(value);
+        // Réinitialiser le filtre checking si on revient à "toutes les activités"
+        if (value === '') {
+            setCheckingFilter('');
+        }
         notifyFiltersChange({
             activityFilter: value,
             firstConnectionFilter,
             connectionTypeFilter,
             emargementFilter,
+            checkingFilter: value === '' ? '' : checkingFilter,
         });
     };
 
@@ -126,6 +130,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             firstConnectionFilter: value,
             connectionTypeFilter,
             emargementFilter,
+            checkingFilter,
         });
     };
 
@@ -139,6 +144,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             firstConnectionFilter,
             connectionTypeFilter: value,
             emargementFilter,
+            checkingFilter,
         });
     };
 
@@ -152,6 +158,21 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             firstConnectionFilter,
             connectionTypeFilter,
             emargementFilter: value,
+            checkingFilter,
+        });
+    };
+
+    /**
+     * Gestion du changement de filtre de checking
+     */
+    const handleCheckingFilterChange = (value: string) => {
+        setCheckingFilter(value);
+        notifyFiltersChange({
+            activityFilter,
+            firstConnectionFilter,
+            connectionTypeFilter,
+            emargementFilter,
+            checkingFilter: value,
         });
     };
 
@@ -162,6 +183,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
      * - Filtre par première connexion
      * - Filtre par type de connexion
      * - Filtre par émargement
+     * - Filtre par checking
      */
     const filteredParticipants = participants.filter((participant) => {
         // Filtre de recherche (nom, prénom, email)
@@ -174,26 +196,40 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
         const matchesActivity = !activityFilter || participant.activite === activityFilter;
 
         // Filtre par première connexion
-        // 'effectuee' = connecte === true
-        // 'non_effectuee' = connecte === false
-        // '' = tous
         const matchesFirstConnection =
             !firstConnectionFilter ||
             (firstConnectionFilter === 'effectuee' && participant.connecte) ||
             (firstConnectionFilter === 'non_effectuee' && !participant.connecte);
 
-        // Filtre par type de connexion (en ligne, en présentiel)
+        // Filtre par type de connexion
         const matchesConnectionType =
             !connectionTypeFilter || participant.typeConnexion === connectionTypeFilter;
 
         // Filtre par émargement
-        // 'signe' = emargement !== null
-        // 'non_signe' = emargement === null
-        // '' = tous
         const matchesEmargement =
             !emargementFilter ||
-            (emargementFilter === 'signe' && participant.emargement !== null) ||
-            (emargementFilter === 'non_signe' && participant.emargement === null);
+            (emargementFilter === 'signed' && participant.emargement !== null) ||
+            (emargementFilter === 'not_signed' && participant.emargement === null);
+
+        // Filtre par checking (uniquement si une activité est sélectionnée)
+        let matchesChecking = true;
+        if (checkingFilter && activityFilter) {
+            if (checkingFilter === 'checked') {
+                // Dans la salle : présentiel + émargé + checking = true
+                matchesChecking =
+                    participant.typeConnexion === 'en présentiel' &&
+                    participant.emargement !== null &&
+                    participant.checking === true;
+            } else if (checkingFilter === 'not_checked') {
+                // Pas dans la salle : présentiel + (pas émargé OU pas checking)
+                matchesChecking =
+                    participant.typeConnexion === 'en présentiel' &&
+                    (participant.emargement === null || participant.checking !== true);
+            } else if (checkingFilter === 'not_applicable') {
+                // Non applicable : en ligne
+                matchesChecking = participant.typeConnexion === 'en ligne';
+            }
+        }
 
         // Retourne true si tous les filtres sont satisfaits
         return (
@@ -201,7 +237,8 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
             matchesActivity &&
             matchesFirstConnection &&
             matchesConnectionType &&
-            matchesEmargement
+            matchesEmargement &&
+            matchesChecking
         );
     });
 
@@ -303,32 +340,26 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                 <TableToolbar
                     selectedCount={selectedParticipants.length}
                     onSelectAll={handleSelectAll}
-                    isAllSelected={
-                        selectedParticipants.length === paginatedParticipants.length &&
-                        paginatedParticipants.length > 0
-                    }
+                    isAllSelected={selectedParticipants.length === paginatedParticipants.length &&
+                        paginatedParticipants.length > 0}
                     onDelete={handleDelete}
-                    onAdd={onAdd}
                     searchTerm={searchTerm}
                     onSearchChange={(e) => setSearchTerm(e.target.value)}
                     activityFilter={activityFilter}
                     onActivityFilterChange={(e) => handleActivityFilterChange(e.target.value)}
                     firstConnectionFilter={firstConnectionFilter}
-                    onFirstConnectionFilterChange={(e) =>
-                        handleFirstConnectionFilterChange(e.target.value)
-                    }
+                    onFirstConnectionFilterChange={(e) => handleFirstConnectionFilterChange(e.target.value)}
                     connectionTypeFilter={connectionTypeFilter}
-                    onConnectionTypeFilterChange={(e) =>
-                        handleConnectionTypeFilterChange(e.target.value)
-                    }
+                    onConnectionTypeFilterChange={(e) => handleConnectionTypeFilterChange(e.target.value)}
                     emargementFilter={emargementFilter}
-                    onEmargementFilterChange={(e) =>
-                        handleEmargementFilterChange(e.target.value)
-                    }
-                    signatureEnabled={signatureEnabled}
-                    onSignatureToggle={setSignatureEnabled}
-                    isDeleting={isDeleting}
-                />
+                    onEmargementFilterChange={(e) => handleEmargementFilterChange(e.target.value)}
+                    checkingFilter={checkingFilter}
+                    onCheckingFilterChange={(e) => handleCheckingFilterChange(e.target.value)}
+                    isDeleting={isDeleting} onAdd={function (): void {
+                        throw new Error('Function not implemented.');
+                    } } signatureEnabled={false} onSignatureToggle={function (checked: boolean): void {
+                        throw new Error('Function not implemented.');
+                    } }                />
 
                 {/* Tableau des invités */}
                 <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2 }}>
@@ -351,9 +382,10 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                                 <TableCell sx={{ fontWeight: 600 }}>Nom & Prénoms</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Téléphone</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
+                                <TableCell sx={{ fontWeight: 600 }}>Participation</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>1ère Connexion</TableCell>
                                 <TableCell sx={{ fontWeight: 600 }}>Émargement</TableCell>
-                                {/* Colonne Checking - Affichage conditionnel */}
+                                {/* Colonne Checking visible uniquement si une activité est sélectionnée */}
                                 {showCheckingColumn && (
                                     <TableCell sx={{ fontWeight: 600 }} align="center">
                                         Checking
@@ -372,7 +404,7 @@ const InvitesTable: React.FC<InvitesTableProps> = ({
                                     onEdit={onEdit}
                                     onView={onView}
                                     onDelete={onDelete}
-                                    showChecking={showCheckingColumn}
+                                    showCheckingColumn={showCheckingColumn}
                                 />
                             ))}
                         </TableBody>

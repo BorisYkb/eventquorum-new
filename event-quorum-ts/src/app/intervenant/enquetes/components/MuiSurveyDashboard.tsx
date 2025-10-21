@@ -224,7 +224,7 @@ const MuiSurveyDashboard: React.FC<MuiSurveyDashboardProps> = ({ surveys }) => {
                     Code
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                    Participants
+                    Invités
                   </TableCell>
                   <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
                     Statut

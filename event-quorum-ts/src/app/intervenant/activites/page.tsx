@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,6 +24,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
 
 import { DashboardContent } from 'src/layouts/intervenant';
 
@@ -49,6 +49,8 @@ export default function ActivitiesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedType, setSelectedType] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const activities: Activity[] = [
     {
@@ -85,8 +87,20 @@ export default function ActivitiesPage() {
     },
   ];
 
+  // Récupération des types uniques pour le filtre
+  const uniqueTypes = Array.from(new Set(activities.map(activity => activity.type)));
+
   const handleViewActivity = (activityId: number) => {
     router.push(`/intervenant/activites/${activityId}`);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
@@ -111,11 +125,16 @@ export default function ActivitiesPage() {
     return matchesSearch && matchesStatus && matchesType;
   });
 
+  // Pagination des résultats filtrés
+  const paginatedActivities = filteredActivities.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
         heading="Liste des activités"
-        
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
@@ -125,7 +144,6 @@ export default function ActivitiesPage() {
         <Box sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              
               <span style={{ paddingLeft: 8, fontWeight: 'normal', color: theme.palette.text.secondary }}>
                 {filteredActivities.length} Activité(s)
               </span>
@@ -134,13 +152,16 @@ export default function ActivitiesPage() {
 
           {/* Ligne des filtres et recherche */}
           <Grid container spacing={2} alignItems="center">
-            {/* Filtres à gauche */}
+            {/* Filtre par statut */}
             <Grid size={{ xs: 12, md: 3 }}>
               <FormControl fullWidth size="small">
                 <InputLabel sx={{ fontSize: '0.875rem' }}>Statut</InputLabel>
                 <Select
                   value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedStatus(e.target.value);
+                    setPage(0);
+                  }}
                   label="Statut"
                   sx={{ fontSize: '0.875rem' }}
                 >
@@ -152,14 +173,40 @@ export default function ActivitiesPage() {
               </FormControl>
             </Grid>
 
+            {/* Filtre par type */}
+            <Grid size={{ xs: 12, md: 3 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Type</InputLabel>
+                <Select
+                  value={selectedType}
+                  onChange={(e) => {
+                    setSelectedType(e.target.value);
+                    setPage(0);
+                  }}
+                  label="Type"
+                  sx={{ fontSize: '0.875rem' }}
+                >
+                  <MenuItem value="" sx={{ fontSize: '0.875rem' }}>Tous les types</MenuItem>
+                  {uniqueTypes.map((type) => (
+                    <MenuItem key={type} value={type} sx={{ fontSize: '0.875rem' }}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-            <Grid size={{ xs: 12, md: 4 }}>
+            {/* Barre de recherche */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 size="small"
                 placeholder="Rechercher par nom, type ou titre..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(0);
+                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -174,8 +221,6 @@ export default function ActivitiesPage() {
                 }}
               />
             </Grid>
-
-
           </Grid>
         </Box>
 
@@ -206,7 +251,7 @@ export default function ActivitiesPage() {
               </TableHead>
 
               <TableBody>
-                {filteredActivities.map((activity) => (
+                {paginatedActivities.map((activity) => (
                   <TableRow
                     key={activity.id}
                     hover
@@ -291,6 +336,27 @@ export default function ActivitiesPage() {
               Aucune activité trouvée pour "{searchTerm}"
             </Typography>
           </Box>
+        )}
+
+        {/* Pagination */}
+        {filteredActivities.length > 0 && (
+          <TablePagination
+            component="div"
+            count={filteredActivities.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            labelRowsPerPage="Lignes par page:"
+            labelDisplayedRows={({ from, to, count }) => 
+              `${from}-${to} sur ${count !== -1 ? count : `plus de ${to}`}`
+            }
+            sx={{
+              borderTop: 1,
+              borderColor: 'divider',
+            }}
+          />
         )}
       </Card>
     </DashboardContent>

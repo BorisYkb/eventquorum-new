@@ -37,7 +37,7 @@ type Participant = {
   emargement: string | null; // URL de la signature ou null
   activite: string;
   typeConnexion: 'en ligne' | 'en présentiel';
-  presentDansLaSalle?: boolean; // true si le participant a confirmé sa présence dans la salle
+  checking?: boolean; // Confirme sa présence dans la salle (uniquement pour présentiel)
 };
 
 /**
@@ -56,8 +56,8 @@ type ParticipantRowProps = {
   onView: (id: number) => void;
   /** Callback pour supprimer le participant */
   onDelete: (id: number) => void;
-  /** Indique si la colonne Checking doit être affichée */
-  showChecking: boolean;
+  /** Indique si la colonne checking doit être affichée */
+  showCheckingColumn?: boolean;
 };
 
 /**
@@ -71,7 +71,7 @@ const ParticipantRow = ({
   onEdit,
   onView,
   onDelete,
-  showChecking,
+  showCheckingColumn = false,
 }: ParticipantRowProps) => {
   /**
    * Gère la redirection vers la page d'édition
@@ -88,22 +88,13 @@ const ParticipantRow = ({
   };
 
   /**
-   * Rendu de la cellule Checking
+   * Détermine l'icône de checking à afficher
    */
-  const renderCheckingCell = () => {
-    // Si le participant est en ligne
+  const renderCheckingIcon = () => {
+    // Si participant en ligne : icône "non applicable" (rond avec barre)
     if (participant.typeConnexion === 'en ligne') {
       return (
-        <Typography variant="body2" color="text.secondary" fontStyle="italic">
-          En ligne
-        </Typography>
-      );
-    }
-
-    // Si le participant est en présentiel mais n'a pas émargé
-    if (!participant.emargement) {
-      return (
-        <Tooltip title="Aucun émargement" arrow>
+        <Tooltip title="Non applicable (participant en ligne)" arrow>
           <BlockIcon
             sx={{
               fontSize: 24,
@@ -114,11 +105,24 @@ const ParticipantRow = ({
       );
     }
 
-    // Si le participant est en présentiel et a émargé
-    if (participant.presentDansLaSalle) {
-      // Présent dans la salle (validé)
+    // Si participant en présentiel mais n'a pas émargé : carré vide gris
+    if (!participant.emargement) {
       return (
-        <Tooltip title="Présent dans la salle" arrow>
+        <Tooltip title="Non émargé - Pas encore dans la salle" arrow>
+          <CheckBoxOutlineBlankIcon
+            sx={{
+              fontSize: 24,
+              color: 'grey.400',
+            }}
+          />
+        </Tooltip>
+      );
+    }
+
+    // Si participant en présentiel, a émargé et a fait le checking
+    if (participant.checking) {
+      return (
+        <Tooltip title="Présent dans la salle (confirmé)" arrow>
           <CheckBoxIcon
             sx={{
               fontSize: 24,
@@ -129,13 +133,13 @@ const ParticipantRow = ({
       );
     }
 
-    // Non présent dans la salle (carré vide)
+    // Si participant en présentiel, a émargé mais n'a pas fait le checking
     return (
-      <Tooltip title="Non présent dans la salle" arrow>
+      <Tooltip title="Émargé mais pas encore dans la salle" arrow>
         <CheckBoxOutlineBlankIcon
           sx={{
             fontSize: 24,
-            color: 'warning.main',
+            color: 'grey.400',
           }}
         />
       </Tooltip>
@@ -166,6 +170,26 @@ const ParticipantRow = ({
 
       {/* Email */}
       <TableCell>{participant.email}</TableCell>
+
+      {/* Participation (Type de connexion) */}
+      <TableCell>
+        <Chip
+          label={participant.typeConnexion}
+          size="small"
+          sx={{
+            backgroundColor:
+              participant.typeConnexion === 'en ligne'
+                ? 'rgba(0, 184, 217, 0.1)'
+                : 'rgba(255, 171, 0, 0.1)',
+            color:
+              participant.typeConnexion === 'en ligne'
+                ? '#00B8D9'
+                : '#FFAB00',
+            fontWeight: 600,
+            textTransform: 'capitalize',
+          }}
+        />
+      </TableCell>
 
       {/* 1ère Connexion (indicateur visuel) */}
       <TableCell>
@@ -219,10 +243,10 @@ const ParticipantRow = ({
         )}
       </TableCell>
 
-      {/* Checking - Affichage conditionnel */}
-      {showChecking && (
+      {/* Checking (visible uniquement si showCheckingColumn est true) */}
+      {showCheckingColumn && (
         <TableCell align="center">
-          {renderCheckingCell()}
+          {renderCheckingIcon()}
         </TableCell>
       )}
 

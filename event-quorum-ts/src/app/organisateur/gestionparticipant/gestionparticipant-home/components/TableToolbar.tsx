@@ -59,6 +59,10 @@ type TableToolbarProps = {
   emargementFilter: string;
   /** Callback pour le changement du filtre d'émargement */
   onEmargementFilterChange: (e: any) => void;
+  /** Filtre de checking actuel */
+  checkingFilter: string;
+  /** Callback pour le changement du filtre de checking */
+  onCheckingFilterChange: (e: any) => void;
   /** Indique si la signature électronique est activée */
   signatureEnabled: boolean;
   /** Callback pour activer/désactiver la signature */
@@ -101,8 +105,18 @@ const CONNECTION_TYPE_OPTIONS = [
  */
 const EMARGEMENT_OPTIONS = [
   { value: '', label: 'Tous' },
-  { value: 'signe', label: 'Signé' },
-  { value: 'non_signe', label: 'Non signé' },
+  { value: 'signed', label: 'Émargé' },
+  { value: 'not_signed', label: 'Non émargé' },
+];
+
+/**
+ * Options de filtre pour le checking
+ */
+const CHECKING_OPTIONS = [
+  { value: '', label: 'Tous' },
+  { value: 'checked', label: 'Dans la salle' },
+  { value: 'not_checked', label: 'Pas dans la salle' },
+  { value: 'not_applicable', label: 'Non applicable' },
 ];
 
 /**
@@ -125,6 +139,8 @@ const TableToolbar = ({
   onConnectionTypeFilterChange,
   emargementFilter,
   onEmargementFilterChange,
+  checkingFilter,
+  onCheckingFilterChange,
   signatureEnabled,
   onSignatureToggle,
   isDeleting = false,
@@ -138,6 +154,9 @@ const TableToolbar = ({
   const handleAddClick = () => {
     router.push(paths.organisateur.gestionparticipant.add);
   };
+
+  // Détermine si le filtre checking doit être affiché
+  const showCheckingFilter = activityFilter !== '';
 
   return (
     <Stack spacing={2} sx={{ mb: 2 }}>
@@ -220,7 +239,7 @@ const TableToolbar = ({
 
           {/* Filtre par type de connexion */}
           <FormControl size="small" sx={{ minWidth: 180 }}>
-            <InputLabel>Type de connexion</InputLabel>
+            <InputLabel>Type de participation</InputLabel>
             <Select
               value={connectionTypeFilter}
               onChange={onConnectionTypeFilterChange}
@@ -236,7 +255,7 @@ const TableToolbar = ({
           </FormControl>
 
           {/* Filtre par émargement */}
-          <FormControl size="small" sx={{ minWidth: 150 }}>
+          <FormControl size="small" sx={{ minWidth: 180 }}>
             <InputLabel>Émargement</InputLabel>
             <Select
               value={emargementFilter}
@@ -251,44 +270,28 @@ const TableToolbar = ({
               ))}
             </Select>
           </FormControl>
-        </Stack>
 
-        {/* Actions à droite : Switch e-signature et bouton Ajouter */}
-        <Stack direction="row" spacing={2} alignItems="center">
-          {/* Switch pour activer/désactiver la signature électronique */}
-          <FormControlLabel
-            control={
-              <Switch
-                checked={signatureEnabled}
-                onChange={(e) => onSignatureToggle(e.target.checked)}
-                color="primary"
+          {/* Filtre par checking - visible uniquement si une activité est sélectionnée */}
+          {showCheckingFilter && (
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel>Checking</InputLabel>
+              <Select
+                value={checkingFilter}
+                onChange={onCheckingFilterChange}
+                label="Checking"
                 disabled={isDeleting}
-              />
-            }
-            label="E-signature pour les participants en ligne"
-            labelPlacement="start"
-            sx={{ mr: 2 }}
-          />
-
-          {/* Bouton d'ajout */}
-          <Tooltip title="Ajouter un invité" arrow>
-            <span>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddClick}
-                disabled={isDeleting}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  fontWeight: 600,
-                }}
               >
-                Ajouter
-              </Button>
-            </span>
-          </Tooltip>
+                {CHECKING_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
         </Stack>
+
+        
       </Stack>
     </Stack>
   );

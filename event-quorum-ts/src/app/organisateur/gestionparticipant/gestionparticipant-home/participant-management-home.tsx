@@ -1,11 +1,20 @@
-//src/app/organisateur/gestionparticipant/gestionparticipant-home/page.tsx
-
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 
-import { Box, Container, Stack, Typography, Snackbar, Alert } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  Snackbar,
+  Alert,
+  Button,
+  Switch,
+  FormControlLabel,
+} from '@mui/material';
 
 // Import des types
 import { Participant } from './components/types';
@@ -39,23 +48,21 @@ const ParticipantManagementPage = () => {
     severity: 'success',
   });
 
+  // État pour la signature électronique
+  const [signatureEnabled, setSignatureEnabled] = useState(true);
+
   // État pour stocker les filtres actifs (pour l'export)
   const [activeFilters, setActiveFilters] = useState({
     activityFilter: '',
     firstConnectionFilter: '',
     connectionTypeFilter: '',
+    emargementFilter: '',
+    checkingFilter: '',
   });
 
   /**
    * Données d'exemple des participants
    * Dans un vrai projet, ces données viendraient d'une API
-   * 
-   * Note importante :
-   * - connecte: true = 1ère connexion effectuée
-   * - connecte: false = 1ère connexion non effectuée
-   * - emargement: null = pas encore signé
-   * - emargement: string = URL de la signature (présent dans la liste de présence)
-   * - typeConnexion: 'en ligne' | 'en présentiel' = type de participation
    */
   const [participants, setParticipants] = useState<Participant[]>([
     {
@@ -64,7 +71,7 @@ const ParticipantManagementPage = () => {
       prenom: 'Emmanuel',
       telephone: '0101010101',
       email: 'koffi@gmail.com',
-      connecte: true, // 1ère connexion effectuée
+      connecte: true,
       emargement:
         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
       activite: 'conference',
@@ -76,8 +83,8 @@ const ParticipantManagementPage = () => {
       prenom: 'Marie',
       telephone: '0202020202',
       email: 'marie@gmail.com',
-      connecte: false, // 1ère connexion non effectuée
-      emargement: null, // Pas encore signé
+      connecte: false,
+      emargement: null,
       activite: 'workshop',
       typeConnexion: 'en présentiel',
     },
@@ -146,7 +153,7 @@ const ParticipantManagementPage = () => {
       telephone: '0808080808',
       email: 'adjoua@gmail.com',
       connecte: true,
-      emargement: null, // Connecté mais pas encore signé
+      emargement: null,
       activite: 'conference',
       typeConnexion: 'en présentiel',
     },
@@ -172,35 +179,35 @@ const ParticipantManagementPage = () => {
         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
       activite: 'workshop',
       typeConnexion: 'en présentiel',
-      
     },
     {
-      id: 10,
+      id: 11,
       nom: 'Chonou',
       prenom: 'Oriane',
       telephone: '0701010101',
-      email: 'mariam@gmail.com',
+      email: 'oriane@gmail.com',
       connecte: true,
       emargement:
         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
       activite: 'cocktail',
       typeConnexion: 'en présentiel',
-      presentDansLaSalle: true,
+      checking: true,
     },
   ]);
 
   /**
    * Callback pour récupérer les filtres actifs du tableau
    * Ces filtres seront utilisés lors de l'export
-   * Mémorisé avec useCallback pour éviter les re-renders infinis
    */
   const handleFiltersChange = useCallback((filters: {
     activityFilter: string;
     firstConnectionFilter: string;
     connectionTypeFilter: string;
+    emargementFilter: string;
+    checkingFilter: string;
   }) => {
     setActiveFilters(filters);
-  }, []); // Pas de dépendances car setActiveFilters est stable
+  }, []);
 
   /**
    * Gère l'ouverture du modal de suppression pour un participant
@@ -249,19 +256,14 @@ const ParticipantManagementPage = () => {
 
   /**
    * Gère l'ajout d'un nouveau participant
-   * TODO: Implémenter la logique d'ajout
+   * Redirige vers la page d'ajout
    */
   const handleAdd = () => {
-    setSnackbar({
-      open: true,
-      message: "Fonctionnalité d'ajout à implémenter",
-      severity: 'info',
-    });
+    router.push('/organisateur/gestionparticipant/add');
   };
 
   /**
    * Gère la visualisation des détails d'un participant
-   * Redirige vers la page de détail
    */
   const handleView = (id: number) => {
     router.push(
@@ -271,7 +273,6 @@ const ParticipantManagementPage = () => {
 
   /**
    * Gère la modification d'un participant
-   * Redirige vers la page d'édition
    */
   const handleEdit = (id: number) => {
     router.push(`/organisateur/gestionparticipant/edit/${id}`);
@@ -294,18 +295,43 @@ const ParticipantManagementPage = () => {
           </Typography>
         </Box>
 
-        {/* 
-          Boutons d'exportation et consultation 
-          Les filtres actifs sont passés pour que l'export 
-          ne concerne que les données filtrées
-        */}
-        <ExportButtons currentTab="invites" activeFilters={activeFilters} />
+        {/* Section : Boutons d'export et actions */}
+        <Stack direction="column" justifyContent="end" alignItems="end">
+          {/* Gauche : Boutons d'exportation et de consultation */}
+          <ExportButtons activeFilters={activeFilters} />
 
-        {/* 
-          Tableau des invités avec tous les filtres
-          Le callback onFiltersChange permet de remonter les filtres actifs
-          au composant parent pour les passer à ExportButtons
-        */}
+          {/* Droite : Switch e-signature et bouton Ajouter */}
+          <Stack direction="row" spacing={2} alignItems="center">
+            {/* Switch pour activer/désactiver la signature électronique */}
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={signatureEnabled}
+                  onChange={(e) => setSignatureEnabled(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="E-signature pour les participants en ligne"
+              labelPlacement="start"
+            />
+
+            {/* Bouton d'ajout */}
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleAdd}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 600,
+              }}
+            >
+              Ajouter
+            </Button>
+          </Stack>
+        </Stack>
+
+        {/* Tableau des invités */}
         <InvitesTable
           participants={participants}
           onAdd={handleAdd}
