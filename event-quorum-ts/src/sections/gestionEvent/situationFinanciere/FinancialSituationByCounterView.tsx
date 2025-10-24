@@ -121,7 +121,7 @@ export function FinancialSituationByCounterView() {
                 action={
                     <Button
                         component={RouterLink}
-                        href={paths.organisateur.gestionevent.financialSituation}
+                        href={paths.organisateur.gestionevent.financialSituation.root}
                         variant="contained"
                         startIcon={<Iconify icon="mingcute:left-fill" />}
                     >

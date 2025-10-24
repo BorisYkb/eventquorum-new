@@ -30,6 +30,6 @@
     /* Plugins */
     "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/sections/gestionEvent/eventpasse","src/app/landing-page/ActiviteDetail"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/sections/gestionEvent/eventpasse","src/app/landingpage/ActiviteDetail"],
   "exclude": ["node_modules"]
 }
