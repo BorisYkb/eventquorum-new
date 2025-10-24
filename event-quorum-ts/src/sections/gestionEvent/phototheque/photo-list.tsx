@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+
+import Grid from '@mui/material/Grid2';
 import {
     Box,
     Typography,
@@ -12,8 +14,9 @@ import {
     Pagination,
     InputAdornment,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+
 import { Iconify } from 'src/components/iconify';
+
 import { PhotoItem } from './photo-item';
 
 /**
@@ -34,6 +37,7 @@ type PhotoWithMetadata = {
 type Props = {
     photos: PhotoWithMetadata[];
     onDeletePhotos: (photoIds: string[]) => void;
+    onPublishPhotos: (photoIds: string[]) => void;
 };
 
 // Nombre de photos par page
@@ -43,7 +47,7 @@ const PHOTOS_PER_PAGE = 12;
  * Composant pour afficher la liste des photos avec filtres et pagination
  * Toutes les données sont gérées en frontend (pas d'appels API)
  */
-export function PhotoList({ photos, onDeletePhotos }: Props) {
+export function PhotoList({ photos, onDeletePhotos, onPublishPhotos }: Props) {
     // État pour le filtre par activité
     const [activityFilter, setActivityFilter] = useState<string>('all');
 
@@ -110,6 +114,16 @@ export function PhotoList({ photos, onDeletePhotos }: Props) {
             onDeletePhotos(selectedPhotos);
             setSelectedPhotos([]);
         }
+    };
+
+    /**
+     * Publie les photos sélectionnées
+     */
+    const handlePublishSelected = () => {
+        if (selectedPhotos.length === 0) return;
+
+        onPublishPhotos(selectedPhotos);
+        setSelectedPhotos([]);
     };
 
     /**
@@ -276,21 +290,36 @@ export function PhotoList({ photos, onDeletePhotos }: Props) {
                     }}
                 />
 
-                {/* Bouton de suppression (visible uniquement si des photos sont sélectionnées) */}
+                {/* Boutons d'action (visibles uniquement si des photos sont sélectionnées) */}
                 {selectedPhotos.length > 0 && (
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={handleDeleteSelected}
-                        startIcon={<Iconify icon="eva:trash-2-fill" />}
-                        sx={{
-                            minWidth: { xs: '100%', sm: 'auto' },
-                            whiteSpace: 'nowrap',
-                            fontSize: { xs: '0.875rem', sm: '0.9375rem' },
-                        }}
-                    >
-                        Supprimer ({selectedPhotos.length})
-                    </Button>
+                    <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handlePublishSelected}
+                            startIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}
+                            sx={{
+                                minWidth: { xs: '100%', sm: 'auto' },
+                                whiteSpace: 'nowrap',
+                                fontSize: { xs: '0.875rem', sm: '0.9375rem' },
+                            }}
+                        >
+                            Publier ({selectedPhotos.length})
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={handleDeleteSelected}
+                            startIcon={<Iconify icon="eva:trash-2-fill" />}
+                            sx={{
+                                minWidth: { xs: '100%', sm: 'auto' },
+                                whiteSpace: 'nowrap',
+                                fontSize: { xs: '0.875rem', sm: '0.9375rem' },
+                            }}
+                        >
+                            Supprimer ({selectedPhotos.length})
+                        </Button>
+                    </>
                 )}
             </Box>
 

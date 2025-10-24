@@ -90,13 +90,13 @@ export default function Fonctionnalite() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* En-tête */}
         <div className="text-center mb-16">
           <h1 
             ref={headingRef} 
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
           >
             Les fonctionnalités personnalisables{' '}
             <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-teal-400 bg-clip-text text-transparent">
@@ -107,7 +107,7 @@ export default function Fonctionnalite() {
 
           <p 
             ref={heading2Ref} 
-            className="text-gray-300 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed"
+            className="text-gray-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed"
           >
             Découvrez nos modules les plus populaires, pensés pour offrir une expérience 
             fluide et complète lors de vos événements.
@@ -136,16 +136,16 @@ export default function Fonctionnalite() {
               </div>
 
               {/* Titre */}
-              <h3 className="font-bold text-xl text-white mb-4 group-hover:text-pink-300 transition-colors duration-300">
+              <h3 className="font-bold text-xl text-gray-900 mb-4 group-hover:text-pink-300 transition-colors duration-300">
                 {feature.title}
               </h3>
 
               {/* Liste des fonctionnalités */}
               <ul className="space-y-3">
                 {feature.items.map((item, i) => (
-                  <li key={i} className="flex items-start text-gray-300 text-sm leading-relaxed">
+                  <li key={i} className="flex items-start text-gray-600 text-sm leading-relaxed">
                     <div className="w-2 h-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 mt-2 mr-3 flex-shrink-0" />
-                    <span className={i === 0 ? 'font-semibold text-white' : ''}>
+                    <span className={i === 0 ? 'font-semibold text-gray-900' : ''}>
                       {item}
                     </span>
                   </li>

@@ -1,15 +1,17 @@
 import type { CardProps } from '@mui/material/Card';
+
 import { varAlpha } from 'minimal-shared/utils';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
 
 import { fDate } from 'src/utils/format-time';
+
 import { Image } from 'src/components/image';
 
 /**

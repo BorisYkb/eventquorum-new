@@ -221,6 +221,22 @@ export default function Phototheque() {
     setSavedPhotos(savedPhotos.filter((photo) => !photoIds.includes(photo.id)));
   };
 
+  /**
+   * Publie les photos sélectionnées
+   */
+  const handlePublishPhotos = (photoIds: string[]) => {
+    // Message de confirmation
+    const confirmMessage =
+      photoIds.length === 1
+        ? 'Êtes-vous sûr de vouloir publier cette photo ?'
+        : `Êtes-vous sûr de vouloir publier ces ${photoIds.length} photos ?`;
+
+    if (window.confirm(confirmMessage)) {
+      // TODO: Implémenter la logique de publication (appel API, etc.)
+      alert(`${photoIds.length} photo(s) publiée(s) avec succès !`);
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {/* ============ TITRE PRINCIPAL ============ */}
@@ -392,7 +408,7 @@ export default function Phototheque() {
 
       {/* ============ SECTION 3 : LISTE DES PHOTOS ENREGISTRÉES ============ */}
       {savedPhotos.length > 0 && (
-        <PhotoList photos={savedPhotos} onDeletePhotos={handleDeletePhotos} />
+        <PhotoList photos={savedPhotos} onDeletePhotos={handleDeletePhotos} onPublishPhotos={handlePublishPhotos} />
       )}
     </Box>
   );
