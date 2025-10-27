@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 
-import { 
-    Box, 
-    Button, 
-    Card, 
-    CardHeader, 
-    Divider, 
+import {
+    Box,
+    Button,
+    Card,
+    CardHeader,
+    Divider,
     Table,
     TableBody,
     TableCell,
@@ -131,8 +131,8 @@ export function ActivityPaymentsDetailView({ activityId }: ActivityPaymentsDetai
     };
 
     // Get activity name (in real app, fetch from API using activityId)
-    const activityName = activityId === '1' ? 'Workshop cyber' : 
-                        activityId === '2' ? 'Workshop Dev' : 'Workshop';
+    const activityName = activityId === '1' ? 'Workshop cyber' :
+        activityId === '2' ? 'Workshop Dev' : 'Workshop';
 
     // Calculate pagination
     const paginatedPayments = paymentsData.slice(
@@ -143,13 +143,17 @@ export function ActivityPaymentsDetailView({ activityId }: ActivityPaymentsDetai
     return (
         <DashboardContent>
             <CustomBreadcrumbs
-                heading={`Détails des versements - ${activityName}`}
-                subtitle= {`${activityName}`}
-                
+                heading={
+                    <span>
+                        Détails des versements <br />
+                        <Typography variant="body2" color="text.secondary">Activité : {activityName}</Typography>
+                    </span>
+                }
+
                 action={
                     <Button
                         component={RouterLink}
-                        href={paths.organisateur.gestionevent.financialSituation}
+                        href={paths.organisateur.gestionevent.financialSituation.root}
                         variant="contained"
                         startIcon={<Iconify icon="mingcute:left-fill" />}
                     >
@@ -192,12 +196,12 @@ export function ActivityPaymentsDetailView({ activityId }: ActivityPaymentsDetai
 
             {/* Payments Table */}
             <Card>
-                <CardHeader 
+                <CardHeader
                     title="Liste des versements effectués"
                     sx={{ pb: 2 }}
                 />
                 <Divider />
-                
+
                 <TableContainer component={Paper} elevation={0}>
                     <Table>
                         <TableHead>
@@ -236,7 +240,7 @@ export function ActivityPaymentsDetailView({ activityId }: ActivityPaymentsDetai
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     labelRowsPerPage="Lignes par page:"
-                    labelDisplayedRows={({ from, to, count }) => 
+                    labelDisplayedRows={({ from, to, count }) =>
                         `${from}-${to} sur ${count}`
                     }
                 />

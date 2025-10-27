@@ -15,6 +15,7 @@ import { ActivitiesList } from '../../superviseur/superviseur-activities-list';
 import { SuperviseurDonutChart } from '../../superviseur/SuperviseurDonutChart';
 import { SuperviseurRevenueChart } from '../../superviseur/superviseur-revenue-chart';
 import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary-2';
+import { PAYMENT_DATA, PaymentMethodsList } from '../../superviseur/admin-sales-overview';
 
 // ----------------------------------------------------------------------
 
@@ -66,21 +67,21 @@ export function OverviewSuperviseurView() {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurWidgetSummary
-            title="Activités"
-            subtitle="6 payantes / 12 total"
-            total={12}
-            color="warning"
+            title="Nombre de transactions"
+            total={1000}
+            unit="TRANSACTIONS"
+            subtitle="Soit 1 850 000 FCFA"
+            color="error"
             sx={{ height: 180 }}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
           <SuperviseurWidgetSummary
-            title="Montant reçu"
-            total={1850000}
-            unit="FCFA"
-            subtitle="1 000 tickets achetés"
-            color="error"
+            title="Activités"
+            subtitle="6 payantes / 12 total"
+            total={12}
+            color="warning"
             sx={{ height: 180 }}
           />
         </Grid>
@@ -130,6 +131,10 @@ export function OverviewSuperviseurView() {
               ],
             }}
           />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 12, lg: 12 }}>
+          <PaymentMethodsList title="Les moyens de paiement" data={PAYMENT_DATA} />
         </Grid>
 
         {/* Liste des activités */}

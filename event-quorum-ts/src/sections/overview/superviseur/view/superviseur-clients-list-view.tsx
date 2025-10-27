@@ -1,3 +1,5 @@
+//src/sections/overview/superviseur/view/superviseur-clients-list-view.tsx
+
 'use client';
 
 import type { TableHeadCellProps } from 'src/components/table';
@@ -23,11 +25,13 @@ import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Tooltip from '@mui/material/Tooltip';
-import Menu from '@mui/material/Menu';
 import { useTheme } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 import { _participantList } from 'src/_mock/_participants';
+import { _superviseurInvitesList, getInvitesStatistics } from 'src/_mock/_superviseurInvites';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -42,12 +46,18 @@ import {
     TablePaginationCustom,
 } from 'src/components/table';
 
-// Import du composant SuperviseurWidgetSummary
 import { SuperviseurWidgetSummary } from '../../superviseur/view/superviseur-widget-summary-2';
-
 import { ParticipantTableRow } from 'src/sections/info-participant/participant-table-row';
 import { ParticipantTableFiltersResult } from 'src/sections/info-participant/participant-table-filters-result';
 import { DetailsInvite } from 'src/app/superviseur/participants/components/details-invite';
+
+// Import des composants superviseur pour les invités
+import {
+    SuperviseurInvitesTable,
+    SuperviseurExportButtons,
+    type SuperviseurParticipant,
+    type ActiveFilters,
+} from 'src/sections/superviseur/participants';
 
 // ----------------------------------------------------------------------
 
@@ -60,49 +70,11 @@ const DEMANDES_TABLE_HEAD: TableHeadCellProps[] = [
     { id: 'statut', label: 'Statut', width: 100 },
 ];
 
-// En-têtes pour l'onglet "Liste des invités"
-const INVITES_TABLE_HEAD: TableHeadCellProps[] = [
-    { id: 'nom_prenom', label: 'Nom_prenom', width: 180 },
-    { id: 'email', label: 'Email', width: 200 },
-    { id: 'telephone', label: 'Téléphone', width: 120 },
-    { id: 'connecte', label: 'Connecté', width: 100 },
-    { id: 'premiere_connexion', label: 'Première connexion', width: 140 },
-    { id: 'achat_effectue', label: 'Achat effectué', width: 120 },
-    { id: 'detail', label: 'Détail', width: 88 },
-];
-
-// En-têtes pour l'onglet "Liste des participants" - MODIFIÉ: Une seule colonne nom_prenom
-const PARTICIPANTS_TABLE_HEAD: TableHeadCellProps[] = [
-    { id: 'nom_prenom', label: 'Nom_prenom', width: 200 },
-    { id: 'telephone', label: 'Téléphone', width: 120 },
-    { id: 'email', label: 'Email', width: 180 },
-    { id: 'connecte', label: 'Connecté', width: 100 },
-    { id: 'statut', label: 'Statut', width: 100 },
-    { id: 'emargement', label: 'Emargement', width: 120 },
-    { id: 'detail', label: 'Détail', width: 88 },
-];
-
 // Options de statut pour les demandes
 export const DEMANDE_STATUS_OPTIONS = [
     { value: 'acceptée', label: 'Acceptée', color: 'success' },
     { value: 'rejetée', label: 'Rejetée', color: 'error' },
     { value: 'en attente', label: 'En attente', color: 'warning' },
-];
-
-// Options pour les invités
-export const INVITE_STATUS_OPTIONS = [
-    { value: 'connecté', label: 'Connectés', color: 'success' },
-    { value: 'non connecté', label: 'Non connectés', color: 'error' },
-    { value: 'première connexion', label: 'Première connexion', color: 'info' },
-    { value: 'pas de première connexion', label: 'Pas de première connexion', color: 'warning' },
-    { value: 'achat effectué', label: 'Achat effectué', color: 'success' },
-    { value: 'pas d\'achat effectué', label: 'Pas d\'achat effectué', color: 'error' },
-];
-
-// Options pour les participants
-export const PARTICIPANT_STATUS_OPTIONS = [
-    { value: 'en présentiel', label: 'En présentiel', color: 'info' },
-    { value: 'en ligne', label: 'En ligne', color: 'warning' },
 ];
 
 // Options d'activité
@@ -111,22 +83,10 @@ export const ACTIVITY_OPTIONS = [
     { value: 'activité 2', label: 'Activité 2' },
 ];
 
-// Options pour l'exportation des invités
-export const EXPORT_INVITE_OPTIONS = [
-    { value: 'tous_les_invites', label: 'Tous les invités' },
-    { value: 'connectes', label: 'Connectés' },
-    { value: 'non_connectes', label: 'Non connectés' },
-    { value: 'premiere_connexion', label: 'Première connexion' },
-    { value: 'pas_de_premiere_connexion', label: 'Pas de première connexion' },
-    { value: 'achat_effectue', label: 'Achat effectué' },
-    { value: 'pas_dachat_effectue', label: 'Pas d\'achat effectué' },
-];
-
-// Onglets de navigation
+// Onglets de navigation (MODIFIÉ : suppression de l'onglet participants)
 export const PARTICIPANT_TABS = [
     { label: 'Liste des demandes d\'inscription', value: 'demandes' },
     { label: 'Liste des invités', value: 'invites' },
-    { label: 'Liste des participants', value: 'participants' },
 ];
 
 interface FilterData {
@@ -137,7 +97,7 @@ interface FilterData {
 }
 
 function applyFilter({ participantData, filters, comparator, activeTab }: FilterData) {
-    const { name, status, activity, connectionStatus, purchaseStatus } = filters;
+    const { name, status, activity } = filters;
 
     let filteredData = [...participantData];
 
@@ -150,11 +110,6 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
             break;
         case 'invites':
             filteredData = filteredData.filter(item => item.statut === 'acceptée');
-            break;
-        case 'participants':
-            filteredData = filteredData.filter(item =>
-                ['en présentiel', 'en ligne'].includes(item.statut)
-            );
             break;
     }
 
@@ -183,14 +138,6 @@ function applyFilter({ participantData, filters, comparator, activeTab }: Filter
         filteredData = filteredData.filter((item) => item.activite_selectionnee === activity);
     }
 
-    if (connectionStatus && connectionStatus !== 'all') {
-        filteredData = filteredData.filter((item) => item.connecte === connectionStatus);
-    }
-
-    if (purchaseStatus && purchaseStatus !== 'all') {
-        filteredData = filteredData.filter((item) => item.achat_effectue === purchaseStatus);
-    }
-
     return filteredData;
 }
 
@@ -205,13 +152,25 @@ export function SuperviseurClientListView() {
     const [activeTab, setActiveTab] = useState('demandes');
     const [participantData] = useState<IParticipantItem[]>(_participantList);
     const [selectedInvite, setSelectedInvite] = useState<IParticipantItem | null>(null);
-    
-    // NOUVEAU: État pour le menu d'exportation
-    const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
+
+    // État pour les filtres actifs (pour l'export des invités)
+    const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
+        activityFilter: '',
+        firstConnectionFilter: '',
+        connectionTypeFilter: '',
+        emargementFilter: '',
+        checkingFilter: '',
+    });
+
+    // Données des invités depuis le fichier mock
+    const [invitesData] = useState<SuperviseurParticipant[]>(_superviseurInvitesList);
+
+    // Statistiques calculées depuis les données mock
+    const invitesStats = getInvitesStatistics();
 
     useEffect(() => {
         const tabFromUrl = searchParams?.get('tab');
-        if (tabFromUrl && ['demandes', 'invites', 'participants'].includes(tabFromUrl)) {
+        if (tabFromUrl && ['demandes', 'invites'].includes(tabFromUrl)) {
             setActiveTab(tabFromUrl);
         }
     }, [searchParams]);
@@ -250,86 +209,27 @@ export function SuperviseurClientListView() {
     );
 
     const handleViewDetails = useCallback((participant: IParticipantItem) => {
-        if (activeTab === 'participants') {
-            router.push(`/superviseur/participants/${participant.id}`);
-        } else {
-            setSelectedInvite(participant);
-            detailsDialog.onTrue();
-        }
-    }, [detailsDialog, router, activeTab]);
+        setSelectedInvite(participant);
+        detailsDialog.onTrue();
+    }, [detailsDialog]);
+
+    const handleViewInviteDetails = useCallback((id: number) => {
+        // TODO: Implémenter la vue détails pour les invités
+        console.log('Voir détails invité:', id);
+        router.push(`/superviseur/participants/${id}`);
+    }, [router]);
 
     const handleExportPDF = () => {
         console.log('Export PDF des demandes en cours...');
+        // TODO: Implémenter l'export PDF des demandes
     };
 
-    // NOUVEAU: Gestion du menu d'exportation
-    const handleExportMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setExportMenuAnchor(event.currentTarget);
-    };
-
-    const handleExportMenuClose = () => {
-        setExportMenuAnchor(null);
-    };
-
-    const handleExportInvitesList = (exportType: string) => {
-        console.log(`Export de la liste: ${exportType}`);
-        let dataToExport = dataFiltered;
-
-        switch (exportType) {
-            case 'connectes':
-                dataToExport = dataFiltered.filter(item => item.connecte === 'connecté');
-                break;
-            case 'non_connectes':
-                dataToExport = dataFiltered.filter(item => item.connecte === 'non connecté');
-                break;
-            case 'premiere_connexion':
-                dataToExport = dataFiltered.filter(item => item.premiere_connexion === 'oui');
-                break;
-            case 'pas_de_premiere_connexion':
-                dataToExport = dataFiltered.filter(item => item.premiere_connexion === 'non');
-                break;
-            case 'achat_effectue':
-                dataToExport = dataFiltered.filter(item => item.achat_effectue === 'oui');
-                break;
-            case 'pas_dachat_effectue':
-                dataToExport = dataFiltered.filter(item => item.achat_effectue === 'non');
-                break;
-            default:
-                break;
-        }
-
-        console.log(`Données à exporter:`, dataToExport);
-        handleExportMenuClose();
-    };
-
-    const handleConsultConnectedList = () => {
-        console.log('Consultation de la liste des connectés...');
-    };
+    const handleFiltersChange = useCallback((filters: ActiveFilters) => {
+        setActiveFilters(filters);
+    }, []);
 
     const getStatusOptions = () => {
-        switch (activeTab) {
-            case 'demandes':
-                return [{ value: 'all', label: 'Tous les statuts' }, ...DEMANDE_STATUS_OPTIONS];
-            case 'invites':
-                return [{ value: 'all', label: 'Tous les invités' }, ...INVITE_STATUS_OPTIONS];
-            case 'participants':
-                return [{ value: 'all', label: 'Tous les statuts' }, ...PARTICIPANT_STATUS_OPTIONS];
-            default:
-                return [{ value: 'all', label: 'Tous les statuts' }];
-        }
-    };
-
-    const getTableHeaders = () => {
-        switch (activeTab) {
-            case 'demandes':
-                return DEMANDES_TABLE_HEAD;
-            case 'invites':
-                return INVITES_TABLE_HEAD;
-            case 'participants':
-                return PARTICIPANTS_TABLE_HEAD;
-            default:
-                return DEMANDES_TABLE_HEAD;
-        }
+        return [{ value: 'all', label: 'Tous les statuts' }, ...DEMANDE_STATUS_OPTIONS];
     };
 
     const getStatistics = () => {
@@ -343,58 +243,33 @@ export function SuperviseurClientListView() {
                 ];
             case 'invites':
                 return [
-                    { title: "Invités", total: 500},
-                    { title: "Tickets achetés", total: 50 },
-                    { title: "Première connexion", total: 100},
-                    { title: "Connectés", total: 100}
+                    { title: "Invités", total: invitesStats.total },
+                    { title: "Connectés", total: invitesStats.connectes },
+                    { title: "Émargés", total: invitesStats.emarges },
+                    { title: "Dans la salle", total: invitesStats.checked }
                 ];
-            case 'participants':
-                return [];
             default:
                 return [];
         }
     };
 
     const getSearchPlaceholder = () => {
-        switch (activeTab) {
-            case 'demandes':
-                return 'Rechercher une demande (nom, email)...';
-            case 'invites':
-                return 'Rechercher un invité (nom, email)...';
-            case 'participants':
-                return 'Rechercher un participant (nom, email)...';
-            default:
-                return 'Rechercher...';
-        }
+        return activeTab === 'demandes'
+            ? 'Rechercher une demande (nom, email)...'
+            : 'Rechercher un invité (nom, email)...';
     };
 
     const canReset = !!(
         filters.state.name ||
         filters.state.status !== 'all' ||
-        filters.state.activity !== 'all' ||
-        filters.state.connectionStatus !== 'all' ||
-        filters.state.purchaseStatus !== 'all'
+        filters.state.activity !== 'all'
     );
 
     const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-    // Couleur de fond alternée pour les widgets
     const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
         const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
         return colors[index % colors.length];
-    };
-
-    const getTableTitle = () => {
-        switch (activeTab) {
-            case 'demandes':
-                return 'Liste des demandes d\'inscription';
-            case 'invites':
-                return 'Liste des invités';
-            case 'participants':
-                return 'Liste des participants';
-            default:
-                return 'Liste des demandes d\'inscription';
-        }
     };
 
     const statistics = getStatistics();
@@ -407,7 +282,7 @@ export function SuperviseurClientListView() {
                     sx={{ mb: { xs: 3, md: 5 } }}
                 />
 
-                {/* Onglets SANS shadow */}
+                {/* Onglets */}
                 <Card sx={{ mb: 3, boxShadow: 'none', border: `1px solid ${theme.palette.divider}` }}>
                     <Tabs
                         value={activeTab}
@@ -424,7 +299,7 @@ export function SuperviseurClientListView() {
                     </Tabs>
                 </Card>
 
-                {/* Statistiques dynamiques avec couleurs alternées */}
+                {/* Statistiques */}
                 {statistics.length > 0 && (
                     <Grid container spacing={3} sx={{ mb: 3 }}>
                         {statistics.map((stat, index) => (
@@ -447,17 +322,17 @@ export function SuperviseurClientListView() {
                     </Grid>
                 )}
 
-                <Card>
-                    <Box sx={{ p: 2.5 }}>
-                        {/* NOUVEAU: Ligne titre + bouton d'action pour tous les onglets */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
-                            <Typography variant='h4' sx={{ fontSize: 20 }}>
-                                {getTableTitle()}
-                                <span style={{ paddingLeft: 4 }}>({dataFiltered.length})</span>
-                            </Typography>
+                {/* Contenu selon l'onglet actif */}
+                {activeTab === 'demandes' && (
+                    <Card>
+                        <Box sx={{ p: 2.5 }}>
+                            {/* En-tête avec bouton export */}
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
+                                <Typography variant='h4' sx={{ fontSize: 20 }}>
+                                    Liste des demandes d'inscription
+                                    <span style={{ paddingLeft: 4 }}>({dataFiltered.length})</span>
+                                </Typography>
 
-                            {/* Boutons d'action selon l'onglet */}
-                            {activeTab === 'demandes' && (
                                 <Tooltip title="la liste des demandes de participations (PDF&EXCEL)" arrow>
                                     <Button
                                         variant="contained"
@@ -472,92 +347,16 @@ export function SuperviseurClientListView() {
                                         Exporter
                                     </Button>
                                 </Tooltip>
-                            )}
+                            </Box>
 
-                            {activeTab === 'invites' && (
-                                <>
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleExportMenuOpen}
-                                        endIcon={<Iconify icon="eva:chevron-down-fill" />}
-                                        sx={{
-                                            bgcolor: '#000',
-                                            color: 'white',
-                                            '&:hover': { bgcolor: '#333' }
-                                        }}
-                                    >
-                                        Exporter
-                                    </Button>
-                                    <Menu
-                                        anchorEl={exportMenuAnchor}
-                                        open={Boolean(exportMenuAnchor)}
-                                        onClose={handleExportMenuClose}
-                                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                    >
-                                        {EXPORT_INVITE_OPTIONS.map((option) => (
-                                            <MenuItem
-                                                key={option.value}
-                                                onClick={() => handleExportInvitesList(option.value)}
-                                            >
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Menu>
-                                </>
-                            )}
-
-                            {activeTab === 'participants' && (
-                                <Tooltip title="La liste des connectés" arrow>
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleConsultConnectedList}
-                                        startIcon={<Iconify icon="eva:eye-fill" />}
-                                        sx={{
-                                            bgcolor: '#000',
-                                            color: 'white',
-                                            '&:hover': { bgcolor: '#333' }
-                                        }}
-                                    >
-                                        Consulter
-                                    </Button>
-                                </Tooltip>
-                            )}
-                        </Box>
-
-                        {/* NOUVEAU: Filtres sous le titre pour tous les onglets */}
-                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                                {/* Filtre activités pour invités uniquement */}
-                                {activeTab === 'invites' && (
-                                    <FormControl size="small" sx={{ minWidth: 200 }}>
-                                        <InputLabel>Toutes les activités</InputLabel>
-                                        <Select
-                                            value={filters.state.activity || 'all'}
-                                            onChange={(e) => filters.setState({ activity: e.target.value })}
-                                            label="Toutes les activités"
-                                        >
-                                            <MenuItem value="all">Toutes les activités</MenuItem>
-                                            {ACTIVITY_OPTIONS.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                )}
-
-                                {/* Filtre de statut */}
+                            {/* Filtres */}
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
                                 <FormControl size="small" sx={{ minWidth: 200 }}>
-                                    <InputLabel>
-                                        {activeTab === 'demandes' ? 'Statut des demandes' : 
-                                         activeTab === 'invites' ? 'Statut' : 'Statut des participants'}
-                                    </InputLabel>
+                                    <InputLabel>Statut des demandes</InputLabel>
                                     <Select
                                         value={filters.state.status || 'all'}
                                         onChange={(e) => filters.setState({ status: e.target.value })}
-                                        label={activeTab === 'demandes' ? 'Statut des demandes' : 
-                                               activeTab === 'invites' ? 'Statut' : 'Statut des participants'}
+                                        label="Statut des demandes"
                                     >
                                         {getStatusOptions().map((option) => (
                                             <MenuItem key={option.value} value={option.value}>
@@ -566,88 +365,111 @@ export function SuperviseurClientListView() {
                                         ))}
                                     </Select>
                                 </FormControl>
-                            </Box>
 
-                            {/* Barre de recherche à droite */}
-                            <TextField
-                                size="small"
-                                value={filters.state.name || ''}
-                                onChange={(e) => {
-                                    table.onResetPage();
-                                    filters.setState({ name: e.target.value });
-                                }}
-                                placeholder={getSearchPlaceholder()}
-                                sx={{ width: 350 }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        </Box>
-                    </Box>
-
-                    {/* Résultats des filtres */}
-                    {canReset && (
-                        <ParticipantTableFiltersResult
-                            filters={filters}
-                            totalResults={dataFiltered.length}
-                            onResetPage={table.onResetPage}
-                            activeTab={activeTab}
-                            sx={{ p: 2.5, pt: 0 }}
-                        />
-                    )}
-
-                    <Box sx={{ position: 'relative' }}>
-                        {/* Tableau */}
-                        <Scrollbar>
-                            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                                <TableHeadCustom
-                                    order={table.order}
-                                    orderBy={table.orderBy}
-                                    headCells={getTableHeaders()}
-                                    rowCount={dataFiltered.length}
-                                    numSelected={0}
-                                    onSort={table.onSort}
+                                <TextField
+                                    size="small"
+                                    value={filters.state.name || ''}
+                                    onChange={(e) => {
+                                        table.onResetPage();
+                                        filters.setState({ name: e.target.value });
+                                    }}
+                                    placeholder={getSearchPlaceholder()}
+                                    sx={{ width: 350 }}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
+                            </Box>
+                        </Box>
 
-                                <TableBody>
-                                    {paginatedData.map((row) => (
-                                        <ParticipantTableRow
-                                            key={row.id}
-                                            row={row}
-                                            onViewDetails={() => handleViewDetails(row)}
-                                            activeTab={activeTab}
-                                        />
-                                    ))}
+                        {/* Résultats des filtres */}
+                        {canReset && (
+                            <ParticipantTableFiltersResult
+                                filters={filters}
+                                totalResults={dataFiltered.length}
+                                onResetPage={table.onResetPage}
+                                activeTab={activeTab}
+                                sx={{ p: 2.5, pt: 0 }}
+                            />
+                        )}
 
-                                    <TableEmptyRows
-                                        height={table.dense ? 56 : 76}
-                                        emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                        <Box sx={{ position: 'relative' }}>
+                            <Scrollbar>
+                                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                                    <TableHeadCustom
+                                        order={table.order}
+                                        orderBy={table.orderBy}
+                                        headCells={DEMANDES_TABLE_HEAD}
+                                        rowCount={dataFiltered.length}
+                                        numSelected={0}
+                                        onSort={table.onSort}
                                     />
 
-                                    <TableNoData notFound={notFound} />
-                                </TableBody>
-                            </Table>
-                        </Scrollbar>
-                    </Box>
+                                    <TableBody>
+                                        {paginatedData.map((row) => (
+                                            <ParticipantTableRow
+                                                key={row.id}
+                                                row={row}
+                                                onViewDetails={() => handleViewDetails(row)}
+                                                activeTab={activeTab}
+                                            />
+                                        ))}
 
-                    {/* Pagination */}
-                    <TablePaginationCustom
-                        page={table.page}
-                        dense={table.dense}
-                        count={dataFiltered.length}
-                        rowsPerPage={table.rowsPerPage}
-                        onPageChange={table.onChangePage}
-                        onChangeDense={table.onChangeDense}
-                        onRowsPerPageChange={table.onChangeRowsPerPage}
-                    />
-                </Card>
+                                        <TableEmptyRows
+                                            height={table.dense ? 56 : 76}
+                                            emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                                        />
+
+                                        <TableNoData notFound={notFound} />
+                                    </TableBody>
+                                </Table>
+                            </Scrollbar>
+                        </Box>
+
+                        <TablePaginationCustom
+                            page={table.page}
+                            dense={table.dense}
+                            count={dataFiltered.length}
+                            rowsPerPage={table.rowsPerPage}
+                            onPageChange={table.onChangePage}
+                            onChangeDense={table.onChangeDense}
+                            onRowsPerPageChange={table.onChangeRowsPerPage}
+                        />
+                    </Card>
+                )}
+
+                {/* Onglet Invités - Utilisation des nouveaux composants */}
+                {activeTab === 'invites' && (
+                    <Container maxWidth="xl" sx={{ py: 0, px: 0 }}>
+                        <Stack spacing={4}>
+                            {/* En-tête */}
+                            <Box>
+                                <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
+                                    Gestion des invités
+                                </Typography>
+                            </Box>
+
+                            {/* Boutons d'export */}
+                            <Stack direction="row" justifyContent="flex-end">
+                                <SuperviseurExportButtons activeFilters={activeFilters} />
+                            </Stack>
+
+                            {/* Tableau des invités */}
+                            <SuperviseurInvitesTable
+                                participants={invitesData}
+                                onView={handleViewInviteDetails}
+                                onFiltersChange={handleFiltersChange}
+                            />
+                        </Stack>
+                    </Container>
+                )}
             </DashboardContent>
 
-            {/* Dialog de détails des invités */}
+            {/* Dialog de détails des demandes */}
             <DetailsInvite
                 open={detailsDialog.value}
                 onClose={detailsDialog.onFalse}

@@ -1,3 +1,5 @@
+//src/app/intervenant/enquetes/components/MuiSurveyDetail.tsx
+
 'use client'
 
 import React, { useState } from 'react';
@@ -50,54 +52,54 @@ const InfoCard: React.FC<{
   icon: React.ReactNode;
   color: string;
 }> = ({ title, value, icon, color }) => (
-    <Card sx={{
-      p: 3,
-      height: '100%',
+  <Card sx={{
+    p: 3,
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    background: `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
+    border: `1px solid ${color}30`,
+    borderRadius: 2,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: `0 8px 25px ${color}20`,
+    }
+  }}>
+    <Box sx={{
       display: 'flex',
       alignItems: 'center',
-      background: `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
-      border: `1px solid ${color}30`,
-      borderRadius: 2,
-      transition: 'all 0.3s ease',
-      '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: `0 8px 25px ${color}20`,
-      }
+      justifyContent: 'center',
+      width: 56,
+      height: 56,
+      borderRadius: '50%',
+      bgcolor: `${color}15`,
+      color: color,
+      mr: 2,
+      flexShrink: 0
     }}>
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 56,
-        height: 56,
-        borderRadius: '50%',
-        bgcolor: `${color}15`,
-        color: color,
-        mr: 2,
-        flexShrink: 0
+      {icon}
+    </Box>
+    <Box sx={{ flex: 1, minWidth: 0 }}>
+      <Typography variant="body2" sx={{
+        color: 'text.secondary',
+        fontWeight: 500,
+        mb: 0.5,
+        fontSize: '0.875rem'
       }}>
-        {icon}
-      </Box>
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="body2" sx={{
-          color: 'text.secondary',
-          fontWeight: 500,
-          mb: 0.5,
-          fontSize: '0.875rem'
-        }}>
-          {title}
-        </Typography>
-        <Typography variant="h6" sx={{
-          fontWeight: 'bold',
-          color: 'text.primary',
-          wordBreak: 'break-word',
-          lineHeight: 1.2
-        }}>
-          {value || 'Non défini'}
-        </Typography>
-      </Box>
-    </Card>
-  );
+        {title}
+      </Typography>
+      <Typography variant="h6" sx={{
+        fontWeight: 'bold',
+        color: 'text.primary',
+        wordBreak: 'break-word',
+        lineHeight: 1.2
+      }}>
+        {value || 'Non défini'}
+      </Typography>
+    </Box>
+  </Card>
+);
 
 
 const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) => {
@@ -217,14 +219,14 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               Titre de l'enquête
             </Typography> */}
             <Typography variant="h4" sx={{
-                color: theme.palette.text.primary,
-                fontWeight: 600
-              }}>
-                {survey.title}
+              color: theme.palette.text.primary,
+              fontWeight: 600
+            }}>
+              {survey.title}
             </Typography>
-            
-              
-            
+
+
+
           </Box>
 
           {/* Cards d'informations améliorées */}
@@ -345,7 +347,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 Liste des questions
               </Typography>
-              
+
               <Button
                 variant="contained"
                 onClick={handleViewResults}
@@ -358,7 +360,7 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
               >
                 Consulter Resultats de l'enquête
               </Button>
-              
+
             </Box>
 
             {/* Tableau des questions */}

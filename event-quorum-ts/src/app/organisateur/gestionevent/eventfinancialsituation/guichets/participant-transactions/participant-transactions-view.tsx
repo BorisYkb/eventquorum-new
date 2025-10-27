@@ -261,7 +261,7 @@ export function ParticipantTransactionsView() {
             <CustomBreadcrumbs
                 heading="Participants enregistrés par l'agent"
                 links={[
-                    { name: 'Situation financière', href: paths.organisateur.gestionevent.financialSituation },
+                    { name: 'Situation financière', href: paths.organisateur.gestionevent.financialSituation.root },
                     { name: 'Par guichet', href: '#' },
                     { name: agent.nom_prenom },
                 ]}

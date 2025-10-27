@@ -1,4 +1,4 @@
-// data/surveys.ts
+// src/app/intervenant/enquetes/data/surveys.ts
 import { Survey, Question, QuestionType } from '../types/survey';
 
 export const surveys: Survey[] = [

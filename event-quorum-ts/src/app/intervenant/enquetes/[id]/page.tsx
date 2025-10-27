@@ -1,4 +1,4 @@
-// superviseur/enquetes/[id]/page.tsx
+// intervenant/enquetes/[id]/page.tsx
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

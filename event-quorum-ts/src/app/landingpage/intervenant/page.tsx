@@ -56,7 +56,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Alex Robertson</Link>
+											<Link href="landingpage/speakers-single">Alex Robertson</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -90,7 +90,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Alexy Sammony</Link>
+											<Link href="/landingpage/speakers-single">Alexy Sammony</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -124,7 +124,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Kireon Pollardy</Link>
+											<Link href="/landingpage/speakers-single">Kireon Pollardy</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -192,7 +192,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Alex Robertson</Link>
+											<Link href="/landingpage/speakers-single">Alex Robertson</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -226,7 +226,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Alexy Sammony</Link>
+											<Link href="/landingpage/speakers-single">Alexy Sammony</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -260,7 +260,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Alexy Sammony</Link>
+											<Link href="/landingpage/speakers-single">Alexy Sammony</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>
@@ -294,7 +294,7 @@ export default function Speakers() {
 										</div>
 										<div className="space28" />
 										<div className="content-area">
-											<Link href="/landing-page/speakers-single">Adresy Ineasta</Link>
+											<Link href="/landingpage/speakers-single">Adresy Ineasta</Link>
 											<div className="space16" />
 											<p>UI/UX Designer</p>
 										</div>

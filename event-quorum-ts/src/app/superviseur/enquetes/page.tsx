@@ -1,7 +1,7 @@
 // superviseur/enquetes/page.tsx
 import React from 'react';
 import { Metadata } from 'next';
-import MuiSurveyDashboard from './components/MuiSurveyDashboard';
+import MuiSurveyDashboard from 'src/sections/superviseur/enquetes/MuiSurveyDashboard';
 import { surveys } from './data/surveys';
 
 export const metadata: Metadata = {

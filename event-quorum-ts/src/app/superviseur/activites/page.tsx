@@ -9,148 +9,122 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import TablePagination from '@mui/material/TablePagination';
 
 import { DashboardContent } from 'src/layouts/superviseur';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 
-// Types
-interface Activity {
-  id: number;
-  titre: string;
-  activite: string;
-  code: string;
-  participants: number;
-  statut: 'Terminée' | 'En cours' | 'Non démarrée';
-}
+// Import des données des activités depuis le fichier externe
+import { ACTIVITES_SUPERVISEUR } from 'src/sections/superviseur/activites/sup-data-activites';
 
+/**
+ * Page de liste des activités pour le superviseur
+ */
 export default function ActivitiesPage() {
   const router = useRouter();
+  const theme = useTheme();
+  
+  // État pour gérer la recherche et les filtres
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedActivity, setSelectedActivity] = useState('');
-  const [dense, setDense] = useState(false);
+  const [selectedType, setSelectedType] = useState('');
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = useState<number[]>([]);
 
-  const activities: Activity[] = [
-    {
-      id: 1,
-      titre: 'Satisfaction des internautes',
-      activite: 'Activité 1',
-      code: '52340',
-      participants: 60,
-      statut: 'Terminée'
-    },
-    {
-      id: 2,
-      titre: 'Les conditions de vie',
-      activite: 'Activité 1',
-      code: '55290',
-      participants: 35,
-      statut: 'En cours'
-    },
-    {
-      id: 3,
-      titre: 'Satisfaction des participants',
-      activite: 'Activité 2',
-      code: '79863',
-      participants: 42,
-      statut: 'Non démarrée'
-    },
-    {
-      id: 4,
-      titre: 'Évaluation cyber',
-      activite: 'Activité 2',
-      code: '10125',
-      participants: 45,
-      statut: 'En cours'
-    }
-  ];
+  // Utilisation des données importées depuis le fichier externe
+  const activities = ACTIVITES_SUPERVISEUR;
 
-  const handleViewActivity = (activityId: number) => {
+  // Récupération des types uniques pour le filtre dynamique
+  const uniqueTypes = Array.from(new Set(activities.map(activity => activity.type)));
+
+  /**
+   * Gestion de la navigation vers les détails d'une activité
+   */
+  const handleViewActivity = (activityId: string) => {
     router.push(`/superviseur/activites/${activityId}`);
   };
 
-  const handleParticipantsManagement = () => {
-    router.push('/superviseur/activites/participants');
+  /**
+   * Gestion du changement de page pour la pagination
+   */
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
   };
 
+  /**
+   * Gestion du changement du nombre de lignes par page
+   */
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Retour à la première page lors du changement
+  };
+
+  /**
+   * Fonction pour obtenir la couleur du label de statut
+   */
   const getStatusColor = (status: string): 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' => {
     switch (status) {
       case 'En cours':
-        return 'success';
-      case 'Non démarrée':
         return 'warning';
-      case 'Terminée':
+      case 'Non démarrée':
         return 'error';
+      case 'Terminée':
+        return 'success';
       default:
         return 'default';
     }
   };
 
+  /**
+   * Filtrage des activités basé sur la recherche et les filtres sélectionnés
+   */
   const filteredActivities = activities.filter(activity => {
-    const matchesSearch = activity.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      activity.activite.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      activity.code.includes(searchTerm);
-    const matchesStatus = selectedStatus === '' || activity.statut === selectedStatus;
-    const matchesActivity = selectedActivity === '' || activity.activite === selectedActivity;
-    return matchesSearch && matchesStatus && matchesActivity;
+    // Recherche dans le nom, le type et le titre
+    const matchesSearch = activity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      activity.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      activity.title.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Filtre par statut
+    const matchesStatus = selectedStatus === '' || activity.status === selectedStatus;
+    
+    // Filtre par type d'activité
+    const matchesType = selectedType === '' || activity.type === selectedType;
+    
+    return matchesSearch && matchesStatus && matchesType;
   });
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = activities.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
+  /**
+   * Pagination des résultats filtrés
+   */
+  const paginatedActivities = filteredActivities.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-  // Couleurs alternées pour les widgets
+  /**
+   * Fonction helper pour obtenir les couleurs alternées des widgets de statistiques
+   */
   const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
     const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
     return colors[index % colors.length];
@@ -158,6 +132,7 @@ export default function ActivitiesPage() {
 
   return (
     <DashboardContent>
+      {/* Fil d'Ariane pour la navigation */}
       <CustomBreadcrumbs
         heading="Liste des activités"
         links={[
@@ -167,7 +142,7 @@ export default function ActivitiesPage() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      {/* Statistiques avec SuperviseurWidgetSummary */}
+      {/* Section des statistiques avec SuperviseurWidgetSummary */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
@@ -180,7 +155,7 @@ export default function ActivitiesPage() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="En cours"
-            total={activities.filter(a => a.statut === 'En cours').length}
+            total={activities.filter(a => a.status === 'En cours').length}
             color={getWidgetColor(1)}
             sx={{ height: 180 }}
           />
@@ -188,7 +163,7 @@ export default function ActivitiesPage() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Non démarrées"
-            total={activities.filter(a => a.statut === 'Non démarrée').length}
+            total={activities.filter(a => a.status === 'Non démarrée').length}
             color={getWidgetColor(2)}
             sx={{ height: 180 }}
           />
@@ -196,238 +171,240 @@ export default function ActivitiesPage() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <SuperviseurWidgetSummary
             title="Terminées"
-            total={activities.filter(a => a.statut === 'Terminée').length}
+            total={activities.filter(a => a.status === 'Terminée').length}
             color={getWidgetColor(3)}
             sx={{ height: 180 }}
           />
         </Grid>
       </Grid>
 
-      {/* Tableau */}
+      {/* Carte principale contenant le tableau des activités */}
       <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
-        {/* Titre et filtres */}
-        <Box sx={{ p: 2.5 }}>
+        {/* En-tête avec titre et filtres */}
+        <Box sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" sx={{ fontSize: 20 }}>
-              Liste des activités
-              <span style={{ paddingLeft: 4 }}>({filteredActivities.length})</span>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              <span style={{ paddingLeft: 8, fontWeight: 'normal', color: theme.palette.text.secondary }}>
+                {filteredActivities.length} Activité(s)
+              </span>
             </Typography>
           </Box>
 
-          {/* Ligne des filtres et recherche */}
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-            {/* Filtres à gauche */}
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <FormControl size="small" sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ fontSize: '0.8rem', px: 0.5 }}>Sélectionner un statut</InputLabel>
+          {/* Ligne des filtres et de la barre de recherche */}
+          <Grid container spacing={2} alignItems="center">
+            {/* Filtre par statut */}
+            <Grid size={{ xs: 12, md: 3 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Statut</InputLabel>
                 <Select
                   value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  label="Sélectionner un statut"
-                  sx={{ fontSize: '0.8rem' }}
+                  onChange={(e) => {
+                    setSelectedStatus(e.target.value);
+                    setPage(0); // Retour à la première page lors du changement de filtre
+                  }}
+                  label="Statut"
+                  sx={{ fontSize: '0.875rem' }}
                 >
-                  <MenuItem value="" sx={{ fontSize: '0.8rem' }}>Tous les statuts</MenuItem>
-                  <MenuItem value="En cours" sx={{ fontSize: '0.8rem' }}>En cours</MenuItem>
-                  <MenuItem value="Non démarrée" sx={{ fontSize: '0.8rem' }}>Non démarrée</MenuItem>
-                  <MenuItem value="Terminée" sx={{ fontSize: '0.8rem' }}>Terminée</MenuItem>
+                  <MenuItem value="" sx={{ fontSize: '0.875rem' }}>Tous les statuts</MenuItem>
+                  <MenuItem value="En cours" sx={{ fontSize: '0.875rem' }}>En cours</MenuItem>
+                  <MenuItem value="Non démarrée" sx={{ fontSize: '0.875rem' }}>Non démarrée</MenuItem>
+                  <MenuItem value="Terminée" sx={{ fontSize: '0.875rem' }}>Terminée</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
 
-              <FormControl size="small" sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ fontSize: '0.8rem', px: 0.5 }}>Sélectionner une activité</InputLabel>
+            {/* Filtre par type d'activité */}
+            <Grid size={{ xs: 12, md: 3 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Type</InputLabel>
                 <Select
-                  value={selectedActivity}
-                  onChange={(e) => setSelectedActivity(e.target.value)}
-                  label="Sélectionner une activité"
-                  sx={{ fontSize: '0.8rem' }}
+                  value={selectedType}
+                  onChange={(e) => {
+                    setSelectedType(e.target.value);
+                    setPage(0); // Retour à la première page lors du changement de filtre
+                  }}
+                  label="Type"
+                  sx={{ fontSize: '0.875rem' }}
                 >
-                  <MenuItem value="" sx={{ fontSize: '0.8rem' }}>Toutes les activités</MenuItem>
-                  <MenuItem value="Activité 1" sx={{ fontSize: '0.8rem' }}>Activité 1</MenuItem>
-                  <MenuItem value="Activité 2" sx={{ fontSize: '0.8rem' }}>Activité 2</MenuItem>
+                  <MenuItem value="" sx={{ fontSize: '0.875rem' }}>Tous les types</MenuItem>
+                  {uniqueTypes.map((type) => (
+                    <MenuItem key={type} value={type} sx={{ fontSize: '0.875rem' }}>
+                      {type}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
-            </Box>
+            </Grid>
 
-            {/* Barre de recherche à droite */}
-            <TextField
-              size="small"
-              placeholder="Rechercher par titre, activité ou code..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ width: 350 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
+            {/* Barre de recherche */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Rechercher par nom, type ou titre..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(0); // Retour à la première page lors de la recherche
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Grid>
+          </Grid>
         </Box>
 
-        <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
-          <Table stickyHeader size={dense ? 'small' : 'medium'}>
-            <TableHead>
-              <TableRow sx={{ '& .MuiTableCell-head': { bgcolor: '#F8F9FA', py: 2 } }}>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    color="primary"
-                    indeterminate={selected.length > 0 && selected.length < activities.length}
-                    checked={activities.length > 0 && selected.length === activities.length}
-                    onChange={handleSelectAllClick}
-                  />
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Titre enquête
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Activité
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Code
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Participants
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Statut
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredActivities.map((activity, index) => {
-                const isItemSelected = isSelected(activity.id);
+        {/* Conteneur du tableau avec scrollbar */}
+        <TableContainer>
+          <Scrollbar>
+            <Table sx={{ minWidth: 800 }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: 'grey.50' }}>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Activités
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Type
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Titre
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Statut
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Date
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 600, color: '#6B7280', fontSize: '14px' }}>
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
 
-                return (
+              <TableBody>
+                {paginatedActivities.map((activity) => (
                   <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, activity.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
                     key={activity.id}
-                    selected={isItemSelected}
+                    hover
                     sx={{
-                      cursor: 'pointer',
-                      '&:hover': { bgcolor: '#F8F9FA' }
+                      '&:hover': {
+                        bgcolor: '#F8F9FA',
+                        cursor: 'pointer'
+                      }
                     }}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                      />
-                    </TableCell>
+                    {/* Colonne: Nom de l'activité */}
                     <TableCell sx={{ py: 2 }}>
                       <Typography variant="body2" sx={{
-                        color: '#1976D2',
                         fontWeight: 500,
-                        fontSize: '14px'
+                        fontSize: '14px',
+                        color: '#6B7280'
                       }}>
-                        {activity.titre}
+                        {activity.name}
                       </Typography>
                     </TableCell>
+
+                    {/* Colonne: Type d'activité */}
                     <TableCell sx={{ py: 2 }}>
                       <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
-                        {activity.activite}
+                        {activity.type}
                       </Typography>
                     </TableCell>
+
+                    {/* Colonne: Titre de l'activité */}
                     <TableCell sx={{ py: 2 }}>
                       <Typography variant="body2" sx={{ fontSize: '14px', color: '#374151' }}>
-                        {activity.code}
+                        {activity.title}
                       </Typography>
                     </TableCell>
-                    <TableCell sx={{ py: 2 }}>
-                      <Typography variant="body2" sx={{ fontSize: '14px', fontWeight: 600 }}>
-                        {activity.participants}
-                      </Typography>
-                    </TableCell>
+
+                    {/* Colonne: Statut avec badge coloré */}
                     <TableCell sx={{ py: 2 }}>
                       <Label
                         variant="soft"
-                        color={getStatusColor(activity.statut)}
+                        color={getStatusColor(activity.status)}
                       >
-                        {activity.statut}
+                        {activity.status}
                       </Label>
                     </TableCell>
+
+                    {/* Colonne: Date et horaires */}
                     <TableCell sx={{ py: 2 }}>
-                      <Button
-                        variant="text"
-                        size="small"
-                        startIcon={<Iconify icon="eva:eye-fill" />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleViewActivity(activity.id);
-                        }}
-                        sx={{
-                          color: '#374151',
-                          fontSize: '14px',
-                          textTransform: 'none'
-                        }}
-                      >
-                        Voir
-                      </Button>
+                      <Typography variant="body2" sx={{ fontSize: '14px', color: '#6B7280' }}>
+                        {activity.date}
+                      </Typography>
+                    </TableCell>
+
+                    {/* Colonne: Actions avec bouton Voir */}
+                    <TableCell align="center" sx={{ py: 2 }}>
+                      <Tooltip title="Voir détails" placement="top" arrow>
+                        <IconButton
+                          color="info"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewActivity(activity.id);
+                          }}
+                          size="small"
+                          sx={{
+                            color: 'info',
+                            '&:hover': {
+                              bgcolor: 'action.hover'
+                            }
+                          }}
+                        >
+                          <Iconify icon="solar:eye-bold" />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          </Scrollbar>
         </TableContainer>
 
-        {/* Footer du tableau avec options */}
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          p: 2,
-          borderTop: 1,
-          borderColor: 'divider',
-          bgcolor: '#FAFAFA'
-        }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={dense}
-                onChange={(event) => setDense(event.target.checked)}
-                size="small"
-              />
-            }
-            label={<Typography variant="body2" sx={{ fontSize: '14px' }}>Dense</Typography>}
-          />
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" sx={{ fontSize: '14px' }}>
-              Rows per page:
+        {/* Message si aucun résultat trouvé */}
+        {filteredActivities.length === 0 && (
+          <Box sx={{ py: 4, textAlign: 'center' }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >
+              Aucune activité trouvée pour "{searchTerm}"
             </Typography>
-            <FormControl size="small">
-              <Select
-                value={rowsPerPage}
-                onChange={(e) => setRowsPerPage(Number(e.target.value))}
-                sx={{ fontSize: '14px' }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={25}>25</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-              </Select>
-            </FormControl>
-            <Typography variant="body2" sx={{ fontSize: '14px' }}>
-              1-{filteredActivities.length} of {filteredActivities.length}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton size="small" disabled>
-                <Iconify icon="eva:chevron-left-fill" />
-              </IconButton>
-              <IconButton size="small" disabled>
-                <Iconify icon="eva:chevron-right-fill" />
-              </IconButton>
-            </Box>
           </Box>
-        </Box>
+        )}
+
+        {/* Pagination */}
+        {filteredActivities.length > 0 && (
+          <TablePagination
+            component="div"
+            count={filteredActivities.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            labelRowsPerPage="Lignes par page:"
+            labelDisplayedRows={({ from, to, count }) => 
+              `${from}-${to} sur ${count !== -1 ? count : `plus de ${to}`}`
+            }
+            sx={{
+              borderTop: 1,
+              borderColor: 'divider',
+            }}
+          />
+        )}
       </Card>
     </DashboardContent>
   );

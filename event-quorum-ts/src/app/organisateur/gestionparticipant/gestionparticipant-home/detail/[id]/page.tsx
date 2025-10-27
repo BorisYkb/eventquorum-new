@@ -114,7 +114,7 @@ const ParticipantDetailPage = () => {
             </IconButton>
             <Box sx={{ flex: 1 }}>
               <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                  Information sur l'invité
+                Information sur l'invité
               </Typography>
               <Breadcrumbs aria-label="breadcrumb">
                 <Link
@@ -123,7 +123,7 @@ const ParticipantDetailPage = () => {
                   onClick={handleBack}
                   sx={{
                     textDecoration: 'none',
-                    
+
                     fontWeight: 500,
                     '&:hover': {
                       textDecoration: 'underline',
@@ -132,7 +132,7 @@ const ParticipantDetailPage = () => {
                 >
                   Gestion des invités
                 </Link>
-                <Typography variant="body2"  sx={{ fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Détail de l'invité
                 </Typography>
               </Breadcrumbs>
@@ -162,7 +162,7 @@ const ParticipantDetailPage = () => {
           }}
         >
           <Stack spacing={4}>
-            
+
 
             {/* Grille des informations - Nom, Prénom, Téléphone */}
             <Grid container spacing={3}>
@@ -254,8 +254,8 @@ const ParticipantDetailPage = () => {
                 </Stack>
               </Grid>
             </Grid>
-              
-            <Box sx={{display: "flex", flexDirection: "row", gap: 10}}>
+
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
               {/* Type de connexion */}
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
@@ -280,7 +280,7 @@ const ParticipantDetailPage = () => {
                   </Box>
                 </Stack>
               </Grid>
-                  
+
               {/* Date d'émargement */}
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
@@ -297,7 +297,7 @@ const ParticipantDetailPage = () => {
                     }}
                   >
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {participant.datePremiereConnexion 
+                      {participant.datePremiereConnexion
                         ? formatDate(participant.datePremiereConnexion)
                         : 'Non émargé'
                       }
@@ -307,37 +307,6 @@ const ParticipantDetailPage = () => {
               </Grid>
             </Box>
 
-            {/* Section Activités */}
-            <Box>
-              <Typography
-                variant="body1"
-                sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}
-              >
-                Activités de l'invité
-              </Typography>
-
-              <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-                {participant.activites.map((activite, index) => (
-                  <Chip
-                    key={index}
-                    label={activite}
-                    onDelete={() => {}}
-                    deleteIcon={<CloseIcon />}
-                    sx={{
-                      backgroundColor: '#212B36',
-                      color: 'white',
-                      fontWeight: 500,
-                      '& .MuiChip-deleteIcon': {
-                        color: 'white',
-                        '&:hover': {
-                          color: 'rgba(255, 255, 255, 0.7)',
-                        },
-                      },
-                    }}
-                  />
-                ))}
-              </Stack>
-            </Box>
 
             {/* Section Émargement */}
             <Box>
@@ -421,6 +390,37 @@ const ParticipantDetailPage = () => {
                   )}
                 </Box>
               )}
+            </Box>
+            {/* Section Activités */}
+            <Box>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}
+              >
+                Activités de l'invité
+              </Typography>
+
+              <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
+                {participant.activites.map((activite, index) => (
+                  <Chip
+                    key={index}
+                    label={activite}
+                    onDelete={() => { }}
+                    deleteIcon={<CloseIcon />}
+                    sx={{
+                      backgroundColor: '#212B36',
+                      color: 'white',
+                      fontWeight: 500,
+                      '& .MuiChip-deleteIcon': {
+                        color: 'white',
+                        '&:hover': {
+                          color: 'rgba(255, 255, 255, 0.7)',
+                        },
+                      },
+                    }}
+                  />
+                ))}
+              </Stack>
             </Box>
           </Stack>
         </Card>

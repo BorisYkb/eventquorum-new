@@ -39,8 +39,8 @@ const handleAccordion = (key: any) => {
 							<Link href="/#" className="hash-nav">Accueil </Link>
 							
 						</li>
-						<li className="hash-has-sub"><Link href="/landing-page/a_propos_de_levenement" className="hash-nav">A propos de l'événement</Link></li>
-						<li className="hash-has-sub"><Link href="/landing-page/faq" className="hash-nav">FAQ,s</Link></li>
+						<li className="hash-has-sub"><Link href="/landingpage/a_propos_de_levenement" className="hash-nav">A propos de l'événement</Link></li>
+						<li className="hash-has-sub"><Link href="/landingpage/faq" className="hash-nav">FAQ,s</Link></li>
 						
 						<li>
 							<Link href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="event-btn4">
@@ -48,7 +48,7 @@ const handleAccordion = (key: any) => {
 							</Link>
 						</li>
 						<li>
-							<Link href="/landing-page/inscription" className="event-btn1">
+							<Link href="/landingpage/inscription" className="event-btn1">
 								<span>Inscription</span>
 							</Link>
 						</li>

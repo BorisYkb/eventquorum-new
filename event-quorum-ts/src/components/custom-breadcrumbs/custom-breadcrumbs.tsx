@@ -48,7 +48,7 @@ export function CustomBreadcrumbs({
   action,
   backHref,
   heading,
-  subtitle,
+  // subtitle,
   slots = {},
   links = [],
   moreLinks = [],

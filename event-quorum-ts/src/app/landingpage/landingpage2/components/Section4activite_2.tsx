@@ -129,7 +129,7 @@ export default function Section4activite_2() {
                                     </div>
                                     <div className="space20" />
                                     <div className="text-area">
-                                        <Link href="/landing-page/intervenant">Dennis Jacobson</Link>
+                                        <Link href="/landingpage/intervenant">Dennis Jacobson</Link>
                                         <div className="space16" />
                                         <p>Consultant Finance</p>
                                     </div>
@@ -195,7 +195,7 @@ export default function Section4activite_2() {
                                     </div>
                                     <div className="space20" />
                                     <div className="text-area">
-                                        <Link href="/landing-page/intervenant">Kendra Cremin</Link>
+                                        <Link href="/landingpage/intervenant">Kendra Cremin</Link>
                                         <div className="space16" />
                                         <p>Business Consultant</p>
                                     </div>
@@ -228,7 +228,7 @@ export default function Section4activite_2() {
                                     </div>
                                     <div className="space20" />
                                     <div className="text-area">
-                                        <Link href="/landing-page/intervenant">Dennis Jacobson</Link>
+                                        <Link href="/landingpage/intervenant">Dennis Jacobson</Link>
                                         <div className="space16" />
                                         <p>Finance Consultant</p>
                                     </div>
@@ -261,7 +261,7 @@ export default function Section4activite_2() {
                                     </div>
                                     <div className="space20" />
                                     <div className="text-area">
-                                        <Link href="/landing-page/intervenant">Patricia Wilkinson</Link>
+                                        <Link href="/landingpage/intervenant">Patricia Wilkinson</Link>
                                         <div className="space16" />
                                         <p>HR Consultant</p>
                                     </div>

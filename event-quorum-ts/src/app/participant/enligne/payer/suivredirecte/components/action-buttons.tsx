@@ -18,8 +18,6 @@ import Grid from '@mui/material/Grid2';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -33,6 +31,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
 
 import { Iconify } from 'src/components/iconify';
 import { PROGRAMME_DAYS } from './programme/programme-data';
@@ -42,9 +41,8 @@ import { PROGRAMME_DAYS } from './programme/programme-data';
 interface Question {
     id: string;
     question: string;
-    isEvent: boolean;
-    activityId?: string;
-    activityTitle?: string;
+    activityId: string;
+    activityTitle: string;
     date: string;
     status: 'En attente' | 'Répondu';
     response?: string;
@@ -52,7 +50,7 @@ interface Question {
 
 /**
  * Composant des boutons d'action pour la participation aux enquêtes et partage d'avis
- * Maintenant avec accordion pour poser des questions
+ * Avec accordion pour poser des questions sur les activités uniquement
  */
 export function ActionButtons() {
     const router = useRouter();
@@ -61,7 +59,6 @@ export function ActionButtons() {
     const [questionAccordionExpanded, setQuestionAccordionExpanded] = useState(false);
 
     // États pour le formulaire de question
-    const [isEventQuestion, setIsEventQuestion] = useState(true);
     const [selectedActivityId, setSelectedActivityId] = useState('');
     const [questionText, setQuestionText] = useState('');
 
@@ -69,14 +66,14 @@ export function ActionButtons() {
     const [questions, setQuestions] = useState<Question[]>([
         {
             id: '1',
-            question: 'Quelle est l\'horaire exact de la cérémonie d\'ouverture ?',
-            isEvent: false,
+            question: "Quelle est l'horaire exact de la cérémonie d'ouverture ?",
             activityId: '2',
             activityTitle: "CÉRÉMONIE D'OUVERTURE OFFICIELLE",
             date: new Date('2024-01-15T10:30:00').toLocaleString('fr-FR'),
             status: 'Répondu',
-            response: 'La cérémonie d\'ouverture commence à 09h00 précises et se termine à 12h00.'
-        }
+            response:
+                "La cérémonie d'ouverture commence à 09h00 précises et se termine à 12h00.",
+        },
     ]);
 
     // État pour le popup de détail
@@ -84,11 +81,11 @@ export function ActionButtons() {
     const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
 
     // Récupérer toutes les activités de tous les jours
-    const allActivities = PROGRAMME_DAYS.flatMap(day =>
-        day.activities.map(activity => ({
+    const allActivities = PROGRAMME_DAYS.flatMap((day) =>
+        day.activities.map((activity) => ({
             id: activity.id,
             title: activity.title,
-            day: day.label
+            day: day.label,
         }))
     );
 
@@ -126,39 +123,26 @@ export function ActionButtons() {
     };
 
     /**
-     * Gère le changement du checkbox Événement
-     */
-    const handleEventCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsEventQuestion(event.target.checked);
-        if (event.target.checked) {
-            setSelectedActivityId(''); // Reset l'activité si on sélectionne Événement
-        }
-    };
-
-    /**
      * Envoie la question
      */
     const handleSendQuestion = () => {
-        if (!questionText.trim()) return;
-        if (!isEventQuestion && !selectedActivityId) return;
+        if (!questionText.trim() || !selectedActivityId) return;
 
-        const selectedActivity = allActivities.find(act => act.id === selectedActivityId);
+        const selectedActivity = allActivities.find((act) => act.id === selectedActivityId);
 
         const newQuestion: Question = {
             id: Date.now().toString(),
             question: questionText,
-            isEvent: isEventQuestion,
-            activityId: isEventQuestion ? undefined : selectedActivityId,
-            activityTitle: isEventQuestion ? undefined : selectedActivity?.title,
+            activityId: selectedActivityId,
+            activityTitle: selectedActivity?.title || '',
             date: new Date().toLocaleString('fr-FR'),
-            status: 'En attente'
+            status: 'En attente',
         };
 
         setQuestions([newQuestion, ...questions]);
 
         // Reset le formulaire
         setQuestionText('');
-        setIsEventQuestion(true);
         setSelectedActivityId('');
     };
 
@@ -185,19 +169,21 @@ export function ActionButtons() {
                     sx={{
                         borderRadius: { xs: 1, md: 2 },
                         border: '1px solid',
-                        borderColor: 'divider'
+                        borderColor: 'divider',
                     }}
                 >
                     <CardContent sx={{ p: { xs: 2, md: 3 } }}>
                         {/* Première ligne de boutons */}
-                        <Box sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'start',
-                            gap: { xs: 1.5, md: 2 },
-                            flexWrap: 'wrap',
-                            mb: 2
-                        }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'start',
+                                gap: { xs: 1.5, md: 2 },
+                                flexWrap: 'wrap',
+                                mb: 2,
+                            }}
+                        >
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -208,7 +194,7 @@ export function ActionButtons() {
                                     px: { xs: 1.5, md: 2 },
                                     py: { xs: 0.75, md: 1 },
                                     fontWeight: 600,
-                                    borderRadius: 1
+                                    borderRadius: 1,
                                 }}
                             >
                                 Je participe à une enquête
@@ -224,7 +210,7 @@ export function ActionButtons() {
                                     px: { xs: 1.5, md: 2 },
                                     py: { xs: 0.75, md: 1 },
                                     fontWeight: 600,
-                                    borderRadius: 1
+                                    borderRadius: 1,
                                 }}
                             >
                                 Partager un avis
@@ -240,14 +226,14 @@ export function ActionButtons() {
                                 border: '1px solid',
                                 borderColor: 'divider',
                                 borderRadius: 1,
-                                '&:before': { display: 'none' }
+                                '&:before': { display: 'none' },
                             }}
                         >
                             <AccordionSummary
                                 expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                                 sx={{
                                     bgcolor: 'grey.50',
-                                    '&:hover': { bgcolor: 'grey.100' }
+                                    '&:hover': { bgcolor: 'grey.100' },
                                 }}
                             >
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -262,22 +248,9 @@ export function ActionButtons() {
                                 {/* Formulaire de question */}
                                 <Box sx={{ mb: 3 }}>
                                     <Grid container spacing={2}>
-                                        {/* Checkbox Événement */}
-                                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={isEventQuestion}
-                                                        onChange={handleEventCheckboxChange}
-                                                    />
-                                                }
-                                                label="Événement"
-                                            />
-                                        </Grid>
-
                                         {/* Liste déroulante des activités */}
-                                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                                            <FormControl fullWidth disabled={isEventQuestion}>
+                                        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                                            <FormControl fullWidth>
                                                 <InputLabel>Sélectionner une activité</InputLabel>
                                                 <Select
                                                     value={selectedActivityId}
@@ -287,9 +260,9 @@ export function ActionButtons() {
                                                         PaperProps: {
                                                             sx: {
                                                                 maxHeight: 300,
-                                                                maxWidth: { xs: '90vw', sm: 500 }
-                                                            }
-                                                        }
+                                                                maxWidth: { xs: '90vw', sm: 500 },
+                                                            },
+                                                        },
                                                     }}
                                                     sx={{ minHeight: '56px' }}
                                                 >
@@ -300,7 +273,7 @@ export function ActionButtons() {
                                                             sx={{
                                                                 whiteSpace: 'normal',
                                                                 wordWrap: 'break-word',
-                                                                py: 1.5
+                                                                py: 1.5,
                                                             }}
                                                         >
                                                             {activity.title} ({activity.day})
@@ -310,8 +283,8 @@ export function ActionButtons() {
                                             </FormControl>
                                         </Grid>
 
-                                        {/* Champ de texte pour la question */}
-                                        <Grid size={{ xs: 12, md: 4 }}>
+                                        {/* Champ de texte pour la question - HEIGHT DOUBLÉ */}
+                                        <Grid size={{ xs: 12, md: 6 }}>
                                             <TextField
                                                 fullWidth
                                                 label="Votre question"
@@ -319,7 +292,11 @@ export function ActionButtons() {
                                                 value={questionText}
                                                 onChange={(e) => setQuestionText(e.target.value)}
                                                 multiline
-                                                rows={2}
+                                                rows={4}
+                                                // Pour doubler le height, changez la valeur de rows
+                                                // rows={2} = height normal
+                                                // rows={4} = height doublé
+                                                // rows={6} = height triplé, etc.
                                                 sx={{ minHeight: '56px' }}
                                             />
                                         </Grid>
@@ -330,11 +307,11 @@ export function ActionButtons() {
                                                 variant="contained"
                                                 fullWidth
                                                 onClick={handleSendQuestion}
-                                                disabled={!questionText.trim() || (!isEventQuestion && !selectedActivityId)}
+                                                disabled={!questionText.trim() || !selectedActivityId}
                                                 startIcon={<Iconify icon="solar:paper-plane-bold" />}
                                                 sx={{
                                                     height: '40px',
-                                                    fontSize: { xs: '0.75rem', md: '0.875rem' }
+                                                    fontSize: { xs: '0.75rem', md: '0.875rem' },
                                                 }}
                                             >
                                                 Envoyer
@@ -352,7 +329,9 @@ export function ActionButtons() {
                                                 <TableCell sx={{ fontWeight: 600 }}>Activité</TableCell>
                                                 <TableCell sx={{ fontWeight: 600 }}>Date & Heure</TableCell>
                                                 <TableCell sx={{ fontWeight: 600 }}>Statut</TableCell>
-                                                <TableCell align="center" sx={{ fontWeight: 600 }}>Action</TableCell>
+                                                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                                                    Action
+                                                </TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -367,14 +346,33 @@ export function ActionButtons() {
                                             ) : (
                                                 questions.map((q) => (
                                                     <TableRow key={q.id} hover>
+                                                        {/* Question cliquable comme lien */}
                                                         <TableCell sx={{ maxWidth: 250 }}>
-                                                            <Typography variant="body2" noWrap>
+                                                            <Link
+                                                                component="button"
+                                                                variant="body2"
+                                                                onClick={() => handleViewDetails(q)}
+                                                                sx={{
+                                                                    textAlign: 'left',
+                                                                    cursor: 'pointer',
+                                                                    textDecoration: 'none',
+                                                                    color: '#000',
+                                                                    '&:hover': {
+                                                                        textDecoration: 'underline',
+                                                                    },
+                                                                    display: 'block',
+                                                                    width: '100%',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap',
+                                                                }}
+                                                            >
                                                                 {q.question}
-                                                            </Typography>
+                                                            </Link>
                                                         </TableCell>
                                                         <TableCell>
                                                             <Typography variant="body2" noWrap>
-                                                                {q.isEvent ? 'Event' : q.activityTitle}
+                                                                {q.activityTitle}
                                                             </Typography>
                                                         </TableCell>
                                                         <TableCell>
@@ -418,7 +416,7 @@ export function ActionButtons() {
                 maxWidth="sm"
                 fullWidth
                 PaperProps={{
-                    sx: { borderRadius: 2 }
+                    sx: { borderRadius: 2 },
                 }}
             >
                 <DialogTitle sx={{ textAlign: 'center', pb: 1 }}>
@@ -428,18 +426,11 @@ export function ActionButtons() {
                 </DialogTitle>
 
                 <DialogContent sx={{ pt: 2, pb: 3 }}>
-                    <Typography
-                        variant="body1"
-                        color="text.secondary"
-                        sx={{ textAlign: 'center', mb: 3 }}
-                    >
+                    <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', mb: 3 }}>
                         Donnez vos avis sur l'activité/Événement
                     </Typography>
 
-                    <Typography
-                        variant="body2"
-                        sx={{ mb: 2, fontWeight: 500 }}
-                    >
+                    <Typography variant="body2" sx={{ mb: 2, fontWeight: 500 }}>
                         Renseigner le code de l'enquête
                     </Typography>
 
@@ -455,18 +446,10 @@ export function ActionButtons() {
                 </DialogContent>
 
                 <DialogActions sx={{ justifyContent: 'center', pb: 2, gap: 1 }}>
-                    <Button
-                        onClick={handleCloseEnqueteModal}
-                        color="inherit"
-                        variant="outlined"
-                    >
+                    <Button onClick={handleCloseEnqueteModal} color="inherit" variant="outlined">
                         Annuler
                     </Button>
-                    <Button
-                        onClick={handleConfirmEnquete}
-                        variant="contained"
-                        disabled={!codeEnquete.trim()}
-                    >
+                    <Button onClick={handleConfirmEnquete} variant="contained" disabled={!codeEnquete.trim()}>
                         Participer
                     </Button>
                 </DialogActions>
@@ -479,7 +462,7 @@ export function ActionButtons() {
                 maxWidth="sm"
                 fullWidth
                 PaperProps={{
-                    sx: { borderRadius: 2 }
+                    sx: { borderRadius: 2 },
                 }}
             >
                 <DialogTitle sx={{ pb: 1 }}>
@@ -507,7 +490,7 @@ export function ActionButtons() {
                                     Activité concernée :
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {selectedQuestion.isEvent ? 'Événement général' : selectedQuestion.activityTitle}
+                                    {selectedQuestion.activityTitle}
                                 </Typography>
                             </Box>
 
@@ -521,18 +504,20 @@ export function ActionButtons() {
                                 </Typography>
                             </Box>
 
-                            {/* Statut */}
-                            <Box>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                                    Statut :
-                                </Typography>
-                                <Chip
-                                    label={selectedQuestion.status}
-                                    size="small"
-                                    color={selectedQuestion.status === 'Répondu' ? 'success' : 'warning'}
-                                    variant="soft"
-                                />
-                            </Box>
+                            {/* Statut - Affiché UNIQUEMENT si la question est en attente */}
+                            {selectedQuestion.status === 'En attente' && (
+                                <Box>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                        Statut :
+                                    </Typography>
+                                    <Chip
+                                        label={selectedQuestion.status}
+                                        size="small"
+                                        color="warning"
+                                        variant="soft"
+                                    />
+                                </Box>
+                            )}
 
                             {/* Réponse si disponible */}
                             {selectedQuestion.status === 'Répondu' && selectedQuestion.response && (
@@ -540,9 +525,9 @@ export function ActionButtons() {
                                     sx={{
                                         p: 2,
                                         borderRadius: 1,
-                                        bgcolor: 'success.lighter',
+                                        bgcolor: 'grey.200',
                                         border: '1px solid',
-                                        borderColor: 'success.light'
+                                        borderColor: 'grey.200',
                                     }}
                                 >
                                     <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
@@ -558,10 +543,7 @@ export function ActionButtons() {
                 </DialogContent>
 
                 <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
-                    <Button
-                        onClick={handleCloseDetailModal}
-                        variant="contained"
-                    >
+                    <Button onClick={handleCloseDetailModal} variant="contained">
                         Fermer
                     </Button>
                 </DialogActions>

@@ -1,3 +1,5 @@
+//src/app/superviseur/participants/page.tsx
+
 import type { Metadata } from 'next';
 
 import { CONFIG } from 'src/global-config';
