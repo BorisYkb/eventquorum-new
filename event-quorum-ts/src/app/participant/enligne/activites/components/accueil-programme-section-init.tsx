@@ -17,11 +17,12 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import { ACTIVITES_DISPONIBLES } from 'src/app/participant/components/data/activite-data';
+
 import { Iconify } from 'src/components/iconify';
 import { CustomTabs } from 'src/components/custom-tabs';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { ACTIVITES_DISPONIBLES } from 'src/app/participant/components/data/activite-data';
 import { ProgrammeActivityItemInit } from './programme/programme-activity-item-init';
 
 // ----------------------------------------------------------------------

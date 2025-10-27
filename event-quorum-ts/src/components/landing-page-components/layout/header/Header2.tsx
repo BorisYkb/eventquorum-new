@@ -1,11 +1,11 @@
-import Link from 'next/link'
 import  '/public/assets/landing-page/css/EventVariables.css';
+
+import Link from 'next/link'
 
 
 export default function Header2({ scroll, isMobileMenu2, handleMobileMenu2, isSearch, handleSearch }: any) {
 	return (
-		<>
-			<header>
+		<header>
 				<div className={`header-area homepage2 header header-sticky d-none d-lg-block ${scroll ? 'sticky' : ''}`} id="header">
 					<div className="container">
 						<div className="row">
@@ -46,7 +46,5 @@ export default function Header2({ scroll, isMobileMenu2, handleMobileMenu2, isSe
 					</div>
 				</div>
 			</header >
-
-		</>
 	)
 }

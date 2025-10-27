@@ -1,12 +1,14 @@
 // src/app/participant/enpresentiel/components/payment-methods.tsx
+
 'use client';
+
+import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { varAlpha } from 'minimal-shared/utils';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -51,8 +53,7 @@ export function PaymentMethods({
 
             {isAllFree ? (
                 <Box
-                >
-                </Box>
+                 />
             ) : (
                 <Stack spacing={2}>
                     {PAYMENT_OPTIONS.map((option) => {
