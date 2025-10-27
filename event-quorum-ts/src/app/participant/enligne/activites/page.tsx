@@ -1,4 +1,5 @@
 // src/app/participant/enligne/activites/page.tsx
+
 'use client';
 
 import { useState, useMemo } from 'react';

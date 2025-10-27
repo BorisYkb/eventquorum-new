@@ -1,11 +1,21 @@
 
 'use client'
+
 import AOS from 'aos'
 import { useEffect, useState } from "react"
-import AddClassBody from '../elements/AddClassBody'
-import BackToTop from '../elements/BackToTop'
+
+import Header1_2 from 'src/app/landingpage/landingpage2/Header1_2'
+import Header1_3 from 'src/app/landingpage/landingpage3/Header1_3'
+import Header1_4 from 'src/app/landingpage/landingpage4/Header1_4'
+import Header1_5 from 'src/app/landingpage/landingpage5/Header1_5'
+import Header1_6 from 'src/app/landingpage/landingpage6/Header1_6'
+import Header1_7 from 'src/app/landingpage/landingpage7/Header1_7'
+import Header1_8 from 'src/app/landingpage/landingpage8/Header1_8'
+import Header1_9 from 'src/app/landingpage/landingpage9/Header1_9'
+import Header1_10 from 'src/app/landingpage/landingpage10/Header1_10'
+
+import MobileMenu from './MobileMenu'
 import Footer1 from './footer/Footer1'
-import Footer10 from './footer/Footer10'
 import Footer2 from './footer/Footer2'
 import Footer3 from './footer/Footer3'
 import Footer4 from './footer/Footer4'
@@ -15,33 +25,26 @@ import Footer7 from './footer/Footer7'
 import Footer8 from './footer/Footer8'
 import Footer9 from './footer/Footer9'
 import Header1 from "./header/Header1"
-import Header10 from './header/Header10'
-import Header1_10 from 'src/app/landingpage/landingpage10/Header1_10'
 import Header2 from './header/Header2'
-import Header1_2 from 'src/app/landingpage/landingpage2/Header1_2'
 import Header3 from './header/Header3'
-import Header1_3 from 'src/app/landingpage/landingpage3/Header1_3'
 import Header4 from './header/Header4'
-import Header1_4 from 'src/app/landingpage/landingpage4/Header1_4'
 import Header5 from './header/Header5'
-import Header1_5 from 'src/app/landingpage/landingpage5/Header1_5'
 import Header6 from './header/Header6'
-import Header1_6 from 'src/app/landingpage/landingpage6/Header1_6'
 import Header7 from './header/Header7'
-import Header1_7 from 'src/app/landingpage/landingpage7/Header1_7'
 import Header8 from './header/Header8'
-import Header1_8 from 'src/app/landingpage/landingpage8/Header1_8'
 import Header9 from './header/Header9'
-import Header1_9 from 'src/app/landingpage/landingpage9/Header1_9'
-import MobileMenu from './MobileMenu'
 import MobileMenu2 from './MobileMenu2'
 import MobileMenu3 from './MobileMenu3'
 import MobileMenu4 from './MobileMenu4'
+import Footer10 from './footer/Footer10'
+import Header10 from './header/Header10'
+import BackToTop from '../elements/BackToTop'
+import AddClassBody from '../elements/AddClassBody'
 
 
 interface LayoutProps {
-	headerStyle?: Number
-	footerStyle?: Number
+	headerStyle?: number
+	footerStyle?: number
 	children?: React.ReactNode
 	breadcrumbTitle?: string
 }

@@ -1,4 +1,5 @@
 // src/app/participant/enligne/components/activites-summary.tsx
+
 'use client';
 
 import Box from '@mui/material/Box';
