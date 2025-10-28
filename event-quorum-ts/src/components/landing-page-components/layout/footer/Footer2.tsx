@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Footer2() {
 	return (
-		<div className="footer2-sertion-area">
+		<div className="footer2-sertion-area" style={{backgroundImage: 'url(/assets/landing-page/img/bg/header-bg3.png)'}}>
 				<div className="container">
 					<div className="row display-flex justify-content-around">
 						<div className="col-lg-3 col-md-6">
