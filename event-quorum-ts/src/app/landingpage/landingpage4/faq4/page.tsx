@@ -1,10 +1,13 @@
 'use client'
+
+import Link from "next/link"
+import { useState } from "react"
+
+import Layout from "src/components/landing-page-components/layout/Layout"
 import Countdown from 'src/components/landing-page-components/elements/Countdown'
 import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
 import Header2 from 'src/components/landing-page-components/layout/header/Header2'
-import Layout from "src/components/landing-page-components/layout/Layout"
-import Link from "next/link"
-import { useState } from "react"
+
 import Header1_4 from '../Header1_4'
 
 export default function Faq5() {
@@ -18,13 +21,11 @@ const handleAccordion = (key: any) => {
     setIsAccordion(prevState => prevState === key ? null : key)
 }
 	return (
-		<>
-
-			<Layout headerStyle={1_4} footerStyle={4} >
+		<Layout headerStyle={1_4} footerStyle={4} >
 				
 				
 				<div>
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg15.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg15.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-9 m-auto">
@@ -729,6 +730,5 @@ const handleAccordion = (key: any) => {
 				</div>
 				{/* <Footer1 /> */}
 			</Layout>
-		</>
 	)
 }

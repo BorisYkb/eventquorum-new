@@ -1,12 +1,11 @@
 
-import Countdown from 'src/components/landing-page-components/elements/Countdown'
 import Link from 'next/link'
+
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
 
 export default function Section9() {
 	return (
-		<>
-
-			<div className="cta2-section-area">
+		<div className="cta2-section-area">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-10 m-auto ">
@@ -31,7 +30,5 @@ export default function Section9() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

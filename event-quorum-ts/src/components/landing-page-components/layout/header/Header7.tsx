@@ -2,21 +2,20 @@ import Link from 'next/link'
 
 export default function Header7({ scroll, isMobileMenu, handleMobileMenu, isSearch, handleSearch }: any) {
 	return (
-		<>
-			<header>
+		<header>
 				<div className={`header-area homepage7 header header-sticky d-none d-lg-block ${scroll ? 'sticky' : ''}`} id="header">
 					<div className="container">
 						<div className="row">
 							<div className="col-lg-12">
 								<div className="header-elements">
 									<div className="site-logo">
-										<Link href="/landing-page/landingpage7"><img src="/assets/landing-page/img/logo/logo6.png" alt="" /></Link>
+										<Link href="/landingpage/landingpage7"><img src="/assets/landing-page/img/logo/logo6.png" alt="" /></Link>
 									</div>
 									<div className="main-menu">
 										<ul>
-											<li><Link href="/landing-page/landingpage7">Accueil </Link></li>
-											<li><Link href="/landing-page/landingpage7/a_propos_de_levenement7">A Propos de l'évènement</Link></li>
-											<li><Link href="/landing-page/landingpage7/faq7">FAQ,s</Link></li>
+											<li><Link href="/landingpage/landingpage7">Accueil </Link></li>
+											<li><Link href="/landingpage/landingpage7/a_propos_de_levenement7">A Propos de l'évènement</Link></li>
+											<li><Link href="/landingpage/landingpage7/faq7">FAQ,s</Link></li>
 											
 										</ul>
 									</div>
@@ -27,7 +26,7 @@ export default function Header7({ scroll, isMobileMenu, handleMobileMenu, isSear
 										</Link>
 									</li>
 									<li>
-										<Link href="/landing-page/landingpage7/inscription7" className="vl-btn4-header4">
+										<Link href="/landingpage/landingpage7/inscription7" className="vl-btn4-header4">
 											<span>Inscription</span>
 										</Link>
 									</li>
@@ -37,7 +36,5 @@ export default function Header7({ scroll, isMobileMenu, handleMobileMenu, isSear
 					</div>
 				</div>
 			</header >
-
-		</>
 	)
 }

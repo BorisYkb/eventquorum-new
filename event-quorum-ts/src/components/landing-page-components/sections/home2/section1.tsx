@@ -1,9 +1,9 @@
 'use client'
 
-import { useCallback } from 'react'
-import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
+import dynamic from 'next/dynamic'
+import { useCallback } from 'react'
 import CountUp from 'react-countup'
 
 // Lazy loading du slider pour améliorer les performances
@@ -34,8 +34,7 @@ const sliderSettings = {
 } as const
 
 // Composant pour une slide individuelle
-const HeroSlide = () => {
-  return (
+const HeroSlide = () => (
     <div className="her2-section-area" >
       
       <div className="container">
@@ -66,9 +65,9 @@ const HeroSlide = () => {
                 
                 <div className="space32" />
                 
-                <div className="btn-area2" style={{display: 'flex', gap: '16px'}}>
+                {/* <div className="btn-area2" style={{display: 'flex', gap: '16px'}}>
                   <Link
-                    href="/landing-page/landingpage2/inscription2"
+                    href="/landingpage/landingpage2/inscription2"
                     className="event-btn1"
                     
                     aria-label="S'inscrire à la conférence SARA"
@@ -82,6 +81,24 @@ const HeroSlide = () => {
                   >
                     Se Connecter
                   </Link>
+                </div> */}
+
+                {/* Action Buttons */}
+                <div className="hidden lg:flex items-center space-x-4">
+                  
+                  <Link 
+                    href="/landingpage/landingpage2/inscription2"
+                    className="px-4 py-2 bg-lime-400 text-gray-900 font-semibold rounded hover:bg-lime-500 hover:text-white transition-colors duration-200"
+                  >
+                    S'inscrire
+                  </Link>
+
+                  <Link 
+                    href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F"
+                    className="px-4 py-2 bg-black text-white font-semibold rounded hover:bg-slate-50 hover:text-black transition-colors duration-200"
+                  >
+                    Se Connecter
+                  </Link>
                 </div>
               </div>
             </div>
@@ -90,7 +107,6 @@ const HeroSlide = () => {
       </div>
     </div>
   )
-}
 
 export default function Section1() {
  

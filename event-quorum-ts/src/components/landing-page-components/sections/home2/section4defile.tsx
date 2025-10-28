@@ -1,7 +1,8 @@
 'use client'
+
 import Link from 'next/link'
-import { Autoplay, Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, Navigation, Pagination } from "swiper/modules"
 const swiperOptions = {
 	modules: [Autoplay, Pagination, Navigation],
 	slidesPerView: 3,
@@ -54,9 +55,7 @@ const swiperOptions = {
 
 export default function Section4defile() {
 	return (
-		<>
-
-			<div className="team8-section-rea sp1" >
+		<div className="team8-section-rea sp1" >
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-5">
@@ -235,7 +234,5 @@ export default function Section4defile() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

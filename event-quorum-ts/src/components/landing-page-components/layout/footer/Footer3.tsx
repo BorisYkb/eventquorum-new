@@ -3,8 +3,7 @@ import Link from 'next/link'
 
 export default function Footer3() {
 	return (
-		<>
-			<div className="footer3-sertion-area">
+		<div className="footer3-sertion-area">
 				<div className="container">
 					<div className="row display-flex justify-content-around">
 						<div className="col-lg-3 col-md-6">
@@ -112,7 +111,5 @@ export default function Footer3() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

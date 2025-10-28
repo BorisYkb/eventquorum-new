@@ -29,7 +29,7 @@ export default function Tarif1() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage3/inscription3" className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/landingpage/landingpage3/inscription3" className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -42,7 +42,7 @@ export default function Tarif1() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage3/inscription3" className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/landingpage/landingpage3/inscription3" className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -54,7 +54,7 @@ export default function Tarif1() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage3/inscription3 " className="vl-btn1">Acheter un Ticket</Link>
+											<Link href="/landingpage/landingpage3/inscription3 " className="vl-btn1">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>

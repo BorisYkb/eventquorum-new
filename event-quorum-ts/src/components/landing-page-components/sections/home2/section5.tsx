@@ -1,4 +1,5 @@
 'use client'
+
 import Link from 'next/link'
 import { useState } from "react"
 
@@ -8,9 +9,7 @@ export default function Section5() {
 		setIsTab(i)
 	}
 	return (
-		<>
-
-			<div className="event2-section-area sp1">
+		<div className="event2-section-area sp1">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-6 m-auto">
@@ -78,7 +77,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Cérémonie officiel de l'ouverture du salon</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Cérémonie officiel de l'ouverture du salon</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -126,7 +125,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Ateliers pour élever l'artisanat</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Ateliers pour élever l'artisanat</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -171,7 +170,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Durabilité, l'entreprise du futur</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Durabilité, l'entreprise du futur</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -225,7 +224,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Cérémonie officiel de l'ouverture du salon</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Cérémonie officiel de l'ouverture du salon</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -273,7 +272,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Ateliers pour élever l'artisanat</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Ateliers pour élever l'artisanat</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -318,7 +317,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Durabilité, l'entreprise du futur</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Durabilité, l'entreprise du futur</Link>
 																<div className="space24" />
 																<div className="author-area" >
 																	<div className="autho-name-area" style={{ display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -363,7 +362,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Business World Event Introduction</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Business World Event Introduction</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -408,7 +407,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Workshops Keynote so Elevate Craft</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Workshops Keynote so Elevate Craft</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{ display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -422,7 +421,7 @@ export default function Section5() {
 																</div>
 																<div className="space24" />
 																<div className="btn-area1">
-																	<Link href="/connexion" className="vl-btn2-prix"><span className="demo">7500 FCFA</span></Link>
+																	<Link href="#" className="vl-btn2-prix"><span className="demo">7500 FCFA</span></Link>
 																</div>
 															</div>
 														</div>
@@ -452,7 +451,7 @@ export default function Section5() {
 																	</li>
 																</ul>
 																<div className="space20" />
-																<Link href="/ActiviteDetail2" className="head">Sustainability the Future Business</Link>
+																<Link href="/landingpage/landingpage2/ActiviteDetail2" className="head">Sustainability the Future Business</Link>
 																<div className="space24" />
 																<div className="author-area">
 																	<div className="autho-name-area" style={{ display: 'flex', alignItems: 'center' , gap: '8px', border: 'none'}}>
@@ -467,7 +466,7 @@ export default function Section5() {
 																</div>
 																<div className="space24" />
 																<div className="btn-area1">
-																	<Link href="/landing-page/inscription" className="vl-btn2-prix"><span className="demo">10 000 FCFA</span></Link>
+																	<Link href="#" className="vl-btn2-prix"><span className="demo">10 000 FCFA</span></Link>
 																</div>
 															</div>
 														</div>
@@ -482,7 +481,5 @@ export default function Section5() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

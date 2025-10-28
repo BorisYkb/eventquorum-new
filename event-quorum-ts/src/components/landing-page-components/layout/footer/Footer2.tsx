@@ -2,8 +2,7 @@ import Link from 'next/link'
 
 export default function Footer2() {
 	return (
-		<>
-			<div className="footer2-sertion-area">
+		<div className="footer2-sertion-area">
 				<div className="container">
 					<div className="row display-flex justify-content-around">
 						<div className="col-lg-3 col-md-6">
@@ -69,7 +68,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img1.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -77,7 +76,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img2.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -85,7 +84,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img3.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -93,7 +92,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img4.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -101,7 +100,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img5.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -109,7 +108,7 @@ export default function Footer2() {
 										<div className="img1">
 											<img src="/assets/landing-page/img/all-images/footer/footer-img6.png" alt="" />
 											<div className="icons">
-												<Link href="/landing-page/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
+												<Link href="/landingpage/landingpage2/a_propos_de_levenement2#evenement_recent"><i className="fa-brands fa-instagram" /></Link>
 											</div>
 										</div>
 									</div>
@@ -127,7 +126,5 @@ export default function Footer2() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

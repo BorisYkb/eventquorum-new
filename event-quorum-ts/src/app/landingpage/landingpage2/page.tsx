@@ -1,5 +1,6 @@
 
 import Layout from "src/components/landing-page-components/layout/Layout"
+import Header2 from "src/components/landing-page-components/layout/header/Header2"
 import Section1 from 'src/components/landing-page-components/sections/home2/section1'
 import Section2 from 'src/components/landing-page-components/sections/home2/section2'
 import Section3 from 'src/components/landing-page-components/sections/home2/section3'
@@ -16,6 +17,7 @@ export default function Home2() {
 
 	return (
 		<Layout headerStyle={2} footerStyle={2}>
+			
 			<Section1 />
 			<Section2 />
 			<Section5 />

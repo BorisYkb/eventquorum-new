@@ -2,21 +2,20 @@ import Link from 'next/link'
 
 export default function Header10({ scroll, isMobileMenu, handleMobileMenu, isSearch, handleSearch }: any) {
 	return (
-		<>
-			<header>
+		<header>
 				<div className={`header-area homepage10 header header-sticky d-none d-lg-block ${scroll ? 'sticky' : ''}`} id="header">
 					<div className="container">
 						<div className="row">
 							<div className="col-lg-12">
 								<div className="header-elements">
 									<div className="site-logo">
-										<Link href="/landing-page/landingpage10"><img src="/assets/landing-page/img/logo/logo5.png" alt="" /></Link>
+										<Link href="/landingpage/landingpage10"><img src="/assets/landing-page/img/logo/logo5.png" alt="" /></Link>
 									</div>
 									<div className="main-menu">
 										<ul>
-											<li><Link href="/landing-page/landingpage10">Accueil </Link></li>
-											<li><Link href="/about">About Event</Link></li>
-											<li><Link href="/landing-page/faq">FAQ,s</Link></li>
+											<li><Link href="/landingpage/landingpage10">Accueil </Link></li>
+											<li><Link href="/landingpage/landingpage10/a_propos_de_levenement10">About Event</Link></li>
+											<li><Link href="/landingpage/faq">FAQ,s</Link></li>
 
 											
 										</ul>
@@ -40,23 +39,12 @@ export default function Header10({ scroll, isMobileMenu, handleMobileMenu, isSea
 											</li>
 										</ul>
 									</div>
-									<div className={`header-search-form-wrapper ${isSearch ? 'open' : ''}`}>
-										<div className="tx-search-close tx-close" onClick={handleSearch}><i className="fa-solid fa-xmark" /></div>
-										<div className="header-search-container">
-											<form role="search" className="search-form">
-												<input type="search" className="search-field" placeholder="Search …" name="s" />
-												<button type="submit" className="search-submit"><img src="/assets/landing-page/img/icons/search1.svg" alt="" /></button>
-											</form>
-										</div>
-									</div>
-									{isSearch && <div className="body-overlay active" onClick={handleSearch} />}
+									
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</header >
-
-		</>
 	)
 }

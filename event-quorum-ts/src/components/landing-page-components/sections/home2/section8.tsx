@@ -3,9 +3,7 @@ import Link from 'next/link'
 
 export default function Section8() {
 	return (
-		<>
-
-			<div className="contact2-section-area sp1">
+		<div className="contact2-section-area sp1">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-6 m-auto">
@@ -63,7 +61,5 @@ export default function Section8() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

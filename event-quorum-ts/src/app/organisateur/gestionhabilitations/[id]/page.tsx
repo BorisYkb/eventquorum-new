@@ -3,10 +3,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useRouter, useParams } from 'next/navigation';
 
-import { ArrowBack, Edit } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import { ArrowBack, Edit } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -20,9 +21,9 @@ import {
 } from '@mui/material';
 
 import Loading from 'src/app/loading';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { Icon } from '@iconify/react/dist/iconify.js';
 interface ReseauSocial {
   nom: string;
   lien: string;
@@ -155,9 +156,7 @@ const DetailAccessPage: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string): 'success' | 'error' => {
-    return status === 'Actif' ? 'success' : 'error';
-  };
+  const getStatusColor = (status: string): 'success' | 'error' => status === 'Actif' ? 'success' : 'error';
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

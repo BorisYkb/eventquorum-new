@@ -3,9 +3,7 @@ import Link from 'next/link'
 
 export default function Section1() {
 	return (
-		<>
-
-			<div className="hero4-section-area">
+		<div className="hero4-section-area">
 				<div className="container">
 					<div className="row align-items-center">
 						<div className="col-lg-5">
@@ -56,7 +54,5 @@ export default function Section1() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

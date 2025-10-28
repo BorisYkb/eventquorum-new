@@ -2,8 +2,7 @@ import Link from 'next/link'
 
 export default function Header9({ scroll, isMobileMenu, handleMobileMenu, isSearch, handleSearch }: any) {
 	return (
-		<>
-			<header>
+		<header>
 				<div className={`header-area homepage8 header header-sticky d-none d-lg-block ${scroll ? 'sticky' : ''}`} id="header">
 					<div className="container">
 						<div className="row">
@@ -61,7 +60,5 @@ export default function Header9({ scroll, isMobileMenu, handleMobileMenu, isSear
 					</div>
 				</div>
 			</header >
-
-		</>
 	)
 }

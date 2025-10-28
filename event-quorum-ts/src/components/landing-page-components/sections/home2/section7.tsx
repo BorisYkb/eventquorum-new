@@ -3,9 +3,7 @@ import Link from 'next/link'
 
 export default function Section7() {
 	return (
-		<>
-
-			<div className="pricing-plan-section-area sp2">
+		<div className="pricing-plan-section-area sp2">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-5 m-auto">
@@ -31,7 +29,7 @@ export default function Section7() {
 									<p>470/500</p>
 									<div className="space24" />
 									<div className="btn-area1">
-										<Link href="/landing-page/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
+										<Link href="/landingpage/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
 									</div>
 								</div>
 							</div>
@@ -50,7 +48,7 @@ export default function Section7() {
 									<p>470/500</p>
 									<div className="space24" />
 									<div className="btn-area1">
-										<Link href="/landing-page/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
+										<Link href="/landingpage/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
 									</div>
 								</div>
 							</div>
@@ -69,7 +67,7 @@ export default function Section7() {
 									<p>470/500</p>
 									<div className="space24" />
 									<div className="btn-area1">
-										<Link href="/landing-page/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
+										<Link href="/landingpage/landingpage2/inscription2" className="vl-btn2"><span className="demo">Acheter</span><span className="arrow"><i className="fa-solid fa-arrow-right" /></span></Link>
 									</div>
 								</div>
 							</div>
@@ -77,7 +75,5 @@ export default function Section7() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

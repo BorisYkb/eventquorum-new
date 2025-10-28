@@ -1,8 +1,9 @@
 
 'use client'
+
 import Link from 'next/link'
-import { Autoplay, Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, Navigation, Pagination } from "swiper/modules"
 
 const swiperOptions = {
 	modules: [Autoplay, Pagination, Navigation],
@@ -56,9 +57,7 @@ const swiperOptions = {
 
 export default function Section6() {
 	return (
-		<>
-
-			<div className="memory2-section-area sp1">
+		<div className="memory2-section-area sp1">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-12">
@@ -119,7 +118,5 @@ export default function Section6() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

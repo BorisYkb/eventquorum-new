@@ -1,9 +1,11 @@
 "use client"
-import Link from 'next/link'
-import CountUp from 'react-countup'
-import { useState } from 'react'
-import ModalVideo from 'react-modal-video'
+
 import 'react-modal-video/css/modal-video.min.css'
+
+import Link from 'next/link'
+import { useState } from 'react'
+import CountUp from 'react-countup'
+import ModalVideo from 'react-modal-video'
 
 export default function Section2() {
 	const [isOpen, setOpen] = useState(false)

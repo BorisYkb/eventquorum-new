@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 // Images de vos vraies images
 const images = [
@@ -51,6 +51,7 @@ export default function SARADescriptionSection() {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!isModalOpen) return
       
+      // eslint-disable-next-line default-case
       switch (e.key) {
         case 'Escape':
           closeModal()
@@ -618,7 +619,7 @@ export default function SARADescriptionSection() {
           <div 
             className="modal-overlay"
             onClick={closeModal}
-          ></div>
+           />
 
           {/* Contenu du modal */}
           <div className="modal-content">
@@ -683,7 +684,7 @@ export default function SARADescriptionSection() {
 
       {/* Section Organisateur */}
       <div className="organizer-section">
-        <h2 className="organizer-title">Organisateur</h2>
+        <h2 className="organizer-title">Organisateurs & Sponsors</h2>
       
         <div className="organizer-content">
           {/* Logo */}

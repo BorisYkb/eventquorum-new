@@ -8,9 +8,7 @@ export default function Section3() {
 		setIsTab(i)
 	}
 	return (
-		<>
-
-			<div className="event1-section-area sp1">
+		<div className="event1-section-area sp1">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-6 m-auto">
@@ -71,7 +69,7 @@ export default function Section3() {
 														</li>
 													</ul>
 													<div className="space20" />
-													<Link href="/ActiviteDetail" className="head">Conférences plénières inspirantes</Link>
+													<Link href="/landingpage/ActiviteDetail" className="head">Conférences plénières inspirantes</Link>
 													<div className="space16" />
 													
 													<div style={{display: 'flex', flexDirection: "row", gap: '15px'}}>
@@ -112,7 +110,7 @@ export default function Section3() {
 														</li>
 													</ul>
 													<div className="space20" />
-													<Link href="/landing-page/ActiviteDetail" className="head">Ateliers pratiques et interactifs</Link>
+													<Link href="/landingpage/ActiviteDetail" className="head">Ateliers pratiques et interactifs</Link>
 													<div className="space16" />
 													<div style={{display: 'flex', flexDirection: "row", gap: '15px'}}>
 														<div style={{maxWidth:  '10%', borderRadius: '50%', overflow: 'hidden' }}>
@@ -153,7 +151,7 @@ export default function Section3() {
 														</li>
 													</ul>
 													<div className="space20" />
-													<Link href="/landing-page/ActiviteDetail" className="head">Panel de discussion avec experts</Link>
+													<Link href="/landingpage/ActiviteDetail" className="head">Panel de discussion avec experts</Link>
 													<div className="space16" />
 													<div style={{display: 'flex', flexDirection: "row", gap: '15px'}}>
 														<div style={{maxWidth:  '10%', borderRadius: '50%', overflow: 'hidden' }}>
@@ -181,7 +179,5 @@ export default function Section3() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

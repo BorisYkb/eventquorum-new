@@ -12,7 +12,7 @@ export default function Contact() {
         <>
             <Layout headerStyle={1_2} footerStyle={1}>
                 <div>
-                    <div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg12.png)' }}>
+                    <div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg12.png)' }}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-6 m-auto">

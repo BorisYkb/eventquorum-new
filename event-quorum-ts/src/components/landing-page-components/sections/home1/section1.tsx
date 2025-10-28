@@ -1,14 +1,15 @@
+
 "use client"
-import Countdown from 'src/components/landing-page-components/elements/Countdown'
+
 import Link from 'next/link'
+
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
 
 
 export default function Section1() {
 	
 	return (
-		<>
-
-			<div className="hero1-section-area">
+		<div className="hero1-section-area">
 				<div className="bg1">
 					<img src="/assets/landing-page/img/bg/header-bg2.png" alt="" className="header-bg1" />
 				</div>
@@ -30,7 +31,7 @@ export default function Section1() {
 								</p>
 								<div className="space32" />
 								<div className="btn-area1" data-aos="fade-left" data-aos-duration={1100}>
-									<Link href="/landing-page/inscription" className="vl-btn1 border-0">S'inscrire</Link>
+									<Link href="/landingpage/inscription" className="vl-btn1 border-0">S'inscrire</Link>
 									<Link href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F" className="vl-btn2">Se Connecter</Link>
 								</div>
 							</div>
@@ -57,7 +58,5 @@ export default function Section1() {
 					</div>
 				</div>
 			</div>
-
-		</>
 	)
 }

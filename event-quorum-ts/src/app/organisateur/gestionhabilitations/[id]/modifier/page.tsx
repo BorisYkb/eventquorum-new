@@ -27,9 +27,12 @@ import {
 } from '@mui/material';
 
 import Loading from 'src/app/loading';
+
 import { Label } from 'src/components/label';
 
 import IntervenantSupinfos from 'src/sections/gestionhabilitation/nouveau/Intervenant-Sup-infos';
+import AgentSaisieSupinfos from 'src/sections/gestionhabilitation/nouveau/AgentSaisie-Sup-infos';
+import GuichetSupinfos from 'src/sections/gestionhabilitation/nouveau/Guichet-Sup-infos';
 
 interface ReseauSocial {
   nom: string;
@@ -41,6 +44,15 @@ interface IntervenantData {
   image: File | string | null;
   description: string;
   reseauxSociaux: ReseauSocial[];
+}
+
+interface AgentSaisieData {
+  typeAdmission: 'entree' | 'activite' | 'entree_et_activite' | '';
+  activiteSelectionnee: string;
+}
+
+interface GuichetData {
+  autoriserAjoutParticipant: boolean;
 }
 
 interface EditAccessForm {
@@ -88,6 +100,21 @@ const getMockUserData = (id: string) => {
       phone: '01 23 45 67 89',
       email: 'pierre.kouassi@example.com',
       role: "Agent d'admission",
+      agentSaisieData: {
+        typeAdmission: 'activite',
+        activiteSelectionnee: '2'
+      }
+    },
+    '4': {
+      id: 4,
+      firstName: 'Sophie',
+      lastName: 'Diallo',
+      phone: '06 11 22 33 44',
+      email: 'sophie.diallo@example.com',
+      role: 'Guichetier',
+      guichetData: {
+        autoriserAjoutParticipant: true
+      }
     }
   };
 
@@ -119,6 +146,17 @@ const EditAccessPage: React.FC = () => {
     image: null,
     description: '',
     reseauxSociaux: []
+  });
+
+  // État pour les données de l'agent de saisie
+  const [agentSaisieData, setAgentSaisieData] = useState<AgentSaisieData>({
+    typeAdmission: '',
+    activiteSelectionnee: ''
+  });
+
+  // État pour les données du guichet
+  const [guichetData, setGuichetData] = useState<GuichetData>({
+    autoriserAjoutParticipant: false
   });
 
   // Chargement des données existantes
@@ -155,6 +193,21 @@ const EditAccessPage: React.FC = () => {
           });
         }
 
+        // Si c'est un agent de saisie, pré-remplir les données
+        if (userData.role === "Agent d'admission" && userData.agentSaisieData) {
+          setAgentSaisieData({
+            typeAdmission: userData.agentSaisieData.typeAdmission || '',
+            activiteSelectionnee: userData.agentSaisieData.activiteSelectionnee || ''
+          });
+        }
+
+        // Si c'est un guichetier, pré-remplir les données
+        if (userData.role === 'Guichetier' && userData.guichetData) {
+          setGuichetData({
+            autoriserAjoutParticipant: userData.guichetData.autoriserAjoutParticipant || false
+          });
+        }
+
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       } finally {
@@ -182,13 +235,24 @@ const EditAccessPage: React.FC = () => {
       role: event.target.value,
     }));
     
-    // Réinitialiser les données d'intervenant si on change de rôle
+    // Réinitialiser les données selon le rôle
     if (event.target.value !== 'Intervenant') {
       setIntervenantData({
         activites: [],
         image: null,
         description: '',
         reseauxSociaux: []
+      });
+    }
+    if (event.target.value !== "Agent d'admission") {
+      setAgentSaisieData({
+        typeAdmission: '',
+        activiteSelectionnee: ''
+      });
+    }
+    if (event.target.value !== 'Guichetier') {
+      setGuichetData({
+        autoriserAjoutParticipant: false
       });
     }
   };
@@ -216,6 +280,19 @@ const EditAccessPage: React.FC = () => {
       }
     }
 
+    // Validation pour Agent d'admission
+    if (formData.role === "Agent d'admission") {
+      if (!agentSaisieData.typeAdmission) {
+        alert('Veuillez sélectionner un type d\'admission');
+        return;
+      }
+      if ((agentSaisieData.typeAdmission === 'activite' || agentSaisieData.typeAdmission === 'entree_et_activite') 
+          && !agentSaisieData.activiteSelectionnee) {
+        alert('Veuillez sélectionner une activité');
+        return;
+      }
+    }
+
     try {
       setSaving(true);
 
@@ -225,12 +302,21 @@ const EditAccessPage: React.FC = () => {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({
       //     ...formData,
-      //     intervenantData: formData.role === 'Intervenant' ? intervenantData : undefined
+      //     intervenantData: formData.role === 'Intervenant' ? intervenantData : undefined,
+      //     agentSaisieData: formData.role === "Agent d'admission" ? agentSaisieData : undefined,
+      //     guichetData: formData.role === 'Guichetier' ? guichetData : undefined
       //   })
       // });
 
       // Simulation d'un délai d'API
       await new Promise(resolve => setTimeout(resolve, 1500));
+
+      console.log('Données à enregistrer:', {
+        formData,
+        intervenantData: formData.role === 'Intervenant' ? intervenantData : undefined,
+        agentSaisieData: formData.role === "Agent d'admission" ? agentSaisieData : undefined,
+        guichetData: formData.role === 'Guichetier' ? guichetData : undefined
+      });
 
       // Afficher l'alerte de succès
       setShowSuccessAlert(true);
@@ -462,6 +548,59 @@ const EditAccessPage: React.FC = () => {
                     activites={activites}
                     intervenantData={intervenantData}
                     onIntervenantDataChange={setIntervenantData}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )}
+
+          {/* Informations supplémentaires Agent de saisie - Conditionnel */}
+          {formData.role === "Agent d'admission" && (
+            <Grid item xs={12}>
+              <Card>
+                <Box sx={{
+                  p: 2,
+                  backgroundColor: '#fafafa',
+                  borderBottom: '1px solid #e0e0e0'
+                }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Informations Supplémentaires - Agent d'admission
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Ces informations seront enregistrées avec l'utilisateur
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 3 }}>
+                  <AgentSaisieSupinfos
+                    activites={activites}
+                    agentSaisieData={agentSaisieData}
+                    onAgentSaisieDataChange={setAgentSaisieData}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )}
+
+          {/* Informations supplémentaires Guichetier - Conditionnel */}
+          {formData.role === 'Guichetier' && (
+            <Grid item xs={12}>
+              <Card>
+                <Box sx={{
+                  p: 2,
+                  backgroundColor: '#fafafa',
+                  borderBottom: '1px solid #e0e0e0'
+                }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Informations Supplémentaires - Guichetier
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Ces informations seront enregistrées avec l'utilisateur
+                  </Typography>
+                </Box>
+                <Box sx={{ p: 3 }}>
+                  <GuichetSupinfos
+                    guichetData={guichetData}
+                    onGuichetDataChange={setGuichetData}
                   />
                 </Box>
               </Card>

@@ -1,17 +1,17 @@
 'use client'
-import CountUp from 'react-countup'
-import Countdown from 'src/components/landing-page-components/elements/Countdown'
-import Layout from "src/components/landing-page-components/layout/Layout"
-import BrandSlider from 'src/components/landing-page-components/slider/BrandSlider'
+
 import Link from "next/link"
-
-import Section5 from 'src/components/landing-page-components/sections/home1/section5'
-import PastEventsSection from './component/PastEventsSection'
-
-import SARADescriptionSection from './component/SARADescriptionSection'
-
 import { useState } from 'react'
+import CountUp from 'react-countup'
+
+import Layout from "src/components/landing-page-components/layout/Layout"
+import Countdown from 'src/components/landing-page-components/elements/Countdown'
 import Footer1 from 'src/components/landing-page-components/layout/footer/Footer1'
+import BrandSlider from 'src/components/landing-page-components/slider/BrandSlider'
+import Section5 from 'src/components/landing-page-components/sections/home1/section5'
+
+import PastEventsSection from './component/PastEventsSection'
+import SARADescriptionSection from './component/SARADescriptionSection'
 
 
 
@@ -19,13 +19,11 @@ import Footer1 from 'src/components/landing-page-components/layout/footer/Footer
 export default function Page() {
 
 	return (
-		<>
-
-			<Layout headerStyle={1_2} footerStyle={1}>
+		<Layout headerStyle={1_2} footerStyle={1}>
 				
 				<div>
 					
-					<div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg5.png)' }}>
+					<div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg5.png)' }}>
 						<div className="container">
 							<div className="row">
 								<div className="col-lg-4 m-auto">
@@ -113,6 +111,5 @@ export default function Page() {
 				
 				<Footer1 />
 			</Layout>
-		</>
 	)
 }
