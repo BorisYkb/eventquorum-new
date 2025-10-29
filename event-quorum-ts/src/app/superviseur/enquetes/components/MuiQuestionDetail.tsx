@@ -1,25 +1,39 @@
 // components/MuiQuestionDetail.tsx
+
 'use client'
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+
+// Import des types et utilitaires
+import type { QuestionDetailData } from 'src/sections/gestionEnquete/utils/questionDetailData';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { ArrowBack, FileDownload } from '@mui/icons-material';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import { ArrowBack, FileDownload } from '@mui/icons-material';
 
-import { Question, OptionDetail } from '../types/survey';
-import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { getSampleQuestionData } from 'src/sections/gestionEnquete/utils/questionDetailData';
+// Import des composants modulaires
+import QuestionDetailSection from 'src/sections/gestionEnquete/components/QuestionDetailSection';
+import QuestionResultsSection from 'src/sections/gestionEnquete/components/QuestionResultsSection';
+import QuestionParticipantsSection from 'src/sections/gestionEnquete/components/QuestionParticipantsSection';
+import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
+
 import DetailModal from './modals/DetailModal';
+import { Question, OptionDetail } from '../types/survey';
+
 
 interface MuiQuestionDetailProps {
   surveyId: string;
@@ -36,8 +50,47 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
 }) => {
   const router = useRouter();
   const theme = useTheme();
+  const params = useParams();
+  const enqueteId = params.id as string;
+
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedOptionDetail, setSelectedOptionDetail] = useState<OptionDetail | null>(null);
+
+  const [data, setData] = useState<QuestionDetailData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // États pour les accordéons
+  const [expandedResults, setExpandedResults] = useState(false);
+  const [expandedParticipants, setExpandedParticipants] = useState(false);
+
+  /**
+       * Chargement des données de la question au montage
+       */
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        // TODO: Remplacer par l'appel API réel
+        // const response = await fetch(`/api/enquetes/${enqueteId}/questions/${questionId}`);
+        // const questionData = await response.json();
+        // setData(questionData);
+        // Simulation d'un délai de chargement
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Utilisation des données d'exemple
+        const questionData = getSampleQuestionData(questionId);
+        setData(questionData);
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (enqueteId && questionId) {
+      loadData();
+    }
+  }, [enqueteId, questionId]);
+
+
 
   // Calculs des statistiques pour cette question
   const totalResponses = question.responses
@@ -100,7 +153,7 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
         {/* En-tête avec titre et bouton retour */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            Question {questionNumber} - Détails
+            Détails de la Question {questionNumber}
           </Typography>
 
           <Button
@@ -118,7 +171,7 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
         </Box>
 
         {/* Titre de la question */}
-        <Card sx={{ p: 3, mb: 4 }}>
+        {/* <Card sx={{ p: 3, mb: 4 }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
             Question
           </Typography>
@@ -134,10 +187,10 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
               {question.question}
             </Typography>
           </Paper>
-        </Card>
+        </Card> */}
 
         {/* Widgets de statistiques */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid size={4}>
             <SuperviseurWidgetSummary
               title="Total des réponses"
@@ -162,121 +215,38 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
               icon="solar:star-bold-duotone"
             />
           </Grid>
-        </Grid>
+        </Grid> */}
 
+        {/* Section 1 : Détail de la question */}
+        {data && (
+          <QuestionDetailSection question={data.question} />
+        )}
 
+        {/* Section 2 : Résultats Globaux (Accordion) */}
+        {data && (
+          <QuestionResultsSection
+            question={data.question}
+            results={data.results}
+            expanded={expandedResults}
+            onToggle={() => setExpandedResults(!expandedResults)}
+          />
+        )}
 
-        {/* Résultats détaillés */}
-        <Scrollbar sx={{ height: 'auto' }}>
-          <Card sx={{
-            borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-          }}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
-                Répartition des réponses
-              </Typography>
-
-              {question.responses ? (
-                <>
-
-
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    {Object.entries(question.responses)
-                      .sort(([,a], [,b]) => b - a) // Trier par nombre de réponses décroissant
-                      .map(([option, count]) => {
-                        const percentage = Math.round((count / totalResponses) * 100);
-                        const color = getResponseColor(option);
-
-
-                        return (
-                          <Box key={option} sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 1,
-                            p: 3,
-                            backgroundColor: 'rgba(0,0,0,0.02)',
-                            borderRadius: 2,
-                            border: '1px solid rgba(0,0,0,0.06)',
-                            position: 'relative'
-                          }}>
-
-
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
-                                {option}
-                              </Typography>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                <Stack direction="row" alignItems="center" spacing={1}>
-                                  <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>
-                                    {count}
-                                  </Typography>
-                                  <Typography color="text.secondary">
-                                    réponses
-                                  </Typography>
-                                </Stack>
-                                <Typography
-                                  sx={{
-                                    fontWeight: 600,
-                                    fontSize: '1.1rem',
-                                    color: color
-                                  }}
-                                >
-                                  ({percentage}%)
-                                </Typography>
-                                <Tooltip title="Voir détail complet" placement="top" arrow>
-                                  <IconButton
-                                    color="info"
-                                    onClick={() => handleViewDetail(option, count)}
-                                    size="small"
-                                  >
-                                    <Iconify icon="solar:eye-bold" />
-                                  </IconButton>
-                                </Tooltip>
-                              </Box>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                height: 12,
-                                width: '100%',
-                                bgcolor: 'grey.100',
-                                borderRadius: 2,
-                                position: 'relative',
-                                overflow: 'hidden',
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  height: '100%',
-                                  width: `${percentage}%`,
-                                  bgcolor: color,
-                                  position: 'absolute',
-                                  borderRadius: 2,
-                                  transition: 'width 0.8s ease',
-                                }}
-                              />
-                            </Box>
-                          </Box>
-                        );
-                      })}
-                  </Box>
-                </>
-              ) : (
-                <Typography variant="body1" color="text.secondary">
-                  Aucune réponse disponible pour cette question.
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Scrollbar>
+        {/* Section 3 : Résultats par participant (Accordion) */}
+        {data && (
+          <QuestionParticipantsSection
+            participants={data.participantsResults}
+            expanded={expandedParticipants}
+            onToggle={() => setExpandedParticipants(!expandedParticipants)}
+          />
+        )}
 
         {/* Modal de détail */}
-        <DetailModal
+        {/* <DetailModal
           showDetailModal={showDetailModal}
           setShowDetailModal={setShowDetailModal}
           selectedOptionDetail={selectedOptionDetail}
-        />
+        /> */}
       </Box>
     </Box>
   );

@@ -15,7 +15,7 @@ export interface Survey {
 
 export interface Question {
   id: number;
-  type: 'text' | 'choice' | 'scale' | 'yesno';
+  type: 'question_libre' | 'choix_multiple' | 'echelle_lineaire' | 'case_a_cocher' | 'liste_deroulante';
   question: string;
   options?: string[];
   responses?: Record<string, number>;

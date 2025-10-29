@@ -244,6 +244,7 @@ export default function GuichetAjouterParticipantPage() {
                         participantId={createdParticipantId}
                         onAddAnother={handleAddAnother}
                         onBackToList={handleBack}
+                        isAddMode={true}
                     />
                 );
 
@@ -284,15 +285,15 @@ export default function GuichetAjouterParticipantPage() {
                                 fontSize: { xs: '1.5rem', md: '2rem' },
                             }}
                         >
-                            Ajouter un participant
+                            Ajouter un invité
                         </Typography>
-                        <Typography
+                        {/* <Typography
                             variant="body2"
                             color="text.secondary"
                             sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
                         >
                             Enregistrez les informations du participant et sélectionnez ses activités
-                        </Typography>
+                        </Typography> */}
                     </Box>
                 </Box>
 
@@ -344,7 +345,7 @@ export default function GuichetAjouterParticipantPage() {
                             onClick={handleNext}
                             sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
                         >
-                            {activeStep === 1 ? 'Valider et enregistrer' : 'Suivant'}
+                            {activeStep === 1 ? 'Valider' : 'Suivant'}
                         </Button>
                     </Box>
                 )}

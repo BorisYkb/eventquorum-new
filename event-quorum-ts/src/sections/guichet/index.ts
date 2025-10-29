@@ -14,6 +14,7 @@ export { GuichetInfoForm } from './GuichetInfoForm';
 
 // Composants d'étapes
 export { GuichetActivitesStep } from './GuichetActivitesStep';
+export { GuichetActivitesSummary } from './GuichetActivitesSummary';
 export { GuichetSuccessStep } from './GuichetSuccessStep';
 
 // Types réexportés pour faciliter l'import

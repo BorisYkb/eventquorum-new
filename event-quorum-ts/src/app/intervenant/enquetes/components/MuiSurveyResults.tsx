@@ -23,7 +23,7 @@ import { Iconify } from 'src/components/iconify';
 
 import { SuperviseurWidgetSummary } from 'src/sections/overview/superviseur/view/superviseur-widget-summary-2';
 
-import DetailModal from './modals/DetailModal';
+// import DetailModal from './modals/DetailModal';
 import { Question, OptionDetail } from '../types/survey';
 
 interface MuiSurveyResultsProps {
@@ -119,49 +119,84 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', p: 3 }}>
+    <Box sx={{ minHeight: '100vh', p: { xs: 2, sm: 3 } }}>
       <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
 
         {/* En-tête */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column-reverse', md: 'row' },
+          alignItems: { xs: 'flex-start', md: 'center' },
+          justifyContent: 'space-between',
+          mb: 3,
+          gap: 2
+        }}>
+          <Typography variant="h4" sx={{
+            fontWeight: 'bold',
+            fontSize: { xs: '1rem', sm: '1.5rem', md: '1.7rem' }
+          }}>
             Resultats de l'enquête <br />
-            ENQUÊTE {surveyId} - ACTIVITÉ 1
+
+            <Typography variant="body1" sx={{
+              fontSize: '0.8rem' 
+            }}>
+              ENQUÊTE: Satisfaction des candidat 
+              {/* <br /> ACTIVITÉ : Ouverture du SARA 2024 */}
+            </Typography>
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="contained"
-              startIcon={<FileDownload />}
-              onClick={handleExport}
-              sx={{
-                bgcolor: '#000',
-                color: 'white',
-                '&:hover': { bgcolor: '#333' }
-              }}
-            >
-              Exporter les résultats (PDF)
-            </Button>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, width: { xs: 'auto', sm: 'auto' } }}>
             <Button
               variant="contained"
               startIcon={<ArrowBack />}
               onClick={handleBack}
+              fullWidth={true}
               sx={{
                 bgcolor: '#000',
                 color: 'white',
-                '&:hover': { bgcolor: '#333' }
+                '&:hover': { bgcolor: '#333' },
+                fontSize: { xs: '0.75rem', sm: '0.875rem' }
               }}
             >
               Retour
             </Button>
-
           </Box>
-          
         </Box>
 
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: { xs: 'flex-end', md: 'flex-end' },
+            alignItems: 'center',
+            width: { xs: '10rem', sm: '100%' },
+            mt: 2,
+            mb: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<FileDownload />}
+            onClick={handleExport}
+            sx={{
+              bgcolor: '#000',
+              color: '#fff',
+              '&:hover': { bgcolor: '#333' },
+              fontSize: { xs: '0.8rem', md: '0.9rem' },
+              px: { xs: 2, md: 3 },
+              py: { xs: 1, md: 1.2 },
+              borderRadius: 1,
+              textTransform: 'none',
+              width: { xs: '100%', sm: 'auto' },
+            }}
+          >
+            Exporter (PDF)
+          </Button>
+        </Box>
+
+
         {/* Widgets de statistiques */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid size={4}>
+        <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <SuperviseurWidgetSummary
               title="Nombre de participants"
               total={totalParticipants}
@@ -169,7 +204,7 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
               icon="solar:users-group-rounded-bold-duotone"
             />
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <SuperviseurWidgetSummary
               title="Nombre de questions"
               total={totalQuestions}
@@ -177,7 +212,7 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
               icon="solar:question-circle-bold-duotone"
             />
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <SuperviseurWidgetSummary
               title="Taux de participation"
               total={participationRate}
@@ -191,40 +226,44 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         {/* Top 3 simplifié et élégant */}
         <Card sx={{
           mb: 4,
-          borderRadius: 3,
+          borderRadius: 1,
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
           overflow: 'hidden'
         }}>
           <Box sx={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            p: 3,
-            color: 'white'
+            background: '#eee',
+            p: { xs: 2, sm: 3 },
+            color: 'black',
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Typography sx={{ fontSize: '1.8rem' }}>🏆</Typography>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              <Typography sx={{ fontSize: { xs: '1.3rem', sm: '1.8rem' } }}>🏆</Typography>
+              <Typography variant="h5" sx={{
+                fontWeight: 'bold',
+                fontSize: { xs: '1.1rem', sm: '1.5rem' }
+              }}>
                 Top 3 des Participants
               </Typography>
             </Box>
           </Box>
 
-          <CardContent sx={{ p: 4 }}>
-            <Grid container spacing={3}>
+          <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+            <Grid container spacing={{ xs: 2, sm: 3 }} justifyContent="center">
               {topThreeList.map((participant, index) => (
-                <Grid size={4} key={index}>
+                <Grid size={{ xs: 12, sm: 5, md: 3 }} key={index}>
                   <Card sx={{
                     borderRadius: 2,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     border: `2px solid ${participant.color}`,
                     transition: 'all 0.3s ease',
+                    height: '100%',
                     '&:hover': {
                       transform: 'translateY(-4px)',
                       boxShadow: '0 6px 16px rgba(0,0,0,0.12)'
                     }
                   }}>
-                    <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                    <CardContent sx={{ p: { xs: 2, sm: 2.5 }, textAlign: 'center' }}>
                       {/* Icône médaille */}
-                      <Typography sx={{ fontSize: '3rem', mb: 2 }}>
+                      <Typography sx={{ fontSize: { xs: '2rem', sm: '2.5rem' }, mb: { xs: 1, sm: 1.5 } }}>
                         {participant.icon}
                       </Typography>
 
@@ -234,7 +273,8 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                         color: participant.color,
                         fontWeight: 'bold',
                         letterSpacing: 1,
-                        mb: 1
+                        mb: 1,
+                        fontSize: { xs: '0.65rem', sm: '0.75rem' }
                       }}>
                         {participant.rank === 1 ? '1ÈRE PLACE' : participant.rank === 2 ? '2ÈME PLACE' : '3ÈME PLACE'}
                       </Typography>
@@ -242,8 +282,9 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                       {/* Nom */}
                       <Typography variant="h6" sx={{
                         fontWeight: 'bold',
-                        mb: 2,
-                        color: 'text.primary'
+                        mb: { xs: 1.5, sm: 2 },
+                        color: 'text.primary',
+                        fontSize: { xs: '0.95rem', sm: '1.1rem' }
                       }}>
                         {participant.name}
                       </Typography>
@@ -254,25 +295,31 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                         alignItems: 'baseline',
                         gap: 0.5,
                         bgcolor: 'grey.100',
-                        px: 2,
-                        py: 1,
+                        px: { xs: 1.5, sm: 2 },
+                        py: { xs: 0.75, sm: 1 },
                         borderRadius: 2
                       }}>
-                        <Typography variant="h4" sx={{ fontWeight: 'bold', color: participant.color }}>
+                        <Typography variant="h4" sx={{
+                          fontWeight: 'bold',
+                          color: participant.color,
+                          fontSize: { xs: '1.5rem', sm: '2rem' }
+                        }}>
                           {participant.score}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.secondary" sx={{
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}>
                           / 10
                         </Typography>
                       </Box>
 
                       {/* Étoiles */}
-                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5, mt: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5, mt: { xs: 1.5, sm: 2 } }}>
                         {[...Array(5)].map((_, starIndex) => (
                           <Typography
                             key={starIndex}
                             sx={{
-                              fontSize: '1rem',
+                              fontSize: { xs: '0.85rem', sm: '1rem' },
                               color: starIndex < Math.floor(participant.score / 2) ? participant.color : '#E0E0E0'
                             }}
                           >
@@ -289,19 +336,23 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         </Card>
 
         {/* Bouton d'exportation */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 1 }}>
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+            <Typography variant="subtitle2" color="text.secondary" sx={{
+              mb: 0.5,
+              fontSize: { xs: '0.75rem', sm: '0.875rem' }
+            }}>
               Questions de l'enquête
             </Typography>
-          
           </Box>
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+            <Typography variant="subtitle2" color="text.secondary" sx={{
+              mb: 0.5,
+              fontSize: { xs: '0.75rem', sm: '0.875rem' }
+            }}>
               Totales: {totalQuestions}
             </Typography>
           </Box>
-          
         </Box>
 
         {/* Questions en accordéons */}
@@ -333,55 +384,44 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                   '& .MuiAccordionSummary-content': {
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    pr: 2
+                    pr: { xs: 1, sm: 2 }
                   }
                 }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 }, flex: 1 }}>
                   <Box sx={{
                     bgcolor: 'primary.main',
                     color: 'white',
-                    width: 40,
-                    height: 40,
+                    width: { xs: 32, sm: 40 },
+                    height: { xs: 32, sm: 40 },
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
                   }}>
                     {questionIndex + 1}
                   </Box>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    <Typography variant="subtitle1" sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }}>
                       {question.question}
                     </Typography>
                     {question.responses && (
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" color="text.secondary" sx={{
+                        fontSize: { xs: '0.7rem', sm: '0.75rem' }
+                      }}>
                         {Object.values(question.responses).reduce((a, b) => a + b, 0)} réponses
                       </Typography>
                     )}
                   </Box>
                 </Box>
-
-                <Tooltip title="Voir détail de la question" placement="top">
-                  <IconButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewDetail(question, questionIndex);
-                    }}
-                    size="small"
-                    sx={{
-                      bgcolor: 'primary.lighter',
-                      color: 'primary.main',
-                      '&:hover': { bgcolor: 'primary.light' }
-                    }}
-                  >
-                    <Iconify icon="solar:eye-bold" width={18} />
-                  </IconButton>
-                </Tooltip>
               </AccordionSummary>
 
-              <AccordionDetails sx={{ p: 3, bgcolor: 'background.paper' }}>
+              <AccordionDetails sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'background.paper' }}>
                 {question.responses && (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {Object.entries(question.responses).map(([option, count]) => {
@@ -391,18 +431,33 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
 
                       return (
                         <Box key={option} sx={{
-                          p: 2,
+                          p: { xs: 1.5, sm: 2 },
                           backgroundColor: 'grey.50',
                           borderRadius: 2,
                           border: '1px solid',
                           borderColor: 'grey.200'
                         }}>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
-                            <Typography sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          <Box sx={{
+                            display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            justifyContent: 'space-between',
+                            alignItems: { xs: 'flex-start', sm: 'center' },
+                            mb: 1.5,
+                            gap: 1
+                          }}>
+                            <Typography sx={{
+                              fontWeight: 500,
+                              color: 'text.primary',
+                              fontSize: { xs: '0.875rem', sm: '1rem' }
+                            }}>
                               {option}
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
+                              <Typography sx={{
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                fontSize: { xs: '0.875rem', sm: '1rem' }
+                              }}>
                                 {count} réponses
                               </Typography>
                               <Typography sx={{
@@ -411,7 +466,7 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
                                 px: 1.5,
                                 py: 0.5,
                                 borderRadius: 1,
-                                fontSize: '0.875rem',
+                                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                                 fontWeight: 600
                               }}>
                                 {percentage}%
@@ -450,11 +505,11 @@ const MuiSurveyResults: React.FC<MuiSurveyResultsProps> = ({ surveyId, questions
         </Box>
 
         {/* Modal de détail */}
-        <DetailModal
+        {/* <DetailModal
           showDetailModal={showDetailModal}
           setShowDetailModal={setShowDetailModal}
           selectedOptionDetail={selectedOptionDetail}
-        />
+        /> */}
       </Box>
     </Box>
   );

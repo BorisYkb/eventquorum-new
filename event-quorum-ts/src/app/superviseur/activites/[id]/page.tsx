@@ -213,9 +213,9 @@ export default function SuperviseurActivityDetailPage() {
                 {activity.name}
               </Typography>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Label variant="soft" color="primary" sx={{ borderRadius: 2, px: 2, py: 1 }}>
+                {/* <Label variant="soft" color="primary" sx={{ borderRadius: 2, px: 2, py: 1 }}>
                   {activity.type}
-                </Label>
+                </Label> */}
                 <Label variant="soft" color={getStatusColor()} sx={{ borderRadius: 2, px: 2, py: 1 }}>
                   {activity.status}
                 </Label>

@@ -59,21 +59,28 @@ export const surveys: Survey[] = [
 export const sampleQuestions: Question[] = [
   {
     id: 1,
-    type: 'choice',
+    type: 'choix_multiple',
     question: 'Les participants de ce site d\'étude pouvait-ils développer de nouvelles idées et trouver des réponses à leurs interrogations ?',
     options: ['Oui', 'Non', 'Sans avis'],
     responses: { 'Oui': 156, 'Non': 31, 'Sans avis': 25 }
   },
   {
     id: 2,
-    type: 'choice',
+    type: 'choix_multiple',
     question: 'Quelles sont les bonnes modalités de création des activités ?',
     options: ['Réponse 1', 'Réponse 2', 'Réponse 3', 'Réponse 4'],
     responses: { 'Réponse 1': 87, 'Réponse 2': 45, 'Réponse 3': 32, 'Réponse 4': 23 }
   },
   {
     id: 3,
-    type: 'choice',
+    type: 'echelle_lineaire',
+    question: 'Les prestataires de ce site d\'étude pouvaient-ils développer de nouvelles idées et trouver des réponses à leurs interrogations ?',
+    options: ['Oui', 'Non', 'Sans avis'],
+    responses: { 'Oui': 142, 'Non': 28, 'Sans avis': 17 }
+  },
+  {
+    id: 4,
+    type: 'question_libre',
     question: 'Les prestataires de ce site d\'étude pouvaient-ils développer de nouvelles idées et trouver des réponses à leurs interrogations ?',
     options: ['Oui', 'Non', 'Sans avis'],
     responses: { 'Oui': 142, 'Non': 28, 'Sans avis': 17 }

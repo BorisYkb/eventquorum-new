@@ -21,8 +21,8 @@ import type { TableHeadCellProps } from 'src/components/table';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
@@ -57,7 +57,7 @@ import {
     TableSelectedAction,
     TablePaginationCustom,
 } from 'src/components/table';
-
+import { GuichetWidgetSummary } from 'src/sections/overview/e-commerce/guichet/guichet-widget-summary-2';
 import { EcommerceWelcome } from '../ecommerce-welcome';
 
 // ============================================
@@ -280,6 +280,11 @@ export function OverviewGuichetView() {
         // TODO: Appel API pour générer le fichier d'export
         alert('Export en cours...');
     };
+    // Couleurs alternées pour les widgets
+    const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
+        const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
+        return colors[index % colors.length];
+    };
 
     /**
      * Réinitialiser tous les filtres
@@ -300,11 +305,39 @@ export function OverviewGuichetView() {
         <DashboardContent maxWidth="xl">
             <Grid container spacing={3}>
                 {/* ========== SECTION BIENVENUE ========== */}
-                <Grid size={{ xs: 12 }}>
+                {/* <Grid size={{ xs: 12 }}>
                     <EcommerceWelcome
                         title={`Bienvenue 🎉, ${user?.displayName?.split(' ')[0] || 'guichet'} !`}
                         description="Gérez facilement la liste des participants aux différentes activités."
                         img={<MotivationIllustration hideBackground />}
+                    />
+                </Grid> */}
+
+                {/* Cards de statistiques avec SuperviseurWidgetSummary */}
+                <Grid size={{ xs: 12, md: 4 }}>
+                    <GuichetWidgetSummary
+                        title="Nombre de transactions"
+                        total={15}
+                        color={getWidgetColor(0)}
+                        sx={{ height: 180 }}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 4 }}>
+                    <GuichetWidgetSummary
+                        title="Participations traitées"
+                        total={6}
+                        color={getWidgetColor(2)}
+                        sx={{ height: 180 }}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 4 }}>
+                    <GuichetWidgetSummary
+                        title="Montant collecté (FCFA)"
+                        total={1000000}
+                        color={getWidgetColor(1)}
+                        sx={{ height: 180 }}
                     />
                 </Grid>
 
@@ -324,11 +357,6 @@ export function OverviewGuichetView() {
                                 LISTE DES PARTICIPANTS
                             </Typography>
 
-                            <Tooltip title="Filtrer la liste">
-                                <IconButton>
-                                    <Iconify icon="ic:round-filter-list" />
-                                </IconButton>
-                            </Tooltip>
                         </Box>
 
                         {/* Barre d'outils avec filtres */}
@@ -423,10 +451,14 @@ export function OverviewGuichetView() {
                                 </Grid>
 
                                 {/* Boutons d'action */}
-                                <Grid size={{ xs: 12, md: 2 }}>
-                                    <Grid container spacing={1} justifyContent="flex-end">
-                                        <Grid size={{ xs: 6, md: 12 }}>
-                                            <Tooltip title="Exporter la liste des participants" placement="top" arrow>
+                                <Grid size={{ xs: 12, md: 4 }}>
+                                    <Grid container spacing={1} direction={{ xs: 'column', sm: 'row' }}>
+                                        <Grid size={{ xs: 12, md: 8 }}>
+                                            <Stack
+                                                direction={{ xs: 'column', sm: 'row' }}
+                                                spacing={2}
+                                                sx={{ height: '100%' }}
+                                            >
                                                 <Button
                                                     fullWidth
                                                     variant="outlined"
@@ -448,10 +480,7 @@ export function OverviewGuichetView() {
                                                 >
                                                     Exporter
                                                 </Button>
-                                            </Tooltip>
-                                        </Grid>
-                                        <Grid size={{ xs: 6, md: 12 }}>
-                                            <Tooltip title="Ajouter un participant" arrow>
+
                                                 <Button
                                                     fullWidth
                                                     variant="outlined"
@@ -473,7 +502,7 @@ export function OverviewGuichetView() {
                                                 >
                                                     Ajouter
                                                 </Button>
-                                            </Tooltip>
+                                            </Stack>
                                         </Grid>
                                     </Grid>
                                 </Grid>

@@ -50,11 +50,13 @@ interface GuichetSuccessStepProps {
     /** ID du participant créé */
     participantId: number | null;
 
-    /** Callback pour ajouter un autre participant */
-    onAddAnother: () => void;
+    /** Callback pour ajouter/Modifier un autre invités */
+    onAddAnother: () => void | null;
 
     /** Callback pour retourner à la liste */
     onBackToList: () => void;
+
+    isAddMode?: boolean; // 👈 ajouté
 }
 
 // ============================================
@@ -67,6 +69,7 @@ export function GuichetSuccessStep({
     participantId,
     onAddAnother,
     onBackToList,
+    isAddMode,
 }: GuichetSuccessStepProps) {
 
     // ============================================
@@ -139,11 +142,11 @@ export function GuichetSuccessStep({
     return (
         <Box>
             {/* ========== ICÔNE DE SUCCÈS ========== */}
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Box sx={{ textAlign: 'center', mb: 3 }}>
                 <Box
                     sx={{
-                        width: { xs: 80, md: 100 },
-                        height: { xs: 80, md: 100 },
+                        width: { xs: 50, md: 80 },
+                        height: { xs: 50, md: 80 },
                         borderRadius: '50%',
                         bgcolor: 'success.lighter',
                         display: 'flex',
@@ -170,16 +173,16 @@ export function GuichetSuccessStep({
                         fontSize: { xs: '1.5rem', md: '2rem' },
                     }}
                 >
-                    Participant enregistré avec succès !
+                    Invité enregistré avec succès !
                 </Typography>
 
-                <Typography
+                {/* <Typography
                     variant="body1"
                     color="text.secondary"
                     sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
                 >
                     Le participant a été ajouté et ses activités ont été enregistrées
-                </Typography>
+                </Typography> */}
 
                 {participantId && (
                     <Label
@@ -194,6 +197,58 @@ export function GuichetSuccessStep({
                         ID: {participantId}
                     </Label>
                 )}
+            </Box>
+
+            {/* ========== ACTIONS ========== */}
+            <Box sx={{ mt: 4, mb: 5 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }}>
+                    {/* Boutons d'impression */}
+                    <Grid size={{ xs: 12, md: 8 }}>
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={2}
+                            sx={{ height: '100%' }}
+                        >
+                            <Button
+                                fullWidth
+                                size="large"
+                                variant="outlined"
+                                startIcon={<Iconify icon="mdi:card-account-details-outline" />}
+                                onClick={handlePrintBadge}
+                                sx={{
+                                    fontSize: { xs: '0.875rem', md: '1rem' },
+                                }}
+                            >
+                                Imprimer le badge
+                            </Button>
+
+                            <Button
+                                fullWidth
+                                size="large"
+                                variant="contained"
+                                startIcon={<Iconify icon="solar:bill-list-bold" />}
+                                onClick={handlePrintReceipt}
+                                sx={{
+                                    fontSize: { xs: '0.875rem', md: '1rem' },
+                                }}
+                            >
+                                Imprimer le reçu
+                            </Button>
+                            {isAddMode && (
+                                <Button
+                                    fullWidth
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={onAddAnother}
+                                    sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
+                                >
+                                    Ajouter un autre
+                                </Button>
+                            )}
+                        </Stack>
+                    </Grid>
+
+                </Grid>
             </Box>
 
             {/* ========== RÉCAPITULATIF ========== */}
@@ -402,78 +457,6 @@ export function GuichetSuccessStep({
                     </Card>
                 </Grid>
             </Grid>
-
-            {/* ========== ACTIONS ========== */}
-            <Box sx={{ mt: 4 }}>
-                <Grid container spacing={{ xs: 2, md: 3 }}>
-                    {/* Boutons d'impression */}
-                    <Grid size={{ xs: 12, md: 8 }}>
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            spacing={2}
-                            sx={{ height: '100%' }}
-                        >
-                            <Button
-                                fullWidth
-                                size="large"
-                                variant="contained"
-                                startIcon={<Iconify icon="mdi:badge-account" />}
-                                onClick={handlePrintBadge}
-                                sx={{
-                                    bgcolor: 'primary.main',
-                                    fontSize: { xs: '0.875rem', md: '1rem' },
-                                }}
-                            >
-                                Imprimer le badge
-                            </Button>
-
-                            <Button
-                                fullWidth
-                                size="large"
-                                variant="contained"
-                                startIcon={<Iconify icon="mdi:receipt" />}
-                                onClick={handlePrintReceipt}
-                                sx={{
-                                    bgcolor: 'success.main',
-                                    '&:hover': { bgcolor: 'success.dark' },
-                                    fontSize: { xs: '0.875rem', md: '1rem' },
-                                }}
-                            >
-                                Imprimer le reçu
-                            </Button>
-                        </Stack>
-                    </Grid>
-
-                    {/* Boutons de navigation */}
-                    <Grid size={{ xs: 12, md: 4 }}>
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            spacing={2}
-                            sx={{ height: '100%' }}
-                        >
-                            <Button
-                                fullWidth
-                                size="large"
-                                variant="outlined"
-                                onClick={onAddAnother}
-                                sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
-                            >
-                                Ajouter un autre
-                            </Button>
-
-                            <Button
-                                fullWidth
-                                size="large"
-                                variant="outlined"
-                                onClick={onBackToList}
-                                sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
-                            >
-                                Retour à la liste
-                            </Button>
-                        </Stack>
-                    </Grid>
-                </Grid>
-            </Box>
         </Box>
     );
 }

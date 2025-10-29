@@ -3,6 +3,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import {
@@ -10,9 +11,11 @@ import {
     Stack,
     Menu,
     MenuItem,
+    Tooltip,
 } from '@mui/material';
 
 import type { ActiveFilters } from './types';
+import { stack } from 'src/theme/core/components/stack';
 
 /**
  * Options d'export
@@ -46,6 +49,7 @@ const SuperviseurExportButtons: React.FC<SuperviseurExportButtonsProps> = ({
     // État pour le menu déroulant d'export
     const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
 
+    const router = useRouter();
     /**
      * Ouvre le menu d'export
      */
@@ -71,6 +75,13 @@ const SuperviseurExportButtons: React.FC<SuperviseurExportButtonsProps> = ({
 
         // TODO: Implémenter l'appel API pour l'export
         handleExportMenuClose();
+    };
+
+    /**
+ * Redirige vers la page de consultation des connectés
+ */
+    const handleConsultConnected = () => {
+        router.push('/superviseur/participants/consultation');
     };
 
     return (
@@ -108,7 +119,26 @@ const SuperviseurExportButtons: React.FC<SuperviseurExportButtonsProps> = ({
                     </MenuItem>
                 ))}
             </Menu>
+
+            {/* Bouton Consulter connectés */}
+            <Tooltip title="Consulter la liste des connectés" arrow>
+                <Button
+                    variant="contained"
+                    onClick={handleConsultConnected}
+                    sx={{
+                        bgcolor: '#000',
+                        color: 'white',
+                        '&:hover': { bgcolor: '#333' },
+                        borderRadius: 1,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                    }}
+                >
+                    Consulter la liste des connectés
+                </Button>
+            </Tooltip>
         </Stack>
+
     );
 };
 

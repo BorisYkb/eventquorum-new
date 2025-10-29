@@ -421,8 +421,10 @@ export default function GuichetModifierParticipantPage() {
      * Modifie un autre participant
      */
     const handleModifyAnother = () => {
+        // Retourne à la liste pour modifier un autre participant
         router.push('/guichet');
     };
+
 
     // ============================================
     // RENDER
@@ -487,48 +489,6 @@ export default function GuichetModifierParticipantPage() {
             case 1:
                 return (
                     <Box>
-                        {/* Message informatif sur les activités déjà payées */}
-                        {disabledActivities.length > 0 && (
-                            <Card
-                                sx={{
-                                    p: 2,
-                                    mb: 3,
-                                    bgcolor: 'info.lighter',
-                                    border: 1,
-                                    borderColor: 'info.main',
-                                }}
-                            >
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                    <Iconify
-                                        icon="eva:info-fill"
-                                        sx={{ fontSize: 28, color: 'info.main' }}
-                                    />
-                                    <Box>
-                                        <Typography
-                                            variant="subtitle2"
-                                            sx={{
-                                                fontWeight: 600,
-                                                color: 'info.dark',
-                                                fontSize: { xs: '0.875rem', md: '1rem' },
-                                            }}
-                                        >
-                                            Activités déjà payées
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                color: 'info.dark',
-                                                fontSize: { xs: '0.75rem', md: '0.875rem' },
-                                            }}
-                                        >
-                                            Ce participant a déjà payé {disabledActivities.length} activité(s).
-                                            Ces activités sont affichées en grisé et ne peuvent pas être modifiées.
-                                            Vous pouvez ajouter de nouvelles activités.
-                                        </Typography>
-                                    </Box>
-                                </Stack>
-                            </Card>
-                        )}
 
                         {/* Composant de sélection des activités avec les déjà payées désactivées */}
                         <GuichetActivitesStep
@@ -549,6 +509,7 @@ export default function GuichetModifierParticipantPage() {
                         participantId={participantId}
                         onAddAnother={handleModifyAnother}
                         onBackToList={handleBackToList}
+                        isAddMode={false}
                     />
                 );
 
@@ -589,9 +550,9 @@ export default function GuichetModifierParticipantPage() {
                                 fontSize: { xs: '1.5rem', md: '2rem' },
                             }}
                         >
-                            Modifier le participant
+                            Modifier l'invité
                         </Typography>
-                        <Typography
+                        {/* <Typography
                             variant="body2"
                             color="text.secondary"
                             sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
@@ -600,7 +561,7 @@ export default function GuichetModifierParticipantPage() {
                             <strong>
                                 {originalParticipant.prenom} {originalParticipant.nom}
                             </strong>
-                        </Typography>
+                        </Typography> */}
                     </Box>
                 </Box>
 
@@ -652,7 +613,7 @@ export default function GuichetModifierParticipantPage() {
                             onClick={handleNext}
                             sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
                         >
-                            {activeStep === 1 ? 'Valider les modifications' : 'Suivant'}
+                            {activeStep === 1 ? 'Valider' : 'Suivant'}
                         </Button>
                     </Box>
                 )}

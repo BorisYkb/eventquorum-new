@@ -242,11 +242,11 @@ const MuiQuestionDetail: React.FC<MuiQuestionDetailProps> = ({
         )}
 
         {/* Modal de détail */}
-        <DetailModal
+        {/* <DetailModal
           showDetailModal={showDetailModal}
           setShowDetailModal={setShowDetailModal}
           selectedOptionDetail={selectedOptionDetail}
-        />
+        /> */}
       </Box>
     </Box>
   );

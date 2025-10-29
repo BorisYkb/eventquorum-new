@@ -18,14 +18,14 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 // Import des composants réutilisables
-import { ActivitesSelection } from 'src/app/participant/enligne/components/activites-selection';
-import { ActivitesSummary } from 'src/app/participant/enligne/components/activites-summary';
+import { ActivitesSelection } from './activites-selection';
+import { GuichetActivitesSummary } from './GuichetActivitesSummary'; // Version guichet du résumé
 
 // Import des données
-import { ACTIVITES_DISPONIBLES } from 'src/app/participant/enligne/components/activites-data';
+import { ACTIVITES_DISPONIBLES } from './activites-data';
 
 // Import des types
-import type { SelectedActivite } from 'src/app/participant/enligne/components/activites-selection';
+import type { SelectedActivite } from './activites-selection';
 
 // ============================================
 // TYPES
@@ -153,93 +153,12 @@ export function GuichetActivitesStep({
             {/* Section 2: Résumé uniquement (40% largeur) - PAS de paiement */}
             <Grid size={{ xs: 12, lg: 5 }}>
                 <Stack spacing={3}>
-                    {/* Résumé des activités */}
-                    <ActivitesSummary
+                    {/* Résumé des activités avec gestion des prix selon disabledActivities */}
+                    <GuichetActivitesSummary
                         activites={ACTIVITES_DISPONIBLES}
                         selectedActivites={selectedActivites}
+                        disabledActivities={disabledActivities} // Pour afficher prix = 0 pour les activités déjà payées
                     />
-
-                    {/* Note pour l'agent - Montant à encaisser (nouvelles activités) */}
-                    {totalAmount > 0 && (
-                        <Stack
-                            spacing={1}
-                            sx={{
-                                p: 2,
-                                bgcolor: 'warning.lighter',
-                                border: 1,
-                                borderColor: 'warning.main',
-                                borderRadius: 1,
-                            }}
-                        >
-                            <Typography
-                                variant="subtitle2"
-                                sx={{
-                                    fontWeight: 600,
-                                    color: 'warning.dark',
-                                    fontSize: { xs: '0.875rem', md: '1rem' },
-                                }}
-                            >
-                                💰 Montant à encaisser
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    fontWeight: 700,
-                                    color: 'warning.dark',
-                                    fontSize: { xs: '1.25rem', md: '1.5rem' },
-                                }}
-                            >
-                                {totalAmount.toLocaleString()} FCFA
-                            </Typography>
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    color: 'warning.dark',
-                                    fontSize: { xs: '0.75rem', md: '0.8125rem' },
-                                }}
-                            >
-                                {disabledActivities.length > 0
-                                    ? `Montant pour ${newActivitiesCount} nouvelle(s) activité(s)`
-                                    : 'Veuillez encaisser le montant avant de valider'}
-                            </Typography>
-                        </Stack>
-                    )}
-
-                    {/* Note si tout est gratuit */}
-                    {totalAmount === 0 && selectedActivites.length > 0 && (
-                        <Stack
-                            spacing={1}
-                            sx={{
-                                p: 2,
-                                bgcolor: 'success.lighter',
-                                border: 1,
-                                borderColor: 'success.main',
-                                borderRadius: 1,
-                            }}
-                        >
-                            <Typography
-                                variant="subtitle2"
-                                sx={{
-                                    fontWeight: 600,
-                                    color: 'success.dark',
-                                    fontSize: { xs: '0.875rem', md: '1rem' },
-                                }}
-                            >
-                                ✅ {disabledActivities.length > 0 ? 'Nouvelles activités gratuites' : 'Inscription gratuite'}
-                            </Typography>
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    color: 'success.dark',
-                                    fontSize: { xs: '0.75rem', md: '0.8125rem' },
-                                }}
-                            >
-                                {disabledActivities.length > 0
-                                    ? `Les ${newActivitiesCount} nouvelle(s) activité(s) sélectionnée(s) sont gratuites`
-                                    : 'Aucun paiement requis pour les activités sélectionnées'}
-                            </Typography>
-                        </Stack>
-                    )}
 
                 </Stack>
             </Grid>

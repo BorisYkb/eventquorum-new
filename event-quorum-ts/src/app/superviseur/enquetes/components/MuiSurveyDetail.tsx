@@ -163,6 +163,20 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
     setSelected(newSelected);
   };
 
+  // Types de questions disponibles pour l'affichage - Updated to match new types
+  const typeQuestions = [
+    { value: 'liste_deroulante', label: 'Liste déroulante' },
+    { value: 'case_a_cocher', label: 'Case à cocher' },
+    { value: 'question_libre', label: 'Question libre' },
+    { value: 'echelle_lineaire', label: 'Échelle linéaire' },
+    { value: 'choix_multiple', label: 'Choix multiple' }
+  ];
+
+  /**
+   * Obtient le label d'un type de question
+   */
+  const getTypeQuestionLabel = (type: string) => typeQuestions.find(t => t.value === type)?.label || type;
+
   /**
    * Vérifie si une question est sélectionnée
    * @param index - Index de la question
@@ -479,6 +493,12 @@ const MuiSurveyDetail: React.FC<MuiSurveyDetailProps> = ({ survey, questions }) 
                                 sx={{ fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.8125rem', lg: '0.875rem' } }}
                               >
                                 {question.question}
+                              </Typography>
+                              <Typography variant="caption" sx={{
+                                color: '#666',
+                                fontSize: '0.75rem'
+                              }}>
+                                {getTypeQuestionLabel(question.type)} 
                               </Typography>
                             </TableCell>
 

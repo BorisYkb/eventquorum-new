@@ -6,7 +6,6 @@ import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid2';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -23,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
+import { useRouter } from 'next/navigation';
 
 import { DashboardContent } from 'src/layouts/guichet';
 
@@ -38,11 +38,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import  {GuichetWidgetSummary}  from 'src/sections/overview/e-commerce/guichet/guichet-widget-summary-2';
-
 import { useMockedUser } from 'src/auth/hooks';
-
-import TransactionDetailModal from '../component/TransactionDetailModal';
 
 // ----------------------------------------------------------------------
 
@@ -53,9 +49,8 @@ type TransactionData = {
   email: string;
   montant: number;
   date: string;
-  statut : string;
   activite: string;
-  activites?: {
+  activites: {
     id: number;
     nom: string;
     horaire: string;
@@ -93,8 +88,25 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'boudou@gmail.com',
     montant: 50000,
     date: '2024-07-17',
-    statut: 'Validé',
-    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE'
+    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
+    activites: [
+      {
+        id: 1,
+        nom: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
+        horaire: '09:00 - 11:00',
+        type: 'Standard',
+        statut: 'En cours',
+        places: 1
+      },
+      {
+        id: 2,
+        nom: 'PANEL DE HAUT NIVEAU',
+        horaire: '14:00 - 16:00',
+        type: 'VIP',
+        statut: 'Non démarré',
+        places: 1
+      }
+    ]
   },
   {
     id: 2,
@@ -103,8 +115,17 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'kouame@gmail.com',
     montant: 25000,
     date: '2024-07-16',
-    statut: 'Validé',
-    activite: 'PANEL DE HAUT NIVEAU'
+    activite: 'PANEL DE HAUT NIVEAU',
+    activites: [
+      {
+        id: 3,
+        nom: 'PANEL DE HAUT NIVEAU',
+        horaire: '14:00 - 16:00',
+        type: 'Standard',
+        statut: 'En cours',
+        places: 1
+      }
+    ]
   },
   {
     id: 3,
@@ -113,8 +134,25 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'sidibemoussa@gmail.com',
     montant: 75000,
     date: '2024-07-15',
-    statut: 'En attente',
-    activite: 'POINT DE PRESSE'
+    activite: 'POINT DE PRESSE',
+    activites: [
+      {
+        id: 4,
+        nom: 'POINT DE PRESSE',
+        horaire: '11:00 - 12:00',
+        type: 'VIP',
+        statut: 'Terminé',
+        places: 1
+      },
+      {
+        id: 5,
+        nom: 'COOLING BREAK',
+        horaire: '16:00 - 17:00',
+        type: 'Standard',
+        statut: 'En cours',
+        places: 2
+      }
+    ]
   },
   {
     id: 4,
@@ -123,8 +161,25 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'grabianira@gmail.com',
     montant: 30000,
     date: '2024-07-14',
-    statut: 'Validé',
-    activite: 'PANEL DE HAUT NIVEAU'
+    activite: 'PANEL DE HAUT NIVEAU',
+    activites: [
+      {
+        id: 6,
+        nom: 'PANEL DE HAUT NIVEAU',
+        horaire: '14:00 - 16:00',
+        type: 'Standard',
+        statut: 'Non démarré',
+        places: 1
+      },
+      {
+        id: 7,
+        nom: 'PAUSE CAFE',
+        horaire: '10:00 - 10:30',
+        type: 'Standard',
+        statut: 'Terminé',
+        places: 1
+      }
+    ]
   },
   {
     id: 5,
@@ -133,8 +188,17 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'fatou.traore@gmail.com',
     montant: 45000,
     date: '2024-07-10',
-    statut: 'Validé',
-    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE'
+    activite: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
+    activites: [
+      {
+        id: 8,
+        nom: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
+        horaire: '09:00 - 11:00',
+        type: 'VIP',
+        statut: 'En cours',
+        places: 1
+      }
+    ]
   },
   {
     id: 6,
@@ -143,8 +207,25 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'mamadou.diallo@gmail.com',
     montant: 60000,
     date: '2024-06-28',
-    statut: 'Validé',
-    activite: 'COOLING BREAK'
+    activite: 'COOLING BREAK',
+    activites: [
+      {
+        id: 9,
+        nom: 'COOLING BREAK',
+        horaire: '16:00 - 17:00',
+        type: 'Standard',
+        statut: 'En cours',
+        places: 1
+      },
+      {
+        id: 10,
+        nom: 'POINT DE PRESSE',
+        horaire: '11:00 - 12:00',
+        type: 'Standard',
+        statut: 'Non démarré',
+        places: 1
+      }
+    ]
   },
   {
     id: 7,
@@ -153,8 +234,17 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'aissata.kone@gmail.com',
     montant: 35000,
     date: '2024-06-25',
-    statut: 'Refusé',
-    activite: 'PAUSE CAFE'
+    activite: 'PAUSE CAFE',
+    activites: [
+      {
+        id: 11,
+        nom: 'PAUSE CAFE',
+        horaire: '10:00 - 10:30',
+        type: 'VIP',
+        statut: 'Terminé',
+        places: 1
+      }
+    ]
   },
   {
     id: 8,
@@ -163,28 +253,49 @@ const MOCK_TRANSACTIONS: TransactionData[] = [
     email: 'ibrahim.ouattara@gmail.com',
     montant: 80000,
     date: '2024-07-17',
-    statut: 'Validé',
-    activite: 'PANEL DE HAUT NIVEAU'
+    activite: 'PANEL DE HAUT NIVEAU',
+    activites: [
+      {
+        id: 12,
+        nom: 'PANEL DE HAUT NIVEAU',
+        horaire: '14:00 - 16:00',
+        type: 'VIP',
+        statut: 'En cours',
+        places: 2
+      },
+      {
+        id: 13,
+        nom: 'CÉRÉMONIE D\'OUVERTURE OFFICIELLE',
+        horaire: '09:00 - 11:00',
+        type: 'Standard',
+        statut: 'Non démarré',
+        places: 1
+      }
+    ]
   }
 ];
-
 
 // ----------------------------------------------------------------------
 
 export default function TransactionsPage() {
   const { user } = useMockedUser();
   const theme = useTheme();
+  const router = useRouter();
   const table = useTable({ defaultOrderBy: 'date', defaultOrder: 'desc' });
 
   const [tableData, setTableData] = useState<TransactionData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDateFilter, setSelectedDateFilter] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<TransactionData | null>(null);
+  const [selectedActivityFilter, setSelectedActivityFilter] = useState('');
 
   useEffect(() => {
     setTableData(MOCK_TRANSACTIONS);
   }, []);
+
+  // Extraire toutes les activités uniques pour le filtre
+  const uniqueActivities = Array.from(
+    new Set(tableData.map(t => t.activite))
+  ).sort();
 
   // Filtrage des transactions
   const dataFiltered = applyFilter({
@@ -192,24 +303,41 @@ export default function TransactionsPage() {
     comparator: getComparator(table.order, table.orderBy),
     searchTerm,
     selectedDateFilter,
+    selectedActivityFilter,
   });
 
-  // Calcul des statistiques
-  const stats = calculateStats(dataFiltered);
-
-
-
   const handleViewDetails = (transactionId: number) => {
-    const transaction = tableData.find(t => t.id === transactionId);
-    if (transaction) {
-      setSelectedTransaction(transaction);
-      setModalOpen(true);
-    }
+    router.push(`/guichet/transactions/${transactionId}`);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedTransaction(null);
+  const handleExport = () => {
+    // Préparer les données pour l'export
+    const exportData = dataFiltered.map(t => ({
+      'ID': t.id,
+      'Nom': t.nom,
+      'Prénom': t.prenom,
+      'Email': t.email,
+      'Montant (FCFA)': t.montant,
+      'Date': formatDate(t.date),
+      'Activité Principale': t.activite,
+      'Nombre d\'activités': t.activites.length
+    }));
+
+    // Convertir en CSV
+    const headers = Object.keys(exportData[0]).join(',');
+    const rows = exportData.map(row => Object.values(row).join(',')).join('\n');
+    const csv = `${headers}\n${rows}`;
+
+    // Télécharger
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `transactions_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const formatCurrency = (amount: number) => {
@@ -228,57 +356,9 @@ export default function TransactionsPage() {
     });
   };
 
-
-  const getStatusColor = (statut: string) => {
-    switch (statut) {
-      case 'Validé':
-        return 'success';
-      case 'En attente':
-        return 'warning';
-      case 'Refusé':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
-
-  // Couleurs alternées pour les widgets
-  const getWidgetColor = (index: number): 'primary' | 'secondary' | 'success' | 'warning' => {
-    const colors: Array<'primary' | 'secondary' | 'success' | 'warning'> = ['primary', 'secondary', 'success', 'warning'];
-    return colors[index % colors.length];
-  };
-
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        {/* Cards de statistiques avec SuperviseurWidgetSummary */}
-        <Grid size={{ xs: 12, md: 4 }}>
-          <GuichetWidgetSummary
-            title="Nombre de transactions"
-            total={stats.totalTransactions}
-            color={getWidgetColor(0)}
-            sx={{ height: 180 }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <GuichetWidgetSummary
-            title="Montant collecté (FCFA)"
-            total={formatCurrency(stats.totalAmount)}
-            color={getWidgetColor(1)}
-            sx={{ height: 180 }}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <GuichetWidgetSummary
-            title="Participations traitées"
-            total={stats.processedParticipations}
-            color={getWidgetColor(2)}
-            sx={{ height: 180 }}
-          />
-        </Grid>
-
         {/* Section principale - Liste des transactions */}
         <Grid size={{ xs: 12 }}>
           <Card>
@@ -287,14 +367,12 @@ export default function TransactionsPage() {
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
                 LISTE DES TRANSACTIONS EFFECTUÉES
               </Typography>
-
-
             </Box>
 
             {/* Barre d'outils */}
             <Box sx={{ px: 3, pb: 3 }}>
               <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-                <Grid size={{ xs: 12, md: 3 }}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <FormControl size="small" fullWidth>
                     <Select
                       value={selectedDateFilter}
@@ -310,6 +388,29 @@ export default function TransactionsPage() {
                       {DATE_FILTER_OPTIONS.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid size={{ xs: 12, md: 2.5 }}>
+                  <FormControl size="small" fullWidth>
+                    <Select
+                      value={selectedActivityFilter}
+                      onChange={(e) => setSelectedActivityFilter(e.target.value)}
+                      displayEmpty
+                      sx={{
+                        bgcolor: 'white',
+                        '& .MuiSelect-select': {
+                          color: selectedActivityFilter ? 'text.primary' : 'grey.500'
+                        }
+                      }}
+                    >
+                      <MenuItem value="">Toutes les activités</MenuItem>
+                      {uniqueActivities.map((activity) => (
+                        <MenuItem key={activity} value={activity}>
+                          {activity}
                         </MenuItem>
                       ))}
                     </Select>
@@ -333,7 +434,17 @@ export default function TransactionsPage() {
                   />
                 </Grid>
 
-
+                <Grid size={{ xs: 12, md: 2 }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    startIcon={<Iconify icon="eva:download-fill" />}
+                    onClick={handleExport}
+                    disabled={dataFiltered.length === 0}
+                  >
+                    Exporter ({dataFiltered.length})
+                  </Button>
+                </Grid>
               </Grid>
             </Box>
 
@@ -405,7 +516,6 @@ export default function TransactionsPage() {
                                 variant="body2"
                                 sx={{
                                   fontSize: '0.875rem',
-                                  color: '#2563eb',
                                   fontWeight: 500,
                                   cursor: 'pointer',
                                   '&:hover': {
@@ -414,9 +524,6 @@ export default function TransactionsPage() {
                                 }}
                               >
                                 {transaction.nom} {transaction.prenom}
-                              </Typography>
-                              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                {transaction.activite}
                               </Typography>
 
                             </Box>
@@ -435,18 +542,9 @@ export default function TransactionsPage() {
                           </TableCell>
 
                           <TableCell align="center">
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-                              <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                                {formatDate(transaction.date)}
-                              </Typography>
-
-                              <Chip
-                                size="small"
-                                label={transaction.statut}
-                                color={getStatusColor(transaction.statut)}
-                                sx={{ minWidth: 80, fontSize: '0.75rem' }}
-                              />
-                            </Box>
+                            <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
+                              {formatDate(transaction.date)}
+                            </Typography>
                           </TableCell>
 
                           <TableCell align="center">
@@ -529,17 +627,7 @@ export default function TransactionsPage() {
           </Card>
         </Grid>
       </Grid>
-
-      {/* Modal de détails de transaction */}
-      <TransactionDetailModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        transaction={selectedTransaction}
-      />
-
     </DashboardContent>
-
-
   );
 }
 
@@ -550,9 +638,16 @@ type ApplyFilterProps = {
   comparator: (a: any, b: any) => number;
   searchTerm: string;
   selectedDateFilter: string;
+  selectedActivityFilter: string;
 };
 
-function applyFilter({ inputData, comparator, searchTerm, selectedDateFilter }: ApplyFilterProps) {
+function applyFilter({
+  inputData,
+  comparator,
+  searchTerm,
+  selectedDateFilter,
+  selectedActivityFilter
+}: ApplyFilterProps) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
@@ -570,6 +665,13 @@ function applyFilter({ inputData, comparator, searchTerm, selectedDateFilter }: 
         transaction.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         transaction.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         transaction.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  // Filtrage par activité
+  if (selectedActivityFilter) {
+    inputData = inputData.filter(
+      (transaction) => transaction.activite === selectedActivityFilter
     );
   }
 
@@ -616,17 +718,4 @@ function applyFilter({ inputData, comparator, searchTerm, selectedDateFilter }: 
   }
 
   return inputData;
-}
-
-// Fonction pour calculer les statistiques
-function calculateStats(transactions: TransactionData[]) {
-  const totalTransactions = transactions.length;
-  const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.montant, 0);
-  const processedParticipations = transactions.filter(t => t.statut === 'Validé').length;
-
-  return {
-    totalTransactions,
-    totalAmount,
-    processedParticipations
-  };
 }
