@@ -1,7 +1,7 @@
 'use client'
 
-import { url } from 'inspector'
 import Link from 'next/link'
+import { url } from 'inspector'
 import { useState } from 'react'
 import CountUp from 'react-countup'
 import ModalVideo from 'react-modal-video'
@@ -12,7 +12,7 @@ export default function Section2() {
 	
 	return (
 		<>
-			<div className="about2-section-area sp1" style={{backgroundImage: 'url(/assets/landing-page/img/bg/header-bg3.png)'}}>
+			<div className="about2-section-area sp1 bg-[#002630] min-h-screen"  >
 				<img src="/assets/landing-page/img/elements/elements13.png" alt="" className="elements12" />
 				<div className="container">
 					<div className="row align-items-center">

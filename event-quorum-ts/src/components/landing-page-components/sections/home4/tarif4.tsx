@@ -1,12 +1,12 @@
 'use client'
+
 import Link from 'next/link'
-import { Autoplay, Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, Navigation, Pagination } from "swiper/modules"
 
 export default function Tarif4() {
     return (
-        <>
-            <div>
+        <div>
                 {/*===== PRICING AREA STARTS =======*/}
 					<div className="pricing-lan-section-area sp1">
 						<div className="container">
@@ -29,7 +29,7 @@ export default function Tarif4() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage4/inscription4" className="event-btn7">Acheter un Ticket</Link>
+											<Link href="/landing-page/landingpage4/inscription4" className="px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition-colors duration-200 uppercase">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -42,7 +42,9 @@ export default function Tarif4() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage4/inscription4" className="event-btn7">Acheter un Ticket</Link>
+											<Link href="/landing-page/landingpage4/inscription4" className="px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition-colors duration-200 uppercase">
+												Acheter un Ticket
+											</Link>
 										</div>
 									</div>
 								</div>
@@ -54,7 +56,7 @@ export default function Tarif4() {
 										
 										<div className="space28" />
 										<div className="btn-area1">
-											<Link href="/landing-page/landingpage4/inscription4 " className="event-btn7">Acheter un Ticket</Link>
+											<Link href="/landing-page/landingpage4/inscription4 " className="px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition-colors duration-200 uppercase">Acheter un Ticket</Link>
 										</div>
 									</div>
 								</div>
@@ -63,6 +65,5 @@ export default function Tarif4() {
 					</div>
 					{/*===== PRICING AREA ENDS =======*/}
             </div>
-        </>
     )
 }

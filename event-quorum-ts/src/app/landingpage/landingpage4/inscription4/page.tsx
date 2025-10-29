@@ -12,7 +12,7 @@ export default function Contact() {
         <>
             <Layout headerStyle={1_4} footerStyle={4}>
                 <div>
-                    <div className="inner-page-header" style={{ backgroundImage: 'url(assets/landing-page/img/bg/header-bg12.png)' }}>
+                    <div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg12.png)' }}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-6 m-auto">
@@ -65,7 +65,7 @@ export default function Contact() {
                                             <div className="col-lg-12">
                                                 <div className="space24" />
                                                 <div className="input-area text-end">
-                                                    <button type="submit" className="vl-btn4-header4">Envoyer ma demande</button>
+                                                    <button type="submit" className="px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition-colors duration-200 uppercase">Envoyer ma demande</button>
                                                 </div>
                                             </div>
                                             {/*<div className='col-lg-12 mt-3 text-center heading2'>

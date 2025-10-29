@@ -19,7 +19,7 @@ import SARADescriptionSection from './component/SARADescriptionSection'
 export default function Page() {
 
 	return (
-		<Layout headerStyle={1_2} footerStyle={1}>
+		<Layout headerStyle={2} footerStyle={1}>
 				
 				<div>
 					

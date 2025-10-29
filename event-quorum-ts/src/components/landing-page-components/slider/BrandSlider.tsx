@@ -1,4 +1,5 @@
 'use client'
+
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Navigation, Pagination } from "swiper/modules"
 
@@ -53,8 +54,7 @@ const swiperOptions = {
 }
 export default function BrandSlider() {
 	return (
-		<>
-			<Swiper {...swiperOptions} className="brand-slider-area owl-carousel">
+		<Swiper {...swiperOptions} className="brand-slider-area owl-carousel ">
 				<SwiperSlide className="brand-box">
 					<img src="/assets/landing-page/img/elements/brand-img1.png" alt="" />
 				</SwiperSlide>
@@ -80,6 +80,5 @@ export default function BrandSlider() {
 					<img src="/assets/landing-page/img/elements/brand-img8.png" alt="" />
 				</SwiperSlide>
 			</Swiper>
-		</>
 	)
 }

@@ -55,7 +55,7 @@ const swiperOptions = {
 
 export default function Section4defile() {
 	return (
-		<div className="team8-section-rea sp1" >
+		<div className="team8-section-rea sp1 bg-[#002630] min-h-screen" >
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-5">

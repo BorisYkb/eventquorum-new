@@ -3,7 +3,7 @@ import BrandSlider from 'src/components/landing-page-components/slider/BrandSlid
 
 export default function Section3() {
 	return (
-		<div className="brands2-section-area sp2">
+		<div className="brands2-section-area sp2 bg-[#002630]">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-5 m-auto">

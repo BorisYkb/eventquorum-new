@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
-// eslint-disable-next-line import/no-unresolved
-import MobileMenu3 from 'src/components/landing-page-components/layout/MobileMenu3'
+export default function Header2({ scroll }: any) {
+	const [isMobileMenu, setIsMobileMenu] = useState(false)
 
-export default function Header3({ scroll }: any) {
-	const [isMobileMenu3, setMobileMenu3] = useState(false)
-	const handleMobileMenu3 = () => setMobileMenu3(!isMobileMenu3)
+	const handleMobileMenu = () => {
+		setIsMobileMenu(!isMobileMenu)
+	}
 
 	return (
 		<>
@@ -31,19 +31,19 @@ export default function Header3({ scroll }: any) {
 						<nav className="flex items-center space-x-8">
 							<Link 
 								href="/landingpage/landingpage3"
-								className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
+								className="text-gray-700 hover:text-red-600 font-medium transition-colors duration-200"
 							>
 								Accueil
 							</Link>
 							<Link 
 								href="/landingpage/landingpage3/a_propos_de_levenement3"
-								className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
+								className="text-gray-700 hover:text-red-600 font-medium transition-colors duration-200"
 							>
-								A Propos de l'évènement
+								A propos de l'événement
 							</Link>
 							<Link 
 								href="/landingpage/landingpage3/faq3"
-								className="text-gray-700 hover:text-purple-600 font-medium transition-colors duration-200"
+								className="text-gray-700 hover:text-red-600 font-medium transition-colors duration-200"
 							>
 								FAQ,s
 							</Link>
@@ -53,13 +53,13 @@ export default function Header3({ scroll }: any) {
 						<div className="flex items-center space-x-4">
 							<Link 
 								href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F"
-								className="px-3 py-2 bg-gray-900 text-white font-semibold rounded hover:bg-gray-800 transition-colors duration-200 uppercase tracking-wide"
+								className="px-3 py-2 bg-gray-900 text-white font-semibold rounded hover:bg-gray-800 transition-colors duration-200 uppercase"
 							>
 								Connexion
 							</Link>
 							<Link 
 								href="/landingpage/landingpage3/inscription3"
-								className="px-3 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors duration-200 uppercase tracking-wide"
+								className="px-3 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors duration-200 uppercase"
 							>
 								Inscription
 							</Link>
@@ -68,8 +68,107 @@ export default function Header3({ scroll }: any) {
 				</div>
 			</header>
 
-			{/* Mobile Menu */}
-			<MobileMenu3 isMobileMenu3={isMobileMenu3} handleMobileMenu3={handleMobileMenu3} />
+			{/* Mobile Header */}
+			<div className="lg:hidden block fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+				<div className="container mx-auto px-4">
+					<div className="flex items-center justify-between h-16">
+						<div className="flex-shrink-0">
+							<Link href="/landingpage/landingpage3">
+								<img 
+									src="/assets/landing-page/img/event_img/SARA-2025-LOGO-2.jpg" 
+									alt="SARA Logo" 
+									className="h-12 w-auto"
+								/>
+							</Link>
+						</div>
+						<button 
+							onClick={handleMobileMenu}
+							aria-label="Menu"
+							className="p-2 rounded-md bg-transparent hover:bg-transparent focus:outline-none border-none"
+							style={{ cursor: 'pointer' }}
+						>
+							<i className="fa-solid fa-bars-staggered" style={{ fontSize: 30, color: 'black' }} />
+						</button>
+					</div>
+				</div>
+			</div>
+
+			{/* Mobile Sidebar */}
+			<div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-[100] transform transition-transform duration-300 ease-in-out ${isMobileMenu ? 'translate-x-0' : 'translate-x-full'}`}>
+				<div className="flex items-start justify-between p-6 border-b">
+					<img 
+						src="/assets/landing-page/img/event_img/SARA-2025-LOGO-2.jpg" 
+						alt="SARA Logo" 
+						className="h-40 w-auto"
+					/>
+					<button 
+						onClick={handleMobileMenu}
+						aria-label="Fermer le menu"
+						className="p-2 rounded-md bg-transparent hover:bg-transparent focus:outline-none border-none"
+						style={{ cursor: 'pointer' }}
+					>
+						<i className="fa-solid fa-xmark" style={{ fontSize: 25, color: 'black' }}/>
+					</button>
+				</div>
+
+				<nav className="p-6">
+					<ul className="space-y-4">
+						<li>
+							<Link 
+								href="/landingpage/landingpage3"
+								className="block text-gray-700 hover:text-red-600 font-medium py-2 transition-colors"
+								onClick={handleMobileMenu}
+							>
+								Accueil
+							</Link>
+						</li>
+						<li>
+							<Link 
+								href="/landingpage/landingpage3/a_propos_de_levenement3"
+								className="block text-gray-700 hover:text-red-600 font-medium py-2 transition-colors"
+								onClick={handleMobileMenu}
+							>
+								A propos de l'événement
+							</Link>
+						</li>
+						<li>
+							<Link 
+								href="/landingpage/landingpage3/faq3"
+								className="block text-gray-700 hover:text-red-600 font-medium py-2 transition-colors"
+								onClick={handleMobileMenu}
+							>
+								FAQ,s
+							</Link>
+						</li>
+						<li className="pt-4">
+							<Link 
+								href="http://localhost:8082/auth/jwt/sign-in/?returnTo=%2Fparticipant%2F"
+								className="block w-full text-center px-6 py-3 bg-gray-900 text-white font-semibold rounded hover:bg-gray-800 transition-colors uppercase"
+								onClick={handleMobileMenu}
+							>
+								Connexion
+							</Link>
+						</li>
+						<li>
+							<Link 
+								href="/landingpage/landingpage3/inscription3"
+								className="block w-full text-center px-6 py-3 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors uppercase"
+								onClick={handleMobileMenu}
+							>
+								Inscription
+							</Link>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+			{/* Overlay */}
+			{isMobileMenu && (
+				<div 
+					className="fixed inset-0 bg-black bg-opacity-50 z-[90] lg:hidden"
+					onClick={handleMobileMenu}
+				/>
+			)}
 		</>
 	)
 }

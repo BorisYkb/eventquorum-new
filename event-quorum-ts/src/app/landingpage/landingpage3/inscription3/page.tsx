@@ -64,7 +64,7 @@ export default function Contact() {
                                             <div className="col-lg-12">
                                                 <div className="space24" />
                                                 <div className="input-area text-end">
-                                                    <button type="submit" className="vl-btn3-header3">Envoyer ma demande</button>
+                                                    <button type="submit" className="px-3 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors duration-200 uppercase">Envoyer ma demande</button>
                                                 </div>
                                             </div>
                                             {/*<div className='col-lg-12 mt-3 text-center heading2'>

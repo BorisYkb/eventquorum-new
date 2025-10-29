@@ -10,7 +10,7 @@ export default function Contact() {
 
     return (
         <>
-            <Layout headerStyle={1_2} footerStyle={1}>
+            <Layout headerStyle={2} footerStyle={1}>
                 <div>
                     <div className="inner-page-header" style={{ backgroundImage: 'url(/assets/landing-page/img/bg/header-bg12.png)' }}>
                         <div className="container">
@@ -65,7 +65,7 @@ export default function Contact() {
                                             <div className="col-lg-12">
                                                 <div className="space24" />
                                                 <div className="input-area text-end">
-                                                    <button type="submit" className="event-btn1">Envoyer ma demande</button>
+                                                    <button type="submit" className="block w-full text-center px-6 py-3 bg-lime-400 text-gray-900 font-semibold rounded hover:bg-lime-500 hover:text-white transition-colors uppercase">Envoyer ma demande</button>
                                                 </div>
                                             </div>
                                             {/*<div className='col-lg-12 mt-3 text-center heading2'>
